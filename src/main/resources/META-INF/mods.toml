@@ -1,0 +1,25 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+license="All rights reserved"
+
+[[mods]]
+modId="dwm"
+version="${file.jarVersion}"
+displayName="DoctorWhoMod"
+logoFile="dwm.png"
+authors="DrGmes"
+description='''...'''
+
+[[dependencies.dwm]]
+    modId="forge"
+    mandatory=true
+    versionRange="[40,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.dwm]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.18.2,1.19)"
+    ordering="NONE"
+    side="BOTH"
