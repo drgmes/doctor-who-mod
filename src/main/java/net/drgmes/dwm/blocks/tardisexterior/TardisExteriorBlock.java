@@ -98,7 +98,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
         MinecraftServer server = level.getServer();
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (server != null && blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisHelper.teleport(entity, TardisHelper.setupTardis(server, tardisExteriorBlockEntity.getTardisDimUUID()));
+            TardisHelper.teleport(entity, TardisHelper.setupTardis(server, tardisExteriorBlockEntity.getTardisDimUUID(), "test"));
         }
     }
 }

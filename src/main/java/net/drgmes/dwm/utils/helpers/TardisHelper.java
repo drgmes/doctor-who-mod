@@ -2,11 +2,15 @@ package net.drgmes.dwm.utils.helpers;
 
 import java.util.function.Function;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.util.ITeleporter;
 
 public class TardisHelper {
@@ -19,8 +23,15 @@ public class TardisHelper {
         }
     }
 
-    public static ServerLevel setupTardis(MinecraftServer server, String uuid) {
+    public static ServerLevel setupVoidTardis(MinecraftServer server, String uuid) {
         return ModDimensions.getTardisDimension(server, uuid);
+    }
+
+    public static ServerLevel setupTardis(MinecraftServer server, String uuid, String consoleRoomName) {
+        return ModDimensions.getTardisDimension(server, uuid, (level) -> {
+            StructureTemplate template = level.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + consoleRoomName));
+            if (template != null) template.placeInWorld(level, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), level.random, 3);
+        });
     }
 
     private static class TardisTeleporter implements ITeleporter {

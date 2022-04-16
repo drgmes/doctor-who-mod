@@ -3,6 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import java.util.Map;
 import java.util.concurrent.Executor;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Lifecycle;
@@ -25,11 +26,13 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class DimensionHelper {
-    public static ServerLevel getLevel(MinecraftServer server, ResourceKey<Level> levelKey, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
+    public static ServerLevel getLevel(MinecraftServer server, ResourceKey<Level> levelKey, Consumer<ServerLevel> initialConsumer, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
         Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
         if (map.containsKey(levelKey)) return map.get(levelKey);
 
-        return getDynamicWorldAndDimension(server, map, levelKey, dimensionFactory);
+        ServerLevel level = getDynamicWorldAndDimension(server, map, levelKey, dimensionFactory);
+        initialConsumer.accept(level);
+        return level;
     }
 
     public static ServerLevel getLevelStatic(MinecraftServer server, ResourceKey<Level> levelKey, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
