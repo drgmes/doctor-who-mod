@@ -12,7 +12,7 @@ public class DWM {
     public static final String MODID = "dwm";
 
     public static class LOCS {
-        // public static final ResourceLocation TEST = new ResourceLocation(DWM.MODID, "test");
+        public static final ResourceLocation TARDIS = new ResourceLocation(DWM.MODID, "tardis");
     }
 
     public static class TEXTURES {

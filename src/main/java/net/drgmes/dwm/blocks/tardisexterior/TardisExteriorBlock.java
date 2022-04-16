@@ -1,8 +1,11 @@
 package net.drgmes.dwm.blocks.tardisexterior;
 
 import net.drgmes.dwm.utils.base.blockentities.BaseRotatableWaterloggedBlockEntity;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -83,6 +86,19 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
             BlockState blockStateBelow = levelReader.getBlockState(blockPos.below());
             if (blockState.getBlock() != this) return super.canSurvive(blockState, levelReader, blockPos);
             return blockStateBelow.is(this) && blockStateBelow.getValue(HALF) == DoubleBlockHalf.LOWER;
+        }
+    }
+
+    @Override
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        if (level.isClientSide) return;
+        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
+        if (entity.getDirection().getOpposite() != blockState.getValue(FACING)) return;
+
+        MinecraftServer server = level.getServer();
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        if (server != null && blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            TardisHelper.teleport(entity, TardisHelper.setupTardis(server, tardisExteriorBlockEntity.getTardisDimUUID()));
         }
     }
 }
