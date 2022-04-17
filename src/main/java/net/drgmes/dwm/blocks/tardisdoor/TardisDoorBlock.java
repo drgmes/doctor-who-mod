@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.PushReaction;
@@ -32,7 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
@@ -48,7 +46,6 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(OPEN);
-        builder.add(HINGE);
         builder.add(HALF);
     }
 
@@ -56,7 +53,6 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
     protected BlockState getDefaultState() {
         return super.getDefaultState()
             .setValue(OPEN, false)
-            .setValue(HINGE,  DoorHingeSide.LEFT)
             .setValue(HALF, DoubleBlockHalf.LOWER);
     }
 
@@ -78,7 +74,6 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
         if (blockPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockPos.above()).canBeReplaced(context)) {
             return super.getStateForPlacement(context)
                 .setValue(OPEN, false)
-                .setValue(HINGE, DoorHingeSide.LEFT)
                 .setValue(HALF, DoubleBlockHalf.LOWER);
         }
 

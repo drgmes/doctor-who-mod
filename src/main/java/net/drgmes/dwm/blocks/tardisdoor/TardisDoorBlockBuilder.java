@@ -11,6 +11,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraftforge.client.model.generators.ConfiguredModel;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class TardisDoorBlockBuilder extends BlockBuilder {
@@ -25,7 +27,13 @@ public class TardisDoorBlockBuilder extends BlockBuilder {
     @Override
     public void registerBlockStateAndModel(ModBlockStateProvider provider) {
         ResourceLocation texture = provider.modLoc("block/" + this.getResourceName());
-        provider.doorBlock((DoorBlock) this.blockObject.get(), texture, texture);
+        ModelFile bottom = provider.models().doorBottomLeft(this.getResourceName() + "_bottom", texture, texture);
+        ModelFile top = provider.models().doorTopLeft(this.getResourceName() + "_top", texture, texture);
+
+        provider.getVariantBuilder((Block) this.blockObject.get()).forAllStatesExcept(state -> {
+            int yRot = ((int) state.getValue(DoorBlock.FACING).toYRot()) + 90;
+            return ConfiguredModel.builder().modelFile(state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? bottom : top).rotationY(yRot % 360).build();
+        }, TardisDoorBlock.WATERLOGGED, TardisDoorBlock.OPEN);
     }
 
     @Override
