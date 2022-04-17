@@ -1,11 +1,14 @@
-package net.drgmes.dwm.blocks.tardisexterior;
+package net.drgmes.dwm.blocks.tardisdoor;
 
-import net.drgmes.dwm.utils.base.blockentities.BaseRotatableWaterloggedBlockEntity;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -14,43 +17,57 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
+public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final EnumProperty<DoorHingeSide> HINGE = BlockStateProperties.DOOR_HINGE;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
-    public TardisExteriorBlock(BlockBehaviour.Properties properties) {
-        super(properties);
-    }
+    protected static final VoxelShape SOUTH_AABB = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 3.0D);
+    protected static final VoxelShape NORTH_AABB = Block.box(0.0D, 0.0D, 13.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape WEST_AABB = Block.box(13.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D);
+    protected static final VoxelShape EAST_AABB = Block.box(0.0D, 0.0D, 0.0D, 3.0D, 16.0D, 16.0D);
 
-    @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new TardisExteriorBlockEntity(blockPos, blockState);
+    public TardisDoorBlock(BlockBehaviour.Properties properties) {
+        super(properties);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
+        builder.add(OPEN);
+        builder.add(HINGE);
         builder.add(HALF);
     }
 
     @Override
     protected BlockState getDefaultState() {
-        return super.getDefaultState().setValue(HALF, DoubleBlockHalf.LOWER);
+        return super.getDefaultState()
+            .setValue(OPEN, false)
+            .setValue(HINGE,  DoorHingeSide.LEFT)
+            .setValue(HALF, DoubleBlockHalf.LOWER);
     }
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
-        double size = 15.9;
-        return Block.box(16 - size, 0.0D, 16 - size, size, 16.0D, size);
+        switch(blockState.getValue(FACING)) {
+            case NORTH: return NORTH_AABB;
+            case SOUTH: return SOUTH_AABB;
+            case WEST: return WEST_AABB;
+            default: return EAST_AABB;
+        }
     }
 
     @Override
@@ -59,7 +76,10 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
         BlockPos blockPos = context.getClickedPos();
 
         if (blockPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockPos.above()).canBeReplaced(context)) {
-            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER);
+            return super.getStateForPlacement(context)
+                .setValue(OPEN, false)
+                .setValue(HINGE, DoorHingeSide.LEFT)
+                .setValue(HALF, DoubleBlockHalf.LOWER);
         }
 
         return null;
@@ -91,10 +111,35 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
     }
 
     @Override
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
-        if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
-
-        TardisHelper.teleportToTardis(entity, TardisHelper.setupTardis(level, blockPos, "test"));
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+       if (player.isCreative()) return;
+       super.playerWillDestroy(level, blockPos, blockState, player);
     }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState blockState) {
+       return PushReaction.DESTROY;
+    }
+
+    @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        return InteractionResult.PASS;
+    }
+
+    @Override
+    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        if (level.isClientSide) return;
+        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
+        if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D) return;
+
+        TardisHelper.teleportFromTardis(entity, level.getServer());
+    }
+
+    // private int getCloseSound() {
+    //     return 1011;
+    // }
+
+    // private int getOpenSound() {
+    //     return 1005;
+    // }
 }

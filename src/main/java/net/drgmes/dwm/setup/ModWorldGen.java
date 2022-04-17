@@ -14,6 +14,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.fml.Bindings;
 
 public class ModWorldGen {
     public static final Map<String, List<OreConfiguration.TargetBlockState>> ORES_TARGET_LIST = Maps.newHashMap();
@@ -21,6 +22,10 @@ public class ModWorldGen {
     public static final List<OreFeatureBuilder> OVERWORLD_ORES = new ArrayList<>();
     public static final List<OreFeatureBuilder> NETHER_ORES = new ArrayList<>();
     public static final List<OreFeatureBuilder> END_ORES = new ArrayList<>();
+
+    public static void init() {
+        Bindings.getForgeBus().get().addListener(ModWorldGen::biomeLoading);
+    }
 
     public static void setup() {
         for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {

@@ -69,13 +69,13 @@ public class DimensionHelper {
         }
 
         DerivedLevelData derivedWorldInfo = new DerivedLevelData(serverConfig, serverConfig.overworldData());
-        ServerLevel world = new ServerLevel(server, executor, levelSave, derivedWorldInfo, levelKey, dimension.typeHolder(), chunkListener, dimension.generator(), worldGenSettings.isDebug(), BiomeManager.obfuscateSeed(worldGenSettings.seed()), ImmutableList.of(), false);
+        ServerLevel level = new ServerLevel(server, executor, levelSave, derivedWorldInfo, levelKey, dimension.typeHolder(), chunkListener, dimension.generator(), worldGenSettings.isDebug(), BiomeManager.obfuscateSeed(worldGenSettings.seed()), ImmutableList.of(), false);
 
-        overworld.getWorldBorder().addListener(new BorderChangeListener.DelegateBorderChangeListener(world.getWorldBorder()));
-        map.put(levelKey, world);
+        overworld.getWorldBorder().addListener(new BorderChangeListener.DelegateBorderChangeListener(level.getWorldBorder()));
+        map.put(levelKey, level);
         server.markWorldsDirty();
 
-        MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));
-        return world;
+        MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(level));
+        return level;
     }
 }

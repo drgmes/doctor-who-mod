@@ -37,7 +37,7 @@ public class ModDimensions {
         );
     }
 
-    public static ServerLevel getTardisDimension(MinecraftServer server, String uuid, Consumer<ServerLevel> initialConsumer) {
+    public static ServerLevel getTardisDimension(String uuid, MinecraftServer server, Consumer<ServerLevel> initialConsumer) {
         ResourceKey<Level> levelKey = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(DWM.MODID, uuid));
         ServerLevel level = DimensionHelper.getLevel(server, levelKey, initialConsumer, ModDimensions::tardisDimensionBuilder);
 
@@ -51,8 +51,8 @@ public class ModDimensions {
         return level;
     }
 
-    public static ServerLevel getTardisDimension(MinecraftServer server, String uuid) {
-        return ModDimensions.getTardisDimension(server, uuid, (l) -> {});
+    public static ServerLevel getTardisDimension(String uuid, MinecraftServer server) {
+        return ModDimensions.getTardisDimension(uuid, server, (l) -> {});
     }
 
     public static void registerOldTardises(MinecraftServer server) {

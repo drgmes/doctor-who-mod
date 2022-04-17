@@ -1,5 +1,6 @@
 {
   "itemGroup.dwm": "DoctorWhoMod",
 
-  "block.dwm.tardis_exterior": "Tardis"
+  "block.dwm.tardis_exterior": "Tardis",
+  "block.dwm.tardis_door": "Tardis Door"
 }

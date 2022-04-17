@@ -71,6 +71,8 @@ public class Registration {
         ModBiomes.init();
         ModDimensions.init();
         ModStructures.init();
+        ModCapabilities.init();
+        ModWorldGen.init();
     }
 
     @OnlyIn(Dist.CLIENT)

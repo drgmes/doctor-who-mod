@@ -1,10 +1,7 @@
 package net.drgmes.dwm;
 
-import net.drgmes.dwm.setup.ModWorldGen;
 import net.drgmes.dwm.setup.Registration;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.Bindings;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(DWM.MODID)
@@ -22,8 +19,5 @@ public class DWM {
 
     public DWM() {
         Registration.init();
-
-        final IEventBus forgeEventBus = Bindings.getForgeBus().get();
-        forgeEventBus.addListener(ModWorldGen::biomeLoading);
     }
 }
