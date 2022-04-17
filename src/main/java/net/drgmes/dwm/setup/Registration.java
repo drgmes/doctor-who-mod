@@ -42,6 +42,7 @@ public class Registration {
         modEventBus.addListener(Registration::setupCommon);
         modEventBus.addListener(DataGenerators::setup);
         modEventBus.addListener(ModRenderers::setup);
+        modEventBus.addListener(ModRenderers::setupLayerDefinitions);
 
         DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new DistExecutor.SafeRunnable() {
             @Override
