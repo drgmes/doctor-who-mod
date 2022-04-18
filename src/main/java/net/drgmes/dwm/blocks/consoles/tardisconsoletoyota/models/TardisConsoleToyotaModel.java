@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -22,18 +23,24 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class TardisConsoleToyotaModel extends EntityModel<Entity> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/consoles/tardis_console_toyota.png"), "main");
     private final ModelPart base;
+    private final ModelPart screwdriver_slot;
+    private final ModelPart controls;
 
     public TardisConsoleToyotaModel(ModelPart root) {
         this.base = root.getChild("base");
+        this.screwdriver_slot = root.getChild("screwdriver_slot");
+        this.controls = root.getChild("controls");
     }
 
     @Override
-    public void setupAnim(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
     }
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         base.render(poseStack, buffer, packedLight, packedOverlay);
+        screwdriver_slot.render(poseStack, buffer, packedLight, packedOverlay);
+        controls.render(poseStack, buffer, packedLight, packedOverlay);
     }
 
     @SuppressWarnings("unused")
@@ -106,60 +113,211 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         PartDefinition desk_panel_outline_3_r1 = desk_panel_outlines.addOrReplaceChild("desk_panel_outline_3_r1", CubeListBuilder.create().texOffs(150, 137).addBox(-7.0F, -15.6176F, 15.777F, 14.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 16.4676F, 15.848F, 0.0F, 1.5708F, 0.0F));
         PartDefinition desk_panel_outline_2_r1 = desk_panel_outlines.addOrReplaceChild("desk_panel_outline_2_r1", CubeListBuilder.create().texOffs(150, 140).addBox(-7.0F, -15.6176F, 15.777F, 14.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 16.4676F, 15.848F, 0.0F, 2.3562F, 0.0F));
         PartDefinition desk_panel_outline_1_r1 = desk_panel_outlines.addOrReplaceChild("desk_panel_outline_1_r1", CubeListBuilder.create().texOffs(160, 71).addBox(-7.0F, -15.6176F, 15.777F, 14.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 16.4676F, 15.848F, 0.0F, 3.1416F, 0.0F));
-        PartDefinition desk_controls = desk_panel.addOrReplaceChild("desk_controls", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_button_24_r1 = desk_controls.addOrReplaceChild("desk_control_button_24_r1", CubeListBuilder.create().texOffs(0, 12).addBox(3.0033F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 12).addBox(1.5033F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 12).addBox(-3.9967F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 12).addBox(-2.4967F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 28).addBox(2.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(3, 29).addBox(1.0F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 30).addBox(-0.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 30).addBox(-2.0F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(12, 29).addBox(-3.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(90, 98).addBox(4.5F, -19.0F, -5.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 110).addBox(-6.5F, -19.0F, -5.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(34, 110).addBox(-1.0F, -19.0F, -2.75F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_button_20_r1 = desk_controls.addOrReplaceChild("desk_control_button_20_r1", CubeListBuilder.create().texOffs(0, 12).addBox(-4.475F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 12).addBox(3.525F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(3, 13).addBox(-1.975F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(12, 13).addBox(-0.475F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 18).addBox(1.025F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_button_15_r1 = desk_controls.addOrReplaceChild("desk_control_button_15_r1", CubeListBuilder.create().texOffs(9, 21).addBox(1.825F, -19.5002F, -3.6342F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 22).addBox(1.825F, -19.5002F, -4.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(12, 22).addBox(1.825F, -19.5002F, 2.3658F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(3, 23).addBox(1.825F, -19.5002F, 3.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 23).addBox(7.325F, -19.5002F, 4.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 26).addBox(8.575F, -19.5002F, 4.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 26).addBox(8.575F, -19.5002F, 3.3658F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(3, 27).addBox(8.575F, -19.5002F, -4.6342F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(12, 27).addBox(8.575F, -19.5002F, -5.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 28).addBox(7.325F, -19.5002F, -5.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_indicator_6_r1 = desk_controls.addOrReplaceChild("desk_control_indicator_6_r1", CubeListBuilder.create().texOffs(95, 78).addBox(0.75F, -19.0F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_telepatic_interface = desk_controls.addOrReplaceChild("desk_control_telepatic_interface", CubeListBuilder.create(), PartPose.offset(-0.25F, 0.0F, 0.0F));
-        PartDefinition desk_control_telepatic_interface_a = desk_control_telepatic_interface.addOrReplaceChild("desk_control_telepatic_interface_a", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_telepatic_interface_a_3_r1 = desk_control_telepatic_interface_a.addOrReplaceChild("desk_control_telepatic_interface_a_3_r1", CubeListBuilder.create().texOffs(0, 56).addBox(-0.25F, -0.4998F, -7.0F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(45, 56).addBox(-0.25F, -0.4998F, 2.0F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(28, 133).addBox(-0.5F, -0.5F, -7.0F, 1.0F, 1.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
-        PartDefinition desk_control_telepatic_interface_b = desk_control_telepatic_interface.addOrReplaceChild("desk_control_telepatic_interface_b", CubeListBuilder.create(), PartPose.offset(-12.6914F, -15.7558F, 0.0F));
-        PartDefinition desk_control_telepatic_interface_b_3_r1 = desk_control_telepatic_interface_b.addOrReplaceChild("desk_control_telepatic_interface_b_3_r1", CubeListBuilder.create().texOffs(100, 105).addBox(1.75F, -0.4998F, -1.5F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 62).addBox(1.25F, -0.4998F, -2.5F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(151, 1).addBox(1.5F, -0.5F, -6.0F, 1.0F, 1.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.2618F));
-        PartDefinition desk_control_telepatic_interface_c = desk_control_telepatic_interface.addOrReplaceChild("desk_control_telepatic_interface_c", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_telepatic_interface_c_4_r1 = desk_control_telepatic_interface_c.addOrReplaceChild("desk_control_telepatic_interface_c_4_r1", CubeListBuilder.create().texOffs(95, 104).addBox(3.25F, -0.4998F, -5.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(96, 73).addBox(3.25F, -0.4998F, 2.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(45, 62).addBox(3.5F, -0.5F, -5.25F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(0, 71).addBox(3.5F, -0.5F, 0.25F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
-        PartDefinition desk_control_telepatic_interface_d = desk_control_telepatic_interface.addOrReplaceChild("desk_control_telepatic_interface_d", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_telepatic_interface_d_4_r1 = desk_control_telepatic_interface_d.addOrReplaceChild("desk_control_telepatic_interface_d_4_r1", CubeListBuilder.create().texOffs(90, 78).addBox(5.75F, -0.4998F, -4.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 95).addBox(5.75F, -0.4998F, 1.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(34, 101).addBox(5.5F, -0.5F, -4.25F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(64, 103).addBox(5.5F, -0.5F, 0.25F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
-        PartDefinition desk_control_monitor = desk_controls.addOrReplaceChild("desk_control_monitor", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -0.5F));
-        PartDefinition desk_control_monitor_main_r1 = desk_control_monitor.addOrReplaceChild("desk_control_monitor_main_r1", CubeListBuilder.create().texOffs(151, 49).addBox(-2.5F, -0.5F, -4.5F, 5.0F, 1.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(10.4241F, -16.3483F, 0.5F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_monitor_borders = desk_control_monitor.addOrReplaceChild("desk_control_monitor_borders", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_monitor_border_4_r1 = desk_control_monitor_borders.addOrReplaceChild("desk_control_monitor_border_4_r1", CubeListBuilder.create().texOffs(0, 45).addBox(2.5F, -0.75F, -4.5F, 0.0F, 2.0F, 9.0F, new CubeDeformation(0.0F)).texOffs(18, 45).addBox(-2.5F, -0.75F, -4.5F, 0.0F, 2.0F, 9.0F, new CubeDeformation(0.0F)).texOffs(51, 0).addBox(-2.5F, -0.75F, 4.5F, 5.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)).texOffs(52, 56).addBox(-2.5F, -0.75F, -4.5F, 5.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(10.4241F, -16.3483F, 0.5F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_handbrake = desk_controls.addOrReplaceChild("desk_control_handbrake", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_handbrake_body_r1 = desk_control_handbrake.addOrReplaceChild("desk_control_handbrake_body_r1", CubeListBuilder.create().texOffs(42, 50).addBox(-3.75F, -1.0085F, -0.4353F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(6.75F, -16.5407F, 12.1297F, -0.3776F, -0.7926F, 0.2753F));
-        PartDefinition desk_control_handbrake_base_2_r1 = desk_control_handbrake.addOrReplaceChild("desk_control_handbrake_base_2_r1", CubeListBuilder.create().texOffs(0, 0).addBox(6.5F, -19.25F, 6.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 86).addBox(4.0F, -19.0F, 6.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter = desk_controls.addOrReplaceChild("desk_control_starter", CubeListBuilder.create(), PartPose.offset(-11.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter_base_r1 = desk_control_starter.addOrReplaceChild("desk_control_starter_base_r1", CubeListBuilder.create().texOffs(45, 79).addBox(4.0F, -19.0F, 6.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter_body = desk_control_starter.addOrReplaceChild("desk_control_starter_body", CubeListBuilder.create(), PartPose.offsetAndRotation(5.5F, -16.2907F, 12.1297F, 1.1345F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter_body_main_r1 = desk_control_starter_body.addOrReplaceChild("desk_control_starter_body_main_r1", CubeListBuilder.create().texOffs(0, 50).addBox(-2.0F, -3.0F, -0.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter_rod_left = desk_control_starter_body.addOrReplaceChild("desk_control_starter_rod_left", CubeListBuilder.create(), PartPose.offset(-5.5F, 16.2907F, -12.1297F));
-        PartDefinition desk_control_starter_rod_left_2_r1 = desk_control_starter_rod_left.addOrReplaceChild("desk_control_starter_rod_left_2_r1", CubeListBuilder.create().texOffs(11, 17).addBox(6.5F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(13, 17).addBox(6.75F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_starter_rod_right = desk_control_starter_body.addOrReplaceChild("desk_control_starter_rod_right", CubeListBuilder.create(), PartPose.offset(-7.75F, 16.2907F, -12.1297F));
-        PartDefinition desk_control_starter_rod_right_2_r1 = desk_control_starter_rod_right.addOrReplaceChild("desk_control_starter_rod_right_2_r1", CubeListBuilder.create().texOffs(4, 17).addBox(6.5F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 17).addBox(6.75F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_1 = desk_controls.addOrReplaceChild("desk_control_lever_1", CubeListBuilder.create(), PartPose.offset(-0.5F, -0.15F, 0.0F));
-        PartDefinition desk_control_lever_1_body_r1 = desk_control_lever_1.addOrReplaceChild("desk_control_lever_1_body_r1", CubeListBuilder.create().texOffs(0, 101).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(9, 10).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_2 = desk_controls.addOrReplaceChild("desk_control_lever_2", CubeListBuilder.create(), PartPose.offset(10.5F, -0.15F, 0.0F));
-        PartDefinition desk_control_lever_2_body_r1 = desk_control_lever_2.addOrReplaceChild("desk_control_lever_2_body_r1", CubeListBuilder.create().texOffs(90, 93).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 10).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_3 = desk_controls.addOrReplaceChild("desk_control_lever_3", CubeListBuilder.create(), PartPose.offset(2.0F, -0.95F, 4.0F));
-        PartDefinition desk_control_lever_3_body_r1 = desk_control_lever_3.addOrReplaceChild("desk_control_lever_3_body_r1", CubeListBuilder.create().texOffs(45, 93).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(9, 8).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -12.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_4 = desk_controls.addOrReplaceChild("desk_control_lever_4", CubeListBuilder.create(), PartPose.offset(4.0F, -0.95F, 3.0F));
-        PartDefinition desk_control_lever_4_body_r1 = desk_control_lever_4.addOrReplaceChild("desk_control_lever_4_body_r1", CubeListBuilder.create().texOffs(90, 88).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(9, 4).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_5 = desk_controls.addOrReplaceChild("desk_control_lever_5", CubeListBuilder.create(), PartPose.offset(6.0F, -0.95F, 3.0F));
-        PartDefinition desk_control_lever_5_body_r1 = desk_control_lever_5.addOrReplaceChild("desk_control_lever_5_body_r1", CubeListBuilder.create().texOffs(90, 73).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(9, 2).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_6 = desk_controls.addOrReplaceChild("desk_control_lever_6", CubeListBuilder.create(), PartPose.offset(8.0F, -0.95F, 4.0F));
-        PartDefinition desk_control_lever_6_body_r1 = desk_control_lever_6.addOrReplaceChild("desk_control_lever_6_body_r1", CubeListBuilder.create().texOffs(90, 61).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(9, 0).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -12.5727F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_7 = desk_controls.addOrReplaceChild("desk_control_lever_7", CubeListBuilder.create(), PartPose.offsetAndRotation(2.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
-        PartDefinition desk_control_lever_7_body_r1 = desk_control_lever_7.addOrReplaceChild("desk_control_lever_7_body_r1", CubeListBuilder.create().texOffs(90, 56).addBox(-0.5F, -0.498F, -2.5586F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 8).addBox(-1.0F, 0.2522F, 0.4412F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, -0.5347F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_8 = desk_controls.addOrReplaceChild("desk_control_lever_8", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
-        PartDefinition desk_control_lever_8_body_r1 = desk_control_lever_8.addOrReplaceChild("desk_control_lever_8_body_r1", CubeListBuilder.create().texOffs(0, 90).addBox(-0.5F, -0.7568F, -3.5246F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 5).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, 0.4653F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_lever_9 = desk_controls.addOrReplaceChild("desk_control_lever_9", CubeListBuilder.create(), PartPose.offsetAndRotation(-2.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
-        PartDefinition desk_control_lever_9_body_r1 = desk_control_lever_9.addOrReplaceChild("desk_control_lever_9_body_r1", CubeListBuilder.create().texOffs(45, 88).addBox(-0.5F, -0.498F, -2.5586F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 3).addBox(-1.0F, 0.2522F, 0.4412F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, -0.5347F, 0.2618F, 0.0F, 0.0F));
-        PartDefinition desk_control_cradle_1 = desk_controls.addOrReplaceChild("desk_control_cradle_1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition desk_control_cradle_1_body_1_r1 = desk_control_cradle_1.addOrReplaceChild("desk_control_cradle_1_body_1_r1", CubeListBuilder.create().texOffs(3, 21).addBox(-0.958F, -0.3706F, -0.975F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(11.4817F, -16.5465F, -7.25F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_cradle_1_base_r1 = desk_control_cradle_1.addOrReplaceChild("desk_control_cradle_1_base_r1", CubeListBuilder.create().texOffs(5, 95).addBox(5.825F, -19.075F, -8.25F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_cradle_2 = desk_controls.addOrReplaceChild("desk_control_cradle_2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 14.5F));
-        PartDefinition desk_control_cradle_2_body_1_r1 = desk_control_cradle_2.addOrReplaceChild("desk_control_cradle_2_body_1_r1", CubeListBuilder.create().texOffs(0, 20).addBox(-0.958F, -0.3706F, -0.975F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(11.4817F, -16.5465F, -7.25F, 0.0F, 0.0F, 0.2618F));
-        PartDefinition desk_control_cradle_2_base_r1 = desk_control_cradle_2.addOrReplaceChild("desk_control_cradle_2_base_r1", CubeListBuilder.create().texOffs(90, 68).addBox(5.825F, -19.075F, -8.25F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition screwdriver_slot = partdefinition.addOrReplaceChild("screwdriver_slot", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition screwdriver_slot_base_r1 = screwdriver_slot.addOrReplaceChild("screwdriver_slot_base_r1", CubeListBuilder.create().texOffs(95, 78).addBox(0.75F, -19.25F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition controls = partdefinition.addOrReplaceChild("controls", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition control_indicator_3_r1 = controls.addOrReplaceChild("control_indicator_3_r1", CubeListBuilder.create().texOffs(90, 98).addBox(4.5F, -19.0F, -5.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 110).addBox(-6.5F, -19.0F, -5.5F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(34, 110).mirror().addBox(-1.0F, -19.0F, -2.75F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_telepatic_interface = controls.addOrReplaceChild("control_telepatic_interface", CubeListBuilder.create(), PartPose.offset(-0.25F, 0.0F, 0.0F));
+        PartDefinition control_telepatic_interface_a = control_telepatic_interface.addOrReplaceChild("control_telepatic_interface_a", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_telepatic_interface_a_3_r1 = control_telepatic_interface_a.addOrReplaceChild("control_telepatic_interface_a_3_r1", CubeListBuilder.create().texOffs(0, 56).addBox(-0.25F, -0.4998F, -7.0F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(45, 56).addBox(-0.25F, -0.4998F, 2.0F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(28, 133).addBox(-0.5F, -0.5F, -7.0F, 1.0F, 1.0F, 14.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
+        PartDefinition control_telepatic_interface_b = control_telepatic_interface.addOrReplaceChild("control_telepatic_interface_b", CubeListBuilder.create(), PartPose.offset(-12.6914F, -15.7558F, 0.0F));
+        PartDefinition control_telepatic_interface_b_3_r1 = control_telepatic_interface_b.addOrReplaceChild("control_telepatic_interface_b_3_r1", CubeListBuilder.create().texOffs(100, 105).addBox(1.75F, -0.4998F, -1.5F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 62).addBox(1.25F, -0.4998F, -2.5F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(151, 1).addBox(1.5F, -0.5F, -6.0F, 1.0F, 1.0F, 12.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, -0.2618F));
+        PartDefinition control_telepatic_interface_c = control_telepatic_interface.addOrReplaceChild("control_telepatic_interface_c", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_telepatic_interface_c_4_r1 = control_telepatic_interface_c.addOrReplaceChild("control_telepatic_interface_c_4_r1", CubeListBuilder.create().texOffs(95, 104).addBox(3.25F, -0.4998F, -5.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(96, 73).addBox(3.25F, -0.4998F, 2.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(45, 62).addBox(3.5F, -0.5F, -5.25F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)).texOffs(0, 71).addBox(3.5F, -0.5F, 0.25F, 1.0F, 1.0F, 5.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
+        PartDefinition control_telepatic_interface_d = control_telepatic_interface.addOrReplaceChild("control_telepatic_interface_d", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_telepatic_interface_d_4_r1 = control_telepatic_interface_d.addOrReplaceChild("control_telepatic_interface_d_4_r1", CubeListBuilder.create().texOffs(90, 78).addBox(5.75F, -0.4998F, -4.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(0, 95).addBox(5.75F, -0.4998F, 1.25F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(34, 101).addBox(5.5F, -0.5F, -4.25F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(64, 103).addBox(5.5F, -0.5F, 0.25F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-12.6914F, -15.7558F, 0.0F, 0.0F, 0.0F, -0.2618F));
+        PartDefinition control_monitor = controls.addOrReplaceChild("control_monitor", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, -0.5F));
+        PartDefinition control_monitor_main_r1 = control_monitor.addOrReplaceChild("control_monitor_main_r1", CubeListBuilder.create().texOffs(151, 49).addBox(-2.5F, -0.5F, -4.5F, 5.0F, 1.0F, 9.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(10.4241F, -16.3483F, 0.5F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_monitor_borders = control_monitor.addOrReplaceChild("control_monitor_borders", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_monitor_border_4_r1 = control_monitor_borders.addOrReplaceChild("control_monitor_border_4_r1", CubeListBuilder.create().texOffs(0, 45).addBox(2.5F, -0.75F, -4.5F, 0.0F, 2.0F, 9.0F, new CubeDeformation(0.0F)).texOffs(18, 45).addBox(-2.5F, -0.75F, -4.5F, 0.0F, 2.0F, 9.0F, new CubeDeformation(0.0F)).texOffs(51, 0).addBox(-2.5F, -0.75F, 4.5F, 5.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)).texOffs(52, 56).addBox(-2.5F, -0.75F, -4.5F, 5.0F, 2.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(10.4241F, -16.3483F, 0.5F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_handbrake = controls.addOrReplaceChild("control_handbrake", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_handbrake_base_2_r1 = control_handbrake.addOrReplaceChild("control_handbrake_base_2_r1", CubeListBuilder.create().texOffs(0, 0).addBox(6.5F, -19.25F, 6.5F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(0, 86).addBox(4.0F, -19.0F, 6.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_handbrake_body = control_handbrake.addOrReplaceChild("control_handbrake_body", CubeListBuilder.create(), PartPose.offset(6.77F, -17.3545F, 12.5572F));
+        PartDefinition control_handbrake_body_r1 = control_handbrake_body.addOrReplaceChild("control_handbrake_body_r1", CubeListBuilder.create().texOffs(42, 50).addBox(-2.0F, -0.5F, -0.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-1.25F, 0.0F, -1.5F, -0.3776F, -0.7926F, 0.2753F));
+        PartDefinition control_starter = controls.addOrReplaceChild("control_starter", CubeListBuilder.create(), PartPose.offset(-11.0F, 0.0F, 0.0F));
+        PartDefinition control_starter_base_r1 = control_starter.addOrReplaceChild("control_starter_base_r1", CubeListBuilder.create().texOffs(45, 79).addBox(4.0F, -19.0F, 6.0F, 3.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_starter_body = control_starter.addOrReplaceChild("control_starter_body", CubeListBuilder.create(), PartPose.offsetAndRotation(5.5F, -16.2907F, 12.1297F, 1.1345F, 0.0F, 0.0F));
+        PartDefinition control_starter_body_main_r1 = control_starter_body.addOrReplaceChild("control_starter_body_main_r1", CubeListBuilder.create().texOffs(0, 50).addBox(-2.0F, -3.0F, -0.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_starter_rod_left = control_starter_body.addOrReplaceChild("control_starter_rod_left", CubeListBuilder.create(), PartPose.offset(-5.5F, 16.2907F, -12.1297F));
+        PartDefinition control_starter_rod_left_2_r1 = control_starter_rod_left.addOrReplaceChild("control_starter_rod_left_2_r1", CubeListBuilder.create().texOffs(11, 17).addBox(6.5F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(13, 17).addBox(6.75F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_starter_rod_right = control_starter_body.addOrReplaceChild("control_starter_rod_right", CubeListBuilder.create(), PartPose.offset(-7.75F, 16.2907F, -12.1297F));
+        PartDefinition control_starter_rod_right_2_r1 = control_starter_rod_right.addOrReplaceChild("control_starter_rod_right_2_r1", CubeListBuilder.create().texOffs(4, 17).addBox(6.5F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(9, 17).addBox(6.75F, -21.0F, 7.0F, 0.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_1 = controls.addOrReplaceChild("control_lever_1", CubeListBuilder.create(), PartPose.offset(-0.5F, -0.15F, 0.0F));
+        PartDefinition control_lever_1_base_r1 = control_lever_1.addOrReplaceChild("control_lever_1_base_r1", CubeListBuilder.create().texOffs(9, 10).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_1_body = control_lever_1.addOrReplaceChild("control_lever_1_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -11.6118F));
+        PartDefinition control_lever_1_body_r1 = control_lever_1_body.addOrReplaceChild("control_lever_1_body_r1", CubeListBuilder.create().texOffs(0, 101).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_2 = controls.addOrReplaceChild("control_lever_2", CubeListBuilder.create(), PartPose.offset(10.5F, -0.15F, 0.0F));
+        PartDefinition control_lever_2_base_r1 = control_lever_2.addOrReplaceChild("control_lever_2_base_r1", CubeListBuilder.create().texOffs(0, 10).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_2_body = control_lever_2.addOrReplaceChild("control_lever_2_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -11.6118F));
+        PartDefinition control_lever_2_body_r1 = control_lever_2_body.addOrReplaceChild("control_lever_2_body_r1", CubeListBuilder.create().texOffs(90, 93).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_3 = controls.addOrReplaceChild("control_lever_3", CubeListBuilder.create(), PartPose.offset(2.0F, -0.95F, 4.0F));
+        PartDefinition control_lever_3_base_r1 = control_lever_3.addOrReplaceChild("control_lever_3_base_r1", CubeListBuilder.create().texOffs(9, 8).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -12.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_3_body = control_lever_3.addOrReplaceChild("control_lever_3_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -12.6118F));
+        PartDefinition control_lever_3_body_r1 = control_lever_3_body.addOrReplaceChild("control_lever_3_body_r1", CubeListBuilder.create().texOffs(45, 93).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_4 = controls.addOrReplaceChild("control_lever_4", CubeListBuilder.create(), PartPose.offset(4.0F, -0.95F, 3.0F));
+        PartDefinition control_lever_4_base_r1 = control_lever_4.addOrReplaceChild("control_lever_4_base_r1", CubeListBuilder.create().texOffs(9, 4).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_4_body = control_lever_4.addOrReplaceChild("control_lever_4_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -11.6118F));
+        PartDefinition control_lever_4_body_r1 = control_lever_4_body.addOrReplaceChild("control_lever_4_body_r1", CubeListBuilder.create().texOffs(90, 88).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_5 = controls.addOrReplaceChild("control_lever_5", CubeListBuilder.create(), PartPose.offset(6.0F, -0.95F, 3.0F));
+        PartDefinition control_lever_5_base_r1 = control_lever_5.addOrReplaceChild("control_lever_5_base_r1", CubeListBuilder.create().texOffs(9, 2).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -11.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_5_body = control_lever_5.addOrReplaceChild("control_lever_5_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -11.6118F));
+        PartDefinition control_lever_5_body_r1 = control_lever_5_body.addOrReplaceChild("control_lever_5_body_r1", CubeListBuilder.create().texOffs(90, 73).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_6 = controls.addOrReplaceChild("control_lever_6", CubeListBuilder.create(), PartPose.offset(8.0F, -0.95F, 4.0F));
+        PartDefinition control_lever_6_base_r1 = control_lever_6.addOrReplaceChild("control_lever_6_base_r1", CubeListBuilder.create().texOffs(9, 0).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-5.0F, -16.687F, -12.5727F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_6_body = control_lever_6.addOrReplaceChild("control_lever_6_body", CubeListBuilder.create(), PartPose.offset(-5.0F, -16.5405F, -12.6118F));
+        PartDefinition control_lever_6_body_r1 = control_lever_6_body.addOrReplaceChild("control_lever_6_body_r1", CubeListBuilder.create().texOffs(90, 61).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_7 = controls.addOrReplaceChild("control_lever_7", CubeListBuilder.create(), PartPose.offsetAndRotation(2.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
+        PartDefinition control_lever_7_base_r1 = control_lever_7.addOrReplaceChild("control_lever_7_base_r1", CubeListBuilder.create().texOffs(0, 8).addBox(-1.0F, 0.2522F, 0.4412F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, -0.5347F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_7_body = control_lever_7.addOrReplaceChild("control_lever_7_body", CubeListBuilder.create(), PartPose.offset(0.0F, -0.1438F, 0.4263F));
+        PartDefinition control_lever_7_body_r1 = control_lever_7_body.addOrReplaceChild("control_lever_7_body_r1", CubeListBuilder.create().texOffs(90, 56).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_8 = controls.addOrReplaceChild("control_lever_8", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
+        PartDefinition control_lever_8_base_r1 = control_lever_8.addOrReplaceChild("control_lever_8_base_r1", CubeListBuilder.create().texOffs(0, 5).addBox(-1.0F, -0.0066F, -0.5248F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, 0.4653F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_8_body = control_lever_8.addOrReplaceChild("control_lever_8_body", CubeListBuilder.create(), PartPose.offset(0.0F, -0.1438F, 0.4263F));
+        PartDefinition control_lever_8_body_r1 = control_lever_8_body.addOrReplaceChild("control_lever_8_body_r1", CubeListBuilder.create().texOffs(0, 90).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_9 = controls.addOrReplaceChild("control_lever_9", CubeListBuilder.create(), PartPose.offsetAndRotation(-2.0F, -17.3467F, 10.038F, 0.0F, 3.1416F, 0.0F));
+        PartDefinition control_lever_9_base_r1 = control_lever_9.addOrReplaceChild("control_lever_9_base_r1", CubeListBuilder.create().texOffs(0, 3).addBox(-1.0F, 0.2522F, 0.4412F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -0.2903F, -0.5347F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_lever_9_body = control_lever_9.addOrReplaceChild("control_lever_9_body", CubeListBuilder.create(), PartPose.offset(0.0F, -0.1438F, 0.4263F));
+        PartDefinition control_lever_9_body_r1 = control_lever_9_body.addOrReplaceChild("control_lever_9_body_r1", CubeListBuilder.create().texOffs(45, 88).addBox(-0.5F, -0.5F, -2.0F, 1.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, -1.5F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_cradle_1 = controls.addOrReplaceChild("control_cradle_1", CubeListBuilder.create(), PartPose.offset(11.4F, -16.1756F, -7.25F));
+        PartDefinition control_cradle_1_base_r1 = control_cradle_1.addOrReplaceChild("control_cradle_1_base_r1", CubeListBuilder.create().texOffs(5, 95).addBox(5.825F, -19.075F, -8.25F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-11.4F, 16.1756F, 7.25F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_cradle_1_body = control_cradle_1.addOrReplaceChild("control_cradle_1_body", CubeListBuilder.create(), PartPose.offset(-0.3941F, -0.3644F, -0.475F));
+        PartDefinition control_cradle_1_body_r1 = control_cradle_1_body.addOrReplaceChild("control_cradle_1_body_r1", CubeListBuilder.create().texOffs(3, 21).addBox(-0.983F, -0.3706F, -1.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.5F, 0.0F, 0.5F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_cradle_2 = controls.addOrReplaceChild("control_cradle_2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 14.5F));
+        PartDefinition control_cradle_2_base_r1 = control_cradle_2.addOrReplaceChild("control_cradle_2_base_r1", CubeListBuilder.create().texOffs(90, 68).addBox(-1.0F, -0.5F, -1.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(11.4F, -16.1756F, -7.25F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_cradle_2_body = control_cradle_2.addOrReplaceChild("control_cradle_2_body", CubeListBuilder.create(), PartPose.offset(11.0059F, -16.5401F, -7.725F));
+        PartDefinition control_cradle_2_body_r1 = control_cradle_2_body.addOrReplaceChild("control_cradle_2_body_r1", CubeListBuilder.create().texOffs(0, 20).addBox(-0.958F, -0.3706F, -0.975F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.4759F, -0.0065F, 0.475F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_1 = controls.addOrReplaceChild("control_button_1", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_1_r1 = control_button_1.addOrReplaceChild("control_button_1_r1", CubeListBuilder.create().texOffs(12, 29).addBox(-3.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_2 = controls.addOrReplaceChild("control_button_2", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_2_r1 = control_button_2.addOrReplaceChild("control_button_2_r1", CubeListBuilder.create().texOffs(0, 30).addBox(-2.0F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_3 = controls.addOrReplaceChild("control_button_3", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_3_r1 = control_button_3.addOrReplaceChild("control_button_3_r1", CubeListBuilder.create().texOffs(9, 30).addBox(-0.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_4 = controls.addOrReplaceChild("control_button_4", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_4_r1 = control_button_4.addOrReplaceChild("control_button_4_r1", CubeListBuilder.create().texOffs(3, 29).addBox(1.0F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_5 = controls.addOrReplaceChild("control_button_5", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_5_r1 = control_button_5.addOrReplaceChild("control_button_5_r1", CubeListBuilder.create().texOffs(9, 28).addBox(2.5F, -19.3703F, -9.3842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_6 = controls.addOrReplaceChild("control_button_6", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_6_r1 = control_button_6.addOrReplaceChild("control_button_6_r1", CubeListBuilder.create().texOffs(0, 28).addBox(7.325F, -19.5002F, -5.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_7 = controls.addOrReplaceChild("control_button_7", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_7_r1 = control_button_7.addOrReplaceChild("control_button_7_r1", CubeListBuilder.create().texOffs(12, 27).addBox(8.575F, -19.5002F, -5.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_8 = controls.addOrReplaceChild("control_button_8", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_8_r1 = control_button_8.addOrReplaceChild("control_button_8_r1", CubeListBuilder.create().texOffs(3, 27).addBox(8.575F, -19.5002F, -4.6342F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_9 = controls.addOrReplaceChild("control_button_9", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_9_r1 = control_button_9.addOrReplaceChild("control_button_9_r1", CubeListBuilder.create().texOffs(9, 26).addBox(8.575F, -19.5002F, 3.3658F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_10 = controls.addOrReplaceChild("control_button_10", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_10_r1 = control_button_10.addOrReplaceChild("control_button_10_r1", CubeListBuilder.create().texOffs(0, 26).addBox(8.575F, -19.5002F, 4.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_11 = controls.addOrReplaceChild("control_button_11", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_11_r1 = control_button_11.addOrReplaceChild("control_button_11_r1", CubeListBuilder.create().texOffs(9, 23).addBox(7.325F, -19.5002F, 4.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_12 = controls.addOrReplaceChild("control_button_12", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_12_r1 = control_button_12.addOrReplaceChild("control_button_12_r1", CubeListBuilder.create().texOffs(3, 23).addBox(1.825F, -19.5002F, 3.6158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_13 = controls.addOrReplaceChild("control_button_13", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_13_r1 = control_button_13.addOrReplaceChild("control_button_13_r1", CubeListBuilder.create().texOffs(12, 22).addBox(1.825F, -19.5002F, 2.3658F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_14 = controls.addOrReplaceChild("control_button_14", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_14_r1 = control_button_14.addOrReplaceChild("control_button_14_r1", CubeListBuilder.create().texOffs(0, 22).addBox(1.825F, -19.5002F, -4.8842F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_15 = controls.addOrReplaceChild("control_button_15", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_15_r1 = control_button_15.addOrReplaceChild("control_button_15_r1", CubeListBuilder.create().texOffs(9, 21).addBox(1.825F, -19.5002F, -3.6342F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, 0.0F, 0.0F, 0.2618F));
+        PartDefinition control_button_16 = controls.addOrReplaceChild("control_button_16", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_16_r1 = control_button_16.addOrReplaceChild("control_button_16_r1", CubeListBuilder.create().texOffs(0, 18).addBox(1.025F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_17 = controls.addOrReplaceChild("control_button_17", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_17_r1 = control_button_17.addOrReplaceChild("control_button_17_r1", CubeListBuilder.create().texOffs(12, 13).addBox(-0.475F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_18 = controls.addOrReplaceChild("control_button_18", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_18_r1 = control_button_18.addOrReplaceChild("control_button_18_r1", CubeListBuilder.create().texOffs(3, 13).addBox(-1.975F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_19 = controls.addOrReplaceChild("control_button_19", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_19_r1 = control_button_19.addOrReplaceChild("control_button_19_r1", CubeListBuilder.create().texOffs(9, 12).addBox(3.525F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_20 = controls.addOrReplaceChild("control_button_20", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_20_r1 = control_button_20.addOrReplaceChild("control_button_20_r1", CubeListBuilder.create().texOffs(0, 12).addBox(-4.475F, -19.5002F, 2.1158F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-0.0217F, 0.1299F, 0.1342F, -0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_21 = controls.addOrReplaceChild("control_button_21", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_21_r1 = control_button_21.addOrReplaceChild("control_button_21_r1", CubeListBuilder.create().texOffs(0, 12).addBox(-2.4967F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_22 = controls.addOrReplaceChild("control_button_22", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_22_r1 = control_button_22.addOrReplaceChild("control_button_22_r1", CubeListBuilder.create().texOffs(0, 12).addBox(-3.9967F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_23 = controls.addOrReplaceChild("control_button_23", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_23_r1 = control_button_23.addOrReplaceChild("control_button_23_r1", CubeListBuilder.create().texOffs(0, 12).addBox(1.5033F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
+        PartDefinition control_button_24 = controls.addOrReplaceChild("control_button_24", CubeListBuilder.create(), PartPose.offset(0.0F, 0.0F, 0.0F));
+        PartDefinition control_button_24_r1 = control_button_24.addOrReplaceChild("control_button_24_r1", CubeListBuilder.create().texOffs(0, 12).addBox(3.0033F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
+    }
+
+    public void setupAnim(TardisConsoleToyotaBlockEntity entity) {
+        try {
+            // Buttons
+            // this.activateButton("control_button_1");
+            // this.activateButton("control_button_2");
+            // this.activateButton("control_button_3");
+            // this.activateButton("control_button_4");
+            // this.activateButton("control_button_5");
+            // this.activateButton("control_button_6");
+            // this.activateButton("control_button_7");
+            // this.activateButton("control_button_8");
+            // this.activateButton("control_button_9");
+            // this.activateButton("control_button_10");
+            // this.activateButton("control_button_11");
+            // this.activateButton("control_button_12");
+            // this.activateButton("control_button_13");
+            // this.activateButton("control_button_14");
+            // this.activateButton("control_button_15");
+            // this.activateButton("control_button_16");
+            // this.activateButton("control_button_17");
+            // this.activateButton("control_button_18");
+            // this.activateButton("control_button_19");
+            // this.activateButton("control_button_20");
+            // this.activateButton("control_button_21");
+            // this.activateButton("control_button_22");
+            // this.activateButton("control_button_23");
+            // this.activateButton("control_button_24");
+
+            // Levers
+            // this.activateLever("control_lever_1");
+            // this.activateLever("control_lever_2");
+            // this.activateLever("control_lever_3");
+            // this.activateLever("control_lever_4");
+            // this.activateLever("control_lever_5");
+            // this.activateLever("control_lever_6");
+            // this.activateLever("control_lever_7");
+            // this.activateLever("control_lever_8");
+            // this.activateLever("control_lever_9");
+
+            // Cradles
+            // this.activateRandomizer();
+            // this.activateFacingControl();
+
+            // Flight controls
+            // this.activateHandbrake();
+            // this.activateStarter();
+
+        }
+        catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    private void activateButton(String name) {
+        this.controls.getChild(name).y += 0.25F;
+    }
+
+    private void activateLever(String name) {
+        this.controls.getChild(name).getChild(name + "_body").xRot -= 1.5F;
+    }
+
+    private void activateRandomizer() {
+        ModelPart randomizer = this.controls.getChild("control_cradle_1").getChild("control_cradle_1_body").getChild("control_cradle_1_body_r1");
+        randomizer.yRot += 1.57F;
+    }
+
+    private void activateFacingControl() {
+        ModelPart facingControl = this.controls.getChild("control_cradle_2").getChild("control_cradle_2_body").getChild("control_cradle_2_body_r1");
+        facingControl.yRot += 1.57F;
+    }
+
+    private void activateHandbrake() {
+        ModelPart handbrake = this.controls.getChild("control_handbrake").getChild("control_handbrake_body");
+        handbrake.xRot -= 0.6F;
+        handbrake.yRot += 1.4F;
+        handbrake.zRot -= 0.9F;
+    }
+
+    private void activateStarter() {
+        ModelPart starter = this.controls.getChild("control_starter").getChild("control_starter_body");
+        starter.xRot -= 2.2F;
     }
 }

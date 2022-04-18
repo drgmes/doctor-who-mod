@@ -23,6 +23,8 @@ public class TardisConsoleToyotaBlockRenderer implements BlockEntityRenderer<Tar
 
     @Override
     public void render(TardisConsoleToyotaBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+        TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION));
+        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -33,8 +35,7 @@ public class TardisConsoleToyotaBlockRenderer implements BlockEntityRenderer<Tar
         poseStack.mulPose(Vector3f.YP.rotationDegrees(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()));
         poseStack.translate(0, -0.8F, 0);
 
-        TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
+        model.setupAnim(tile);
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
     }
