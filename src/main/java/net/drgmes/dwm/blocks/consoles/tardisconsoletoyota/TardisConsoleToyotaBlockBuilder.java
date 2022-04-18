@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardisexterior;
+package net.drgmes.dwm.blocks.consoles.tardisconsoletoyota;
 
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
@@ -12,9 +12,9 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.model.generators.ModelFile;
 
-public class TardisExteriorBlockBuilder extends BlockBuilder {
-    public TardisExteriorBlockBuilder(String name) {
-        super(name, () -> new TardisExteriorBlock(getBlockBehaviour()));
+public class TardisConsoleToyotaBlockBuilder extends BlockBuilder {
+    public TardisConsoleToyotaBlockBuilder(String name) {
+        super(name, () -> new TardisConsoleToyotaBlock(getBlockBehaviour()));
         this.disableNativeDrop();
     }
 
@@ -41,6 +41,6 @@ public class TardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerCustomRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModBlockEntities.TARDIS_EXTERIOR.get(), TardisExteriorBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TARDIS_CONSOLE_TOYOTA.get(), TardisConsoleToyotaBlockRenderer::new);
     }
 }

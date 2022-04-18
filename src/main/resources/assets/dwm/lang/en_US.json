@@ -2,5 +2,6 @@
   "itemGroup.dwm": "DoctorWhoMod",
 
   "block.dwm.tardis_exterior": "Tardis",
-  "block.dwm.tardis_door": "Tardis Door"
+  "block.dwm.tardis_door": "Tardis Door",
+  "block.dwm.tardis_console_toyota": "Toyota Console"
 }
