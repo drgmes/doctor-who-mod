@@ -4,8 +4,11 @@ import net.drgmes.dwm.utils.base.blockentities.BaseRotatableWaterloggedBlockEnti
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -19,12 +22,16 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     public TardisExteriorBlock(BlockBehaviour.Properties properties) {
@@ -39,12 +46,15 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
+        builder.add(OPEN);
         builder.add(HALF);
     }
 
     @Override
     protected BlockState getDefaultState() {
-        return super.getDefaultState().setValue(HALF, DoubleBlockHalf.LOWER);
+        return super.getDefaultState()
+            .setValue(OPEN, false)
+            .setValue(HALF, DoubleBlockHalf.LOWER);
     }
 
     @Override
@@ -91,7 +101,21 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
     }
 
     @Override
+    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
+            blockPos = blockPos.below();
+            blockState = level.getBlockState(blockPos);
+        }
+
+        level.setBlock(blockPos, blockState.cycle(OPEN), 10);
+        level.levelEvent(player, blockState.getValue(OPEN) ? 1012 : 1006, blockPos, 0);
+        level.gameEvent(player, blockState.getValue(OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
+        return InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+        if (!blockState.getValue(OPEN)) return;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
 

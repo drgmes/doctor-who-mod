@@ -43,14 +43,17 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
     }
 
     public void renderExterior(TardisExteriorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight, float alpha) {
+        TardisPoliceBoxExteriorModel model = new TardisPoliceBoxExteriorModel(ctx.bakeLayer(TardisPoliceBoxExteriorModel.LAYER_LOCATION));
+        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisPoliceBoxExteriorModel.LAYER_LOCATION.getModel()));
         float scale = 1.25F;
+
         poseStack.pushPose();
         poseStack.scale(scale, scale + 0.15F, scale);
         poseStack.translate(0, -1, 0);
 
-        TardisPoliceBoxExteriorModel model = new TardisPoliceBoxExteriorModel(ctx.bakeLayer(TardisPoliceBoxExteriorModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisPoliceBoxExteriorModel.LAYER_LOCATION.getModel()));
+        model.setupAnim(tile);
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, alpha);
+
         poseStack.popPose();
     }
 }
