@@ -55,12 +55,16 @@ public class BlockBuilder {
             .requiresCorrectToolForDrops();
     }
 
+    public Block get() {
+        return this.blockObject.get();
+    }
+
     public String getResourceName() {
         return this.name;
     }
 
     public void registerBlockStateAndModel(ModBlockStateProvider provider) {
-        provider.simpleBlock((Block) this.blockObject.get());
+        provider.simpleBlock(this.get());
     }
 
     public void registerItemModel(ModItemModelProvider provider) {
@@ -68,7 +72,7 @@ public class BlockBuilder {
     }
 
     public void registerLootTable(ModLootTableProvider.ModBlockLootTable provider) {
-        if (!this.isDropDisabled) provider.dropSelf((Block) this.blockObject.get());
+        if (!this.isDropDisabled) provider.dropSelf(this.get());
     }
 
     public void registerRecipe(ModRecipeProvider provider, Consumer<FinishedRecipe> consumer) {

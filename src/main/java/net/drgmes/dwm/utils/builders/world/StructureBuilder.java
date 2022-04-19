@@ -33,6 +33,10 @@ public class StructureBuilder {
         ModStructures.STRUCTURE_BUILDERS.add(this);
     }
 
+    public StructureFeature<?> get() {
+        return this.structureObject.get();
+    }
+
     public StructureBuilder addBiomeTag(TagKey<Biome> biomeTag) {
         this.biomeTags.add(biomeTag);
         return this;

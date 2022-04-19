@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.base.blockentities;
+package net.drgmes.dwm.utils.base.blocks;
 
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
@@ -11,10 +11,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
-public class BaseRotatableWaterloggedBlockEntity extends BaseRotatableBlockEntity implements SimpleWaterloggedBlock {
+public class BaseRotatableWaterloggedEntityBlock extends BaseRotatableEntityBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public BaseRotatableWaterloggedBlockEntity(BlockBehaviour.Properties properties) {
+    public BaseRotatableWaterloggedEntityBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 

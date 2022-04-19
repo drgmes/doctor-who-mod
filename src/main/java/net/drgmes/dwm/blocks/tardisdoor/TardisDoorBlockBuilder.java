@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -30,7 +29,7 @@ public class TardisDoorBlockBuilder extends BlockBuilder {
         ModelFile bottom = provider.models().doorBottomLeft(this.getResourceName() + "_bottom", texture, texture);
         ModelFile top = provider.models().doorTopLeft(this.getResourceName() + "_top", texture, texture);
 
-        provider.getVariantBuilder((Block) this.blockObject.get()).forAllStatesExcept(state -> {
+        provider.getVariantBuilder(this.get()).forAllStatesExcept(state -> {
             int yRot = ((int) state.getValue(DoorBlock.FACING).toYRot()) + 90;
             return ConfiguredModel.builder().modelFile(state.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? bottom : top).rotationY(yRot % 360).build();
         }, TardisDoorBlock.WATERLOGGED, TardisDoorBlock.OPEN);
@@ -44,12 +43,12 @@ public class TardisDoorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerLootTable(ModLootTableProvider.ModBlockLootTable provider) {
-        provider.addDoorDrop((Block) this.blockObject.get());
+        provider.addDoorDrop(this.get());
     }
 
     @Override
     public void registerCustomRender() {
-        ItemBlockRenderTypes.setRenderLayer((Block) this.blockObject.get(), (layer) -> layer == RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(this.get(), (layer) -> layer == RenderType.translucent());
     }
 
     @Override

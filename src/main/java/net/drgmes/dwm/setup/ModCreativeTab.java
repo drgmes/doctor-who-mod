@@ -15,7 +15,7 @@ public class ModCreativeTab extends CreativeModeTab {
 
     @Override
     public ItemStack makeIcon() {
-        return ModBlocks.TARDIS_EXTERIOR.blockObject.get().asItem().getDefaultInstance();
+        return ModBlocks.TARDIS_EXTERIOR.get().asItem().getDefaultInstance();
     }
 
     @Override

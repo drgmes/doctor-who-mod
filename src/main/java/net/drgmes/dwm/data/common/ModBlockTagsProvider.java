@@ -18,7 +18,7 @@ public class ModBlockTagsProvider extends BlockTagsProvider {
     protected void addTags() {
         for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {
             for (TagKey<Block> tag : blockBuilder.tags) {
-                this.tag(tag).add((Block) blockBuilder.blockObject.get());
+                this.tag(tag).add(blockBuilder.get());
             }
         }
     }

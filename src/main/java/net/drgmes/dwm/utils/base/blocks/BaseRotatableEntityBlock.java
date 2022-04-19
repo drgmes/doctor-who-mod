@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.base.blockentities;
+package net.drgmes.dwm.utils.base.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,10 +10,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
-public class BaseRotatableBlockEntity extends BaseEntityBlock {
+public class BaseRotatableEntityBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public BaseRotatableBlockEntity(BlockBehaviour.Properties properties) {
+    public BaseRotatableEntityBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.getDefaultState());
     }

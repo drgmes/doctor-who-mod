@@ -6,7 +6,6 @@ import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -25,7 +24,7 @@ public class TardisExteriorBlockBuilder extends BlockBuilder {
     @Override
     public void registerBlockStateAndModel(ModBlockStateProvider provider) {
         ModelFile entityModel = provider.models().getExistingFile(provider.modLoc("block/invisible"));
-        provider.simpleBlock((Block) this.blockObject.get(), entityModel);
+        provider.simpleBlock(this.get(), entityModel);
     }
 
     @Override
@@ -36,7 +35,7 @@ public class TardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerCustomRender() {
-        ItemBlockRenderTypes.setRenderLayer((Block) this.blockObject.get(), (layer) -> layer == RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(this.get(), (layer) -> layer == RenderType.translucent());
     }
 
     @Override

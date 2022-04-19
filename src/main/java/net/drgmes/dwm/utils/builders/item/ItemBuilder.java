@@ -31,6 +31,10 @@ public class ItemBuilder {
         return new Item.Properties().tab(Registration.CREATIVE_MODE_TAB);
     }
 
+    public Item get() {
+        return this.itemObject.get();
+    }
+
     public void registerItemModel(ModItemModelProvider provider) {
         ModelFile itemGenerated = provider.getExistingFile(provider.mcLoc("item/generated"));
         provider.getBuilder(this.name).parent(itemGenerated).texture("layer0", "item/" + this.name);

@@ -51,7 +51,7 @@ public class ModLootTableProvider extends LootTableProvider {
         protected Iterable<Block> getKnownBlocks() {
             return ModBlocks.BLOCK_BUILDERS.stream()
                 .filter((bb) -> !bb.isDropDisabled)
-                .map((bb) -> bb.blockObject.get())
+                .map((bb) -> bb.get())
                 .collect(Collectors.toList());
         }
 

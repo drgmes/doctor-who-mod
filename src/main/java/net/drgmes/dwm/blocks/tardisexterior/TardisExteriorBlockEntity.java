@@ -22,9 +22,8 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        this.TARDIS_DIM_UUID = tag.getString("tardisDimUUID");
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -34,8 +33,9 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        this.TARDIS_DIM_UUID = tag.getString("tardisDimUUID");
     }
 
     public String getTardisDimUUID() {

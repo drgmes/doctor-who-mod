@@ -39,7 +39,7 @@ public class ModWorldGen {
         if (!ModWorldGen.ORES_TARGET_LIST.containsKey(oreKey)) list = new ArrayList<>();
         else list = ModWorldGen.ORES_TARGET_LIST.get(oreKey);
 
-        list.add(OreConfiguration.target(ruleTest, blockBuilder.blockObject.get().defaultBlockState()));
+        list.add(OreConfiguration.target(ruleTest, blockBuilder.get().defaultBlockState()));
         ModWorldGen.ORES_TARGET_LIST.put(oreKey, list);
     }
 

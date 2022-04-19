@@ -26,7 +26,6 @@ public class TardisConsoleToyotaBlockRenderer implements BlockEntityRenderer<Tar
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION));
         VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
         BlockState blockState = tile.getBlockState();
-        if (blockState == null) return;
 
         poseStack.pushPose();
         poseStack.translate(0.5, 0.7, 0.5);

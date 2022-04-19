@@ -1,6 +1,6 @@
 package net.drgmes.dwm.blocks.tardisexterior;
 
-import net.drgmes.dwm.utils.base.blockentities.BaseRotatableWaterloggedBlockEntity;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +30,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TardisExteriorBlock extends BaseRotatableWaterloggedBlockEntity {
+public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
