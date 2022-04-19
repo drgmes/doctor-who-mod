@@ -26,6 +26,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class DimensionHelper {
+    @SuppressWarnings("deprecation")
     public static ServerLevel getLevel(MinecraftServer server, ResourceKey<Level> levelKey, Consumer<ServerLevel> initialConsumer, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
         Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
         if (map.containsKey(levelKey)) return map.get(levelKey);
@@ -35,6 +36,7 @@ public class DimensionHelper {
         return level;
     }
 
+    @SuppressWarnings("deprecation")
     public static ServerLevel getLevelStatic(MinecraftServer server, ResourceKey<Level> levelKey, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
         Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
         if (map.containsKey(levelKey)) return map.get(levelKey);
@@ -48,6 +50,7 @@ public class DimensionHelper {
         return world;
     }
 
+    @SuppressWarnings("deprecation")
     private static ServerLevel getWorldAndDimension(MinecraftServer server, Map<ResourceKey<Level>, ServerLevel> map, ResourceKey<Level> levelKey, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
         ServerLevel overworld = server.getLevel(Level.OVERWORLD);
         ResourceKey<LevelStem> dimensionKey = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, levelKey.location());

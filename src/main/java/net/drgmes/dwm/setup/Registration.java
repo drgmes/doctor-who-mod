@@ -5,6 +5,10 @@ import java.util.function.Supplier;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.DataGenerators;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
@@ -32,6 +36,7 @@ public class Registration {
 
     public static final DeferredRegister<Item> ITEMS = createRegistry(ForgeRegistries.ITEMS);
     public static final DeferredRegister<Block> BLOCKS = createRegistry(ForgeRegistries.BLOCKS);
+    public static final DeferredRegister<EntityType<?>> ENTITIES = createRegistry(ForgeRegistries.ENTITIES);
     public static final DeferredRegister<MenuType<?>> CONTAINERS = createRegistry(ForgeRegistries.CONTAINERS);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = createRegistry(ForgeRegistries.BLOCK_ENTITIES);
     public static final DeferredRegister<StructureFeature<?>> STRUCTURES = createRegistry(ForgeRegistries.STRUCTURE_FEATURES);
@@ -60,6 +65,7 @@ public class Registration {
 
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
+        ENTITIES.register(modEventBus);
         CONTAINERS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
         STRUCTURES.register(modEventBus);
@@ -67,6 +73,7 @@ public class Registration {
 
         ModItems.init();
         ModBlocks.init();
+        ModEntities.init();
         ModContainers.init();
         ModBlockEntities.init();
         ModBiomes.init();
@@ -106,6 +113,18 @@ public class Registration {
         RegistryObject<T> blockObject = BLOCKS.register(name, factory);
         Registration.registerItem(name, () -> item.apply(blockObject.get()));
         return blockObject;
+    }
+
+    public static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate) {
+        return Registration.ENTITIES.register(name, () -> {
+            EntityType.Builder<T> builder = EntityType.Builder.of(factory, category);
+            builder.setShouldReceiveVelocityUpdates(sendUpdate);
+            builder.setTrackingRange(trackingRange);
+            builder.setUpdateInterval(updateFreq);
+            builder.sized(width, height);
+            builder.fireImmune();
+            return builder.build(new ResourceLocation(DWM.MODID, name).toString());
+        });
     }
 
     public static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> factory, RegistryObject<? extends Block> block) {

@@ -19,6 +19,7 @@ public class BaseRotatableWaterloggedEntityBlock extends BaseRotatableEntityBloc
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState blockState) {
         return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
     }

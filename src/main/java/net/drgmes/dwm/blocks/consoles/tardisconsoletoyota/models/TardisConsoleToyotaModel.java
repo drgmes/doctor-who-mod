@@ -238,8 +238,15 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         return LayerDefinition.create(meshdefinition, 256, 256);
     }
 
-    public void setupAnim(TardisConsoleToyotaBlockEntity entity) {
+    public void setupAnim(TardisConsoleToyotaBlockEntity tile) {
         try {
+            if (tile.controlShields) this.activateLever("control_lever_1");
+            if (tile.controlDoor) this.activateLever("control_lever_2");
+            if (tile.controlHandbrake) this.activateHandbrake();
+            if (tile.controlStarter) this.activateStarter();
+
+            this.activateFacingControl(tile.controlFacing);
+
             // Buttons
             // this.activateButton("control_button_1");
             // this.activateButton("control_button_2");
@@ -267,8 +274,6 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
             // this.activateButton("control_button_24");
 
             // Levers
-            // this.activateLever("control_lever_1");
-            // this.activateLever("control_lever_2");
             // this.activateLever("control_lever_3");
             // this.activateLever("control_lever_4");
             // this.activateLever("control_lever_5");
@@ -279,12 +284,6 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
 
             // Cradles
             // this.activateRandomizer();
-            // this.activateFacingControl();
-
-            // Flight controls
-            // this.activateHandbrake();
-            // this.activateStarter();
-
         }
         catch (Exception e) {
             System.out.println(e);
@@ -304,9 +303,9 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         randomizer.yRot += 1.57F;
     }
 
-    private void activateFacingControl() {
+    private void activateFacingControl(int phase) {
         ModelPart facingControl = this.controls.getChild("control_cradle_2").getChild("control_cradle_2_body").getChild("control_cradle_2_body_r1");
-        facingControl.yRot += 1.57F;
+        facingControl.yRot += 1.57F * phase;
     }
 
     private void activateHandbrake() {

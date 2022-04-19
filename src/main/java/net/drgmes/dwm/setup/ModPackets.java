@@ -1,9 +1,11 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.network.ClientboundEnergyTardisConsoleUpdatePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -18,11 +20,11 @@ public class ModPackets {
     );
 
     public static void setup() {
-        // int index = 0;
+        int index = 0;
 
-        // INSTANCE.messageBuilder(ClientboundTestUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-        //     .encoder(ClientboundTestUpdatePacket::encode).decoder(ClientboundTestUpdatePacket::new)
-        //     .consumer(ClientboundTestUpdatePacket::handle).add();
+        INSTANCE.messageBuilder(ClientboundEnergyTardisConsoleUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundEnergyTardisConsoleUpdatePacket::encode).decoder(ClientboundEnergyTardisConsoleUpdatePacket::new)
+            .consumer(ClientboundEnergyTardisConsoleUpdatePacket::handle).add();
     }
 
     public static void send(Object packet) {

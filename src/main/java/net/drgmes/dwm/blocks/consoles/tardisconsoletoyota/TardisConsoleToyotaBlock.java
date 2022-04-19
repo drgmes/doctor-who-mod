@@ -19,4 +19,11 @@ public class TardisConsoleToyotaBlock extends BaseRotatableWaterloggedEntityBloc
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new TardisConsoleToyotaBlockEntity(blockPos, blockState);
     }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide ? null : createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_CONSOLE_TOYOTA.get(), (l, bp, bs, blockEntity) -> {
+            ((TardisConsoleToyotaBlockEntity) blockEntity).tick(l, bp, bs);
+        });
+    }
 }

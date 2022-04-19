@@ -81,6 +81,7 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState newBlockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos newBlockPos) {
         DoubleBlockHalf doubleBlockHalf = blockState.getValue(HALF);
 
