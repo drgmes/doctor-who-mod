@@ -1,6 +1,6 @@
-package net.drgmes.dwm.entities.tardis.consolecontrol;
+package net.drgmes.dwm.entities.tardis.consoles.controls;
 
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControl;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
@@ -15,7 +15,7 @@ import net.minecraftforge.network.NetworkHooks;
 
 public class TardisConsoleControlEntity extends Entity {
     private BaseTardisConsoleBlockEntity consoleBlockEntity;
-    private TardisConsoleControl control;
+    private TardisConsoleControlEntry controlEntry;
 
     public TardisConsoleControlEntity(EntityType<?> type, Level level) {
         super(type, level);
@@ -48,7 +48,7 @@ public class TardisConsoleControlEntity extends Entity {
         if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
         if (this.consoleBlockEntity == null) return InteractionResult.PASS;
 
-        this.consoleBlockEntity.useControl(this.control, hand);
+        this.consoleBlockEntity.useControl(this.controlEntry, hand);
         return InteractionResult.SUCCESS;
     }
 
@@ -56,7 +56,7 @@ public class TardisConsoleControlEntity extends Entity {
     public boolean skipAttackInteraction(Entity entity) {
         if (this.consoleBlockEntity == null) return false;
 
-        this.consoleBlockEntity.useControl(this.control, InteractionHand.MAIN_HAND);
+        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND);
         return true;
     }
 
@@ -64,7 +64,7 @@ public class TardisConsoleControlEntity extends Entity {
         this.consoleBlockEntity = tile;
     }
 
-    public void setTardisControl(TardisConsoleControl control) {
-        this.control = control;
+    public void setTardisControlEntry(TardisConsoleControlEntry controlEntry) {
+        this.controlEntry = controlEntry;
     }
 }

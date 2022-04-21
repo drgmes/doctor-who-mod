@@ -1,4 +1,4 @@
-package net.drgmes.dwm.entities.tardis.consolecontrol;
+package net.drgmes.dwm.entities.tardis.consoles.controls;
 
 import net.drgmes.dwm.setup.ModEntities;
 import net.drgmes.dwm.utils.builders.entity.EntityBuilder;

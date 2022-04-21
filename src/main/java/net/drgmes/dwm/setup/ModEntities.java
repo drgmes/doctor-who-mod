@@ -2,7 +2,7 @@ package net.drgmes.dwm.setup;
 
 import java.util.ArrayList;
 
-import net.drgmes.dwm.entities.tardis.consolecontrol.TardisConsoleControlEntityBuilder;
+import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
 import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
 
 public class ModEntities {

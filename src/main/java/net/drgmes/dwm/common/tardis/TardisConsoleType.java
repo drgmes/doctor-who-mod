@@ -1,27 +1,26 @@
 package net.drgmes.dwm.common.tardis;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleTypeToyota;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControl;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
-import net.drgmes.dwm.entities.tardis.consolecontrol.TardisConsoleControlEntityBuilder;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
+import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
 import net.drgmes.dwm.setup.ModEntities;
 import net.minecraft.world.phys.Vec3;
 
 public class TardisConsoleType {
     public static final TardisConsoleType TOYOTA = new TardisConsoleTypeToyota();
 
-    public final List<TardisConsoleControl> controls = new ArrayList<>();
+    public final Map<TardisConsoleControlRoles, TardisConsoleControlEntry> controlEntries = new HashMap<>();
 
-    public TardisConsoleControl addControl(TardisConsoleControlRoles role, Vec3 position, TardisConsoleControlEntityBuilder builder) {
-        TardisConsoleControl control = new TardisConsoleControl(role, position, builder);
-        this.controls.add(control);
-        return control;
+    public TardisConsoleControlEntry addControlEntry(TardisConsoleControlRoles controlRole, TardisConsoleControlEntryTypes controlType, Vec3 position, String modelPath, TardisConsoleControlEntityBuilder builder) {
+        return this.controlEntries.put(controlRole, new TardisConsoleControlEntry(controlRole, controlType, position, modelPath, builder));
     }
 
-    public TardisConsoleControl addControl(TardisConsoleControlRoles role, Vec3 position) {
-        return this.addControl(role, position, ModEntities.TARDIS_CONSOLE_CONTROL);
+    public TardisConsoleControlEntry addControlEntry(TardisConsoleControlRoles controlRole, TardisConsoleControlEntryTypes controlType, Vec3 position, String modelPath) {
+        return this.addControlEntry(controlRole, controlType, position, modelPath, ModEntities.TARDIS_CONSOLE_CONTROL);
     }
 }

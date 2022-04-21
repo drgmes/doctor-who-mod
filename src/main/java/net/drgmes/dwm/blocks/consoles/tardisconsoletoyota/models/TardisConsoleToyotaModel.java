@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -236,87 +235,5 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         PartDefinition control_button_24_r1 = control_button_24.addOrReplaceChild("control_button_24_r1", CubeListBuilder.create().texOffs(0, 12).addBox(3.0033F, -19.3703F, -2.75F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
-    }
-
-    public void setupAnim(TardisConsoleToyotaBlockEntity tile) {
-        try {
-            if (tile.controlShields) this.activateLever("control_lever_1");
-            if (tile.controlDoor) this.activateLever("control_lever_2");
-            if (tile.controlHandbrake) this.activateHandbrake();
-            if (tile.controlStarter) this.activateStarter();
-
-            this.activateFacingControl(tile.controlFacing);
-
-            // Buttons
-            // this.activateButton("control_button_1");
-            // this.activateButton("control_button_2");
-            // this.activateButton("control_button_3");
-            // this.activateButton("control_button_4");
-            // this.activateButton("control_button_5");
-            // this.activateButton("control_button_6");
-            // this.activateButton("control_button_7");
-            // this.activateButton("control_button_8");
-            // this.activateButton("control_button_9");
-            // this.activateButton("control_button_10");
-            // this.activateButton("control_button_11");
-            // this.activateButton("control_button_12");
-            // this.activateButton("control_button_13");
-            // this.activateButton("control_button_14");
-            // this.activateButton("control_button_15");
-            // this.activateButton("control_button_16");
-            // this.activateButton("control_button_17");
-            // this.activateButton("control_button_18");
-            // this.activateButton("control_button_19");
-            // this.activateButton("control_button_20");
-            // this.activateButton("control_button_21");
-            // this.activateButton("control_button_22");
-            // this.activateButton("control_button_23");
-            // this.activateButton("control_button_24");
-
-            // Levers
-            // this.activateLever("control_lever_3");
-            // this.activateLever("control_lever_4");
-            // this.activateLever("control_lever_5");
-            // this.activateLever("control_lever_6");
-            // this.activateLever("control_lever_7");
-            // this.activateLever("control_lever_8");
-            // this.activateLever("control_lever_9");
-
-            // Cradles
-            // this.activateRandomizer();
-        }
-        catch (Exception e) {
-            System.out.println(e);
-        }
-    }
-
-    private void activateButton(String name) {
-        this.controls.getChild(name).y += 0.25F;
-    }
-
-    private void activateLever(String name) {
-        this.controls.getChild(name).getChild(name + "_body").xRot -= 1.5F;
-    }
-
-    private void activateRandomizer() {
-        ModelPart randomizer = this.controls.getChild("control_cradle_1").getChild("control_cradle_1_body").getChild("control_cradle_1_body_r1");
-        randomizer.yRot += 1.57F;
-    }
-
-    private void activateFacingControl(int phase) {
-        ModelPart facingControl = this.controls.getChild("control_cradle_2").getChild("control_cradle_2_body").getChild("control_cradle_2_body_r1");
-        facingControl.yRot += 1.57F * phase;
-    }
-
-    private void activateHandbrake() {
-        ModelPart handbrake = this.controls.getChild("control_handbrake").getChild("control_handbrake_body");
-        handbrake.xRot -= 0.6F;
-        handbrake.yRot += 1.4F;
-        handbrake.zRot -= 0.9F;
-    }
-
-    private void activateStarter() {
-        ModelPart starter = this.controls.getChild("control_starter").getChild("control_starter_body");
-        starter.xRot -= 2.2F;
     }
 }

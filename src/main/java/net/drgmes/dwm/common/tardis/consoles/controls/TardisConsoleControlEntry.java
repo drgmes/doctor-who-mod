@@ -1,7 +1,7 @@
 package net.drgmes.dwm.common.tardis.consoles.controls;
 
-import net.drgmes.dwm.entities.tardis.consolecontrol.TardisConsoleControlEntity;
-import net.drgmes.dwm.entities.tardis.consolecontrol.TardisConsoleControlEntityBuilder;
+import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
+import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -10,15 +10,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.phys.Vec3;
 
-public class TardisConsoleControl {
+public class TardisConsoleControlEntry {
+    public final String modelPath;
     public final Vec3 position;
     public final TardisConsoleControlRoles role;
+    public final TardisConsoleControlEntryTypes type;
     public final TardisConsoleControlEntityBuilder builder;
 
-    public TardisConsoleControl(TardisConsoleControlRoles role, Vec3 position, TardisConsoleControlEntityBuilder builder) {
-        this.role = role;
-        this.position = position;
+    public TardisConsoleControlEntry(TardisConsoleControlRoles controlRole, TardisConsoleControlEntryTypes controlType, Vec3 position, String modelPath, TardisConsoleControlEntityBuilder builder) {
+        this.modelPath = modelPath;
         this.builder = builder;
+        this.position = position;
+        this.role = controlRole;
+        this.type = controlType;
     }
 
     public EntityType<TardisConsoleControlEntity> getEntityType() {
@@ -32,7 +36,7 @@ public class TardisConsoleControl {
 
         entity.setPos(pos);
         entity.setTardisConsole(tile);
-        entity.setTardisControl(this);
+        entity.setTardisControlEntry(this);
 
         level.addFreshEntity(entity);
         return entity;

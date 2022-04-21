@@ -1,4 +1,4 @@
-package net.drgmes.dwm.entities.tardis.consolecontrol;
+package net.drgmes.dwm.entities.tardis.consoles.controls;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
