@@ -19,7 +19,7 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
         this.ctx = context;
     }
 
-    protected void animate(BaseTardisConsoleBlockEntity tile, ModelPart modelRoot) {
+    protected void animate(BaseTardisConsoleBlockEntity tile, ModelPart modelRoot, float partialTicks) {
         try {
             for (TardisConsoleControlRoles controlRole : TardisConsoleControlRoles.values()) {
                 if (!tile.consoleType.controlEntries.containsKey(controlRole)) continue;
@@ -32,9 +32,9 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
                 else if (controlRole == TardisConsoleControlRoles.HANDBRAKE && (boolean) value) this.activateHandbrake(model);
 
                 else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) {
-                    if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON) this.animateButton(model, (int) value);
-                    if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateLever(model, (int) value);
-                    if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON) this.animateButton(model, partialTicks, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateLever(model, partialTicks, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, partialTicks, controlRole.maxIntValue - (int) value);
                 }
     
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON && (boolean) value) this.activateButton(model);
@@ -49,15 +49,15 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
 
     protected abstract void activateButton(ModelPart model);
 
-    protected abstract void animateButton(ModelPart model, int phase);
+    protected abstract void animateButton(ModelPart model, float partialTicks, int phase);
 
     protected abstract void activateLever(ModelPart model);
 
-    protected abstract void animateLever(ModelPart model, int phase);
+    protected abstract void animateLever(ModelPart model, float partialTicks, int phase);
 
     protected abstract void activateRotator(ModelPart model, int phase);
 
-    protected abstract void animateRotator(ModelPart model, int phase);
+    protected abstract void animateRotator(ModelPart model, float partialTicks, int phase);
 
     protected abstract void activateHandbrake(ModelPart model);
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.drgmes.dwm.common.tardis.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
@@ -100,7 +101,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
             int value = (int) this.controlsStorage.get(controlEntry.role);
             if (value > 0) this.controlsStorage.values.put(controlEntry.role, value - 1);
-            if (value == 1) isChanged = true;
+            if (value == 1 || controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) isChanged = true;
         }
 
         if (isChanged) this.sendUpdatePacket();

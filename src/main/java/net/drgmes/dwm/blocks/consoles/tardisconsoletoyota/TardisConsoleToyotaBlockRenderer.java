@@ -35,7 +35,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         poseStack.mulPose(Vector3f.YP.rotationDegrees(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()));
         poseStack.translate(0, -0.8F, 0);
 
-        this.animate(tile, modelRoot);
+        this.animate(tile, modelRoot, partialTicks);
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
     }
@@ -44,7 +44,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         model.y += 0.25F;
     }
 
-    protected void animateButton(ModelPart model, int phase) {
+    protected void animateButton(ModelPart model, float partialTicks, int phase) {
         if (phase > 0) model.y += 0.25F;
     }
 
@@ -52,16 +52,17 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         model.xRot -= 1.5F;
     }
 
-    protected void animateLever(ModelPart model, int phase) {
-        model.xRot -= 1.5F;
+    protected void animateLever(ModelPart model, float partialTicks, int phase) {
+        if (phase > 0) model.xRot -= 1.5F;
     }
 
     protected void activateRotator(ModelPart model, int phase) {
         model.yRot += 1.57F * phase;
     }
 
-    protected void animateRotator(ModelPart model, int phase) {
-        model.yRot += 1.57F;
+    protected void animateRotator(ModelPart model, float partialTicks, int phase) {
+        float step = 1.57F;
+        if (phase > 0) model.yRot += (step / 2) * phase;
     }
 
     protected void activateHandbrake(ModelPart model) {

@@ -13,7 +13,7 @@ public enum TardisConsoleControlRoles {
     XSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
     YSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
     ZSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
-    RANDOMIZER(TardisConsoleControlRoleTypes.ANIMATION, 5);
+    RANDOMIZER(TardisConsoleControlRoleTypes.ANIMATION, 16);
 
     public final TardisConsoleControlRoleTypes type;
     public final int maxIntValue;
