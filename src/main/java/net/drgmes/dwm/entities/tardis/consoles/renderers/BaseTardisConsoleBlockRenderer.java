@@ -32,8 +32,8 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
                 else if (controlRole == TardisConsoleControlRoles.HANDBRAKE && (boolean) value) this.activateHandbrake(model);
 
                 else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) {
-                    if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON) this.animateRotator(model, (int) value);
-                    if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateRotator(model, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON) this.animateButton(model, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateLever(model, (int) value);
                     if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, (int) value);
                 }
     
