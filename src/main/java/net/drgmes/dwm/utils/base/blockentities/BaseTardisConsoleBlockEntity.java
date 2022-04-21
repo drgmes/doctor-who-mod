@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import net.drgmes.dwm.common.tardis.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.ClientboundTardisConsoleUpdatePacket;
@@ -66,10 +67,15 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.timeToSpawnControls > 0) {
             --this.timeToSpawnControls;
+            if (this.timeToSpawnControls == 0) this.createControls();
+        }
 
-            if (this.timeToSpawnControls == 0) {
-                this.createControls();
-            }
+        this.animateControls();
+    }
+
+    public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
+        if (this.controlsStorage.update(control.role, hand)) {
+            this.sendUpdatePacket();
         }
     }
 
@@ -87,17 +93,28 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.setChanged();
     }
 
-    public void removeControls() {
+    private void animateControls() {
+        boolean isChanged = false;
+        for (TardisConsoleControlEntry controlEntry : this.consoleType.controlEntries.values()) {
+            if (controlEntry.role.type != TardisConsoleControlRoleTypes.ANIMATION) continue;
+
+            int value = (int) this.controlsStorage.get(controlEntry.role);
+            if (value > 0) this.controlsStorage.values.put(controlEntry.role, value - 1);
+            if (value == 1) isChanged = true;
+        }
+
+        if (isChanged) this.sendUpdatePacket();
+    }
+
+    private void removeControls() {
         for (TardisConsoleControlEntity control : this.controls) control.discard();
         this.controls.clear();
     }
 
-    public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
+    private void sendUpdatePacket() {
         BlockPos blockPos = this.getBlockPos();
-        if (this.controlsStorage.update(control.role, hand)) {
-            ClientboundTardisConsoleUpdatePacket packet = new ClientboundTardisConsoleUpdatePacket(blockPos, this.controlsStorage);
-            ModPackets.send(level.getChunkAt(blockPos), packet);
-            this.setChanged();
-        }
+        ClientboundTardisConsoleUpdatePacket packet = new ClientboundTardisConsoleUpdatePacket(blockPos, this.controlsStorage);
+        ModPackets.send(level.getChunkAt(blockPos), packet);
+        this.setChanged();
     }
 }

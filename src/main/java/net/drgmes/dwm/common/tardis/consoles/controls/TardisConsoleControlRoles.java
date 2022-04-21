@@ -9,10 +9,10 @@ public enum TardisConsoleControlRoles {
     HANDBRAKE(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
     STARTER(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
     FACING(TardisConsoleControlRoleTypes.NUMBER, 4),
-    XSET(TardisConsoleControlRoleTypes.ANIMATION, 40),
-    YSET(TardisConsoleControlRoleTypes.ANIMATION, 40),
-    ZSET(TardisConsoleControlRoleTypes.ANIMATION, 40),
-    RANDOMIZER(TardisConsoleControlRoleTypes.ANIMATION, 40);
+    XSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
+    YSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
+    ZSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
+    RANDOMIZER(TardisConsoleControlRoleTypes.ANIMATION, 5);
 
     public final TardisConsoleControlRoleTypes type;
     public final int maxIntValue;

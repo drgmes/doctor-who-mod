@@ -45,7 +45,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     protected void animateButton(ModelPart model, int phase) {
-        model.y += 0.25F;
+        if (phase > 0) model.y += 0.25F;
     }
 
     protected void activateLever(ModelPart model) {

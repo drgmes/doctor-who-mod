@@ -87,6 +87,8 @@ public class TardisConsoleControlsStorage {
     }
 
     private int getUpdatedAnimation(TardisConsoleControlRoles controlRole, InteractionHand hand) {
-        return (int) this.get(controlRole);
+        int value = (int) this.get(controlRole);
+        if (value == 0) return controlRole.maxIntValue;
+        return value;
     }
 }
