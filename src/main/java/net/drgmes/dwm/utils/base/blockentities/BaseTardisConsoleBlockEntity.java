@@ -2,7 +2,7 @@ package net.drgmes.dwm.utils.base.blockentities;
 
 import java.util.ArrayList;
 
-import net.drgmes.dwm.common.tardis.TardisConsoleType;
+import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;

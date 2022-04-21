@@ -1,6 +1,5 @@
 package net.drgmes.dwm.common.tardis.consoles;
 
-import net.drgmes.dwm.common.tardis.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.setup.ModEntities;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;

@@ -60,6 +60,11 @@ public class TardisConsoleControlEntity extends Entity {
         return true;
     }
 
+    public void tick() {
+        if (!this.level.isClientSide && this.consoleBlockEntity == null) this.discard();
+        else super.tick();
+    }
+
     public void setTardisConsole(BaseTardisConsoleBlockEntity tile) {
         this.consoleBlockEntity = tile;
     }

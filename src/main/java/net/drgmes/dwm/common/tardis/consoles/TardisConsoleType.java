@@ -1,9 +1,8 @@
-package net.drgmes.dwm.common.tardis;
+package net.drgmes.dwm.common.tardis.consoles;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import net.drgmes.dwm.common.tardis.consoles.TardisConsoleTypeToyota;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;

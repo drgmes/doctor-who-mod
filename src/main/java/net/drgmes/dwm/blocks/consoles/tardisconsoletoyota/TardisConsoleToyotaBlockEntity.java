@@ -1,6 +1,6 @@
 package net.drgmes.dwm.blocks.consoles.tardisconsoletoyota;
 
-import net.drgmes.dwm.common.tardis.TardisConsoleType;
+import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
