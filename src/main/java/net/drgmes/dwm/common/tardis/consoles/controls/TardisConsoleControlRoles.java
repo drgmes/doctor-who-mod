@@ -6,6 +6,7 @@ public enum TardisConsoleControlRoles {
     TELEPATIC_INTERFACE(TardisConsoleControlRoleTypes.NONE),
     DOORS(TardisConsoleControlRoleTypes.BOOLEAN),
     SHIELDS(TardisConsoleControlRoleTypes.BOOLEAN),
+    FUEL_ARTRON(TardisConsoleControlRoleTypes.BOOLEAN),
     HANDBRAKE(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
     STARTER(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
     FACING(TardisConsoleControlRoleTypes.NUMBER, 4),
