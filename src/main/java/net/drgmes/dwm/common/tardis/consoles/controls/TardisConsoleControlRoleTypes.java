@@ -5,5 +5,7 @@ public enum TardisConsoleControlRoleTypes {
     BOOLEAN,
     BOOLEAN_DIRECT,
     NUMBER,
-    ANIMATION
+    NUMBER_DIRECT,
+    ANIMATION,
+    ANIMATION_DIRECT
 }

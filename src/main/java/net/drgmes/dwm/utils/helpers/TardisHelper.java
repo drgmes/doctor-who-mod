@@ -35,10 +35,12 @@ public class TardisHelper {
         if (server == null || !entity.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS)) return;
 
         entity.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            ServerLevel level = server.getLevel(provider.getExteriorDim());
+            if (!provider.isValid()) return;
+
+            ServerLevel level = server.getLevel(provider.getCurrentExteriorDimension());
             if (level != null) {
-                entity.setYRot(provider.getExteriorFacing().toYRot());
-                entity.changeDimension(level, new TardisTeleporter(provider.getExteriorRelativePosition()));
+                entity.setYRot(provider.getCurrentExteriorFacing().toYRot());
+                entity.changeDimension(level, new TardisTeleporter(provider.getCurrentExteriorRelativePosition()));
             }
         });
     }
@@ -55,11 +57,11 @@ public class TardisHelper {
                     if (template != null) template.placeInWorld(lvl, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), lvl.random, 3);
                 }
             });
-    
+
             tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                provider.setExteriorDim(level.dimension());
-                provider.setExteriorPosition(blockPos);
-                provider.setExteriorFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING));
+                provider.updateDimension(level.dimension());
+                provider.updateFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING));
+                provider.updatePosition(blockPos);
             });
     
             return tardisLevel;

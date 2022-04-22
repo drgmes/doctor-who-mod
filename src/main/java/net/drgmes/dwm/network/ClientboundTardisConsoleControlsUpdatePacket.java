@@ -1,50 +1,39 @@
 package net.drgmes.dwm.network;
 
-import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ClientboundTardisConsoleUpdatePacket {
+public class ClientboundTardisConsoleControlsUpdatePacket {
     private final BlockPos blockPos;
     private final TardisConsoleControlsStorage controlsStorage;
 
-    public ClientboundTardisConsoleUpdatePacket(BlockPos blockPos, TardisConsoleControlsStorage controlsStorage) {
+    public ClientboundTardisConsoleControlsUpdatePacket(BlockPos blockPos, TardisConsoleControlsStorage controlsStorage) {
         this.blockPos = blockPos;
         this.controlsStorage = controlsStorage;
     }
 
-    public ClientboundTardisConsoleUpdatePacket(FriendlyByteBuf buffer) {
+    public ClientboundTardisConsoleControlsUpdatePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), new TardisConsoleControlsStorage());
-
-        for (Entry<TardisConsoleControlRoles, Object> entry : this.controlsStorage.values.entrySet()) {
-            if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN) this.controlsStorage.values.put(entry.getKey(), buffer.readBoolean());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) this.controlsStorage.values.put(entry.getKey(), buffer.readBoolean());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER) this.controlsStorage.values.put(entry.getKey(), buffer.readInt());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION) this.controlsStorage.values.put(entry.getKey(), buffer.readInt());
-        }
+        this.controlsStorage.load(buffer.readNbt());
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeBlockPos(this.blockPos);
+        CompoundTag tag = new CompoundTag();
+        this.controlsStorage.save(tag);
 
-        for (Entry<TardisConsoleControlRoles, Object> entry : this.controlsStorage.values.entrySet()) {
-            if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN) buffer.writeBoolean((boolean) entry.getValue());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) buffer.writeBoolean((boolean) entry.getValue());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER) buffer.writeInt((int) entry.getValue());
-            else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION) buffer.writeInt((int) entry.getValue());
-        }
+        buffer.writeBlockPos(this.blockPos);
+        buffer.writeNbt(tag);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {

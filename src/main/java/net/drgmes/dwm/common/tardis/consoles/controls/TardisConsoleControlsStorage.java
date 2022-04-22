@@ -26,7 +26,9 @@ public class TardisConsoleControlsStorage {
             if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN) controls.putBoolean(name, (boolean) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) controls.putBoolean(name, (boolean) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER) controls.putInt(name, (int) value);
+            else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) controls.putInt(name, (int) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION) controls.putInt(name, (int) value);
+            else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) controls.putInt(name, (int) value);
         }
 
         tag.put("controls", controls);
@@ -42,7 +44,9 @@ public class TardisConsoleControlsStorage {
             if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN) value = controls.getBoolean(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = controls.getBoolean(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = controls.getInt(key);
+            else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = controls.getInt(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = controls.getInt(key);
+            else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = controls.getInt(key);
 
             this.values.put(controlRole, value);
         }
@@ -57,7 +61,9 @@ public class TardisConsoleControlsStorage {
         if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN) value = false;
         else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = false;
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = 0;
+        else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = 0;
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = 0;
+        else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = 0;
 
         return this.values.put(controlRole, value);
     }
@@ -68,7 +74,9 @@ public class TardisConsoleControlsStorage {
         if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN) value = this.getUpdatedBoolean(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = this.getUpdatedBooleanDirect(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = this.getUpdatedNumber(controlRole, hand);
+        else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = this.getUpdatedNumberDirect(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = this.getUpdatedAnimation(controlRole, hand);
+        else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = this.getUpdatedAnimationDirect(controlRole, hand);
 
         this.values.put(controlRole, value);
         return true;
@@ -83,12 +91,22 @@ public class TardisConsoleControlsStorage {
     }
 
     private int getUpdatedNumber(TardisConsoleControlRoles controlRole, InteractionHand hand) {
+        return ((int) this.get(controlRole) + 1) % controlRole.maxIntValue;
+    }
+
+    private int getUpdatedNumberDirect(TardisConsoleControlRoles controlRole, InteractionHand hand) {
         return ((int) this.get(controlRole) + (hand == InteractionHand.MAIN_HAND ? 1 : -1)) % controlRole.maxIntValue;
     }
 
     private int getUpdatedAnimation(TardisConsoleControlRoles controlRole, InteractionHand hand) {
         int value = (int) this.get(controlRole);
         if (value == 0) return controlRole.maxIntValue;
+        return value;
+    }
+
+    private int getUpdatedAnimationDirect(TardisConsoleControlRoles controlRole, InteractionHand hand) {
+        int value = (int) this.get(controlRole);
+        if (value == 0) return controlRole.maxIntValue * (hand == InteractionHand.MAIN_HAND ? 1 : -1);
         return value;
     }
 }

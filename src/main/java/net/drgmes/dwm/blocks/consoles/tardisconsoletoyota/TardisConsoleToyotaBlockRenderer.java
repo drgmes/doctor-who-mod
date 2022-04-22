@@ -6,6 +6,8 @@ import com.mojang.math.Vector3f;
 
 import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
 import net.drgmes.dwm.entities.tardis.consoles.renderers.BaseTardisConsoleBlockRenderer;
+import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
@@ -13,8 +15,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -27,8 +27,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
     @Override
     public void render(BaseTardisConsoleBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
-        BlockPos blockPos = tile.getBlockPos();
-        BlockState blockState = tile.getBlockState();
+        float rotateDegrees = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
         ModelPart modelRoot = this.ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION);
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(modelRoot);
         VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
@@ -39,7 +38,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         poseStack.translate(0.5, 0.7, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot()));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(rotateDegrees));
         poseStack.translate(0, -0.8F, 0);
 
         this.animate(tile, modelRoot, partialTicks);
@@ -48,36 +47,54 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
         // Render Screen texts
 
-        float scaling = 0.0035F;
-        String posPrevName = blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
-        String posCurrName = blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
-        String posDestName = blockPos.getX() + " " + blockPos.getY() + " " + blockPos.getZ();
-        String dimPrevName = Level.OVERWORLD.location().getPath().toUpperCase();
-        String dimCurrName = Level.OVERWORLD.location().getPath().toUpperCase();
-        String dimDestName = Level.OVERWORLD.location().getPath().toUpperCase();
+        tile.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            try {
+                if (!provider.isValid() || !tile.getLevel().dimensionTypeRegistration().is(ModDimensionTypes.TARDIS)) return;
 
-        String[] lines = new String[] {
-            this.buildScreenParamText("Prev Position", posPrevName),
-            this.buildScreenParamText("Curr Position", posCurrName),
-            this.buildScreenParamText("Dest Position", posDestName),
-            "",
-            this.buildScreenParamText("Prev Dimension", dimPrevName),
-            this.buildScreenParamText("Curr Dimension", dimCurrName),
-            this.buildScreenParamText("Dest Dimension", dimDestName)
-        };
+                float scaling = 0.0027F;
+                BlockPos prevExteriorPosition = provider.getPreviousExteriorPosition();
+                BlockPos currExteriorPosition = provider.getCurrentExteriorPosition();
+                BlockPos destExteriorPosition = provider.getDestinationExteriorPosition();
+                String posPrevName = prevExteriorPosition.getX() + " " + prevExteriorPosition.getY() + " " + prevExteriorPosition.getZ();
+                String posCurrName = currExteriorPosition.getX() + " " + currExteriorPosition.getY() + " " + currExteriorPosition.getZ();
+                String posDestName = destExteriorPosition.getX() + " " + destExteriorPosition.getY() + " " + destExteriorPosition.getZ();
+                String facingPrevName = provider.getPreviousExteriorFacing().name().toUpperCase();
+                String facingCurrName = provider.getCurrentExteriorFacing().name().toUpperCase();
+                String facingDestName = provider.getDestinationExteriorFacing().name().toUpperCase();
+                String dimPrevName = provider.getPreviousExteriorDimension().location().getPath().toUpperCase();
+                String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
+                String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
-        poseStack.pushPose();
-        poseStack.translate(0.5D, 1.085D, 0.5D);
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() - 90));
-        poseStack.translate(-0.255D, 0, 0.53D);
-        poseStack.scale(scaling, -scaling, scaling);
-        poseStack.mulPose(Vector3f.XN.rotation(-1.3F));
+                String[] lines = new String[] {
+                    this.buildScreenParamText("Prev Position", posPrevName),
+                    this.buildScreenParamText("Curr Position", posCurrName),
+                    this.buildScreenParamText("Dest Position", posDestName),
+                    "",
+                    this.buildScreenParamText("Prev Facing", facingPrevName),
+                    this.buildScreenParamText("Curr Facing", facingCurrName),
+                    this.buildScreenParamText("Dest Facing", facingDestName),
+                    "",
+                    this.buildScreenParamText("Prev Dimension", dimPrevName),
+                    this.buildScreenParamText("Curr Dimension", dimCurrName),
+                    this.buildScreenParamText("Dest Dimension", dimDestName)
+                };
 
-        for (int i = 0; i < lines.length; i++) {
-            this.ctx.getFont().drawInBatch(lines[i], 0, i * this.ctx.getFont().lineHeight, 0xFFFFFF, true, poseStack.last().pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
-        }
+                poseStack.pushPose();
+                poseStack.translate(0.5D, 1.085D, 0.5D);
+                poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees - 90));
+                poseStack.translate(-0.255D, 0, 0.53D);
+                poseStack.scale(scaling, -scaling, scaling);
+                poseStack.mulPose(Vector3f.XN.rotation(-1.3F));
 
-        poseStack.popPose();
+                for (int i = 0; i < lines.length; i++) {
+                    this.ctx.getFont().drawInBatch(lines[i], 0, i * this.ctx.getFont().lineHeight, 0xFFFFFF, true, poseStack.last().pose(), buffer, false, 0, LightTexture.FULL_BRIGHT);
+                }
+
+                poseStack.popPose();
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        });
     }
 
     protected void activateButton(ModelPart model) {
@@ -85,7 +102,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     protected void animateButton(ModelPart model, float partialTicks, int phase) {
-        if (phase > 0) model.y += 0.25F;
+        if (phase != 0) model.y += 0.25F;
     }
 
     protected void activateLever(ModelPart model) {
@@ -93,7 +110,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     protected void animateLever(ModelPart model, float partialTicks, int phase) {
-        if (phase > 0) model.xRot -= 1.5F;
+        if (phase != 0) model.xRot -= 1.5F;
     }
 
     protected void activateRotator(ModelPart model, int phase) {
@@ -102,7 +119,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
     protected void animateRotator(ModelPart model, float partialTicks, int phase) {
         float step = 1.57F;
-        if (phase > 0) model.yRot += (step / 2) * phase;
+        if (phase != 0) model.yRot += (step / 2) * phase;
     }
 
     protected void activateHandbrake(ModelPart model) {
@@ -116,7 +133,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     private String buildScreenParamText(String title, String append) {
-        int lineWidth = 146;
+        int lineWidth = 188;
         Font font = this.ctx.getFont();
         String str = title + ": " + append;
 

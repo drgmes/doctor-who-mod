@@ -9,10 +9,10 @@ public enum TardisConsoleControlRoles {
     FUEL_ARTRON(TardisConsoleControlRoleTypes.BOOLEAN),
     HANDBRAKE(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
     STARTER(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),
-    FACING(TardisConsoleControlRoleTypes.NUMBER, 4),
-    XSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
-    YSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
-    ZSET(TardisConsoleControlRoleTypes.ANIMATION, 5),
+    FACING(TardisConsoleControlRoleTypes.NUMBER_DIRECT, 4),
+    XSET(TardisConsoleControlRoleTypes.ANIMATION_DIRECT, 5),
+    YSET(TardisConsoleControlRoleTypes.ANIMATION_DIRECT, 5),
+    ZSET(TardisConsoleControlRoleTypes.ANIMATION_DIRECT, 5),
     RANDOMIZER(TardisConsoleControlRoleTypes.ANIMATION, 16);
 
     public final TardisConsoleControlRoleTypes type;

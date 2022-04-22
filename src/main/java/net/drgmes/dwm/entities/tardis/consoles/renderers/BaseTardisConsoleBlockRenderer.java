@@ -36,6 +36,12 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
                     if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateLever(model, partialTicks, (int) value);
                     if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, partialTicks, controlRole.maxIntValue - (int) value);
                 }
+
+                else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) {
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON) this.animateButton(model, partialTicks, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER) this.animateLever(model, partialTicks, (int) value);
+                    if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, partialTicks, controlRole.maxIntValue + (int) value);
+                }
     
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON && (boolean) value) this.activateButton(model);
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER && (boolean) value) this.activateLever(model);
