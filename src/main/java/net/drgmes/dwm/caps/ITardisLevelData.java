@@ -1,7 +1,10 @@
 package net.drgmes.dwm.caps;
 
+import java.util.List;
+
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -20,6 +23,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean isEnergyArtronHarvesting();
     boolean isEnergyForgeHarvesting();
 
+    List<BaseTardisConsoleBlockEntity> getConsoleTiles();
     int getEnergyArtron();
     int getEnergyForge();
     int getXYZStep();
@@ -37,6 +41,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     BlockPos getCurrentExteriorRelativePosition();
     BlockPos getDestinationExteriorPosition();
 
+    void updateConsoleTiles();
     void updateDoorsState(boolean flag, boolean shouldUpdate);
     void updateShieldsState(boolean flag, boolean shouldUpdate);
     void updateEnergyArtronHarvesting(boolean flag);

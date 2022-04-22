@@ -83,6 +83,10 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     @Override
     public void setRemoved() {
+        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+            if (levelProvider.isValid()) levelProvider.getConsoleTiles().remove(this);
+        });
+
         this.removeControls();
         super.setRemoved();
     }
@@ -98,6 +102,17 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.tardisDataHolder.invalidate();
     }
 
+    public void init() {
+        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
+            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                if (!levelProvider.isValid()) return;
+
+                levelProvider.getConsoleTiles().add(this);
+                levelProvider.updateConsoleTiles();
+            });
+        }
+    }
+
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.timeToSpawnControls > 0) {
             --this.timeToSpawnControls;
@@ -111,6 +126,16 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.animateControls();
     }
 
+    public void sendMonitorUpdatePacket() {
+        ClientboundTardisConsoleMonitorUpdatePacket packet = new ClientboundTardisConsoleMonitorUpdatePacket(this.worldPosition, this.monitorPage);
+        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
+    }
+
+    public void sendControlsUpdatePacket() {
+        ClientboundTardisConsoleControlsUpdatePacket packet = new ClientboundTardisConsoleControlsUpdatePacket(this.worldPosition, this.controlsStorage);
+        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
+    }
+
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
         if (this.controlsStorage.update(control.role, hand)) {
             // Next Screen Page
@@ -121,41 +146,16 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             int monitorPagePrev = (int) controlsStorage.get(TardisConsoleControlRoles.MONITOR_PAGE_PREV);
             if (monitorPagePrev != 0) this.monitorPage = this.monitorPage < 1 ? this.monitorPageLength - 1 : this.monitorPage - 1;
 
-            this.sendControlsUpdatePacket();
-            this.sendMonitorUpdatePacket();
+            if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket();
             this.setChanged();
 
-            if (!this.checkTileIsInATardis()) return;
-
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (!levelProvider.isValid()) return;
-
-                levelProvider.applyControlsStorage(this.controlsStorage);
-                this.controlsStorage.applyTardisWorldStorage(levelProvider);
-
-                this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                    CompoundTag tag = levelProvider.serializeNBT();
-                    provider.deserializeNBT(tag);
-                    this.sendWorldDataUpdatePacket(tag);
-                    this.setChanged();
-                });
-            });
-        }
-    }
-
-    private void init() {
-        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (!levelProvider.isValid()) return;
-
-                this.controlsStorage.applyTardisWorldStorage(levelProvider);
+            if (!this.checkTileIsInATardis()) {
                 this.sendControlsUpdatePacket();
+                return;
+            }
 
-                this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                    CompoundTag tag = levelProvider.serializeNBT();
-                    provider.deserializeNBT(tag);
-                    this.sendWorldDataUpdatePacket(tag);
-                });
+            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                if (levelProvider.isValid()) levelProvider.applyControlsStorage(this.controlsStorage);
             });
         }
     }
@@ -180,7 +180,9 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             int direction = value > 0 ? 1 : (value < 0 ? -1 : 0);
 
             this.controlsStorage.values.put(controlEntry.role, value - direction);
-            if (value == direction || controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) isChanged = true;
+
+            if (value != 0 && value == direction) isChanged = true;
+            else if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR && value != 0) isChanged = true;
         }
 
         if (isChanged) {
@@ -196,22 +198,5 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     private boolean checkTileIsInATardis() {
         return this.level != null && this.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
-    }
-
-    private void sendMonitorUpdatePacket() {
-        ClientboundTardisConsoleMonitorUpdatePacket packet = new ClientboundTardisConsoleMonitorUpdatePacket(this.worldPosition, this.monitorPage);
-        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
-    }
-
-    private void sendControlsUpdatePacket() {
-        ClientboundTardisConsoleControlsUpdatePacket packet = new ClientboundTardisConsoleControlsUpdatePacket(this.worldPosition, this.controlsStorage);
-        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
-    }
-
-    private void sendWorldDataUpdatePacket(CompoundTag tag) {
-        this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            ClientboundTardisConsoleWorldDataUpdatePacket packet = new ClientboundTardisConsoleWorldDataUpdatePacket(this.worldPosition, tag);
-            ModPackets.send(level.getChunkAt(this.worldPosition), packet);
-        });
     }
 }
