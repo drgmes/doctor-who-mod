@@ -1,9 +1,11 @@
 package net.drgmes.dwm.blocks.tardisexterior;
 
+import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -108,9 +110,18 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
             blockState = level.getBlockState(blockPos);
         }
 
-        level.setBlock(blockPos, blockState.cycle(OPEN), 10);
-        level.levelEvent(player, blockState.getValue(OPEN) ? 1012 : 1006, blockPos, 0);
-        level.gameEvent(player, blockState.getValue(OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
+        boolean isDoorsOpened = !blockState.getValue(OPEN);
+        level.setBlock(blockPos, blockState.setValue(OPEN, isDoorsOpened), 10);
+        level.levelEvent(player, isDoorsOpened ? 1006 : 1012, blockPos, 0);
+        level.gameEvent(player, isDoorsOpened ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
+
+        ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+        if (tardisLevel != null) {
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+                if (provider.isValid()) provider.updateDoorsState(isDoorsOpened, false);
+            });
+        }
+
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
@@ -120,6 +131,17 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
 
-        TardisHelper.teleportToTardis(entity, TardisHelper.setupTardis(level, blockPos, "test"));
+        ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+        if (tardisLevel != null) TardisHelper.teleportToTardis(entity, tardisLevel);
+    }
+
+    public ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+
+        if (!level.isClientSide && blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            return tardisExteriorBlockEntity.getTardisDimension(level, blockPos);
+        }
+
+        return null;
     }
 }

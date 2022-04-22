@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import net.drgmes.dwm.caps.ITardisLevelData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 
@@ -80,6 +81,14 @@ public class TardisConsoleControlsStorage {
 
         this.values.put(controlRole, value);
         return true;
+    }
+
+    public void applyTardisWorldStorage(ITardisLevelData storage) {
+        this.values.put(TardisConsoleControlRoles.DOORS, storage.isDoorsOpened());
+        this.values.put(TardisConsoleControlRoles.SHIELDS, storage.isShieldsEnabled());
+        this.values.put(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, storage.isEnergyArtronHarvesting());
+        this.values.put(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING, storage.isEnergyForgeHarvesting());
+        this.values.put(TardisConsoleControlRoles.FACING, storage.getDestinationExteriorFacing().ordinal() - 2);
     }
 
     private boolean getUpdatedBoolean(TardisConsoleControlRoles controlRole, InteractionHand hand) {

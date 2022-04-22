@@ -8,9 +8,11 @@ import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
@@ -29,19 +31,21 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
-    public final TardisConsoleType consoleType;
+    public TardisConsoleType consoleType;
+    public int monitorPage = 0;
 
-    final private LazyOptional<ITardisLevelData> tardisDataHolder;
+    private final LazyOptional<ITardisLevelData> tardisDataHolder;
     private ITardisLevelData tardisData;
 
     private ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
     private int timeToSpawnControls = 0;
+    private int monitorPageLength = 3;
 
     public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
 
         this.consoleType = consoleType;
-        this.tardisData = new TardisLevelCapability();
+        this.tardisData = new TardisLevelCapability(this.level);
         this.tardisDataHolder = LazyOptional.of(() -> this.tardisData);
     }
 
@@ -59,30 +63,22 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
         this.controlsStorage.save(tag);
+
+        tag.putInt("monitorPage", this.monitorPage);
     }
 
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
         this.controlsStorage.load(tag);
+
+        this.monitorPage = tag.getInt("monitorPage");
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
         this.timeToSpawnControls = 10;
-
-        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (!levelProvider.isValid()) return;
-
-                this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                    CompoundTag tag = levelProvider.serializeNBT();
-                    provider.deserializeNBT(tag);
-                    this.sendWorldDataUpdatePacket(tag);
-                });
-            });
-        }
     }
 
     @Override
@@ -105,7 +101,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public void tick(Level level, BlockPos blockPos, BlockState blockState) {
         if (this.timeToSpawnControls > 0) {
             --this.timeToSpawnControls;
-            if (this.timeToSpawnControls == 0) this.createControls();
+
+            if (this.timeToSpawnControls == 0) {
+                this.createControls();
+                this.init();
+            }
         }
 
         this.animateControls();
@@ -113,20 +113,48 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
         if (this.controlsStorage.update(control.role, hand)) {
+            // Next Screen Page
+            int monitorPageNext = (int) controlsStorage.get(TardisConsoleControlRoles.MONITOR_PAGE_NEXT);
+            if (monitorPageNext != 0) this.monitorPage = (this.monitorPage + 1) % this.monitorPageLength;
+
+            // Prev Screen Page
+            int monitorPagePrev = (int) controlsStorage.get(TardisConsoleControlRoles.MONITOR_PAGE_PREV);
+            if (monitorPagePrev != 0) this.monitorPage = this.monitorPage < 1 ? this.monitorPageLength - 1 : this.monitorPage - 1;
+
             this.sendControlsUpdatePacket();
+            this.sendMonitorUpdatePacket();
             this.setChanged();
 
             if (!this.checkTileIsInATardis()) return;
 
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                 if (!levelProvider.isValid()) return;
+
                 levelProvider.applyControlsStorage(this.controlsStorage);
+                this.controlsStorage.applyTardisWorldStorage(levelProvider);
 
                 this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
                     CompoundTag tag = levelProvider.serializeNBT();
                     provider.deserializeNBT(tag);
                     this.sendWorldDataUpdatePacket(tag);
                     this.setChanged();
+                });
+            });
+        }
+    }
+
+    private void init() {
+        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
+            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                if (!levelProvider.isValid()) return;
+
+                this.controlsStorage.applyTardisWorldStorage(levelProvider);
+                this.sendControlsUpdatePacket();
+
+                this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+                    CompoundTag tag = levelProvider.serializeNBT();
+                    provider.deserializeNBT(tag);
+                    this.sendWorldDataUpdatePacket(tag);
                 });
             });
         }
@@ -168,6 +196,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     private boolean checkTileIsInATardis() {
         return this.level != null && this.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
+    }
+
+    private void sendMonitorUpdatePacket() {
+        ClientboundTardisConsoleMonitorUpdatePacket packet = new ClientboundTardisConsoleMonitorUpdatePacket(this.worldPosition, this.monitorPage);
+        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
     }
 
     private void sendControlsUpdatePacket() {

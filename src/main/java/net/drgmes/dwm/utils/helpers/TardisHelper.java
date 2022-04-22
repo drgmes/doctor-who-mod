@@ -15,7 +15,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.util.ITeleporter;
@@ -45,29 +44,24 @@ public class TardisHelper {
         });
     }
 
-    public static ServerLevel setupTardis(Level level, BlockPos blockPos, String consoleRoomName) {
+    public static ServerLevel setupTardis(TardisExteriorBlockEntity tile, Level level, BlockPos blockPos) {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
-        if (blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            ServerLevel tardisLevel = ModDimensions.getTardisDimension(tardisExteriorBlockEntity.getTardisDimUUID(), server, (lvl) -> {
-                if (consoleRoomName != null) {
-                    StructureTemplate template = lvl.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + consoleRoomName));
-                    if (template != null) template.placeInWorld(lvl, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), lvl.random, 3);
-                }
-            });
+        ServerLevel tardisLevel = ModDimensions.getTardisDimension(tile.getTardisDimUUID(), server, (lvl) -> {
+            if (tile.tardisConsoleRoom != null) {
+                StructureTemplate template = lvl.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + tile.tardisConsoleRoom));
+                if (template != null) template.placeInWorld(lvl, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), lvl.random, 3);
+            }
+        });
 
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                provider.updateDimension(level.dimension());
-                provider.updateFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING));
-                provider.updatePosition(blockPos);
-            });
-    
-            return tardisLevel;
-        }
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            provider.updateDimension(level.dimension());
+            provider.updateFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING));
+            provider.updatePosition(blockPos);
+        });
 
-        return null;
+        return tardisLevel;
     }
 
     private static class TardisTeleporter implements ITeleporter {

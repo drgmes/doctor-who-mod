@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardisdoor;
 
+import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
@@ -128,14 +129,10 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D) return;
 
-        TardisHelper.teleportFromTardis(entity, level.getServer());
+        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            if (provider.isValid() && provider.isDoorsOpened()) {
+                TardisHelper.teleportFromTardis(entity, level.getServer());
+            }
+        });
     }
-
-    // private int getCloseSound() {
-    //     return 1011;
-    // }
-
-    // private int getOpenSound() {
-    //     return 1005;
-    // }
 }

@@ -2,7 +2,9 @@ package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -23,6 +25,14 @@ public class ModPackets {
 
     public static void setup() {
         int index = 0;
+
+        INSTANCE.messageBuilder(ClientboundTardisExteriorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisExteriorUpdatePacket::encode).decoder(ClientboundTardisExteriorUpdatePacket::new)
+            .consumer(ClientboundTardisExteriorUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisConsoleMonitorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisConsoleMonitorUpdatePacket::encode).decoder(ClientboundTardisConsoleMonitorUpdatePacket::new)
+            .consumer(ClientboundTardisConsoleMonitorUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisConsoleControlsUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleControlsUpdatePacket::encode).decoder(ClientboundTardisConsoleControlsUpdatePacket::new)

@@ -15,6 +15,14 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean isValid();
+    boolean isDoorsOpened();
+    boolean isShieldsEnabled();
+    boolean isEnergyArtronHarvesting();
+    boolean isEnergyForgeHarvesting();
+
+    int getEnergyArtron();
+    int getEnergyForge();
+    int getXYZStep();
 
     ResourceKey<Level> getPreviousExteriorDimension();
     ResourceKey<Level> getCurrentExteriorDimension();
@@ -29,6 +37,10 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     BlockPos getCurrentExteriorRelativePosition();
     BlockPos getDestinationExteriorPosition();
 
+    void updateDoorsState(boolean flag, boolean shouldUpdate);
+    void updateShieldsState(boolean flag, boolean shouldUpdate);
+    void updateEnergyArtronHarvesting(boolean flag);
+    void updateEnergyForgeHarvesting(boolean flag);
     void updateDimension(ResourceKey<Level> dimension);
     void updateFacing(Direction direction);
     void updatePosition(BlockPos blockPos);
@@ -40,7 +52,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
         private ITardisLevelData data;
 
         public TardisLevelProvider(Level level) {
-            this.data = new TardisLevelCapability();
+            this.data = new TardisLevelCapability(level);
             this.holder = LazyOptional.of(() -> this.data);
         }
 
