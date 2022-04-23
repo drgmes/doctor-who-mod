@@ -19,6 +19,7 @@ import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.utils.DWMUtils;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -303,16 +304,17 @@ public class TardisLevelCapability implements ITardisLevelData {
             ServerLevel exteriorLevel = ((ServerLevel) this.level).getServer().getLevel(this.currExteriorDimension);
             if (exteriorLevel == null) return;
 
-            BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
-
-            if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
-
-                ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
-                ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
-            }
-
             this.updateDoorTiles();
+
+            DWMUtils.runInThread(() -> {
+                BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
+                if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
+                    exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
+
+                    ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
+                    ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
+                }
+            });
         }
     }
 

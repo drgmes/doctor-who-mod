@@ -4,6 +4,7 @@ import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.setup.ModBlocks;
+import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -51,17 +52,20 @@ public class TardisSystemMaterialization implements ITardisSystem {
             ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
             if (exteriorLevel == null) return false;
 
-            BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
-            BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
-
-            if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                exteriorLevel.setBlock(exteriorBlockPos, Blocks.AIR.defaultBlockState(), 3);
-                exteriorLevel.setBlock(exteriorBlockPos.above(), Blocks.AIR.defaultBlockState(), 3);
-            }
-
             this.tardisData.setDoorsState(false, true);
             this.isMaterialized = false;
             this.tardisData.updateConsoleTiles();
+
+            DWMUtils.runInThread(() -> {
+                BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+                BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
+
+                if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
+                    exteriorLevel.setBlock(exteriorBlockPos, Blocks.AIR.defaultBlockState(), 3);
+                    exteriorLevel.setBlock(exteriorBlockPos.above(), Blocks.AIR.defaultBlockState(), 3);
+                }
+            });
+
             return true;
         }
 
