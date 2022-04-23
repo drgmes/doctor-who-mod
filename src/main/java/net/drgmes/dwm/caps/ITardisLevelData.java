@@ -2,6 +2,7 @@ package net.drgmes.dwm.caps;
 
 import java.util.List;
 
+import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
@@ -23,6 +24,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean isEnergyArtronHarvesting();
     boolean isEnergyForgeHarvesting();
 
+    List<TardisDoorBlockEntity> getDoorTiles();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
     int getEnergyArtron();
     int getEnergyForge();
@@ -41,6 +43,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     BlockPos getCurrentExteriorRelativePosition();
     BlockPos getDestinationExteriorPosition();
 
+    void updateDoorTiles();
     void updateConsoleTiles();
     void updateDoorsState(boolean flag, boolean shouldUpdate);
     void updateShieldsState(boolean flag, boolean shouldUpdate);

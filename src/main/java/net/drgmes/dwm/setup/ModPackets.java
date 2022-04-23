@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,6 +30,10 @@ public class ModPackets {
         INSTANCE.messageBuilder(ClientboundTardisExteriorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisExteriorUpdatePacket::encode).decoder(ClientboundTardisExteriorUpdatePacket::new)
             .consumer(ClientboundTardisExteriorUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisDoorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisDoorUpdatePacket::encode).decoder(ClientboundTardisDoorUpdatePacket::new)
+            .consumer(ClientboundTardisDoorUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisConsoleMonitorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleMonitorUpdatePacket::encode).decoder(ClientboundTardisConsoleMonitorUpdatePacket::new)

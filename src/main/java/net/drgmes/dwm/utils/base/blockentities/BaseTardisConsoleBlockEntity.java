@@ -13,7 +13,6 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStora
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;

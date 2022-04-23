@@ -3,10 +3,13 @@ package net.drgmes.dwm.caps;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlock;
+import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
@@ -22,6 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisLevelCapability implements ITardisLevelData {
+    private List<TardisDoorBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
     private Level level;
 
@@ -140,6 +144,11 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public List<TardisDoorBlockEntity> getDoorTiles() {
+        return this.doorTiles;
+    }
+
+    @Override
     public List<BaseTardisConsoleBlockEntity> getConsoleTiles() {
         return this.consoleTiles;
     }
@@ -210,6 +219,16 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public void updateDoorTiles() {
+        this.doorTiles.forEach((tile) -> {
+            level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorBlock.OPEN, this.isDoorsOpened()), 10);
+
+            ClientboundTardisDoorUpdatePacket packet = new ClientboundTardisDoorUpdatePacket(tile.getBlockPos(), this.isDoorsOpened());
+            ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), packet);
+        });
+    }
+
+    @Override
     public void updateConsoleTiles() {
         this.consoleTiles.forEach((tile) -> {
             tile.controlsStorage.applyTardisWorldStorage(this);
@@ -241,6 +260,8 @@ public class TardisLevelCapability implements ITardisLevelData {
                 ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
                 ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
             }
+
+            this.updateDoorTiles();
         }
     }
 

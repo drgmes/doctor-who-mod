@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardisdoor;
 
 import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlock;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -18,6 +18,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -30,7 +31,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
+public class TardisDoorBlock extends BaseRotatableWaterloggedEntityBlock {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
@@ -41,6 +42,11 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
 
     public TardisDoorBlock(BlockBehaviour.Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return new TardisDoorBlockEntity(blockPos, blockState);
     }
 
     @Override
@@ -120,7 +126,14 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return InteractionResult.PASS;
+        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            if (!provider.isValid()) return;
+
+            provider.updateDoorsState(!provider.isDoorsOpened(), true);
+            provider.updateConsoleTiles();
+        });
+
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     @Override

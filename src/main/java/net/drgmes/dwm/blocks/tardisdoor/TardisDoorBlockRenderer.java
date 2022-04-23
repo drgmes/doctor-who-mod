@@ -1,10 +1,10 @@
-package net.drgmes.dwm.blocks.tardisexterior;
+package net.drgmes.dwm.blocks.tardisdoor;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
-import net.drgmes.dwm.blocks.tardisexterior.models.TardisPoliceBoxExteriorModel;
+import net.drgmes.dwm.blocks.tardisdoor.models.TardisPoliceBoxDoorModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -16,15 +16,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisExteriorBlockEntity> {
+public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBlockEntity> {
     private BlockEntityRendererProvider.Context ctx;
 
-    public TardisExteriorBlockRenderer(BlockEntityRendererProvider.Context context) {
+    public TardisDoorBlockRenderer(BlockEntityRendererProvider.Context context) {
         this.ctx = context;
     }
 
     @Override
-    public void render(TardisExteriorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+    public void render(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -35,21 +35,20 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
         poseStack.pushPose();
         poseStack.translate(0.5, 0.7, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
 
-        this.renderExterior(tile, partialTicks, poseStack, buffer, combinedOverlay, packedLight, 1.0F);
+        this.renderDoor(tile, partialTicks, poseStack, buffer, combinedOverlay, packedLight, 1.0F);
         poseStack.popPose();
     }
 
-    public void renderExterior(TardisExteriorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight, float alpha) {
-        TardisPoliceBoxExteriorModel model = new TardisPoliceBoxExteriorModel(ctx.bakeLayer(TardisPoliceBoxExteriorModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisPoliceBoxExteriorModel.LAYER_LOCATION.getModel()));
-        float scale = 1.25F;
+    public void renderDoor(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight, float alpha) {
+        TardisPoliceBoxDoorModel model = new TardisPoliceBoxDoorModel(ctx.bakeLayer(TardisPoliceBoxDoorModel.LAYER_LOCATION));
+        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisPoliceBoxDoorModel.LAYER_LOCATION.getModel()));
+        float scale = 1.5F;
 
         poseStack.pushPose();
-        poseStack.scale(scale, scale + 0.15F, scale);
-        poseStack.translate(0, -1, 0);
+        poseStack.scale(scale, scale, scale);
+        poseStack.translate(0, -1, -0.325F);
 
         model.setupAnim(tile.getBlockState());
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, alpha);
