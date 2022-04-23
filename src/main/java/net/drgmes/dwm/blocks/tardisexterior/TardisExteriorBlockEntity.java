@@ -51,11 +51,15 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     public void onLoad() {
         super.onLoad();
 
-        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+        if (this.tardisLevelUUID == null) return;
+        ServerLevel tardisLevel = this.getTardisDimension(this.level, this.worldPosition);
+        if (tardisLevel == null) return;
+
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
             BlockState blockState = this.level.getBlockState(this.worldPosition);
-            level.setBlock(this.worldPosition, blockState.setValue(TardisExteriorBlock.OPEN, provider.isDoorsOpened()), 10);
+            this.level.setBlock(this.worldPosition, blockState.setValue(TardisExteriorBlock.OPEN, provider.isDoorsOpened()), 3);
         });
     }
 

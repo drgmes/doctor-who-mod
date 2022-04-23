@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -105,25 +104,21 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
             blockPos = blockPos.below();
             blockState = level.getBlockState(blockPos);
         }
 
-        boolean isDoorsOpened = !blockState.getValue(OPEN);
-        level.setBlock(blockPos, blockState.setValue(OPEN, isDoorsOpened), 10);
-        level.levelEvent(player, isDoorsOpened ? 1006 : 1012, blockPos, 0);
-        level.gameEvent(player, isDoorsOpened ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
-
         ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
-        if (tardisLevel != null) {
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (!provider.isValid()) return;
+        if (tardisLevel == null) return InteractionResult.FAIL;
 
-                provider.updateDoorsState(isDoorsOpened, false);
-                provider.updateConsoleTiles();
-            });
-        }
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            if (!provider.isValid()) return;
+
+            provider.setDoorsState(!provider.isDoorsOpened(), true);
+            provider.updateConsoleTiles();
+        });
 
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
@@ -141,7 +136,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     public ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
 
-        if (!level.isClientSide && blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+        if (blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
             return tardisExteriorBlockEntity.getTardisDimension(level, blockPos);
         }
 

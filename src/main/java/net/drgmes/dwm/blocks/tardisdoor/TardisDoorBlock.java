@@ -126,10 +126,12 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedEntityBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
+
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
-            provider.updateDoorsState(!provider.isDoorsOpened(), true);
+            provider.setDoorsState(!provider.isDoorsOpened(), true);
             provider.updateConsoleTiles();
         });
 

@@ -2,6 +2,7 @@ package net.drgmes.dwm.caps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlock;
 import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
@@ -12,6 +13,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -33,7 +35,7 @@ public class TardisLevelCapability implements ITardisLevelData {
     private int energyForge = 0;
     private int xyzStep = 1;
 
-    private boolean doorsOpened = true;
+    private boolean doorsOpened = false;
     private boolean shieldsEnabled = false;
     private boolean energyArtronHarvesting = false;
     private boolean energyForgeHarvesting = false;
@@ -219,9 +221,59 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public void setDoorsState(boolean flag, boolean shouldUpdate) {
+        if (this.doorsOpened == flag) return;
+        this.doorsOpened = flag;
+
+        if (shouldUpdate && this.isValid() && this.level instanceof ServerLevel) {
+            ServerLevel exteriorLevel = ((ServerLevel) this.level).getServer().getLevel(this.currExteriorDimension);
+            BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
+
+            if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
+                exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
+
+                ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
+                ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
+                this.updateDoorTiles();
+            }
+        }
+    }
+
+    @Override
+    public void setShieldsState(boolean flag, boolean shouldUpdate) {
+        if (this.shieldsEnabled == flag) return;
+        this.shieldsEnabled = flag;
+    }
+
+    @Override
+    public void setEnergyArtronHarvesting(boolean flag) {
+        this.energyArtronHarvesting = flag;
+    }
+
+    @Override
+    public void setEnergyForgeHarvesting(boolean flag) {
+        this.energyForgeHarvesting = flag;
+    }
+
+    @Override
+    public void setDimension(ResourceKey<Level> dimension) {
+        this.currExteriorDimension = dimension;
+    }
+
+    @Override
+    public void setFacing(Direction direction) {
+        this.currExteriorFacing = direction;
+    }
+
+    @Override
+    public void setPosition(BlockPos blockPos) {
+        this.currExteriorPosition = blockPos.immutable();
+    }
+
+    @Override
     public void updateDoorTiles() {
         this.doorTiles.forEach((tile) -> {
-            level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorBlock.OPEN, this.isDoorsOpened()), 10);
+            level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorBlock.OPEN, this.isDoorsOpened()), 3);
 
             ClientboundTardisDoorUpdatePacket packet = new ClientboundTardisDoorUpdatePacket(tile.getBlockPos(), this.isDoorsOpened());
             ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), packet);
@@ -246,60 +298,6 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
-    public void updateDoorsState(boolean flag, boolean shouldUpdate) {
-        if (this.doorsOpened == flag) return;
-        this.doorsOpened = flag;
-
-        if (shouldUpdate && this.isValid() && this.level instanceof ServerLevel) {
-            ServerLevel exteriorLevel = ((ServerLevel) this.level).getServer().getLevel(this.currExteriorDimension);
-            BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
-
-            if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 10);
-
-                ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
-                ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
-            }
-
-            this.updateDoorTiles();
-        }
-    }
-
-    @Override
-    public void updateShieldsState(boolean flag, boolean shouldUpdate) {
-        if (this.shieldsEnabled == flag) return;
-        this.shieldsEnabled = flag;
-    }
-
-    @Override
-    public void updateEnergyArtronHarvesting(boolean flag) {
-        this.energyArtronHarvesting = flag;
-    }
-
-    @Override
-    public void updateEnergyForgeHarvesting(boolean flag) {
-        this.energyForgeHarvesting = flag;
-    }
-
-    @Override
-    public void updateDimension(ResourceKey<Level> dimension) {
-        this.prevExteriorDimension = this.currExteriorDimension;
-        this.currExteriorDimension = dimension;
-    }
-
-    @Override
-    public void updateFacing(Direction direction) {
-        this.prevExteriorFacing = this.currExteriorFacing;
-        this.currExteriorFacing = direction;
-    }
-
-    @Override
-    public void updatePosition(BlockPos blockPos) {
-        this.prevExteriorPosition = this.currExteriorPosition;
-        this.currExteriorPosition = blockPos;
-    }
-
-    @Override
     @SuppressWarnings("deprecation")
     public void applyControlsStorage(TardisConsoleControlsStorage controlsStorage) {
         if (this.destExteriorDimension == null) this.destExteriorDimension = this.currExteriorDimension;
@@ -307,16 +305,16 @@ public class TardisLevelCapability implements ITardisLevelData {
         if (this.destExteriorPosition == null) this.destExteriorPosition = this.currExteriorPosition;
 
         // Doors
-        this.updateDoorsState((boolean) controlsStorage.get(TardisConsoleControlRoles.DOORS), true);
+        this.setDoorsState((boolean) controlsStorage.get(TardisConsoleControlRoles.DOORS), true);
 
         // Shields
-        this.updateShieldsState((boolean) controlsStorage.get(TardisConsoleControlRoles.SHIELDS), true);
+        this.setShieldsState((boolean) controlsStorage.get(TardisConsoleControlRoles.SHIELDS), true);
 
         // Energy Artron Harvesting
-        this.updateEnergyArtronHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING));
+        this.setEnergyArtronHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING));
 
         // Energy Forge Harvesting
-        this.updateEnergyForgeHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING));
+        this.setEnergyForgeHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING));
 
         // Facing
         int facing = (int) controlsStorage.get(TardisConsoleControlRoles.FACING);
@@ -353,9 +351,11 @@ public class TardisLevelCapability implements ITardisLevelData {
         int dimPrev = (int) controlsStorage.get(TardisConsoleControlRoles.DIM_PREV);
         int dimNext = (int) controlsStorage.get(TardisConsoleControlRoles.DIM_NEXT);
         if (dimPrev != 0 || dimNext != 0) {
+            Map<ResourceKey<Level>, ServerLevel> levels = this.level.getServer().forgeGetWorldMap();
             List<ResourceKey<Level>> levelKeys = new ArrayList<>();
 
-            this.level.getServer().forgeGetWorldMap().keySet().forEach((key) -> {
+            levels.keySet().forEach((key) -> {
+                if (levels.get(key).dimensionTypeRegistration().is(ModDimensionTypes.TARDIS)) return;
                 if (key == this.level.dimension()) return;
                 levelKeys.add(key);
             });
