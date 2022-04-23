@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.base.blockentities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.TardisLevelCapability;
@@ -123,6 +124,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
 
         this.animateControls();
+
+        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+            List<BaseTardisConsoleBlockEntity> consoleTiles = levelProvider.getConsoleTiles();
+            if (consoleTiles.size() > 0 && consoleTiles.get(0) == this) levelProvider.tick();
+        });
     }
 
     public void sendMonitorUpdatePacket() {

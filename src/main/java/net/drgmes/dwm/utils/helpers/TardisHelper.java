@@ -56,9 +56,9 @@ public class TardisHelper {
         });
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            provider.setDimension(level.dimension());
-            provider.setFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING));
-            provider.setPosition(blockPos);
+            provider.setDimension(level.dimension(), false);
+            provider.setFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING), false);
+            provider.setPosition(blockPos, false);
         });
 
         return tardisLevel;

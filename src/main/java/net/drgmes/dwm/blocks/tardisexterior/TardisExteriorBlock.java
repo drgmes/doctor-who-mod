@@ -41,6 +41,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return null;
         return new TardisExteriorBlockEntity(blockPos, blockState);
     }
 

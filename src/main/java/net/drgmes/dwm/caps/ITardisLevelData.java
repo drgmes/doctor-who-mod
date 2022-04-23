@@ -1,9 +1,11 @@
 package net.drgmes.dwm.caps;
 
 import java.util.List;
+import java.util.Map;
 
 import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -11,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -18,17 +21,17 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
+    void addSystem(ITardisSystem system);
+    Map<Class<? extends ITardisSystem>, ITardisSystem> getSystems();
+    ITardisSystem getSystem(Class<? extends ITardisSystem> system);
+
     boolean isValid();
     boolean isDoorsOpened();
     boolean isShieldsEnabled();
     boolean isEnergyArtronHarvesting();
     boolean isEnergyForgeHarvesting();
 
-    List<TardisDoorBlockEntity> getDoorTiles();
-    List<BaseTardisConsoleBlockEntity> getConsoleTiles();
-    int getEnergyArtron();
-    int getEnergyForge();
-    int getXYZStep();
+    ServerLevel getLevel();
 
     ResourceKey<Level> getPreviousExteriorDimension();
     ResourceKey<Level> getCurrentExteriorDimension();
@@ -43,18 +46,25 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     BlockPos getCurrentExteriorRelativePosition();
     BlockPos getDestinationExteriorPosition();
 
+    int getXYZStep();
+    int getEnergyArtron();
+    int getEnergyForge();
+    List<TardisDoorBlockEntity> getDoorTiles();
+    List<BaseTardisConsoleBlockEntity> getConsoleTiles();
+
+    void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
+    void setFacing(Direction direction, boolean shouldUpdatePrev);
+    void setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
     void setDoorsState(boolean flag, boolean shouldUpdate);
     void setShieldsState(boolean flag, boolean shouldUpdate);
     void setEnergyArtronHarvesting(boolean flag);
     void setEnergyForgeHarvesting(boolean flag);
-    void setDimension(ResourceKey<Level> dimension);
-    void setFacing(Direction direction);
-    void setPosition(BlockPos blockPos);
 
     void updateDoorTiles();
     void updateConsoleTiles();
 
     void applyControlsStorage(TardisConsoleControlsStorage controlsStorage);
+    void tick();
 
     public static class TardisLevelProvider implements ICapabilitySerializable<CompoundTag> {
         final private LazyOptional<ITardisLevelData> holder;
