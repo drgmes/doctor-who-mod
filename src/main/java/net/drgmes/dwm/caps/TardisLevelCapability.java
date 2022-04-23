@@ -214,22 +214,22 @@ public class TardisLevelCapability implements ITardisLevelData {
 
     @Override
     public BlockPos getPreviousExteriorPosition() {
-        return this.prevExteriorPosition != null ? this.prevExteriorPosition : this.getCurrentExteriorPosition();
+        return this.prevExteriorPosition != null ? this.prevExteriorPosition.immutable() : this.getCurrentExteriorPosition();
     }
 
     @Override
     public BlockPos getCurrentExteriorPosition() {
-        return this.currExteriorPosition;
+        return this.currExteriorPosition.immutable();
     }
 
     @Override
     public BlockPos getCurrentExteriorRelativePosition() {
-        return this.currExteriorPosition.relative(this.currExteriorFacing);
+        return this.currExteriorPosition.relative(this.currExteriorFacing).immutable();
     }
 
     @Override
     public BlockPos getDestinationExteriorPosition() {
-        return this.destExteriorPosition != null ? this.destExteriorPosition : this.getCurrentExteriorPosition();
+        return this.destExteriorPosition != null ? this.destExteriorPosition.immutable() : this.getCurrentExteriorPosition();
     }
 
     @Override
@@ -264,15 +264,30 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public void setDestinationDimension(ResourceKey<Level> dimension) {
+        this.destExteriorDimension = dimension;
+    }
+
+    @Override
     public void setFacing(Direction direction, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorFacing = this.currExteriorFacing;
         this.currExteriorFacing = direction;
     }
 
     @Override
+    public void setDestinationFacing(Direction direction) {
+        this.destExteriorFacing = direction;
+    }
+
+    @Override
     public void setPosition(BlockPos blockPos, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorPosition = this.currExteriorPosition;
         this.currExteriorPosition = blockPos.immutable();
+    }
+
+    @Override
+    public void setDestinationPosition(BlockPos blockPos) {
+        this.destExteriorPosition = blockPos.immutable();
     }
 
     @Override
@@ -286,6 +301,8 @@ public class TardisLevelCapability implements ITardisLevelData {
 
         if (shouldUpdate && this.isValid() && this.level instanceof ServerLevel) {
             ServerLevel exteriorLevel = ((ServerLevel) this.level).getServer().getLevel(this.currExteriorDimension);
+            if (exteriorLevel == null) return;
+
             BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
 
             if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {

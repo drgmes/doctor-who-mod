@@ -67,6 +67,11 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
             if (flightSystem.tickInFlight > 0) flight = flightSystem.getFlightPercent() + "%";
         }
 
+        String isMaterialized = "YES";
+        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            if (!materializationSystem.isMaterialized) isMaterialized = "NO";
+        }
+
         BlockPos prevExteriorPosition = provider.getPreviousExteriorPosition();
         BlockPos currExteriorPosition = provider.getCurrentExteriorPosition();
         BlockPos destExteriorPosition = provider.getDestinationExteriorPosition();
@@ -80,8 +85,9 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
         String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
-        this.printStringsToScreen(poseStack, buffer, 0.00235F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, 0.002175F, new String[] {
             this.buildScreenParamText("Flight", flight),
+            this.buildScreenParamText("Materialized", isMaterialized),
             "",
             this.buildScreenParamText("Prev Position", posPrevName),
             this.buildScreenParamText("Curr Position", posCurrName),
@@ -98,18 +104,11 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     private void renderScreenPage2(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, ITardisLevelData provider) {
-        String isMaterialized = "YES";
-        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            if (!materializationSystem.isMaterialized) isMaterialized = "NO";
-        }
-
         String shieldsState = provider.isShieldsEnabled() ? "ON" : "OFF";
         String artronEnergyHarvestingState = provider.isEnergyArtronHarvesting() ? "ON" : "OFF";
         String forgeEnergyHarvestingState = provider.isEnergyForgeHarvesting() ? "ON" : "OFF";
 
-        this.printStringsToScreen(poseStack, buffer, 0.00235F, new String[] {
-            this.buildScreenParamText("Materialized", isMaterialized),
-            "",
+        this.printStringsToScreen(poseStack, buffer, 0.002175F, new String[] {
             this.buildScreenParamText("Shields", shieldsState),
             this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
             this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),
@@ -162,7 +161,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String append = appendInput.substring(0, Math.min(substring, appendInput.length()));
         append += appendInput.length() > append.length() ? "..." : "";
 
-        int lineWidth = 220;
+        int lineWidth = 239;
         Font font = this.ctx.getFont();
         String str = title + ": " + append;
 

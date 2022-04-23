@@ -54,7 +54,7 @@ public class TardisSystemFlight implements ITardisSystem {
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
             if (!rematSystem.demat()) return false;
 
-            this.lastTicksInFlyGoal = 120;
+            this.lastTicksInFlyGoal = 60;
             this.tickInFlight = this.lastTicksInFlyGoal;
         }
 

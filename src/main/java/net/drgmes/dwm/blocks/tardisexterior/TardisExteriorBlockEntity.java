@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardisexterior;
 import java.util.UUID;
 
 import net.drgmes.dwm.setup.ModBlockEntities;
-import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -47,28 +46,12 @@ public class TardisExteriorBlockEntity extends BlockEntity {
         this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-
-        if (this.tardisLevelUUID == null) return;
-        ServerLevel tardisLevel = this.getTardisDimension(this.level, this.worldPosition);
-        if (tardisLevel == null) return;
-
-        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (!provider.isValid()) return;
-
-            BlockState blockState = this.level.getBlockState(this.worldPosition);
-            this.level.setBlock(this.worldPosition, blockState.setValue(TardisExteriorBlock.OPEN, provider.isDoorsOpened()), 3);
-        });
-    }
-
     public String getTardisDimUUID() {
         if (this.tardisLevelUUID == null) this.tardisLevelUUID = UUID.randomUUID().toString();
         return this.tardisLevelUUID;
     }
 
-    public ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
-        return TardisHelper.setupTardis(this, level, blockPos);
+    public ServerLevel getTardisDimension(Level level) {
+        return TardisHelper.setupTardis(this, level);
     }
 }

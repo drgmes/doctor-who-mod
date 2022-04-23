@@ -39,7 +39,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     private ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
     private int timeToSpawnControls = 0;
-    private int monitorPageLength = 3;
+    private int monitorPageLength = 2;
 
     public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);

@@ -44,7 +44,7 @@ public class TardisHelper {
         });
     }
 
-    public static ServerLevel setupTardis(TardisExteriorBlockEntity tile, Level level, BlockPos blockPos) {
+    public static ServerLevel setupTardis(TardisExteriorBlockEntity tile, Level level) {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
@@ -56,9 +56,13 @@ public class TardisHelper {
         });
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            provider.setDimension(level.dimension(), false);
-            provider.setFacing(level.getBlockState(blockPos).getValue(TardisExteriorBlock.FACING), false);
-            provider.setPosition(blockPos, false);
+            try {
+                provider.setDimension(level.dimension(), false);
+                provider.setFacing(tile.getBlockState().getValue(TardisExteriorBlock.FACING), false);
+                provider.setPosition(tile.getBlockPos(), false);
+            } catch(Exception e) {
+                System.out.println(e);
+            }
         });
 
         return tardisLevel;

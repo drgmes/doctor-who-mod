@@ -53,8 +53,14 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 
     void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
+    void setDestinationDimension(ResourceKey<Level> dimension);
+
     void setFacing(Direction direction, boolean shouldUpdatePrev);
+    void setDestinationFacing(Direction direction);
+
     void setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
+    void setDestinationPosition(BlockPos blockPos);
+
     void setDoorsState(boolean flag, boolean shouldUpdate);
     void setShieldsState(boolean flag, boolean shouldUpdate);
     void setEnergyArtronHarvesting(boolean flag);
