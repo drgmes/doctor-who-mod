@@ -49,7 +49,9 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     int getXYZStep();
     int getEnergyArtron();
     int getEnergyForge();
+    TardisDoorBlockEntity getMainDoorTile();
     List<TardisDoorBlockEntity> getDoorTiles();
+    BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 
     void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);

@@ -1,7 +1,6 @@
 package net.drgmes.dwm.utils.base.blockentities;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.TardisLevelCapability;
@@ -22,7 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -113,7 +111,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
     }
 
-    public void tick(Level level, BlockPos blockPos, BlockState blockState) {
+    public void tick() {
         if (this.timeToSpawnControls > 0) {
             --this.timeToSpawnControls;
 
@@ -126,8 +124,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.animateControls();
 
         this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-            List<BaseTardisConsoleBlockEntity> consoleTiles = levelProvider.getConsoleTiles();
-            if (consoleTiles.size() > 0 && consoleTiles.get(0) == this) levelProvider.tick();
+            if (levelProvider.getMainConsoleTile() == this) levelProvider.tick();
         });
     }
 

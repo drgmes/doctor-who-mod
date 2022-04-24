@@ -122,12 +122,13 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     private void renderScreenPage1(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, ITardisLevelData provider) {
         String flight = "NO";
         if (provider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-            if (flightSystem.tickInFlight > 0) flight = flightSystem.getFlightPercent() + "%";
+            if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
         }
 
-        String isMaterialized = "YES";
+        String materialized = "YES";
         if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            if (!materializationSystem.isMaterialized) isMaterialized = "NO";
+            if (materializationSystem.inProgress()) materialized = materializationSystem.getProgressPercent() + "%";
+            else if (!materializationSystem.isMaterialized()) materialized = "NO";
         }
 
         BlockPos prevExteriorPosition = provider.getPreviousExteriorPosition();
@@ -145,7 +146,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
         this.printStringsToScreen(poseStack, buffer, 0.002175F, new String[] {
             this.buildScreenParamText("Flight", flight),
-            this.buildScreenParamText("Materialized", isMaterialized),
+            this.buildScreenParamText("Materialized", materialized),
             "",
             this.buildScreenParamText("Prev Position", posPrevName),
             this.buildScreenParamText("Curr Position", posCurrName),

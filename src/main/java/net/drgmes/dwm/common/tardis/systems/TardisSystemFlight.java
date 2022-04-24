@@ -2,12 +2,19 @@ package net.drgmes.dwm.common.tardis.systems;
 
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
+import net.drgmes.dwm.setup.ModSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 
 public class TardisSystemFlight implements ITardisSystem {
-    public int tickInFlight = 0;
-    public int lastTicksInFlyGoal = 0;
     private final ITardisLevelData tardisData;
+    private boolean isFlightLaunched = false;
+    private boolean isSoundFlyPlayed = false;
+
+    public int tickInProgress = 0;
+    public int tickInProgressGoal = 0;
 
     public TardisSystemFlight(ITardisLevelData tardisData) {
         this.tardisData = tardisData;
@@ -15,70 +22,89 @@ public class TardisSystemFlight implements ITardisSystem {
 
     @Override
     public void load(CompoundTag tag) {
-        this.tickInFlight = tag.getInt("tickInFlight");
-        this.lastTicksInFlyGoal = tag.getInt("lastTicksInFlyGoal");
+        this.tickInProgress = tag.getInt("tickInProgress");
+        this.tickInProgressGoal = tag.getInt("tickInProgressGoal");
     }
 
     @Override
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
 
-        tag.putInt("tickInFlight", this.tickInFlight);
-        tag.putInt("lastTicksInFlyGoal", this.lastTicksInFlyGoal);
+        tag.putInt("tickInProgress", this.tickInProgress);
+        tag.putInt("tickInProgressGoal", this.tickInProgressGoal);
 
         return tag;
     }
 
     @Override
     public void tick() {
-        if (this.tickInFlight > 0) {
-            this.tickInFlight--;
+        if (this.tickInProgress > 0) {
+            this.tickInProgress--;
 
-            if (this.tickInFlight == 1) this.stopFligth();
-            else this.tardisData.updateConsoleTiles();
+            this.playFlySound();
+            if (this.tickInProgress % 33 == 0) this.isSoundFlyPlayed = false;
+
+            if (this.tickInProgress == 1) this.land();
+            this.tardisData.updateConsoleTiles();
         }
     }
 
-    public boolean isInFligth() {
-        return this.tickInFlight > 0;
+    public int getProgressPercent() {
+        return (int) Math.ceil((this.tickInProgressGoal - this.tickInProgress) / (float) this.tickInProgressGoal * 100);
+    }
+
+    public boolean inProgress() {
+        return this.isFlightLaunched || this.tickInProgress > 0;
     }
 
     public void setFlight(boolean flag) {
-        if (flag) this.startFligth();
-        else this.stopFligth();
+        if (flag ? this.takeoff() : this.land()) {
+            this.tardisData.updateConsoleTiles();
+        }
     }
 
-    public boolean startFligth() {
-        if (this.isInFligth()) return false;
+    public boolean takeoff() {
+        if (this.inProgress()) return false;
+        this.isFlightLaunched = true;
 
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
-            if (!rematSystem.demat()) return false;
-
-            this.lastTicksInFlyGoal = 60;
-            this.tickInFlight = this.lastTicksInFlyGoal;
+            return rematSystem.demat(() -> {
+                this.isSoundFlyPlayed = false;
+                this.tickInProgressGoal = 66;
+                this.tickInProgress = this.tickInProgressGoal;
+            });
         }
 
         return false;
     }
 
-    public boolean stopFligth() {
-        if (!this.isInFligth()) return false;
-
-        this.tickInFlight = 0;
-        this.tardisData.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
-        this.tardisData.setDimension(this.tardisData.getDestinationExteriorDimension(), true);
-        this.tardisData.setFacing(this.tardisData.getDestinationExteriorFacing(), true);
-        this.tardisData.setPosition(this.tardisData.getDestinationExteriorPosition(), true);
-        this.tardisData.updateConsoleTiles();
+    public boolean land() {
+        if (!this.inProgress()) return false;
 
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
+            this.isFlightLaunched = false;
+            this.isSoundFlyPlayed = false;
+            this.tickInProgress = 0;
+            this.tardisData.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
+            this.tardisData.setDimension(this.tardisData.getDestinationExteriorDimension(), true);
+            this.tardisData.setFacing(this.tardisData.getDestinationExteriorFacing(), true);
+            this.tardisData.setPosition(this.tardisData.getDestinationExteriorPosition(), true);
+            this.tardisData.updateConsoleTiles();
+
             return rematSystem.remat();
         }
 
         return false;
     }
 
-    public int getFlightPercent() {
-        return (int) Math.ceil((this.lastTicksInFlyGoal - this.tickInFlight) / (float) this.lastTicksInFlyGoal * 100);
+    public void playSound(SoundEvent soundEvent) {
+        BlockPos consoleTileBlockPos = this.tardisData.getMainConsoleTile().getBlockPos();
+        this.tardisData.getLevel().playSound(null, consoleTileBlockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    private void playFlySound() {
+        if (this.isSoundFlyPlayed) return;
+        this.playSound(ModSounds.TARDIS_FLY.get());
+        this.isSoundFlyPlayed = true;
     }
 }

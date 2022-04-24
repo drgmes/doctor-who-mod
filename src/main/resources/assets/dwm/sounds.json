@@ -1,0 +1,18 @@
+{
+	"tardis_error": {
+		"subtitle": "subtitle.tardis.tardis_error",
+		"sounds": ["dwm:tardis/tardis_error"]
+	},
+	"tardis_fly": {
+		"subtitle": "subtitle.tardis.tardis_fly",
+		"sounds": ["dwm:tardis/tardis_fly"]
+	},
+	"tardis_land": {
+		"subtitle": "subtitle.tardis.tardis_land",
+		"sounds": ["dwm:tardis/tardis_land"]
+	},
+	"tardis_takeoff": {
+		"subtitle": "subtitle.tardis.tardis_takeoff",
+		"sounds": ["dwm:tardis/tardis_takeoff"]
+	}
+}

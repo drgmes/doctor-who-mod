@@ -249,8 +249,20 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public TardisDoorBlockEntity getMainDoorTile() {
+        int size = this.doorTiles.size();
+        return size > 0 ? this.doorTiles.get(size - 1) : null;
+    }
+
+    @Override
     public List<TardisDoorBlockEntity> getDoorTiles() {
         return this.doorTiles;
+    }
+
+    @Override
+    public BaseTardisConsoleBlockEntity getMainConsoleTile() {
+        int size = this.consoleTiles.size();
+        return size > 0 ? this.consoleTiles.get(size - 1) : null;
     }
 
     @Override
@@ -293,8 +305,8 @@ public class TardisLevelCapability implements ITardisLevelData {
 
     @Override
     public void setDoorsState(boolean flag, boolean shouldUpdate) {
-        if (this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            if (!materializationSystem.isMaterialized) return;
+        if (flag && this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            if (!materializationSystem.isMaterialized()) return;
         }
 
         if (this.doorsOpened == flag) return;
@@ -380,16 +392,14 @@ public class TardisLevelCapability implements ITardisLevelData {
         if (this.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
             boolean handbrake = (boolean) controlsStorage.get(TardisConsoleControlRoles.HANDBRAKE);
             flightSystem.setFlight(handbrake ? false : (boolean) controlsStorage.get(TardisConsoleControlRoles.STARTER));
-
-            isInFlight = flightSystem.isInFligth();
+            isInFlight = flightSystem.inProgress();
         }
 
         // Materialization
         if (this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
             materializationSystem.setSafeDirection(Math.abs((int) controlsStorage.get(TardisConsoleControlRoles.SAFE_DIRECTION)));
-            materializationSystem.setupMaterializationState(!(boolean) controlsStorage.get(TardisConsoleControlRoles.MATERIALIZATION));
-
-            isMaterialized = materializationSystem.isMaterialized;
+            materializationSystem.setMaterializationState(!(boolean) controlsStorage.get(TardisConsoleControlRoles.MATERIALIZATION));
+            isMaterialized = materializationSystem.isMaterialized();
         }
 
         // Only if Tardis is not in flight (and could be when dematerialized)

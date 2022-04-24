@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.DataGenerators;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -41,6 +42,7 @@ public class Registration {
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = createRegistry(ForgeRegistries.BLOCK_ENTITIES);
     public static final DeferredRegister<StructureFeature<?>> STRUCTURES = createRegistry(ForgeRegistries.STRUCTURE_FEATURES);
     public static final DeferredRegister<Biome> BIOMES = createRegistry(ForgeRegistries.BIOMES);
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = createRegistry(ForgeRegistries.SOUND_EVENTS);
 
     public static void init() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -70,6 +72,7 @@ public class Registration {
         BLOCK_ENTITIES.register(modEventBus);
         STRUCTURES.register(modEventBus);
         BIOMES.register(modEventBus);
+        SOUND_EVENTS.register(modEventBus);
 
         ModItems.init();
         ModBlocks.init();
@@ -81,6 +84,7 @@ public class Registration {
         ModStructures.init();
         ModCapabilities.init();
         ModWorldGen.init();
+        ModSounds.init();
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -143,5 +147,9 @@ public class Registration {
 
     public static RegistryObject<Biome> registerBiome(String name, Supplier<Biome> biomeSupplier) {
         return Registration.BIOMES.register(name, biomeSupplier);
+    }
+
+    public static RegistryObject<SoundEvent> registerSoundEvent(String name) {
+        return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(DWM.MODID, name)));
     }
 }

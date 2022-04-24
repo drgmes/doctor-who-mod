@@ -91,11 +91,11 @@ public class TardisConsoleControlsStorage {
 
     public void applyTardisWorldStorage(ITardisLevelData storage) {
         if (storage.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-            this.values.put(TardisConsoleControlRoles.STARTER, flightSystem.isInFligth());
+            this.values.put(TardisConsoleControlRoles.STARTER, flightSystem.inProgress());
         }
 
         if (storage.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            this.values.put(TardisConsoleControlRoles.MATERIALIZATION, !materializationSystem.isMaterialized);
+            this.values.put(TardisConsoleControlRoles.MATERIALIZATION, !materializationSystem.isMaterialized());
             this.values.put(TardisConsoleControlRoles.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
         }
 

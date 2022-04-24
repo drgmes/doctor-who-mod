@@ -1,13 +1,19 @@
 package net.drgmes.dwm.common.tardis.systems;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.setup.ModBlocks;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
@@ -22,9 +28,17 @@ public class TardisSystemMaterialization implements ITardisSystem {
         NONE
     }
 
-    public boolean isMaterialized = true;
-    public TardisSystemMaterializationSafeDirection safeDirection;
+    private final List<Runnable> dematConsumers = new ArrayList<>();
+    private final List<Runnable> rematConsumers = new ArrayList<>();
+
     private final ITardisLevelData tardisData;
+    private boolean isMaterialized = true;
+
+    public int dematTickInProgress = 0;
+    public int rematTickInProgress = 0;
+    public int dematTickInProgressGoal = 0;
+    public int rematTickInProgressGoal = 0;
+    public TardisSystemMaterializationSafeDirection safeDirection;
 
     public TardisSystemMaterialization(ITardisLevelData tardisData) {
         this.tardisData = tardisData;
@@ -34,6 +48,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
     @Override
     public void load(CompoundTag tag) {
         this.isMaterialized = tag.getBoolean("isMaterialized");
+        this.dematTickInProgress = tag.getInt("dematTickInProgress");
+        this.rematTickInProgress = tag.getInt("rematTickInProgress");
+        this.dematTickInProgressGoal = tag.getInt("dematTickInProgressGoal");
+        this.rematTickInProgressGoal = tag.getInt("rematTickInProgressGoal");
         this.safeDirection = TardisSystemMaterializationSafeDirection.valueOf(tag.getString("safeDirection"));
     }
 
@@ -42,6 +60,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
         CompoundTag tag = new CompoundTag();
 
         tag.putBoolean("isMaterialized", this.isMaterialized);
+        tag.putInt("dematTickInProgress", this.dematTickInProgress);
+        tag.putInt("rematTickInProgress", this.rematTickInProgress);
+        tag.putInt("dematTickInProgressGoal", this.dematTickInProgressGoal);
+        tag.putInt("rematTickInProgressGoal", this.rematTickInProgressGoal);
         tag.putString("safeDirection", this.safeDirection.name());
 
         return tag;
@@ -49,6 +71,39 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void tick() {
+        if (this.inProgress()) {
+            if (this.inDematProgress()) {
+                this.dematTickInProgress--;
+                if (!this.inDematProgress()) this.demat();
+            }
+            else if (this.inRematProgress()) {
+                this.rematTickInProgress--;
+            }
+
+            this.tardisData.updateConsoleTiles();
+        }
+    }
+
+    public int getProgressPercent() {
+        if (this.dematTickInProgress > 0) return (int) Math.ceil(this.dematTickInProgress / (float) this.dematTickInProgressGoal * 100);
+        if (this.rematTickInProgress > 0) return (int) Math.ceil((this.rematTickInProgressGoal - this.rematTickInProgress) / (float) this.rematTickInProgressGoal * 100);
+        return 100;
+    }
+
+    public boolean inProgress() {
+        return this.inDematProgress() || this.inRematProgress();
+    }
+
+    public boolean inDematProgress() {
+        return this.dematTickInProgress > 0;
+    }
+
+    public boolean inRematProgress() {
+        return this.rematTickInProgress > 0;
+    }
+
+    public boolean isMaterialized() {
+        return !this.inProgress() && this.isMaterialized;
     }
 
     public void setSafeDirection(int value) {
@@ -57,9 +112,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
         else if (value == 2) this.safeDirection = TardisSystemMaterializationSafeDirection.NONE;
     }
 
-    public boolean setupMaterializationState(boolean flag) {
+    public boolean setMaterializationState(boolean flag) {
         if (this.tardisData.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-            if (flightSystem.isInFligth()) return false;
+            if (flightSystem.inProgress()) return false;
         }
 
         if (flag) return this.remat();
@@ -67,15 +122,28 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     public boolean demat() {
-        if (!this.isMaterialized) return true;
+        if (this.inProgress()) return false;
+
+        if (!this.isMaterialized) {
+            this.runDematConsumers();
+            return true;
+        }
+
+        if (this.dematTickInProgressGoal == 0) {
+            this.dematTickInProgressGoal = 240;
+            this.dematTickInProgress = this.dematTickInProgressGoal;
+            this.tardisData.setDoorsState(false, true);
+            this.playTakeoffSound();
+            return false;
+        }
 
         ServerLevel level = this.tardisData.getLevel();
         if (level != null) {
             ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
             if (exteriorLevel == null) return false;
 
-            this.tardisData.setDoorsState(false, true);
             this.isMaterialized = false;
+            this.dematTickInProgressGoal = 0;
             this.tardisData.updateConsoleTiles();
 
             DWMUtils.runInThread("materialization", () -> {
@@ -89,14 +157,25 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 }
             });
 
+            this.runDematConsumers();
             return true;
         }
 
         return false;
     }
 
+    public boolean demat(Runnable consumer) {
+        this.dematConsumers.add(consumer);
+        return this.demat();
+    }
+
     public boolean remat() {
-        if (this.isMaterialized) return true;
+        if (this.inProgress()) return false;
+
+        if (this.isMaterialized) {
+            this.runRematConsumers();
+            return true;
+        }
 
         ServerLevel level = this.tardisData.getLevel();
         if (level != null) {
@@ -123,15 +202,34 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     tardisExteriorBlockEntity.tardisLevelUUID = level.dimension().location().getPath();
 
                     this.isMaterialized = true;
-                    this.tardisData.updateConsoleTiles();
+                    this.rematTickInProgressGoal = 180;
+                    this.rematTickInProgress = this.rematTickInProgressGoal;
+                    this.playLandingSound();
                     return true;
                 }
 
                 this.demat();
             }
+
+            this.playErrorSound();
         }
 
         return false;
+    }
+
+    public boolean remat(Runnable consumer) {
+        this.rematConsumers.add(consumer);
+        return this.remat();
+    }
+
+    private void runDematConsumers() {
+        this.dematConsumers.forEach((consumer) -> consumer.run());
+        this.dematConsumers.clear();
+    }
+
+    private void runRematConsumers() {
+        this.rematConsumers.forEach((consumer) -> consumer.run());
+        this.rematConsumers.clear();
     }
 
     private boolean findSafePosition() {
@@ -204,5 +302,22 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private boolean checkBlockIsSolid(BlockState blockState) {
         return !this.checkBlockIsEmpty(blockState) && blockState.getFluidState().isEmpty();
+    }
+
+    public void playSound(SoundEvent soundEvent) {
+        BlockPos consoleTileBlockPos = this.tardisData.getMainConsoleTile().getBlockPos();
+        this.tardisData.getLevel().playSound(null, consoleTileBlockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
+    }
+
+    private void playErrorSound() {
+        this.playSound(ModSounds.TARDIS_ERROR.get());
+    }
+
+    private void playTakeoffSound() {
+        this.playSound(ModSounds.TARDIS_TAKEOFF.get());
+    }
+
+    private void playLandingSound() {
+        this.playSound(ModSounds.TARDIS_LAND.get());
     }
 }
