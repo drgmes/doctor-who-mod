@@ -48,7 +48,7 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, scale);
-        poseStack.translate(0, -1, -0.325F);
+        poseStack.translate(0, -1, -0.2075F);
 
         model.setupAnim(tile.getBlockState());
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, alpha);

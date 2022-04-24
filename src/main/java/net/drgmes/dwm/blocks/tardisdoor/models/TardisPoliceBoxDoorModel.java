@@ -31,7 +31,7 @@ public class TardisPoliceBoxDoorModel extends EntityModel<Entity> {
     }
 
     public void setupAnim(BlockState blockState) {
-        float doorAngle = -1.65F;
+        float doorAngle = 1.85F;
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
             this.door_left.yRot = -doorAngle;
