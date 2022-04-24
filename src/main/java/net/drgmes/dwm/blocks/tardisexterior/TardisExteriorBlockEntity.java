@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TardisExteriorBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
     public String tardisConsoleRoom = "test";
+    public int materializedPercent = 100;
 
     public TardisExteriorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_EXTERIOR.get(), blockPos, blockState);
@@ -36,6 +37,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
 
         tag.putString("tardisDimUUID", this.getTardisDimUUID());
         tag.putString("tardisConsoleRoom", this.tardisConsoleRoom);
+        tag.putInt("materializedPercent", this.materializedPercent);
     }
 
     @Override
@@ -44,6 +46,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
 
         this.tardisLevelUUID = tag.getString("tardisDimUUID");
         this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
+        this.materializedPercent = tag.getInt("materializedPercent");
     }
 
     public String getTardisDimUUID() {

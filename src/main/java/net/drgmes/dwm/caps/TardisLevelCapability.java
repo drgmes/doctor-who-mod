@@ -325,9 +325,14 @@ public class TardisLevelCapability implements ITardisLevelData {
                 try {
                     if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
                         exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
-    
-                        ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
-                        ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
+
+                        ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), new ClientboundTardisExteriorUpdatePacket(
+                            this.currExteriorPosition,
+                            100,
+                            this.isDoorsOpened(),
+                            false,
+                            false
+                        ));
                     }
                 } catch (Exception e) {
                 }

@@ -48,9 +48,9 @@ public class TardisPoliceBoxExteriorModel extends EntityModel<Entity> {
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay);
-        door_left.render(poseStack, buffer, packedLight, packedOverlay);
-        door_right.render(poseStack, buffer, packedLight, packedOverlay);
+        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        door_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        door_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @SuppressWarnings("unused")

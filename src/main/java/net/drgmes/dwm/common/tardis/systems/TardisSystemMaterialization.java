@@ -6,7 +6,9 @@ import java.util.List;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
+import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModBlocks;
+import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.core.BlockPos;
@@ -17,7 +19,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
@@ -81,13 +82,17 @@ public class TardisSystemMaterialization implements ITardisSystem {
             }
 
             this.tardisData.updateConsoleTiles();
+            this.sendExteriorUpdatePacket(
+                this.dematTickInProgress == this.dematTickInProgressGoal - 1,
+                this.rematTickInProgress == this.rematTickInProgressGoal - 1
+            );
         }
     }
 
     public int getProgressPercent() {
         if (this.dematTickInProgress > 0) return (int) Math.ceil(this.dematTickInProgress / (float) this.dematTickInProgressGoal * 100);
         if (this.rematTickInProgress > 0) return (int) Math.ceil((this.rematTickInProgressGoal - this.rematTickInProgress) / (float) this.rematTickInProgressGoal * 100);
-        return 100;
+        return this.isMaterialized ? 100 : 0;
     }
 
     public boolean inProgress() {
@@ -152,8 +157,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
                 if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                    exteriorLevel.setBlock(exteriorBlockPos, Blocks.AIR.defaultBlockState(), 3);
-                    exteriorLevel.setBlock(exteriorBlockPos.above(), Blocks.AIR.defaultBlockState(), 3);
+                    exteriorLevel.removeBlock(exteriorBlockPos.above(), true);
+                    exteriorLevel.removeBlock(exteriorBlockPos, true);
                 }
             });
 
@@ -304,7 +309,24 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return !this.checkBlockIsEmpty(blockState) && blockState.getFluidState().isEmpty();
     }
 
-    public void playSound(SoundEvent soundEvent) {
+    private void sendExteriorUpdatePacket(boolean dematSound, boolean rematSound) {
+        ServerLevel level = this.tardisData.getLevel();
+        if (level == null) return;
+
+        BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+        if (exteriorLevel == null) return;
+
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(
+            exteriorBlockPos,
+            this.getProgressPercent(),
+            this.tardisData.isDoorsOpened(),
+            dematSound,
+            rematSound
+        ));
+    }
+
+    private void playSound(SoundEvent soundEvent) {
         BlockPos consoleTileBlockPos = this.tardisData.getMainConsoleTile().getBlockPos();
         this.tardisData.getLevel().playSound(null, consoleTileBlockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
