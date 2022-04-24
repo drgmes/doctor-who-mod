@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.drgmes.dwm.caps.ITardisLevelData;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 
@@ -28,6 +30,7 @@ public class TardisConsoleControlsStorage {
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) controls.putBoolean(name, (boolean) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER) controls.putInt(name, (int) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) controls.putInt(name, (int) value);
+            else if (entry.getKey().type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) controls.putInt(name, (int) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION) controls.putInt(name, (int) value);
             else if (entry.getKey().type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) controls.putInt(name, (int) value);
         }
@@ -46,6 +49,7 @@ public class TardisConsoleControlsStorage {
             else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = controls.getBoolean(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = controls.getInt(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = controls.getInt(key);
+            else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) value = controls.getInt(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = controls.getInt(key);
             else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = controls.getInt(key);
 
@@ -63,6 +67,7 @@ public class TardisConsoleControlsStorage {
         else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = false;
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = 0;
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = 0;
+        else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) value = 0;
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = 0;
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = 0;
 
@@ -76,6 +81,7 @@ public class TardisConsoleControlsStorage {
         else if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) value = this.getUpdatedBooleanDirect(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER) value = this.getUpdatedNumber(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT) value = this.getUpdatedNumberDirect(controlRole, hand);
+        else if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) value = this.getUpdatedNumberDirectBlock(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION) value = this.getUpdatedAnimation(controlRole, hand);
         else if (controlRole.type == TardisConsoleControlRoleTypes.ANIMATION_DIRECT) value = this.getUpdatedAnimationDirect(controlRole, hand);
 
@@ -84,6 +90,15 @@ public class TardisConsoleControlsStorage {
     }
 
     public void applyTardisWorldStorage(ITardisLevelData storage) {
+        if (storage.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+            this.values.put(TardisConsoleControlRoles.STARTER, flightSystem.isInFligth());
+        }
+
+        if (storage.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            this.values.put(TardisConsoleControlRoles.MATERIALIZATION, !materializationSystem.isMaterialized);
+            this.values.put(TardisConsoleControlRoles.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
+        }
+
         this.values.put(TardisConsoleControlRoles.DOORS, storage.isDoorsOpened());
         this.values.put(TardisConsoleControlRoles.SHIELDS, storage.isShieldsEnabled());
         this.values.put(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, storage.isEnergyArtronHarvesting());
@@ -105,6 +120,10 @@ public class TardisConsoleControlsStorage {
 
     private int getUpdatedNumberDirect(TardisConsoleControlRoles controlRole, InteractionHand hand) {
         return ((int) this.get(controlRole) + (hand == InteractionHand.MAIN_HAND ? 1 : -1)) % controlRole.maxIntValue;
+    }
+
+    private int getUpdatedNumberDirectBlock(TardisConsoleControlRoles controlRole, InteractionHand hand) {
+        return Math.max(0, Math.min((int) this.get(controlRole) + (hand == InteractionHand.MAIN_HAND ? 1 : -1), controlRole.maxIntValue - 1));
     }
 
     private int getUpdatedAnimation(TardisConsoleControlRoles controlRole, InteractionHand hand) {

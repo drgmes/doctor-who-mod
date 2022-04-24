@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,32 +17,53 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 public class TardisSystemMaterialization implements ITardisSystem {
     public static enum TardisSystemMaterializationSafeDirection {
-        NONE,
         TOP,
-        BOTTOM
+        BOTTOM,
+        NONE
     }
 
     public boolean isMaterialized = true;
+    public TardisSystemMaterializationSafeDirection safeDirection;
     private final ITardisLevelData tardisData;
 
     public TardisSystemMaterialization(ITardisLevelData tardisData) {
         this.tardisData = tardisData;
+        this.safeDirection = TardisSystemMaterializationSafeDirection.TOP;
     }
 
     @Override
     public void load(CompoundTag tag) {
         this.isMaterialized = tag.getBoolean("isMaterialized");
+        this.safeDirection = TardisSystemMaterializationSafeDirection.valueOf(tag.getString("safeDirection"));
     }
 
     @Override
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
+
         tag.putBoolean("isMaterialized", this.isMaterialized);
+        tag.putString("safeDirection", this.safeDirection.name());
+
         return tag;
     }
 
     @Override
     public void tick() {
+    }
+
+    public void setSafeDirection(int value) {
+        if (value == 0) this.safeDirection = TardisSystemMaterializationSafeDirection.TOP;
+        else if (value == 1) this.safeDirection = TardisSystemMaterializationSafeDirection.BOTTOM;
+        else if (value == 2) this.safeDirection = TardisSystemMaterializationSafeDirection.NONE;
+    }
+
+    public boolean setupMaterializationState(boolean flag) {
+        if (this.tardisData.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+            if (flightSystem.isInFligth()) return false;
+        }
+
+        if (flag) return this.remat();
+        return this.demat();
     }
 
     public boolean demat() {
@@ -119,8 +141,17 @@ public class TardisSystemMaterialization implements ITardisSystem {
         ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
         if (exteriorLevel == null) return false;
 
-        BlockPos safePosition = this.getSafePosition(exteriorLevel, TardisSystemMaterializationSafeDirection.TOP);
-        if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, TardisSystemMaterializationSafeDirection.BOTTOM);
+        BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+        BlockPos safePosition = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos) ? exteriorBlockPos : null;
+
+        if (this.safeDirection == TardisSystemMaterializationSafeDirection.TOP) {
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.TOP);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.BOTTOM);
+        }
+        else if (this.safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) {
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.BOTTOM);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.TOP);
+        }
 
         if (safePosition != null) {
             this.tardisData.setPosition(safePosition, false);
@@ -131,55 +162,47 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return false;
     }
 
-    private BlockPos getSafePosition(ServerLevel exteriorLevel, TardisSystemMaterializationSafeDirection safeDirection) {
-        if (safeDirection == TardisSystemMaterializationSafeDirection.NONE) return null;
-
-        BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
-        boolean freeSpaceFound = false;
-        boolean maxHeightReached = false;
-        BlockPos exteriorFrontBlockPos;
-        BlockState exteriorBlockState;
-        BlockState exteriorUpBlockState;
-        BlockState exteriorDownBlockState;
-        BlockState exteriorFrontDownBlockState;
-        BlockState exteriorFrontBlockState;
-        BlockState exteriorFrontUpBlockState;
-
+    private BlockPos getSafePosition(ServerLevel exteriorLevel, BlockPos exteriorBlockPos, TardisSystemMaterializationSafeDirection safeDirection) {
         if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.below();
         else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.above();
         else return null;
 
+        boolean freeSpaceFound = false;
         do {
             if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.above();
             else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.below();
-
-            exteriorFrontBlockPos = exteriorBlockPos.relative(this.tardisData.getCurrentExteriorFacing());
-
-            exteriorDownBlockState = exteriorLevel.getBlockState(exteriorBlockPos.below());
-            exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
-            exteriorUpBlockState = exteriorLevel.getBlockState(exteriorBlockPos.above());
-
-            exteriorFrontDownBlockState = exteriorLevel.getBlockState(exteriorFrontBlockPos.below());
-            exteriorFrontBlockState = exteriorLevel.getBlockState(exteriorFrontBlockPos);
-            exteriorFrontUpBlockState = exteriorLevel.getBlockState(exteriorFrontBlockPos.above());
-
-            boolean isBottomSolid = !this.checkBlockIsEmpty(exteriorDownBlockState) && exteriorFrontDownBlockState.getFluidState().isEmpty();
-            boolean isEmpty = this.checkBlockIsEmpty(exteriorBlockState);
-            boolean isUpEmpty = this.checkBlockIsEmpty(exteriorUpBlockState);
-
-            boolean isFrontBottomSolid = !this.checkBlockIsEmpty(exteriorFrontDownBlockState) && exteriorFrontDownBlockState.getFluidState().isEmpty();
-            boolean isFrontEmpty = this.checkBlockIsEmpty(exteriorFrontBlockState);
-            boolean isFrontUpEmpty = this.checkBlockIsEmpty(exteriorFrontUpBlockState);
-
-            freeSpaceFound = isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
-            if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) maxHeightReached = exteriorBlockPos.getY() >= exteriorLevel.getMaxBuildHeight() - 1;
-            else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) maxHeightReached = exteriorBlockPos.getY() < exteriorLevel.getMinBuildHeight();
-        } while (!freeSpaceFound && !maxHeightReached);
+            freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos);
+        } while (!freeSpaceFound && !this.checkBlockIsReachedMaxHeight(exteriorLevel, exteriorBlockPos, safeDirection));
 
         return freeSpaceFound ? exteriorBlockPos : null;
     }
 
+    private boolean checkBlockIsReachedMaxHeight(Level level, BlockPos blockPos, TardisSystemMaterializationSafeDirection safeDirection) {
+        if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) return blockPos.getY() >= level.getMaxBuildHeight() - 1;
+        else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) return blockPos.getY() < level.getMinBuildHeight();
+
+        return false;
+    }
+
+    private boolean checkBlockIsSafe(Level level, BlockPos blockPos) {
+        BlockPos frontBlockPos = blockPos.relative(this.tardisData.getCurrentExteriorFacing());
+
+        boolean isBottomSolid = this.checkBlockIsSolid(level.getBlockState(blockPos.below()));
+        boolean isEmpty = this.checkBlockIsEmpty(level.getBlockState(blockPos));
+        boolean isUpEmpty = this.checkBlockIsEmpty(level.getBlockState(blockPos.above()));
+
+        boolean isFrontBottomSolid = this.checkBlockIsSolid(level.getBlockState(frontBlockPos.below()));
+        boolean isFrontEmpty = this.checkBlockIsEmpty(level.getBlockState(frontBlockPos));
+        boolean isFrontUpEmpty = this.checkBlockIsEmpty(level.getBlockState(frontBlockPos.above()));
+
+        return isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
+    }
+
     private boolean checkBlockIsEmpty(BlockState blockState) {
         return blockState.getBlock() instanceof AirBlock || blockState.getFluidState().is(FluidTags.WATER);
+    }
+
+    private boolean checkBlockIsSolid(BlockState blockState) {
+        return !this.checkBlockIsEmpty(blockState) && blockState.getFluidState().isEmpty();
     }
 }

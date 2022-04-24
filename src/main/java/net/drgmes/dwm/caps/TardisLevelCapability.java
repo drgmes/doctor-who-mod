@@ -310,11 +310,14 @@ public class TardisLevelCapability implements ITardisLevelData {
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
                 if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
-                if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                    exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
-
-                    ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
-                    ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
+                try {
+                    if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
+                        exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
+    
+                        ClientboundTardisExteriorUpdatePacket packet = new ClientboundTardisExteriorUpdatePacket(this.currExteriorPosition, this.isDoorsOpened());
+                        ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), packet);
+                    }
+                } catch (Exception e) {
                 }
             });
         }
@@ -383,6 +386,9 @@ public class TardisLevelCapability implements ITardisLevelData {
 
         // Materialization
         if (this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            materializationSystem.setSafeDirection(Math.abs((int) controlsStorage.get(TardisConsoleControlRoles.SAFE_DIRECTION)));
+            materializationSystem.setupMaterializationState(!(boolean) controlsStorage.get(TardisConsoleControlRoles.MATERIALIZATION));
+
             isMaterialized = materializationSystem.isMaterialized;
         }
 
@@ -440,11 +446,17 @@ public class TardisLevelCapability implements ITardisLevelData {
                 this.destExteriorDimension = levelKeys.get(index);
             }
 
-            // Reset
-            int reset = (int) controlsStorage.get(TardisConsoleControlRoles.RESET);
-            if (reset != 0) this.destExteriorDimension = this.currExteriorDimension;
-            if (reset != 0) this.destExteriorFacing = this.currExteriorFacing;
-            if (reset != 0) this.destExteriorPosition = this.currExteriorPosition;
+            // Reset to Prev
+            int resetToPrev = (int) controlsStorage.get(TardisConsoleControlRoles.RESET_TO_PREV);
+            if (resetToPrev != 0) this.destExteriorDimension = this.getPreviousExteriorDimension();
+            if (resetToPrev != 0) this.destExteriorFacing = this.getPreviousExteriorFacing();
+            if (resetToPrev != 0) this.destExteriorPosition = this.getPreviousExteriorPosition();
+
+            // Reset to Current
+            int resetToCurr = (int) controlsStorage.get(TardisConsoleControlRoles.RESET_TO_CURR);
+            if (resetToCurr != 0) this.destExteriorDimension = this.getCurrentExteriorDimension();
+            if (resetToCurr != 0) this.destExteriorFacing = this.getCurrentExteriorFacing();
+            if (resetToCurr != 0) this.destExteriorPosition = this.getCurrentExteriorPosition();
         }
 
         // Only if Tardis materialized

@@ -75,7 +75,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
     @Override
     protected void activateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_CYCLE) {
+        if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) {
             model.xRot -= (1.5F / (controlRole.maxIntValue - 1)) * Math.abs(value);
             return;
         }
