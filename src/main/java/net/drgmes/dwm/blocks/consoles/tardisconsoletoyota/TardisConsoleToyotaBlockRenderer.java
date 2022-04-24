@@ -6,6 +6,8 @@ import com.mojang.math.Vector3f;
 
 import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
 import net.drgmes.dwm.caps.ITardisLevelData;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.entities.tardis.consoles.renderers.BaseTardisConsoleBlockRenderer;
@@ -51,12 +53,68 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         poseStack.popPose();
     }
 
+    @Override
+    protected void activateButton(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (value) model.y += 0.25F;
+    }
+
+    @Override
+    protected void activateButton(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        this.activateButton(model, value != 0, controlRole, partialTicks);
+    }
+
+    @Override
+    protected void animateButton(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        this.activateButton(model, value, controlRole, partialTicks);
+    }
+
+    @Override
+    protected void activateLever(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (value) model.xRot -= 1.5F;
+    }
+
+    @Override
+    protected void activateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_CYCLE) {
+            model.xRot -= (1.5F / (controlRole.maxIntValue - 1)) * Math.abs(value);
+            return;
+        }
+
+        this.activateLever(model, value != 0, controlRole, partialTicks);
+    }
+
+    @Override
+    protected void animateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        this.activateLever(model, value, controlRole, partialTicks);
+    }
+
+    @Override
+    protected void activateRotator(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        model.yRot += 1.57F * value;
+    }
+
+    @Override
+    protected void animateRotator(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (value != 0) this.activateRotator(model, value / 2, controlRole, partialTicks);
+    }
+
+    @Override
+    protected void activateHandbrake(ModelPart model, TardisConsoleControlRoles controlRole) {
+        model.xRot -= 0.6F;
+        model.yRot += 1.4F;
+        model.zRot -= 0.9F;
+    }
+
+    @Override
+    protected void activateStarter(ModelPart model, TardisConsoleControlRoles controlRole) {
+        model.xRot -= 2.2F;
+    }
+
     private void renderScreen(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer) {
         tile.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
-            if (tile.monitorPage == 2) this.renderScreenPage3(tile, poseStack, buffer, provider);
-            else if (tile.monitorPage == 1) this.renderScreenPage2(tile, poseStack, buffer, provider);
+            if (tile.monitorPage == 1) this.renderScreenPage2(tile, poseStack, buffer, provider);
             else this.renderScreenPage1(tile, poseStack, buffer, provider);
         });
     }
@@ -116,44 +174,6 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
             this.buildScreenParamText("Artron Energy", provider.getEnergyArtron() + " AE"),
             this.buildScreenParamText("Forge Energy", provider.getEnergyForge() + " FE"),
         });
-    }
-
-    private void renderScreenPage3(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, ITardisLevelData provider) {
-    }
-
-    protected void activateButton(ModelPart model) {
-        model.y += 0.25F;
-    }
-
-    protected void animateButton(ModelPart model, float partialTicks, int phase) {
-        if (phase != 0) model.y += 0.25F;
-    }
-
-    protected void activateLever(ModelPart model) {
-        model.xRot -= 1.5F;
-    }
-
-    protected void animateLever(ModelPart model, float partialTicks, int phase) {
-        if (phase != 0) model.xRot -= 1.5F;
-    }
-
-    protected void activateRotator(ModelPart model, int phase) {
-        model.yRot += 1.57F * phase;
-    }
-
-    protected void animateRotator(ModelPart model, float partialTicks, int phase) {
-        float step = 1.57F;
-        if (phase != 0) model.yRot += (step / 2) * phase;
-    }
-
-    protected void activateHandbrake(ModelPart model) {
-        model.xRot -= 0.6F;
-        model.yRot += 1.4F;
-        model.zRot -= 0.9F;
-    }
-
-    protected void activateStarter(ModelPart model) {
-        model.xRot -= 2.2F;
     }
 
     private String buildScreenParamText(String title, String appendInput) {
