@@ -306,8 +306,10 @@ public class TardisLevelCapability implements ITardisLevelData {
 
             this.updateDoorTiles();
 
-            DWMUtils.runInThread(() -> {
+            DWMUtils.runInThread("tardisUpdateDoor", () -> {
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(this.currExteriorPosition);
+                if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
+
                 if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
                     exteriorLevel.setBlock(this.currExteriorPosition, exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened()), 3);
 

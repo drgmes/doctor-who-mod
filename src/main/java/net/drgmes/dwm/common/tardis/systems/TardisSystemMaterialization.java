@@ -56,9 +56,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.isMaterialized = false;
             this.tardisData.updateConsoleTiles();
 
-            DWMUtils.runInThread(() -> {
+            DWMUtils.runInThread("materialization", () -> {
                 BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
+                if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
                 if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
                     exteriorLevel.setBlock(exteriorBlockPos, Blocks.AIR.defaultBlockState(), 3);
