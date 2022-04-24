@@ -98,9 +98,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
 
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        BlockPos blockPosBelow = blockPos.below();
-        BlockState blockStateBelow = levelReader.getBlockState(blockPosBelow);
-        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER ? blockStateBelow.isFaceSturdy(levelReader, blockPosBelow, Direction.UP) : blockStateBelow.is(this);
+        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
     }
 
     @Override
