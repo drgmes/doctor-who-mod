@@ -32,6 +32,8 @@ public class TardisDoorBlockEntity extends BlockEntity {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                 if (!levelProvider.isValid()) return;
 
+                levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorBlock.FACING));
+                levelProvider.setEntracePosition(this.getBlockPos());
                 levelProvider.getDoorTiles().add(this);
                 levelProvider.updateDoorTiles();
             });

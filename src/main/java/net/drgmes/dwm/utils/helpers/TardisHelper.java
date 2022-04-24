@@ -3,6 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import java.util.function.Function;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -21,13 +22,14 @@ import net.minecraftforge.common.util.ITeleporter;
 
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).immutable();
-    public static final BlockPos TARDIS_SPAWN_POS = TARDIS_POS.above(1).south(2).east(3).immutable();
 
     public static void teleportToTardis(Entity entity, ServerLevel destination) {
         if (destination == null || entity.level.dimension() == destination.dimension() || !destination.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS)) return;
 
-        entity.setYRot(Direction.SOUTH.toYRot());
-        entity.changeDimension(destination, new TardisTeleporter(TARDIS_SPAWN_POS));
+        destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            entity.setYRot(provider.getEntraceFacing().toYRot());
+            entity.changeDimension(destination, new TardisTeleporter(provider.getEntracePosition().relative(provider.getEntraceFacing())));
+        });
     }
 
     public static void teleportFromTardis(Entity entity, MinecraftServer server) {

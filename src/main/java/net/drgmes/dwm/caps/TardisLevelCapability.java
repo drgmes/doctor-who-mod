@@ -21,6 +21,7 @@ import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -33,6 +34,9 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisLevelCapability implements ITardisLevelData {
     private Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
+
+    private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(1).south(2).east(3).immutable();
+    private Direction entraceFacing = Direction.SOUTH;
 
     private List<TardisDoorBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
@@ -75,9 +79,14 @@ public class TardisLevelCapability implements ITardisLevelData {
         tdTag.putString("currExteriorDimension", this.getCurrentExteriorDimension().location().toString());
         tdTag.putString("destExteriorDimension", this.getDestinationExteriorDimension().location().toString());
 
+        tdTag.putString("entraceFacing", this.getEntraceFacing().getName());
         tdTag.putString("prevExteriorFacing", this.getPreviousExteriorFacing().getName());
         tdTag.putString("currExteriorFacing", this.getCurrentExteriorFacing().getName());
         tdTag.putString("destExteriorFacing", this.getDestinationExteriorFacing().getName());
+
+        tdTag.putInt("entracePositionX", this.getEntracePosition().getX());
+        tdTag.putInt("entracePositionY", this.getEntracePosition().getY());
+        tdTag.putInt("entracePositionZ", this.getEntracePosition().getZ());
 
         tdTag.putInt("prevExteriorPositionX", this.getPreviousExteriorPosition().getX());
         tdTag.putInt("prevExteriorPositionY", this.getPreviousExteriorPosition().getY());
@@ -116,10 +125,12 @@ public class TardisLevelCapability implements ITardisLevelData {
         this.currExteriorDimension = this.getDimensionByKey(tdTag, "currExteriorDimension");
         this.destExteriorDimension = this.getDimensionByKey(tdTag, "destExteriorDimension");
 
+        this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
         this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
         this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
         this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
 
+        this.entracePosition = this.getBlockPosByKey(tdTag, "entracePosition");
         this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
         this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
         this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
@@ -199,6 +210,11 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public Direction getEntraceFacing() {
+        return this.entraceFacing;
+    }
+
+    @Override
     public Direction getPreviousExteriorFacing() {
         return this.prevExteriorFacing != null ? this.prevExteriorFacing : this.getCurrentExteriorFacing();
     }
@@ -211,6 +227,11 @@ public class TardisLevelCapability implements ITardisLevelData {
     @Override
     public Direction getDestinationExteriorFacing() {
         return this.destExteriorFacing != null ? this.destExteriorFacing : this.getCurrentExteriorFacing();
+    }
+
+    @Override
+    public BlockPos getEntracePosition() {
+        return this.entracePosition;
     }
 
     @Override
@@ -282,6 +303,11 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     @Override
+    public void setEntraceFacing(Direction direction) {
+        this.entraceFacing = direction;
+    }
+
+    @Override
     public void setFacing(Direction direction, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorFacing = this.currExteriorFacing;
         this.currExteriorFacing = direction;
@@ -290,6 +316,11 @@ public class TardisLevelCapability implements ITardisLevelData {
     @Override
     public void setDestinationFacing(Direction direction) {
         this.destExteriorFacing = direction;
+    }
+
+    @Override
+    public void setEntracePosition(BlockPos blockPos) {
+        this.entracePosition = blockPos.immutable();
     }
 
     @Override

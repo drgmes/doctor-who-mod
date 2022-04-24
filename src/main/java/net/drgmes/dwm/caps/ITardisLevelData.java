@@ -37,10 +37,12 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     ResourceKey<Level> getCurrentExteriorDimension();
     ResourceKey<Level> getDestinationExteriorDimension();
 
+    Direction getEntraceFacing();
     Direction getPreviousExteriorFacing();
     Direction getCurrentExteriorFacing();
     Direction getDestinationExteriorFacing();
 
+    BlockPos getEntracePosition();
     BlockPos getPreviousExteriorPosition();
     BlockPos getCurrentExteriorPosition();
     BlockPos getCurrentExteriorRelativePosition();
@@ -57,9 +59,11 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
     void setDestinationDimension(ResourceKey<Level> dimension);
 
+    void setEntraceFacing(Direction direction);
     void setFacing(Direction direction, boolean shouldUpdatePrev);
     void setDestinationFacing(Direction direction);
 
+    void setEntracePosition(BlockPos blockPos);
     void setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
     void setDestinationPosition(BlockPos blockPos);
 
