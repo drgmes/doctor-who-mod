@@ -163,15 +163,15 @@ public class TardisSystemMaterialization implements ITardisSystem {
             exteriorFrontBlockState = exteriorLevel.getBlockState(exteriorFrontBlockPos);
             exteriorFrontUpBlockState = exteriorLevel.getBlockState(exteriorFrontBlockPos.above());
 
-            boolean isBottomEmpty = this.checkBlockIsEmpty(exteriorDownBlockState);
+            boolean isBottomSolid = !this.checkBlockIsEmpty(exteriorDownBlockState) && exteriorFrontDownBlockState.getFluidState().isEmpty();
             boolean isEmpty = this.checkBlockIsEmpty(exteriorBlockState);
             boolean isUpEmpty = this.checkBlockIsEmpty(exteriorUpBlockState);
 
-            boolean isFrontBottomEmpty = this.checkBlockIsEmpty(exteriorFrontDownBlockState);
+            boolean isFrontBottomSolid = !this.checkBlockIsEmpty(exteriorFrontDownBlockState) && exteriorFrontDownBlockState.getFluidState().isEmpty();
             boolean isFrontEmpty = this.checkBlockIsEmpty(exteriorFrontBlockState);
             boolean isFrontUpEmpty = this.checkBlockIsEmpty(exteriorFrontUpBlockState);
 
-            freeSpaceFound = !isBottomEmpty && isEmpty && isUpEmpty && !isFrontBottomEmpty && isFrontEmpty && isFrontUpEmpty;
+            freeSpaceFound = isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
             if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) maxHeightReached = exteriorBlockPos.getY() >= exteriorLevel.getMaxBuildHeight() - 1;
             else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) maxHeightReached = exteriorBlockPos.getY() < exteriorLevel.getMinBuildHeight();
         } while (!freeSpaceFound && !maxHeightReached);
