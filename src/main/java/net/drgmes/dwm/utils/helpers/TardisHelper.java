@@ -68,7 +68,7 @@ public class TardisHelper {
         return tardisLevel;
     }
 
-    private static class TardisTeleporter implements ITeleporter {
+    public static class TardisTeleporter implements ITeleporter {
         private BlockPos pos = BlockPos.ZERO;
 
         public TardisTeleporter(BlockPos pos) {

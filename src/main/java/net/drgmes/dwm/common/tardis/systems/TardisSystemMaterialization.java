@@ -13,15 +13,19 @@ import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.helpers.TardisHelper.TardisTeleporter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public class TardisSystemMaterialization implements ITardisSystem {
     public static enum TardisSystemMaterializationSafeDirection {
@@ -184,7 +188,6 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.inProgress()) return false;
 
         if (this.isMaterialized) {
-            this.sendExteriorUpdatePacket(false, false);
             this.runRematConsumers();
             return true;
         }
@@ -218,6 +221,19 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     this.rematTickInProgress = this.rematTickInProgressGoal;
                     this.sendExteriorUpdatePacket(false, true);
                     this.playLandingSound();
+
+                    this.rematConsumers.add(() -> {
+                        AABB aabb = AABB.ofSize(Vec3.atBottomCenterOf(exteriorBlockPos), 0.5, 1, 0.5);
+                        BlockPos entracePosition = this.tardisData.getEntracePosition().relative(this.tardisData.getEntraceFacing());
+                        List<Entity> entities = exteriorLevel.getEntitiesOfClass(Entity.class, aabb);
+
+                        for (Entity entity : entities) {
+                            entity.changeDimension(this.tardisData.getLevel(), new TardisTeleporter(entracePosition));
+                        }
+
+                        this.sendExteriorUpdatePacket(false, false);
+                    });
+
                     return true;
                 }
                 else {
