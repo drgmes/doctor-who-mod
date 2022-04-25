@@ -9,6 +9,7 @@ import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModBlocks;
+import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
@@ -213,11 +214,14 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     this.playLandingSound();
                     return true;
                 }
-
-                this.demat();
+                else {
+                    this.playErrorSound();
+                    this.demat();
+                }
             }
-
-            this.playErrorSound();
+            else if (!this.tryLandToForeignTardis()) {
+                this.playErrorSound();
+            }
         }
 
         return false;
@@ -236,6 +240,36 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private void runRematConsumers() {
         this.rematConsumers.forEach((consumer) -> consumer.run());
         this.rematConsumers.clear();
+    }
+
+    private boolean tryLandToForeignTardis() {
+        if (this.safeDirection != TardisSystemMaterializationSafeDirection.NONE) return false;
+
+        ServerLevel level = this.tardisData.getLevel();
+        if (level == null) return false;
+
+        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+        if (exteriorLevel == null) return false;
+
+        if (exteriorLevel.getBlockEntity(this.tardisData.getCurrentExteriorPosition()) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisDimension(exteriorLevel);
+            if (foreignTardisLevel != null) {
+                foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                    if (levelProvider.isValid() && !levelProvider.isShieldsEnabled()) {
+                        this.tardisData.setDimension(levelProvider.getLevel().dimension(), false);
+                        this.tardisData.setFacing(levelProvider.getEntraceFacing(), false);
+                        this.tardisData.setPosition(levelProvider.getEntracePosition().relative(levelProvider.getEntraceFacing()), false);
+                        this.remat();
+                    } else {
+                        this.playErrorSound();
+                    }
+                });
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private boolean findSafePosition() {
