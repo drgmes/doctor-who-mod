@@ -19,7 +19,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AirBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
@@ -301,7 +300,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private boolean checkBlockIsEmpty(BlockState blockState) {
-        return blockState.getBlock() instanceof AirBlock || blockState.getFluidState().is(FluidTags.WATER);
+        return (
+            blockState.isAir()
+            || blockState.getFluidState().is(FluidTags.WATER)
+            || (blockState.getMaterial().isReplaceable() && blockState.getFluidState().isEmpty())
+        );
     }
 
     private boolean checkBlockIsSolid(BlockState blockState) {
