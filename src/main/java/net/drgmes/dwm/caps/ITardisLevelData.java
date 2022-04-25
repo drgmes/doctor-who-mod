@@ -27,6 +27,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
 
     boolean isValid();
     boolean isDoorsOpened();
+    boolean isLightEnabled();
     boolean isShieldsEnabled();
     boolean isEnergyArtronHarvesting();
     boolean isEnergyForgeHarvesting();
@@ -68,6 +69,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     void setDestinationPosition(BlockPos blockPos);
 
     void setDoorsState(boolean flag, boolean shouldUpdate);
+    void setLightState(boolean flag, boolean shouldUpdate);
     void setShieldsState(boolean flag, boolean shouldUpdate);
     void setEnergyArtronHarvesting(boolean flag);
     void setEnergyForgeHarvesting(boolean flag);
@@ -75,7 +77,8 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     void updateDoorTiles();
     void updateConsoleTiles();
 
-    void applyControlsStorage(TardisConsoleControlsStorage controlsStorage);
+    void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage);
+    void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage);
     void tick();
 
     public static class TardisLevelProvider implements ICapabilitySerializable<CompoundTag> {

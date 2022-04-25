@@ -6,6 +6,7 @@ public enum TardisConsoleControlRoles {
     TELEPATIC_INTERFACE(TardisConsoleControlRoleTypes.NONE),
     DOORS(TardisConsoleControlRoleTypes.BOOLEAN),
     SHIELDS(TardisConsoleControlRoleTypes.BOOLEAN),
+    LIGHT(TardisConsoleControlRoleTypes.BOOLEAN),
     ENERGY_ARTRON_HARVESTING(TardisConsoleControlRoleTypes.BOOLEAN),
     ENERGY_FORGE_HARVESTING(TardisConsoleControlRoleTypes.BOOLEAN),
     MATERIALIZATION(TardisConsoleControlRoleTypes.BOOLEAN_DIRECT),

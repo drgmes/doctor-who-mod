@@ -36,6 +36,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
 
     public TardisExteriorBlock(BlockBehaviour.Properties properties) {
@@ -59,6 +60,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(OPEN);
+        builder.add(LIT);
         builder.add(HALF);
     }
 
@@ -66,6 +68,7 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     protected BlockState getDefaultState() {
         return super.getDefaultState()
             .setValue(OPEN, false)
+            .setValue(LIT, false)
             .setValue(HALF, DoubleBlockHalf.LOWER);
     }
 

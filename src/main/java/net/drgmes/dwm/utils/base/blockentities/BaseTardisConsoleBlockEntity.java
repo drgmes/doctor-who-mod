@@ -159,7 +159,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             }
 
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (levelProvider.isValid()) levelProvider.applyControlsStorage(this.controlsStorage);
+                if (levelProvider.isValid()) levelProvider.applyControlsStorageToData(this.controlsStorage);
             });
         }
     }

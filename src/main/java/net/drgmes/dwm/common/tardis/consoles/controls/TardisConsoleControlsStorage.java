@@ -4,9 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
-import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 
@@ -87,23 +84,6 @@ public class TardisConsoleControlsStorage {
 
         this.values.put(controlRole, value);
         return true;
-    }
-
-    public void applyTardisWorldStorage(ITardisLevelData storage) {
-        if (storage.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-            this.values.put(TardisConsoleControlRoles.STARTER, flightSystem.inProgress());
-        }
-
-        if (storage.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            this.values.put(TardisConsoleControlRoles.MATERIALIZATION, !materializationSystem.isMaterialized());
-            this.values.put(TardisConsoleControlRoles.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
-        }
-
-        this.values.put(TardisConsoleControlRoles.DOORS, storage.isDoorsOpened());
-        this.values.put(TardisConsoleControlRoles.SHIELDS, storage.isShieldsEnabled());
-        this.values.put(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, storage.isEnergyArtronHarvesting());
-        this.values.put(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING, storage.isEnergyForgeHarvesting());
-        this.values.put(TardisConsoleControlRoles.FACING, storage.getDestinationExteriorFacing().ordinal() - 2);
     }
 
     private boolean getUpdatedBoolean(TardisConsoleControlRoles controlRole, InteractionHand hand) {

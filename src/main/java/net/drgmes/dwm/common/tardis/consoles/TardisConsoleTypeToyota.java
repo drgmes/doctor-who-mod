@@ -22,6 +22,7 @@ public class TardisConsoleTypeToyota extends TardisConsoleType {
         this.addControlEntry(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, TardisConsoleControlEntryTypes.BUTTON, new Vec3(-0.4485F, 0.6F, -0.2185F), "controls/control_button_22", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);
 
         this.addControlEntry(TardisConsoleControlRoles.SHIELDS, TardisConsoleControlEntryTypes.LEVER, new Vec3(-0.725F, 0.5F, -0.345F), "controls/control_lever_1$_body");
+        this.addControlEntry(TardisConsoleControlRoles.LIGHT, TardisConsoleControlEntryTypes.LEVER, new Vec3(-0.535F, 0.55F, -0.19F), "controls/control_lever_3$_body");
         this.addControlEntry(TardisConsoleControlRoles.DOORS, TardisConsoleControlEntryTypes.LEVER, new Vec3(-0.725F, 0.5F, 0.345F), "controls/control_lever_2$_body");
         this.addControlEntry(TardisConsoleControlRoles.SAFE_DIRECTION, TardisConsoleControlEntryTypes.LEVER, new Vec3(0.6F, 0.55F, -0.125F), "controls/control_lever_9$_body");
         this.addControlEntry(TardisConsoleControlRoles.RANDOMIZER, TardisConsoleControlEntryTypes.ROTATOR, new Vec3(-0.4545F, 0.5F, 0.7225F), "controls/control_cradle_1$_body$_r1");

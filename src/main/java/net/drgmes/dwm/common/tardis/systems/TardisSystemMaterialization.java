@@ -133,6 +133,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.dematTickInProgressGoal == 0) {
             this.dematTickInProgressGoal = DWM.TIMINGS.DEMAT;
             this.dematTickInProgress = this.dematTickInProgressGoal;
+            this.tardisData.setLightState(false, true);
             this.tardisData.setDoorsState(false, true);
             this.sendExteriorUpdatePacket(true, false);
             this.playTakeoffSound();
@@ -325,6 +326,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
             ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(
                 exteriorBlockPos,
+                this.tardisData.isLightEnabled(),
                 this.tardisData.isDoorsOpened(),
                 demat,
                 remat
