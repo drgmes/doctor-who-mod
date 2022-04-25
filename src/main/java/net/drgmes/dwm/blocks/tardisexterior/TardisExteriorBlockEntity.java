@@ -93,6 +93,13 @@ public class TardisExteriorBlockEntity extends BlockEntity {
         this.level.playSound(null, this.worldPosition, ModSounds.TARDIS_TAKEOFF.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
+    public void resetMaterializationState(boolean flag) {
+        this.isMaterialized = flag;
+        this.inRematProgress = false;
+        this.inDematProgress = false;
+        this.tickInProgress = 0;
+    }
+
     public int getMaterializedPercent() {
         if (this.inDematProgress) return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
         if (this.inRematProgress) return (int) Math.ceil(this.tickInProgress / DWM.TIMINGS.REMAT * 100);

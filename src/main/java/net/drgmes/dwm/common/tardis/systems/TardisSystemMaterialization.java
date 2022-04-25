@@ -79,6 +79,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             }
             else if (this.inRematProgress()) {
                 this.rematTickInProgress--;
+                if (!this.inRematProgress()) this.remat();
             }
 
             this.tardisData.updateConsoleTiles();
@@ -176,6 +177,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.inProgress()) return false;
 
         if (this.isMaterialized) {
+            this.sendExteriorUpdatePacket(false, false);
             this.runRematConsumers();
             return true;
         }
@@ -322,16 +324,17 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
         if (exteriorLevel.getBlockEntity(exteriorBlockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (demat) tardisExteriorBlockEntity.demat();
-            if (remat) tardisExteriorBlockEntity.remat();
-
-            ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(
-                exteriorBlockPos,
-                this.tardisData.isLightEnabled(),
-                this.tardisData.isDoorsOpened(),
-                demat,
-                remat
-            ));
+            else if (remat) tardisExteriorBlockEntity.remat();
+            else if (!this.inProgress()) tardisExteriorBlockEntity.resetMaterializationState(this.isMaterialized);
         }
+
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(
+            exteriorBlockPos,
+            this.tardisData.isLightEnabled(),
+            this.tardisData.isDoorsOpened(),
+            demat,
+            remat
+        ));
     }
 
     private void playSound(SoundEvent soundEvent) {
