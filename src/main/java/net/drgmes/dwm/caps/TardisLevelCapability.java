@@ -541,7 +541,7 @@ public class TardisLevelCapability implements ITardisLevelData {
 
     @Override
     public void tick() {
-        if (!this.isValid()) return;
+        if (this.level.isClientSide || !this.isValid()) return;
         this.getSystems().values().forEach((system) -> system.tick());
     }
 

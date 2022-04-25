@@ -112,19 +112,13 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        if (!level.isClientSide) {
-            if (this.timeToSpawnControls > 0) {
-                --this.timeToSpawnControls;
+        if (!level.isClientSide && this.timeToSpawnControls > 0) {
+            --this.timeToSpawnControls;
 
-                if (this.timeToSpawnControls == 0) {
-                    this.createControls();
-                    this.init();
-                }
+            if (this.timeToSpawnControls == 0) {
+                this.createControls();
+                this.init();
             }
-
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (levelProvider.getMainConsoleTile() == this) levelProvider.tick();
-            });
         }
 
         this.animateControls();

@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -43,10 +44,9 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tickInProgress--;
 
             this.playFlySound();
-            if (this.tickInProgress % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
-
             if (this.tickInProgress == 1) this.land();
-            this.tardisData.updateConsoleTiles();
+            if (this.tickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
+            if (this.tickInProgress % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
         }
     }
 
@@ -71,7 +71,7 @@ public class TardisSystemFlight implements ITardisSystem {
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
             return rematSystem.demat(() -> {
                 this.isSoundFlyPlayed = false;
-                this.tickInProgressGoal = DWM.TIMINGS.FLIGHT_LOOP * 2;
+                this.tickInProgressGoal = DWM.TIMINGS.FLIGHT_LOOP * 10; // TODO
                 this.tickInProgress = this.tickInProgressGoal;
             });
         }
@@ -99,8 +99,9 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public void playSound(SoundEvent soundEvent) {
-        BlockPos consoleTileBlockPos = this.tardisData.getMainConsoleTile().getBlockPos();
-        this.tardisData.getLevel().playSound(null, consoleTileBlockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
+        BaseTardisConsoleBlockEntity consoleTile = this.tardisData.getMainConsoleTile();
+        BlockPos blockPos = consoleTile != null ? consoleTile.getBlockPos() : this.tardisData.getEntracePosition();
+        this.tardisData.getLevel().playSound(null, blockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     private void playFlySound() {

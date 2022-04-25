@@ -13,6 +13,7 @@ import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper.TardisTeleporter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -39,6 +40,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private final ITardisLevelData tardisData;
     private boolean isMaterialized = true;
+    private float tickForErrorSound = 0;
 
     public float dematTickInProgress = 0;
     public float rematTickInProgress = 0;
@@ -77,17 +79,21 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void tick() {
+        if (this.tickForErrorSound > 0) {
+            this.tickForErrorSound--;
+        }
+
         if (this.inProgress()) {
             if (this.inDematProgress()) {
                 this.dematTickInProgress--;
                 if (!this.inDematProgress()) this.demat();
+                else if (this.dematTickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
             }
             else if (this.inRematProgress()) {
                 this.rematTickInProgress--;
                 if (!this.inRematProgress()) this.remat();
+                else if (this.rematTickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
             }
-
-            this.tardisData.updateConsoleTiles();
         }
     }
 
@@ -231,6 +237,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                             entity.changeDimension(this.tardisData.getLevel(), new TardisTeleporter(entracePosition));
                         }
 
+                        this.tardisData.updateConsoleTiles();
                         this.sendExteriorUpdatePacket(false, false);
                     });
 
@@ -394,12 +401,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private void playSound(SoundEvent soundEvent) {
-        BlockPos consoleTileBlockPos = this.tardisData.getMainConsoleTile().getBlockPos();
-        this.tardisData.getLevel().playSound(null, consoleTileBlockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
-    }
-
-    private void playErrorSound() {
-        this.playSound(ModSounds.TARDIS_ERROR.get());
+        BaseTardisConsoleBlockEntity consoleTile = this.tardisData.getMainConsoleTile();
+        BlockPos blockPos = consoleTile != null ? consoleTile.getBlockPos() : this.tardisData.getEntracePosition();
+        this.tardisData.getLevel().playSound(null, blockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
     private void playTakeoffSound() {
@@ -408,5 +412,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private void playLandingSound() {
         this.playSound(ModSounds.TARDIS_LAND.get());
+    }
+
+    private void playErrorSound() {
+        if (this.tickForErrorSound > 0) return;
+
+        this.tickForErrorSound = DWM.TIMINGS.ERROR_SOUND;
+        this.playSound(ModSounds.TARDIS_ERROR.get());
     }
 }
