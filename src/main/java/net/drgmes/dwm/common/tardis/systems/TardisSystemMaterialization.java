@@ -135,8 +135,14 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.dematTickInProgressGoal == 0) {
             this.dematTickInProgressGoal = DWM.TIMINGS.DEMAT;
             this.dematTickInProgress = this.dematTickInProgressGoal;
-            this.tardisData.setLightState(false, true);
+
             this.tardisData.setDoorsState(false, true);
+            this.tardisData.setLightState(false, true);
+            this.tardisData.setShieldsState(false, true);
+            this.tardisData.setEnergyArtronHarvesting(false);
+            this.tardisData.setEnergyForgeHarvesting(false);
+            this.tardisData.updateConsoleTiles();
+
             this.sendExteriorUpdatePacket(true, false);
             this.playTakeoffSound();
             return false;
