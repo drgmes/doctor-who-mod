@@ -9,7 +9,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -43,12 +43,12 @@ public class ClientboundTardisConsoleControlsUpdatePacket {
             @Override
             public void run() {
                 final Minecraft mc = Minecraft.getInstance();
-                final BlockEntity blockEntity = mc.level.getBlockEntity(blockPos);
 
-                if (blockEntity instanceof BaseTardisConsoleBlockEntity baseTardisConsoleBlockEntity) {
+                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity baseTardisConsoleBlockEntity) {
+                    BlockState blockState = baseTardisConsoleBlockEntity.getBlockState();
                     baseTardisConsoleBlockEntity.controlsStorage = controlsStorage;
-                    blockEntity.getLevel().sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), 3);
-                    blockEntity.setChanged();
+                    baseTardisConsoleBlockEntity.getLevel().sendBlockUpdated(blockPos, blockState, blockState, 3);
+                    baseTardisConsoleBlockEntity.setChanged();
                     success.set(true);
                 }
             }

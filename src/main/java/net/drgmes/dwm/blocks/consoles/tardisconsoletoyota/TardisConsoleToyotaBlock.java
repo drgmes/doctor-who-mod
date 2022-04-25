@@ -22,7 +22,7 @@ public class TardisConsoleToyotaBlock extends BaseRotatableWaterloggedEntityBloc
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide ? null : createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_CONSOLE_TOYOTA.get(), (l, bp, bs, blockEntity) -> {
+        return createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_CONSOLE_TOYOTA.get(), (l, bp, bs, blockEntity) -> {
             ((TardisConsoleToyotaBlockEntity) blockEntity).tick();
         });
     }
