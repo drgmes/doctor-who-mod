@@ -8,6 +8,12 @@ import net.minecraftforge.fml.common.Mod;
 public class DWM {
     public static final String MODID = "dwm";
 
+    public static class TIMINGS {
+        public static final float FLIGHT_LOOP = 33;
+        public static final float DEMAT = 240;
+        public static final float REMAT = 180;
+    }
+
     public static class LOCS {
         public static final ResourceLocation TARDIS = new ResourceLocation(DWM.MODID, "tardis");
     }

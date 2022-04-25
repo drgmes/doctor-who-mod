@@ -1,5 +1,6 @@
 package net.drgmes.dwm.common.tardis.systems;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.setup.ModSounds;
@@ -13,8 +14,8 @@ public class TardisSystemFlight implements ITardisSystem {
     private boolean isFlightLaunched = false;
     private boolean isSoundFlyPlayed = false;
 
-    public int tickInProgress = 0;
-    public int tickInProgressGoal = 0;
+    public float tickInProgress = 0;
+    public float tickInProgressGoal = 0;
 
     public TardisSystemFlight(ITardisLevelData tardisData) {
         this.tardisData = tardisData;
@@ -22,16 +23,16 @@ public class TardisSystemFlight implements ITardisSystem {
 
     @Override
     public void load(CompoundTag tag) {
-        this.tickInProgress = tag.getInt("tickInProgress");
-        this.tickInProgressGoal = tag.getInt("tickInProgressGoal");
+        this.tickInProgress = tag.getFloat("tickInProgress");
+        this.tickInProgressGoal = tag.getFloat("tickInProgressGoal");
     }
 
     @Override
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
 
-        tag.putInt("tickInProgress", this.tickInProgress);
-        tag.putInt("tickInProgressGoal", this.tickInProgressGoal);
+        tag.putFloat("tickInProgress", this.tickInProgress);
+        tag.putFloat("tickInProgressGoal", this.tickInProgressGoal);
 
         return tag;
     }
@@ -42,7 +43,7 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tickInProgress--;
 
             this.playFlySound();
-            if (this.tickInProgress % 33 == 0) this.isSoundFlyPlayed = false;
+            if (this.tickInProgress % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
 
             if (this.tickInProgress == 1) this.land();
             this.tardisData.updateConsoleTiles();
@@ -50,7 +51,7 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public int getProgressPercent() {
-        return (int) Math.ceil((this.tickInProgressGoal - this.tickInProgress) / (float) this.tickInProgressGoal * 100);
+        return (int) Math.ceil((this.tickInProgressGoal - this.tickInProgress) / this.tickInProgressGoal * 100);
     }
 
     public boolean inProgress() {
@@ -70,7 +71,7 @@ public class TardisSystemFlight implements ITardisSystem {
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
             return rematSystem.demat(() -> {
                 this.isSoundFlyPlayed = false;
-                this.tickInProgressGoal = 66;
+                this.tickInProgressGoal = DWM.TIMINGS.FLIGHT_LOOP * 2;
                 this.tickInProgress = this.tickInProgressGoal;
             });
         }

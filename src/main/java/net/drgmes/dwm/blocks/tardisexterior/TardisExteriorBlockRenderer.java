@@ -50,14 +50,16 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
 
         float speed = 0.3F;
         float intense = 0.4F;
-        float alpha = (float) Math.cos(tile.materializedPercent * speed) * intense + (1.0F / 100) * tile.materializedPercent;
+        float percent = tile.getMaterializedPercent();
+        float alpha = (float) Math.cos(percent * speed) * intense + (1.0F / 100) * percent;
+        float alphaClamped = percent < 10 ? 0 : Math.max(0, Math.min(1.0F, alpha));
 
         poseStack.pushPose();
         poseStack.scale(scale, scale + 0.15F, scale);
         poseStack.translate(0, -1, 0);
 
         model.setupAnim(tile.getBlockState());
-        model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, tile.materializedPercent < 10 ? 0 : Math.max(0, Math.min(1.0F, alpha)));
+        model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, alphaClamped);
 
         poseStack.popPose();
     }

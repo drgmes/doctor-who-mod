@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardisexterior;
 
+import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -20,6 +21,8 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -43,6 +46,13 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return null;
         return new TardisExteriorBlockEntity(blockPos, blockState);
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_EXTERIOR.get(), (l, bp, bs, blockEntity) -> {
+            ((TardisExteriorBlockEntity) blockEntity).tick();
+        });
     }
 
     @Override
@@ -94,6 +104,10 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
         level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
+
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.remat();
+        }
     }
 
     @Override
@@ -107,6 +121,10 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
             blockPos = blockPos.below();
             blockState = level.getBlockState(blockPos);
+        }
+
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return InteractionResult.PASS;
         }
 
         ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
@@ -132,10 +150,8 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
         if (tardisLevel != null) TardisHelper.teleportToTardis(entity, tardisLevel);
     }
 
-    public ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
-
-        if (blockEntity instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+    private ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
             return tardisExteriorBlockEntity.getTardisDimension(level);
         }
 

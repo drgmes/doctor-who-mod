@@ -359,7 +359,6 @@ public class TardisLevelCapability implements ITardisLevelData {
 
                         ModPackets.send(exteriorLevel.getChunkAt(this.currExteriorPosition), new ClientboundTardisExteriorUpdatePacket(
                             this.currExteriorPosition,
-                            100,
                             this.isDoorsOpened(),
                             false,
                             false
