@@ -3,14 +3,12 @@ package net.drgmes.dwm.utils.helpers;
 import java.util.function.Function;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;

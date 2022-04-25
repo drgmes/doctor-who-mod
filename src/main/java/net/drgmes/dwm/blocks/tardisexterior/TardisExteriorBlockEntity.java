@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisExteriorBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
-    public String tardisConsoleRoom = "test";
     public int materializedPercent = 100;
+    public String tardisConsoleRoom = "toyota_natured";
 
     public TardisExteriorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_EXTERIOR.get(), blockPos, blockState);
