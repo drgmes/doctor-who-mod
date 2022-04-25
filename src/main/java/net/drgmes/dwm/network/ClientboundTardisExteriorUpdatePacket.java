@@ -50,21 +50,18 @@ public class ClientboundTardisExteriorUpdatePacket {
                 final Minecraft mc = Minecraft.getInstance();
                 BlockState blockState = mc.level.getBlockState(blockPos);
 
-                final boolean isDoorOpened = blockState.getValue(TardisExteriorBlock.OPEN);
-                final boolean isLightEnabled = blockState.getValue(TardisExteriorBlock.LIT);
-
                 if (mc.level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
                     if (demat) tardisExteriorBlockEntity.demat();
                     success.set(true);
                 }
 
                 if (blockState.getBlock() instanceof TardisExteriorBlock) {
-                    if (isDoorOpened != doorsOpened) {
+                    if (blockState.getValue(TardisExteriorBlock.OPEN) != doorsOpened) {
                         mc.level.levelEvent(mc.player, doorsOpened ? 1006 : 1012, blockPos, 0);
                         mc.level.gameEvent(mc.player, doorsOpened ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                     }
 
-                    if (isLightEnabled != lightEnabled) {
+                    if (blockState.getValue(TardisExteriorBlock.LIT) != lightEnabled) {
                         mc.level.levelEvent(mc.player, 1003, blockPos, 0);
                     }
 

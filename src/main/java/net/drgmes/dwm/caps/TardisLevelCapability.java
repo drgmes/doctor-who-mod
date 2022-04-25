@@ -352,6 +352,7 @@ public class TardisLevelCapability implements ITardisLevelData {
 
         if (shouldUpdate) {
             this.updateDoorTiles();
+            System.out.println("setDoorsState");
             this.updateExterior();
         }
     }
@@ -362,6 +363,7 @@ public class TardisLevelCapability implements ITardisLevelData {
         this.lightEnabled = flag;
 
         if (shouldUpdate) {
+            System.out.println("setLightState");
             this.updateExterior();
         }
     }
@@ -558,6 +560,7 @@ public class TardisLevelCapability implements ITardisLevelData {
     }
 
     private void updateExterior() {
+        System.out.println("updateExterior");
         if (!this.isValid() || !(this.level instanceof ServerLevel)) return;
 
         ServerLevel exteriorLevel = ((ServerLevel) this.level).getServer().getLevel(this.getCurrentExteriorDimension());
@@ -574,8 +577,10 @@ public class TardisLevelCapability implements ITardisLevelData {
                     exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.LIT, this.isLightEnabled());
                     exteriorLevel.setBlock(exteriorBlockPos, exteriorBlockState, 3);
 
-                    exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
-                    exteriorLevel.setBlock(exteriorBlockPos.above(), exteriorBlockState, 3);
+                    if (exteriorLevel.getBlockState(exteriorBlockPos.above()).getBlock() instanceof TardisExteriorBlock) {
+                        exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
+                        exteriorLevel.setBlock(exteriorBlockPos.above(), exteriorBlockState, 3);
+                    }
 
                     this.sendExteriorUpdatePacket(exteriorLevel, exteriorBlockPos);
                 }
