@@ -141,6 +141,18 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
+        // Monitor
+        if (hand == InteractionHand.OFF_HAND && control.role == TardisConsoleControlRoles.MONITOR) {
+            System.out.println("Monitor"); // TODO
+            return;
+        }
+
+        // Telepatic Interface
+        if (hand == InteractionHand.OFF_HAND && control.role == TardisConsoleControlRoles.TELEPATIC_INTERFACE) {
+            System.out.println("Telepatic Interface"); // TODO
+            return;
+        }
+
         if (this.controlsStorage.update(control.role, hand)) {
             // Next Screen Page
             int monitorPageNext = (int) controlsStorage.get(TardisConsoleControlRoles.MONITOR_PAGE_NEXT);
