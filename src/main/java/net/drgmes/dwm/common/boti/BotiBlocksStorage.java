@@ -3,6 +3,7 @@ package net.drgmes.dwm.common.boti;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -67,6 +68,22 @@ public class BotiBlocksStorage {
                     BlockPos blockPos = new BlockPos(x, y, z);
                     BlockPos realBlockPos = initialBlockPos.offset(blockPos.rotate(rotation));
                     BlockState blockState = level.getBlockState(realBlockPos);
+
+                    BlockState upBlockState = level.getBlockState(realBlockPos.above());
+                    BlockState downBlockState = level.getBlockState(realBlockPos.below());
+                    BlockState westBlockState = level.getBlockState(realBlockPos.west());
+                    BlockState eastBlockState = level.getBlockState(realBlockPos.east());
+                    BlockState frontBlockState = level.getBlockState(realBlockPos.north());
+
+                    boolean isUpSolid = !DWMUtils.checkBlockIsTransparent(upBlockState);
+                    boolean isDownSolid = !DWMUtils.checkBlockIsTransparent(downBlockState);
+                    boolean isWestSolid = !DWMUtils.checkBlockIsTransparent(westBlockState);
+                    boolean isEastSolid = !DWMUtils.checkBlockIsTransparent(eastBlockState);
+                    boolean isFrontSolid = z > 0 && !DWMUtils.checkBlockIsTransparent(frontBlockState);
+
+                    if ((y > 0 ? isDownSolid : isUpSolid) && (x > 0 ? isWestSolid : isEastSolid) && isFrontSolid) {
+                        continue;
+                    }
 
                     this.blockEntries.put(blockPos, blockState);
                 }

@@ -354,27 +354,15 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private boolean checkBlockIsSafe(Level level, BlockPos blockPos) {
         BlockPos frontBlockPos = blockPos.relative(this.tardisData.getCurrentExteriorFacing());
 
-        boolean isBottomSolid = this.checkBlockIsSolid(level.getBlockState(blockPos.below()));
-        boolean isEmpty = this.checkBlockIsEmpty(level.getBlockState(blockPos));
-        boolean isUpEmpty = this.checkBlockIsEmpty(level.getBlockState(blockPos.above()));
+        boolean isBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(blockPos.below()));
+        boolean isEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos));
+        boolean isUpEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos.above()));
 
-        boolean isFrontBottomSolid = this.checkBlockIsSolid(level.getBlockState(frontBlockPos.below()));
-        boolean isFrontEmpty = this.checkBlockIsEmpty(level.getBlockState(frontBlockPos));
-        boolean isFrontUpEmpty = this.checkBlockIsEmpty(level.getBlockState(frontBlockPos.above()));
+        boolean isFrontBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(frontBlockPos.below()));
+        boolean isFrontEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(frontBlockPos));
+        boolean isFrontUpEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(frontBlockPos.above()));
 
         return isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
-    }
-
-    private boolean checkBlockIsEmpty(BlockState blockState) {
-        return (
-            blockState.isAir()
-            || blockState.getFluidState().is(FluidTags.WATER)
-            || (blockState.getMaterial().isReplaceable() && blockState.getFluidState().isEmpty())
-        );
-    }
-
-    private boolean checkBlockIsSolid(BlockState blockState) {
-        return !this.checkBlockIsEmpty(blockState) && blockState.getFluidState().isEmpty();
     }
 
     private void sendExteriorUpdatePacket(boolean demat, boolean remat) {
