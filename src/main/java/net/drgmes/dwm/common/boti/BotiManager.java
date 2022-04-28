@@ -11,6 +11,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
 import org.lwjgl.opengl.GL11;
@@ -45,7 +46,7 @@ public class BotiManager {
     private static boolean inRenderProcess;
 
     @SubscribeEvent
-	public static void removeHighlight(DrawSelectionEvent event) {
+    public static void removeHighlight(DrawSelectionEvent event) {
         if (event.getTarget() instanceof BlockHitResult blockHitResult) {
             Block hitBlock = mc.level.getBlockState(blockHitResult.getBlockPos()).getBlock();
 
@@ -54,7 +55,7 @@ public class BotiManager {
                 if (block == hitBlock) event.setCanceled(true);
             }
         }
-	}
+    }
 
     @SubscribeEvent
     public static void onRenderWorldLast(RenderLevelLastEvent event) {
@@ -132,10 +133,22 @@ public class BotiManager {
 
                     poseStack.pushPose();
                     poseStack.translate(pos.x(), pos.y(), pos.z());
-                    if (ItemBlockRenderTypes.canRenderInLayer(blockState, type)) {
-                        mc.getBlockRenderer().renderSingleBlock(blockState, poseStack, vbo.getBufferSource(type), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+
+                    if (blockState.getFluidState().isEmpty()) {
+                        if (ItemBlockRenderTypes.canRenderInLayer(blockState, type)) {
+                            mc.getBlockRenderer().renderSingleBlock(blockState, poseStack, vbo.getBufferSource(type), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
+                            hasRenderedInLayer = true;
+                        }
+                    }
+                    else if (ItemBlockRenderTypes.canRenderInLayer(blockState.getFluidState(), type)) {
+                        if (!vbo.getBufferBuilder(type).building()) {
+                            vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
+                        }
+
+                        mc.getBlockRenderer().renderLiquid(entry.getKey(), mc.level, vbo.getBufferBuilder(type), blockState, blockState.getFluidState());
                         hasRenderedInLayer = true;
                     }
+
                     poseStack.popPose();
                 }
 
