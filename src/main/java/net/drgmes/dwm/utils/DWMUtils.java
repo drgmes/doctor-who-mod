@@ -39,9 +39,9 @@ public class DWMUtils {
     public static boolean checkBlockIsTransparent(BlockState blockState) {
         return (
             !checkBlockIsSolid(blockState)
-            && !blockState.hasBlockEntity()
-            || !blockState.getMaterial().isSolidBlocking()
             || blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+            || !blockState.getMaterial().isSolidBlocking()
+            || !blockState.canOcclude()
         );
     }
 }

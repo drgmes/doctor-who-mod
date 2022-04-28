@@ -66,14 +66,20 @@ public class BotiBlocksStorage {
             for (int x = -xRadius; x <= xRadius; x++) {
                 for (int y = -yRadius; y <= yRadius; y++) {
                     BlockPos blockPos = new BlockPos(x, y, z);
-                    BlockPos realBlockPos = initialBlockPos.offset(blockPos.rotate(rotation));
-                    BlockState blockState = level.getBlockState(realBlockPos);
 
-                    BlockState upBlockState = level.getBlockState(realBlockPos.above());
-                    BlockState downBlockState = level.getBlockState(realBlockPos.below());
-                    BlockState westBlockState = level.getBlockState(realBlockPos.west());
-                    BlockState eastBlockState = level.getBlockState(realBlockPos.east());
-                    BlockState frontBlockState = level.getBlockState(realBlockPos.north());
+                    BlockPos realBlockPos = initialBlockPos.offset(blockPos.rotate(rotation)).immutable();
+                    BlockPos realUpBlockPos = initialBlockPos.offset(blockPos.above().rotate(rotation)).immutable();
+                    BlockPos realDownBlockPos = initialBlockPos.offset(blockPos.below().rotate(rotation)).immutable();
+                    BlockPos realWestBlockPos = initialBlockPos.offset(blockPos.west().rotate(rotation)).immutable();
+                    BlockPos realEastBlockPos = initialBlockPos.offset(blockPos.east().rotate(rotation)).immutable();
+                    BlockPos realFrontBlockPos = initialBlockPos.offset(blockPos.north().rotate(rotation)).immutable();
+
+                    BlockState blockState = level.getBlockState(realBlockPos);
+                    BlockState upBlockState = level.getBlockState(realUpBlockPos);
+                    BlockState downBlockState = level.getBlockState(realDownBlockPos);
+                    BlockState westBlockState = level.getBlockState(realWestBlockPos);
+                    BlockState eastBlockState = level.getBlockState(realEastBlockPos);
+                    BlockState frontBlockState = level.getBlockState(realFrontBlockPos);
 
                     boolean isUpSolid = !DWMUtils.checkBlockIsTransparent(upBlockState);
                     boolean isDownSolid = !DWMUtils.checkBlockIsTransparent(downBlockState);
