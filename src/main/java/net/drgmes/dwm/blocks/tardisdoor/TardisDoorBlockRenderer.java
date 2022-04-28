@@ -60,7 +60,7 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
             this.setupModelView(innerPoseStack, face, false);
             innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
             innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            innerPoseStack.translate(-0.5, 0, 0);
+            innerPoseStack.translate(-0.5, -0.15, 0);
         });
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
