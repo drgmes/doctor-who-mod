@@ -65,7 +65,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        float goal = this.inRematProgress ? DWM.TIMINGS.REMAT : (this.inDematProgress ? DWM.TIMINGS.DEMAT : 0);
+        float goal = this.inRematProgress ? DWM.TIMINGS.REMAT_BE : (this.inDematProgress ? DWM.TIMINGS.DEMAT_BE : 0);
 
         if (goal > 0) {
             if (this.inRematProgress) this.inDematProgress = false;
@@ -101,8 +101,8 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     }
 
     public int getMaterializedPercent() {
-        if (this.inDematProgress) return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
-        if (this.inRematProgress) return (int) Math.ceil(this.tickInProgress / DWM.TIMINGS.REMAT * 100);
+        if (this.inDematProgress) return (int) Math.ceil((DWM.TIMINGS.DEMAT_BE - this.tickInProgress) / DWM.TIMINGS.DEMAT_BE * 100);
+        if (this.inRematProgress) return (int) Math.ceil(this.tickInProgress / DWM.TIMINGS.REMAT_BE * 100);
         return this.isMaterialized ? 100 : 0;
     }
 

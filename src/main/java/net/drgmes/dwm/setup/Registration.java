@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.DataGenerators;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -91,6 +92,11 @@ public class Registration {
     public static void setupClient(FMLClientSetupEvent event) {
         ModRender.setup();
         ModContainerScreens.setup();
+
+        Minecraft mc = Minecraft.getInstance();
+        if(!mc.getMainRenderTarget().isStencilEnabled()) {
+            event.enqueueWork(() -> mc.getMainRenderTarget().enableStencil());
+        }
     }
 
     @OnlyIn(Dist.DEDICATED_SERVER)

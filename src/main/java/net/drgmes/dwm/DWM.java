@@ -10,7 +10,11 @@ public class DWM {
 
     public static class TIMINGS {
         public static final float DEMAT = 480;
+        public static final float DEMAT_BE = 240;
+
         public static final float REMAT = 360;
+        public static final float REMAT_BE = 180;
+
         public static final float FLIGHT_LOOP = 63;
         public static final float ERROR_SOUND = 120;
     }

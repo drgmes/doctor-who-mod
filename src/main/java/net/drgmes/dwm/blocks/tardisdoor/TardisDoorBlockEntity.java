@@ -10,6 +10,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisDoorBlockEntity extends BlockEntity {
+    public String tardisLevelUUID;
+
     public TardisDoorBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_DOOR.get(), blockPos, blockState);
     }
@@ -28,15 +30,19 @@ public class TardisDoorBlockEntity extends BlockEntity {
     public void onLoad() {
         super.onLoad();
 
-        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (!levelProvider.isValid()) return;
+        if (this.checkTileIsInATardis()) {
+            this.tardisLevelUUID = this.level.dimension().location().getPath();
 
-                levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorBlock.FACING));
-                levelProvider.setEntracePosition(this.getBlockPos());
-                levelProvider.getDoorTiles().add(this);
-                levelProvider.updateDoorTiles();
-            });
+            if (!this.level.isClientSide) {
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                    if (!levelProvider.isValid()) return;
+    
+                    levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorBlock.FACING));
+                    levelProvider.setEntracePosition(this.getBlockPos());
+                    levelProvider.getDoorTiles().add(this);
+                    levelProvider.updateDoorTiles();
+                });
+            }
         }
     }
 

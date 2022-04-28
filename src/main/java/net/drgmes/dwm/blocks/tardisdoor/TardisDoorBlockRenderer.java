@@ -5,10 +5,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
 import net.drgmes.dwm.blocks.tardisdoor.models.TardisPoliceBoxDoorModel;
+import net.drgmes.dwm.common.boti.BotiEntraceData;
+import net.drgmes.dwm.common.boti.BotiManager;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -24,7 +28,7 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
     }
 
     @Override
-    public void render(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+    public void render(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, int packedLight) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -32,27 +36,44 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
         DoubleBlockHalf half = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
         if (half != DoubleBlockHalf.LOWER) return;
 
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.7, 0.5);
-        poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
+        ResourceLocation modelResource = TardisPoliceBoxDoorModel.LAYER_LOCATION.getModel();
+        TardisPoliceBoxDoorModel model = new TardisPoliceBoxDoorModel(ctx.bakeLayer(TardisPoliceBoxDoorModel.LAYER_LOCATION));
+        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(modelResource));
+        model.setupAnim(tile.getBlockState());
 
-        this.renderDoor(tile, partialTicks, poseStack, buffer, combinedOverlay, packedLight, 1.0F);
+        poseStack.pushPose();
+        this.setupModelView(poseStack, face);
+        model.renderToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
+        model.renderDoorsToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
         poseStack.popPose();
+
+        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID);
+
+        entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
+            innerPoseStack.pushPose();
+            this.setupModelView(innerPoseStack, face);
+            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), combinedOverlay, packedLight, 1, 1, 1, 1);
+            innerPoseStack.popPose();
+        });
+
+        entraceData.setBotiTransformer((innerPoseStack) -> {
+            this.setupModelView(innerPoseStack, face);
+            innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
+            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+            innerPoseStack.translate(0, -0.5, -0.055);
+        });
+
+        if (blockState.getValue(BlockStateProperties.OPEN)) {
+            BotiManager.addEntraceData(entraceData);
+        }
     }
 
-    public void renderDoor(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight, float alpha) {
-        TardisPoliceBoxDoorModel model = new TardisPoliceBoxDoorModel(ctx.bakeLayer(TardisPoliceBoxDoorModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisPoliceBoxDoorModel.LAYER_LOCATION.getModel()));
+    public void setupModelView(PoseStack poseStack, Direction face) {
         float scale = 1.5F;
-
-        poseStack.pushPose();
+        poseStack.translate(0.5, 2.25, 0.5);
+        poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
+        poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
+        poseStack.translate(0, 0, -0.31F);
         poseStack.scale(scale, scale, scale);
-        poseStack.translate(0, -1, -0.2075F);
-
-        model.setupAnim(tile.getBlockState());
-        model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, alpha);
-
-        poseStack.popPose();
     }
 }
