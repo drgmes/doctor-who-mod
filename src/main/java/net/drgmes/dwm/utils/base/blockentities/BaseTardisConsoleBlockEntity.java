@@ -36,7 +36,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private ITardisLevelData tardisData;
 
     private ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
-    private int timeToSpawnControls = 0;
+    private int timeToInit = 0;
     private int monitorPageLength = 2;
 
     public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
@@ -76,7 +76,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        this.timeToSpawnControls = 10;
+        this.timeToInit = 10;
     }
 
     @Override
@@ -101,6 +101,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void init() {
+        this.createControls();
+
         if (!this.level.isClientSide && this.checkTileIsInATardis()) {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                 if (!levelProvider.isValid()) return;
@@ -112,13 +114,9 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        if (!level.isClientSide && this.timeToSpawnControls > 0) {
-            --this.timeToSpawnControls;
-
-            if (this.timeToSpawnControls == 0) {
-                this.createControls();
-                this.init();
-            }
+        if (!level.isClientSide && this.timeToInit > 0) {
+            --this.timeToInit;
+            if (this.timeToInit == 0) this.init();
         }
 
         this.animateControls();

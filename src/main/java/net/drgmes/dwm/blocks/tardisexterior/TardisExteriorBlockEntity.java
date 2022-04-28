@@ -42,7 +42,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
 
-        tag.putString("tardisDimUUID", this.getTardisDimUUID());
+        tag.putString("tardisDimUUID", this.getTardisLevelUUID());
         tag.putString("tardisConsoleRoom", this.tardisConsoleRoom);
 
         tag.putInt("tickInProgress", this.tickInProgress);
@@ -106,7 +106,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
         return this.isMaterialized ? 100 : 0;
     }
 
-    public String getTardisDimUUID() {
+    public String getTardisLevelUUID() {
         if (this.tardisLevelUUID == null) this.tardisLevelUUID = UUID.randomUUID().toString();
         return this.tardisLevelUUID;
     }

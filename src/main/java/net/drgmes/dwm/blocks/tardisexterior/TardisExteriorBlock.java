@@ -149,6 +149,10 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
 
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            TardisHelper.saveBlocksForBoti(level, blockPos, tardisExteriorBlockEntity.getTardisLevelUUID() + "-exterior");
+        }
+
         ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
         if (tardisLevel != null) TardisHelper.teleportToTardis(entity, tardisLevel);
     }

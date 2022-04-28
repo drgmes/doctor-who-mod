@@ -59,7 +59,10 @@ public class BotiVBO {
             bb.end();
         }
 
-        this.getVBO(type).upload(bb);
+        try {
+            this.getVBO(type).upload(bb);
+        } catch (Exception e) {
+        }
     }
 
     public void unbind(RenderType type) {

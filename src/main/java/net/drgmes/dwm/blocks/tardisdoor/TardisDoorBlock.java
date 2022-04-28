@@ -140,9 +140,10 @@ public class TardisDoorBlock extends BaseRotatableWaterloggedEntityBlock {
 
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (level.isClientSide) return;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D) return;
+
+        TardisHelper.saveBlocksForBoti(level, blockPos, level.dimension().location().getPath());
 
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (provider.isValid() && provider.isDoorsOpened()) {

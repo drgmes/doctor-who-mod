@@ -5,6 +5,7 @@ import java.util.function.Function;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
+import net.drgmes.dwm.common.boti.BotiBlocksStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
@@ -14,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.util.ITeleporter;
@@ -48,7 +50,7 @@ public class TardisHelper {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
-        ServerLevel tardisLevel = ModDimensions.getTardisDimension(tile.getTardisDimUUID(), server, (lvl) -> {
+        ServerLevel tardisLevel = ModDimensions.getTardisDimension(tile.getTardisLevelUUID(), server, (lvl) -> {
             if (tile.tardisConsoleRoom != null) {
                 StructureTemplate template = lvl.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + tile.tardisConsoleRoom));
                 if (template != null) template.placeInWorld(lvl, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), lvl.random, 3);
@@ -66,6 +68,17 @@ public class TardisHelper {
         });
 
         return tardisLevel;
+    }
+
+    public static void saveBlocksForBoti(Level level, BlockPos blockPos, String tardisLevelUUID) {
+        if (!level.isClientSide) return;
+
+        BotiBlocksStorage storage = BotiBlocksStorage.getStorage(tardisLevelUUID);
+        storage.gatherBlocks(level, blockPos, level.getBlockState(blockPos).getValue(BlockStateProperties.HORIZONTAL_FACING));
+    }
+
+    public static void saveBlocksForBoti(Entity entity, String tardisLevelUUID) {
+        TardisHelper.saveBlocksForBoti(entity.level, entity.blockPosition(), tardisLevelUUID);
     }
 
     public static class TardisTeleporter implements ITeleporter {

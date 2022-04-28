@@ -42,25 +42,25 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
         model.setupAnim(tile.getBlockState());
 
         poseStack.pushPose();
-        this.setupModelView(poseStack, face);
+        this.setupModelView(poseStack, face, true);
         model.renderToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
         model.renderDoorsToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
         poseStack.popPose();
 
-        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID);
+        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
 
         entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face);
+            this.setupModelView(innerPoseStack, face, true);
             model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), combinedOverlay, packedLight, 1, 1, 1, 1);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiTransformer((innerPoseStack) -> {
-            this.setupModelView(innerPoseStack, face);
+            this.setupModelView(innerPoseStack, face, false);
             innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
             innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            innerPoseStack.translate(0, -0.5, -0.055);
+            innerPoseStack.translate(-0.5, 0, 0);
         });
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
@@ -68,12 +68,15 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
         }
     }
 
-    public void setupModelView(PoseStack poseStack, Direction face) {
-        float scale = 1.5F;
+    public void setupModelView(PoseStack poseStack, Direction face, boolean scaling) {
         poseStack.translate(0.5, 2.25, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
         poseStack.translate(0, 0, -0.31F);
-        poseStack.scale(scale, scale, scale);
+
+        if (scaling) {
+            float scale = 1.5F;
+            poseStack.scale(scale, scale, scale);
+        }
     }
 }

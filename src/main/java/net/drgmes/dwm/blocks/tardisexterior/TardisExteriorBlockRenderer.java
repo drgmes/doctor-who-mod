@@ -48,30 +48,30 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
         float alphaClamped = percent < 10 ? 0 : Math.max(0, Math.min(1.0F, alpha));
 
         poseStack.pushPose();
-        this.setupModelView(poseStack, face);
+        this.setupModelView(poseStack, face, true);
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
         poseStack.popPose();
 
-        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
+        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID);
 
         entraceData.setDoorsRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face);
+            this.setupModelView(innerPoseStack, face, true);
             model.renderDoorsToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face);
+            this.setupModelView(innerPoseStack, face, true);
             model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiTransformer((innerPoseStack) -> {
-            this.setupModelView(innerPoseStack, face);
+            this.setupModelView(innerPoseStack, face, false);
             innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-            innerPoseStack.translate(0, -0.5, -0.375);
+            innerPoseStack.translate(-0.5, 0, -0.5);
         });
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
@@ -82,13 +82,16 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
         }
     }
 
-    public void setupModelView(PoseStack poseStack, Direction face) {
-        float scale = 1.25F;
-        poseStack.translate(0.5, 0.7, 0.5);
+    public void setupModelView(PoseStack poseStack, Direction face, boolean scaling) {
+        poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
-        poseStack.scale(scale, scale + 0.15F, scale);
-        poseStack.translate(0, -1, 0);
+        poseStack.translate(0, -1.6, 0);
+
+        if (scaling) {
+            float scale = 1.25F;
+            poseStack.scale(scale, scale + 0.15F, scale);
+        }
     }
 }

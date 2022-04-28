@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class BotiBlocksStorage {
@@ -21,13 +23,12 @@ public class BotiBlocksStorage {
         }
 
         BotiBlocksStorage storage = new BotiBlocksStorage(radius, distance);
-        storage.gatherBlocks();
         storages.put(id, storage);
         return storage;
     }
 
     public static BotiBlocksStorage getStorage(String id) {
-        return BotiBlocksStorage.getStorage(id, 5, 15);
+        return BotiBlocksStorage.getStorage(id, 5, 30);
     }
 
     private BotiBlocksStorage(int radius, int distance) {
@@ -35,27 +36,40 @@ public class BotiBlocksStorage {
         this.distance = distance;
     }
 
-    public void gatherBlocks() {
+    public void gatherBlocks(Level level, BlockPos entraceBlockPos, Direction face) {
         this.blockEntries.clear();
         this.isUpdated = true;
+
+        BlockPos initialBlockPos = entraceBlockPos.relative(face).immutable();
+        Rotation rotation;
+
+        switch (face) {
+            case WEST:
+                rotation = Rotation.CLOCKWISE_90;
+                break;
+            case EAST:
+                rotation = Rotation.COUNTERCLOCKWISE_90;
+                break;
+            case NORTH:
+                rotation = Rotation.CLOCKWISE_180;
+                break;
+            default:
+                rotation = Rotation.NONE;
+                break;
+        }
 
         for (int z = 0; z <= this.distance; z++) {
             int yRadius = z + this.radius;
             int xRadius = z + this.radius;
 
             for (int x = -xRadius; x <= xRadius; x++) {
-                for (int y = 0; y >= -yRadius; y--) {
+                for (int y = -yRadius; y <= yRadius; y++) {
                     BlockPos blockPos = new BlockPos(x, y, z);
-                    BlockState blockState = Blocks.GRASS_BLOCK.defaultBlockState();
+                    BlockPos realBlockPos = initialBlockPos.offset(blockPos.rotate(rotation));
+                    BlockState blockState = level.getBlockState(realBlockPos);
+
                     this.blockEntries.put(blockPos, blockState);
                 }
-
-                // for (int y = -yRadius; y <= yRadius; y++) {
-                //     if (y > -2) continue; // TODO tmp
-                //     BlockPos blockPos = new BlockPos(x, y, z);
-                //     BlockState blockState = Blocks.GRASS_BLOCK.defaultBlockState();
-                //     this.blockEntries.put(blockPos, blockState);
-                // }
             }
         }
     }
