@@ -25,8 +25,11 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,6 +43,18 @@ public class BotiManager {
 
     private static TextureTarget fbo;
     private static boolean inRenderProcess;
+
+    @SubscribeEvent
+	public static void removeHighlight(DrawSelectionEvent event) {
+        if (event.getTarget() instanceof BlockHitResult blockHitResult) {
+            Block hitBlock = mc.level.getBlockState(blockHitResult.getBlockPos()).getBlock();
+
+            for (BotiEntraceData entraceData : entracesData) {
+                Block block = mc.level.getBlockState(new BlockPos(entraceData.getPosition())).getBlock();
+                if (block == hitBlock) event.setCanceled(true);
+            }
+        }
+	}
 
     @SubscribeEvent
     public static void onRenderWorldLast(RenderLevelLastEvent event) {
