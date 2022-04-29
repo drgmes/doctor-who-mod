@@ -65,7 +65,7 @@ public class BotiBlocksStorage {
 
             for (int x = -xRadius; x <= xRadius; x++) {
                 for (int y = -yRadius; y <= yRadius; y++) {
-                    BlockPos blockPos = new BlockPos(x, y, z);
+                    BlockPos blockPos = new BlockPos(x, y, z).immutable();
 
                     BlockPos realBlockPos = initialBlockPos.offset(blockPos.rotate(rotation)).immutable();
                     BlockPos realUpBlockPos = initialBlockPos.offset(blockPos.above().rotate(rotation)).immutable();
@@ -74,7 +74,6 @@ public class BotiBlocksStorage {
                     BlockPos realEastBlockPos = initialBlockPos.offset(blockPos.east().rotate(rotation)).immutable();
                     BlockPos realFrontBlockPos = initialBlockPos.offset(blockPos.north().rotate(rotation)).immutable();
 
-                    BlockState blockState = level.getBlockState(realBlockPos);
                     BlockState upBlockState = level.getBlockState(realUpBlockPos);
                     BlockState downBlockState = level.getBlockState(realDownBlockPos);
                     BlockState westBlockState = level.getBlockState(realWestBlockPos);
@@ -91,7 +90,7 @@ public class BotiBlocksStorage {
                         continue;
                     }
 
-                    this.blockEntries.put(blockPos, blockState);
+                    this.blockEntries.put(blockPos, level.getBlockState(realBlockPos));
                 }
             }
         }
