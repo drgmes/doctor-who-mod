@@ -7,15 +7,12 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(DWM.MODID)
 public class DWM {
     public static final String MODID = "dwm";
+    public static final int CHUNKS_UPDATE_RADIUS = 2;
 
     public static class TIMINGS {
-        public static final float DEMAT = 480;
-        public static final float DEMAT_BE = 240;
-
-        public static final float REMAT = 360;
-        public static final float REMAT_BE = 180;
-
-        public static final float FLIGHT_LOOP = 63;
+        public static final float DEMAT = 240;
+        public static final float REMAT = 180;
+        public static final float FLIGHT_LOOP = 32;
         public static final float ERROR_SOUND = 120;
     }
 

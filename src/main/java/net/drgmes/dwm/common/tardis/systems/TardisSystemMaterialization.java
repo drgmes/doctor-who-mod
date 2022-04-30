@@ -87,12 +87,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
             if (this.inDematProgress()) {
                 this.dematTickInProgress--;
                 if (!this.inDematProgress()) this.demat();
-                else if (this.dematTickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
+                else if (this.dematTickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
             }
             else if (this.inRematProgress()) {
                 this.rematTickInProgress--;
                 if (!this.inRematProgress()) this.remat();
-                else if (this.rematTickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
+                else if (this.rematTickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
             }
         }
     }

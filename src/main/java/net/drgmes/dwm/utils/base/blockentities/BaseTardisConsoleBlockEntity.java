@@ -3,7 +3,7 @@ package net.drgmes.dwm.utils.base.blockentities;
 import java.util.ArrayList;
 
 import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.caps.TardisLevelCapability;
+import net.drgmes.dwm.caps.TardisLevelDataCapability;
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
@@ -21,6 +21,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +44,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         super(type, blockPos, blockState);
 
         this.consoleType = consoleType;
-        this.tardisData = new TardisLevelCapability(this.level);
+        this.tardisData = new TardisLevelDataCapability(this.level);
         this.tardisDataHolder = LazyOptional.of(() -> this.tardisData);
     }
 
@@ -122,6 +123,32 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.animateControls();
     }
 
+    public void unloadAll() {
+        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+            ChunkPos pos = this.level.getChunk(this.worldPosition).getPos();
+            int radius = 3;
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    levelProvider.remove(new ChunkPos(pos.x + x - radius, pos.z + z - radius), this.worldPosition);
+                }
+            }
+        });
+    }
+
+    public void loadAll() {
+        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+            ChunkPos pos = this.level.getChunk(this.worldPosition).getPos();
+            int radius = 3;
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    levelProvider.add(new ChunkPos(pos.x + x - radius, pos.z + z - radius), this.worldPosition);
+                }
+            }
+        });
+    }
+
     public void sendMonitorUpdatePacket() {
         ClientboundTardisConsoleMonitorUpdatePacket packet = new ClientboundTardisConsoleMonitorUpdatePacket(this.worldPosition, this.monitorPage);
         ModPackets.send(level.getChunkAt(this.worldPosition), packet);
@@ -182,7 +209,9 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private void animateControls() {
         boolean isChanged = false;
         for (TardisConsoleControlEntry controlEntry : this.consoleType.controlEntries.values()) {
-            if (controlEntry.role.type != TardisConsoleControlRoleTypes.ANIMATION && controlEntry.role.type != TardisConsoleControlRoleTypes.ANIMATION_DIRECT) continue;
+            if (controlEntry.role.type != TardisConsoleControlRoleTypes.ANIMATION && controlEntry.role.type != TardisConsoleControlRoleTypes.ANIMATION_DIRECT) {
+                continue;
+            }
 
             int value = (int) this.controlsStorage.get(controlEntry.role);
             int direction = value > 0 ? 1 : (value < 0 ? -1 : 0);

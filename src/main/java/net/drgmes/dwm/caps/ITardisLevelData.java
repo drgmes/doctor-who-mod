@@ -81,12 +81,12 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage);
     void tick();
 
-    public static class TardisLevelProvider implements ICapabilitySerializable<CompoundTag> {
-        final private LazyOptional<ITardisLevelData> holder;
+    public static class TardisLevelDataProvider implements ICapabilitySerializable<CompoundTag> {
+        public final LazyOptional<ITardisLevelData> holder;
         private ITardisLevelData data;
 
-        public TardisLevelProvider(Level level) {
-            this.data = new TardisLevelCapability(level);
+        public TardisLevelDataProvider(Level level) {
+            this.data = new TardisLevelDataCapability(level);
             this.holder = LazyOptional.of(() -> this.data);
         }
 

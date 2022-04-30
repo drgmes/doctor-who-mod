@@ -33,7 +33,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
-public class TardisLevelCapability implements ITardisLevelData {
+public class TardisLevelDataCapability implements ITardisLevelData {
     private Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
 
     private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(14).immutable();
@@ -65,7 +65,7 @@ public class TardisLevelCapability implements ITardisLevelData {
     private BlockPos currExteriorPosition;
     private BlockPos destExteriorPosition;
 
-    public TardisLevelCapability(Level level) {
+    public TardisLevelDataCapability(Level level) {
         this.level = level;
 
         this.addSystem(new TardisSystemMaterialization(this));

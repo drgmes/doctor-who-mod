@@ -114,6 +114,23 @@ public class TardisExteriorBlock extends BaseRotatableWaterloggedEntityBlock {
     }
 
     @Override
+    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldBlockState, boolean isMoving) {
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.loadAll();
+        }
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newBlockState, boolean isMoving) {
+        if (level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.unloadAll();
+        }
+
+        super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
+    }
+
+    @Override
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
     }

@@ -45,7 +45,7 @@ public class TardisSystemFlight implements ITardisSystem {
 
             this.playFlySound();
             if (this.tickInProgress == 1) this.land();
-            if (this.tickInProgress % 5 == 0) this.tardisData.updateConsoleTiles();
+            if (this.tickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
             if (this.tickInProgress % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
         }
     }
