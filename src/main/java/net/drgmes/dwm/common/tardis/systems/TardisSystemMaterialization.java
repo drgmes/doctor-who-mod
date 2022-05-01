@@ -354,13 +354,13 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private boolean checkBlockIsSafe(Level level, BlockPos blockPos) {
         BlockPos frontBlockPos = blockPos.relative(this.tardisData.getCurrentExteriorFacing());
 
-        boolean isBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(blockPos.below()));
         boolean isEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos));
         boolean isUpEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos.above()));
+        boolean isBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(blockPos.below()));
 
-        boolean isFrontBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(frontBlockPos.below()));
         boolean isFrontEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(frontBlockPos));
         boolean isFrontUpEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(frontBlockPos.above()));
+        boolean isFrontBottomSolid = DWMUtils.checkBlockIsSolid(level.getBlockState(frontBlockPos.below()));
 
         return isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
     }

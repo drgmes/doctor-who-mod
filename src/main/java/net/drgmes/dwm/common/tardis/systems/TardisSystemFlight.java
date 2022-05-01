@@ -7,8 +7,11 @@ import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class TardisSystemFlight implements ITardisSystem {
     private final ITardisLevelData tardisData;
@@ -70,8 +73,17 @@ public class TardisSystemFlight implements ITardisSystem {
 
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
             return rematSystem.demat(() -> {
+                if (!this.isFlightLaunched) return;
+
+                BlockPos currExteriorPosition = this.tardisData.getCurrentExteriorPosition();
+                BlockPos destExteriorPosition = this.tardisData.getDestinationExteriorPosition();
+                ResourceKey<Level> currExteriorDimension = this.tardisData.getCurrentExteriorDimension();
+                ResourceKey<Level> destExteriorDimension = this.tardisData.getDestinationExteriorDimension();
+                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 10);
+                float timeToFly = Math.min(4000, DWM.TIMINGS.FLIGHT_LOOP * distance) * (currExteriorDimension != destExteriorDimension ? 2 : 1);
+
                 this.isSoundFlyPlayed = false;
-                this.tickInProgressGoal = DWM.TIMINGS.FLIGHT_LOOP * 10; // TODO
+                this.tickInProgressGoal = timeToFly;
                 this.tickInProgress = this.tickInProgressGoal;
             });
         }
@@ -81,9 +93,16 @@ public class TardisSystemFlight implements ITardisSystem {
 
     public boolean land() {
         if (!this.inProgress()) return false;
+        this.isFlightLaunched = false;
+
+        if (this.tickInProgress > 1) {
+            BlockPos currExteriorPosition = this.tardisData.getCurrentExteriorPosition();
+            BlockPos destExteriorPosition = this.tardisData.getDestinationExteriorPosition();
+            Vec3 resultPosition = Vec3.atLowerCornerOf(destExteriorPosition.subtract(currExteriorPosition)).scale(this.getProgressPercent() / 100F);
+            this.tardisData.setDestinationPosition(currExteriorPosition.offset(resultPosition.x, resultPosition.y, resultPosition.z));
+        }
 
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
-            this.isFlightLaunched = false;
             this.isSoundFlyPlayed = false;
             this.tickInProgress = 0;
             this.tardisData.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
