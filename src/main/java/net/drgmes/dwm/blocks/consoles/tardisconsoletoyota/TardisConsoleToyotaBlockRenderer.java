@@ -17,6 +17,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -34,28 +35,50 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         float rotateDegrees = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
         ModelPart modelRoot = this.ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION);
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(modelRoot);
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.renderType(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
+        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
 
+        float scale = 0.4F;
         poseStack.pushPose();
         poseStack.translate(0.5, 0.7, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(rotateDegrees));
-        poseStack.translate(0, -0.8F, 0);
+        poseStack.scale(scale, scale, scale);
+        poseStack.translate(0, 0.25F, 0);
         this.animate(tile, modelRoot, partialTicks);
         model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
 
         poseStack.pushPose();
-        poseStack.translate(0.5D, 1.085D, 0.5D);
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees - 90));
+        poseStack.translate(0.5, 1F, 0.5);
+        poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees + 60));
         this.renderScreen(tile, poseStack, buffer);
         poseStack.popPose();
     }
 
     @Override
+    protected void activateLever(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (value) model.xRot -= 1.25F;
+    }
+
+    @Override
+    protected void activateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN || controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) {
+            this.activateLever(model, value != 0, controlRole, partialTicks);
+            return;
+        }
+
+        model.xRot -= (1F / (controlRole.maxIntValue - 1)) * value;
+    }
+
+    @Override
+    protected void animateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        this.activateLever(model, value, controlRole, partialTicks);
+    }
+
+    @Override
     protected void activateButton(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.y += 0.25F;
+        if (value) model.y += 0.5F;
     }
 
     @Override
@@ -69,23 +92,18 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     @Override
-    protected void activateLever(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.xRot -= 1.5F;
+    protected void activateSlider(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        if (value) model.z += 4F;
     }
 
     @Override
-    protected void activateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (controlRole.type == TardisConsoleControlRoleTypes.NUMBER || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT || controlRole.type == TardisConsoleControlRoleTypes.NUMBER_DIRECT_BLOCK) {
-            model.xRot -= (1.5F / (controlRole.maxIntValue - 1)) * Math.abs(value);
-            return;
-        }
-
-        this.activateLever(model, value != 0, controlRole, partialTicks);
+    protected void activateSlider(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        model.z += value * (4F / (controlRole.maxIntValue > 0 ? controlRole.maxIntValue : 1));
     }
 
     @Override
-    protected void animateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        this.activateLever(model, value, controlRole, partialTicks);
+    protected void animateSlider(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
+        this.activateSlider(model, value, controlRole, partialTicks);
     }
 
     @Override
@@ -100,14 +118,12 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
     @Override
     protected void activateHandbrake(ModelPart model, TardisConsoleControlRoles controlRole) {
-        model.xRot -= 0.6F;
-        model.yRot += 1.4F;
-        model.zRot -= 0.9F;
+        model.yRot -= 1.55F;
     }
 
     @Override
     protected void activateStarter(ModelPart model, TardisConsoleControlRoles controlRole) {
-        model.xRot -= 2.2F;
+        model.xRot += 2F;
     }
 
     private void renderScreen(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer) {
@@ -144,7 +160,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
         String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
-        this.printStringsToScreen(poseStack, buffer, 0.002175F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, 0.002F, new String[] {
             this.buildScreenParamText("Flight", flight),
             this.buildScreenParamText("Materialized", materialized),
             "",
@@ -167,7 +183,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String artronEnergyHarvestingState = provider.isEnergyArtronHarvesting() ? "ON" : "OFF";
         String forgeEnergyHarvestingState = provider.isEnergyForgeHarvesting() ? "ON" : "OFF";
 
-        this.printStringsToScreen(poseStack, buffer, 0.002175F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, 0.002F, new String[] {
             this.buildScreenParamText("Shields", shieldsState),
             this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
             this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),
@@ -193,9 +209,9 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         Font font = this.ctx.getFont();
 
         poseStack.pushPose();
-        poseStack.translate(-0.255D, 0, 0.53D);
+        poseStack.translate(-0.255D, 0.095F, 0.765D);
         poseStack.scale(scaling, -scaling, scaling);
-        poseStack.mulPose(Vector3f.XN.rotation(-1.3F));
+        poseStack.mulPose(Vector3f.XN.rotation(-1.31F));
 
         for (int i = 0; i < lines.length; i++) {
             font.drawInBatch(
