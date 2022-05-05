@@ -1,4 +1,8 @@
 {
+	"screwdriver_main": {
+		"subtitle": "subtitle.screwdriver.screwdriver_main",
+		"sounds": ["dwm:screwdriver/screwdriver_main"]
+	},
 	"tardis_error": {
 		"subtitle": "subtitle.tardis.tardis_error",
 		"sounds": ["dwm:tardis/tardis_error"]

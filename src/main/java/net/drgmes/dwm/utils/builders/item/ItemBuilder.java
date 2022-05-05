@@ -24,10 +24,10 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(String name) {
-        this(name, () -> new Item(getItemBehaviour()));
+        this(name, () -> new Item(getItemProperties()));
     }
 
-    public static Item.Properties getItemBehaviour() {
+    public static Item.Properties getItemProperties() {
         return new Item.Properties().tab(Registration.CREATIVE_MODE_TAB);
     }
 
