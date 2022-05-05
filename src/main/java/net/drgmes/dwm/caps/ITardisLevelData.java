@@ -3,7 +3,7 @@ package net.drgmes.dwm.caps;
 import java.util.List;
 import java.util.Map;
 
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -52,8 +52,8 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     int getXYZStep();
     int getEnergyArtron();
     int getEnergyForge();
-    TardisDoorBlockEntity getMainDoorTile();
-    List<TardisDoorBlockEntity> getDoorTiles();
+    TardisDoorsPoliceBoxBlockEntity getMainDoorTile();
+    List<TardisDoorsPoliceBoxBlockEntity> getDoorTiles();
     BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 

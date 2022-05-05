@@ -1,10 +1,10 @@
-package net.drgmes.dwm.blocks.tardisdoor;
+package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
-import net.drgmes.dwm.blocks.tardisdoor.models.TardisPoliceBoxDoorModel;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.common.boti.BotiEntraceData;
 import net.drgmes.dwm.common.boti.BotiManager;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,15 +20,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBlockEntity> {
+public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<TardisDoorsPoliceBoxBlockEntity> {
     private BlockEntityRendererProvider.Context ctx;
 
-    public TardisDoorBlockRenderer(BlockEntityRendererProvider.Context context) {
+    public TardisDoorsPoliceBoxBlockRenderer(BlockEntityRendererProvider.Context context) {
         this.ctx = context;
     }
 
     @Override
-    public void render(TardisDoorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, int packedLight) {
+    public void render(TardisDoorsPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, int packedLight) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -36,8 +36,8 @@ public class TardisDoorBlockRenderer implements BlockEntityRenderer<TardisDoorBl
         DoubleBlockHalf half = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
         if (half != DoubleBlockHalf.LOWER) return;
 
-        ResourceLocation modelResource = TardisPoliceBoxDoorModel.LAYER_LOCATION.getModel();
-        TardisPoliceBoxDoorModel model = new TardisPoliceBoxDoorModel(ctx.bakeLayer(TardisPoliceBoxDoorModel.LAYER_LOCATION));
+        ResourceLocation modelResource = TardisDoorsPoliceBoxModel.LAYER_LOCATION.getModel();
+        TardisDoorsPoliceBoxModel model = new TardisDoorsPoliceBoxModel(ctx.bakeLayer(TardisDoorsPoliceBoxModel.LAYER_LOCATION));
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(modelResource));
         model.setupAnim(tile.getBlockState());
 

@@ -1,22 +1,22 @@
 package net.drgmes.dwm.setup;
 
-import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockEntity;
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
-    public static final RegistryObject<BlockEntityType<TardisExteriorBlockEntity>> TARDIS_EXTERIOR = Registration.registerBlockEntity(
-        "tardis",
-        TardisExteriorBlockEntity::new,
-        ModBlocks.TARDIS_EXTERIOR.blockObject
+    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR = Registration.registerBlockEntity(
+        "tardis_exterior_police_box",
+        TardisExteriorPoliceBoxBlockEntity::new,
+        ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.blockObject
     );
 
-    public static final RegistryObject<BlockEntityType<TardisDoorBlockEntity>> TARDIS_DOOR = Registration.registerBlockEntity(
-        "tardis_door",
-        TardisDoorBlockEntity::new,
-        ModBlocks.TARDIS_DOOR.blockObject
+    public static final RegistryObject<BlockEntityType<TardisDoorsPoliceBoxBlockEntity>> TARDIS_DOOR = Registration.registerBlockEntity(
+        "tardis_doors_police_box",
+        TardisDoorsPoliceBoxBlockEntity::new,
+        ModBlocks.TARDIS_DOORS_POLICE_BOX.blockObject
     );
 
     /////////////////////

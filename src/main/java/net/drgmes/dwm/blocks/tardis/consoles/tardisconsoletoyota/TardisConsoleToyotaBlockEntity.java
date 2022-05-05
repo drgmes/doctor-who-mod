@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.consoles.tardisconsoletoyota;
+package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota;
 
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.setup.ModBlockEntities;

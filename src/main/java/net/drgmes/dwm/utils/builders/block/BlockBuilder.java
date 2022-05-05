@@ -81,7 +81,10 @@ public class BlockBuilder {
     public void registerCustomRender() {
     }
 
-    public void registerCustomRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    }
+
+    public void registerCustomLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
     }
 
     public void registerWorldGen() {

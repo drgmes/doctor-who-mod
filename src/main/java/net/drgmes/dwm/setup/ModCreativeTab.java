@@ -15,7 +15,7 @@ public class ModCreativeTab extends CreativeModeTab {
 
     @Override
     public ItemStack makeIcon() {
-        return ModBlocks.TARDIS_EXTERIOR.get().asItem().getDefaultInstance();
+        return ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().asItem().getDefaultInstance();
     }
 
     @Override

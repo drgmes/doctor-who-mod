@@ -3,8 +3,8 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -50,18 +50,18 @@ public class ClientboundTardisExteriorUpdatePacket {
                 final Minecraft mc = Minecraft.getInstance();
                 BlockState blockState = mc.level.getBlockState(blockPos);
 
-                if (mc.level.getBlockEntity(blockPos) instanceof TardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                if (mc.level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
                     if (demat) tardisExteriorBlockEntity.demat();
                     success.set(true);
                 }
 
-                if (blockState.getBlock() instanceof TardisExteriorBlock) {
-                    if (blockState.getValue(TardisExteriorBlock.OPEN) != doorsOpened) {
+                if (blockState.getBlock() instanceof TardisExteriorPoliceBoxBlock) {
+                    if (blockState.getValue(TardisExteriorPoliceBoxBlock.OPEN) != doorsOpened) {
                         mc.level.levelEvent(mc.player, doorsOpened ? 1006 : 1012, blockPos, 0);
                         mc.level.gameEvent(mc.player, doorsOpened ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                     }
 
-                    if (blockState.getValue(TardisExteriorBlock.LIT) != lightEnabled) {
+                    if (blockState.getValue(TardisExteriorPoliceBoxBlock.LIT) != lightEnabled) {
                         mc.level.levelEvent(mc.player, 1003, blockPos, 0);
                     }
 

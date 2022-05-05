@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardisdoor;
+package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -9,10 +9,10 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TardisDoorBlockEntity extends BlockEntity {
+public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
 
-    public TardisDoorBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public TardisDoorsPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_DOOR.get(), blockPos, blockState);
     }
 
@@ -37,7 +37,7 @@ public class TardisDoorBlockEntity extends BlockEntity {
                 this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                     if (!levelProvider.isValid()) return;
     
-                    levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorBlock.FACING));
+                    levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorsPoliceBoxBlock.FACING));
                     levelProvider.setEntracePosition(this.getBlockPos());
                     levelProvider.getDoorTiles().add(this);
                     levelProvider.updateDoorTiles();

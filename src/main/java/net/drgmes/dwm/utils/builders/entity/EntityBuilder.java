@@ -31,6 +31,9 @@ public class EntityBuilder<T extends Entity> {
         return this.name;
     }
 
-    public void registerCustomRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    }
+
+    public void registerCustomLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
     }
 }

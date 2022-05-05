@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardisdoor.models;
+package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -18,14 +18,14 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class TardisPoliceBoxDoorModel extends EntityModel<Entity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/doors/tardis_police_box_doors.png"), "main");
+public class TardisDoorsPoliceBoxModel extends EntityModel<Entity> {
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/tardis/doors/tardis_doors_police_box.png"), "main");
     private final ModelPart base;
     private final ModelPart boti;
     private final ModelPart door_left;
     private final ModelPart door_right;
 
-    public TardisPoliceBoxDoorModel(ModelPart root) {
+    public TardisDoorsPoliceBoxModel(ModelPart root) {
         this.base = root.getChild("base");
         this.boti = root.getChild("boti");
         this.door_left = root.getChild("door_left");

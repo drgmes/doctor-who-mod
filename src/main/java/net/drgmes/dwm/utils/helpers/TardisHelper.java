@@ -3,8 +3,8 @@ package net.drgmes.dwm.utils.helpers;
 import java.util.function.Function;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.common.boti.BotiBlocksStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions;
@@ -46,7 +46,7 @@ public class TardisHelper {
         });
     }
 
-    public static ServerLevel setupTardis(TardisExteriorBlockEntity tile, Level level) {
+    public static ServerLevel setupTardis(TardisExteriorPoliceBoxBlockEntity tile, Level level) {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
@@ -60,7 +60,7 @@ public class TardisHelper {
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             try {
                 provider.setDimension(level.dimension(), false);
-                provider.setFacing(tile.getBlockState().getValue(TardisExteriorBlock.FACING), false);
+                provider.setFacing(tile.getBlockState().getValue(TardisExteriorPoliceBoxBlock.FACING), false);
                 provider.setPosition(tile.getBlockPos(), false);
             } catch(Exception e) {
                 System.out.println(e);

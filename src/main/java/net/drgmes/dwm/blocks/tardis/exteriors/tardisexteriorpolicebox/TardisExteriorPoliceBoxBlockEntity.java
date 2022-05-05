@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardisexterior;
+package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TardisExteriorBlockEntity extends BlockEntity {
+public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
     public String tardisConsoleRoom = "toyota_natured";
 
@@ -26,7 +26,7 @@ public class TardisExteriorBlockEntity extends BlockEntity {
     private boolean inRematProgress = false;
     private boolean inDematProgress = false;
 
-    public TardisExteriorBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public TardisExteriorPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_EXTERIOR.get(), blockPos, blockState);
     }
 

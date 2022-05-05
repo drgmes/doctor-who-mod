@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlock;
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlockEntity;
-import net.drgmes.dwm.blocks.tardisexterior.TardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
@@ -39,7 +39,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(14).immutable();
     private Direction entraceFacing = Direction.SOUTH;
 
-    private List<TardisDoorBlockEntity> doorTiles = new ArrayList<>();
+    private List<TardisDoorsPoliceBoxBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
     private Level level;
 
@@ -277,13 +277,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public TardisDoorBlockEntity getMainDoorTile() {
+    public TardisDoorsPoliceBoxBlockEntity getMainDoorTile() {
         int size = this.doorTiles.size();
         return size > 0 ? this.doorTiles.get(size - 1) : null;
     }
 
     @Override
-    public List<TardisDoorBlockEntity> getDoorTiles() {
+    public List<TardisDoorsPoliceBoxBlockEntity> getDoorTiles() {
         return this.doorTiles;
     }
 
@@ -385,7 +385,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public void updateDoorTiles() {
         this.doorTiles.forEach((tile) -> {
-            level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorBlock.OPEN, this.isDoorsOpened()), 3);
+            level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorsPoliceBoxBlock.OPEN, this.isDoorsOpened()), 3);
 
             ClientboundTardisDoorUpdatePacket packet = new ClientboundTardisDoorUpdatePacket(tile.getBlockPos(), this.isDoorsOpened());
             ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), packet);
@@ -569,13 +569,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
             if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
             try {
-                if (exteriorBlockState.getBlock() instanceof TardisExteriorBlock) {
-                    exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.OPEN, this.isDoorsOpened());
-                    exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.LIT, this.isLightEnabled());
+                if (exteriorBlockState.getBlock() instanceof TardisExteriorPoliceBoxBlock) {
+                    exteriorBlockState = exteriorBlockState.setValue(TardisExteriorPoliceBoxBlock.OPEN, this.isDoorsOpened());
+                    exteriorBlockState = exteriorBlockState.setValue(TardisExteriorPoliceBoxBlock.LIT, this.isLightEnabled());
                     exteriorLevel.setBlock(exteriorBlockPos, exteriorBlockState, 3);
 
-                    if (exteriorLevel.getBlockState(exteriorBlockPos.above()).getBlock() instanceof TardisExteriorBlock) {
-                        exteriorBlockState = exteriorBlockState.setValue(TardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
+                    if (exteriorLevel.getBlockState(exteriorBlockPos.above()).getBlock() instanceof TardisExteriorPoliceBoxBlock) {
+                        exteriorBlockState = exteriorBlockState.setValue(TardisExteriorPoliceBoxBlock.HALF, DoubleBlockHalf.UPPER);
                         exteriorLevel.setBlock(exteriorBlockPos.above(), exteriorBlockState, 3);
                     }
 

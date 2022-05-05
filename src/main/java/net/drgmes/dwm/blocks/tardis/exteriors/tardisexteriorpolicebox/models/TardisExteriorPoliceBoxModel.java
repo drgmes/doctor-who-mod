@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardisexterior.models;
+package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -21,14 +21,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TardisPoliceBoxExteriorModel extends EntityModel<Entity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/exteriors/tardis_police_box.png"), "main");
+public class TardisExteriorPoliceBoxModel extends EntityModel<Entity> {
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/tardis/exteriors/tardis_exterior_police_box.png"), "main");
     private final ModelPart base;
     private final ModelPart boti;
     private final ModelPart door_left;
     private final ModelPart door_right;
 
-    public TardisPoliceBoxExteriorModel(ModelPart root) {
+    public TardisExteriorPoliceBoxModel(ModelPart root) {
         this.base = root.getChild("base");
         this.boti = root.getChild("boti");
         this.door_left = root.getChild("door_left");

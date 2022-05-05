@@ -18,7 +18,7 @@ public class TardisConsoleControlEntityBuilder extends EntityBuilder<TardisConso
     }
 
     @Override
-    public void registerCustomRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(this.get(), TardisConsoleControlEntityRenderer::new);
     }
 }

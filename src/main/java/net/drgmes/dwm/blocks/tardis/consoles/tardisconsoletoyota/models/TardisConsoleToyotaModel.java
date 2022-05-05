@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.models;
+package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class TardisConsoleToyotaModel extends EntityModel<Entity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/consoles/tardis_console_toyota.png"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/tardis/consoles/tardis_console_toyota.png"), "main");
     private final ModelPart base;
     private final ModelPart controls;
     private final ModelPart screwdriver_slot;

@@ -99,25 +99,29 @@ public class ModelHelper {
         builder.element(1).face(Direction.EAST).texture("#wall_x").uvs(0, 3, 16, 16);
     }
 
-    public static <T extends ModelBuilder<T>> void rotateToBlockStyle(T builder) {
+    public static <T extends ModelBuilder<T>> void rotateToBlockStyle(T builder, float scale) {
         builder.transforms().transform(ModelBuilder.Perspective.GUI).rotation(30, 225, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(3F, -1.5F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).scale(0.625F, 0.625F, 0.625F);
+        builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-5.75F, -2.25F, 0);
+        builder.transforms().transform(ModelBuilder.Perspective.GUI).scale(0.625F * scale);
 
         builder.transforms().transform(ModelBuilder.Perspective.GROUND).rotation(0, 0, 0);
         builder.transforms().transform(ModelBuilder.Perspective.GROUND).translation(0, 3F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GROUND).scale(0.25F, 0.25F, 0.25F);
+        builder.transforms().transform(ModelBuilder.Perspective.GROUND).scale(0.25F * scale);
 
         builder.transforms().transform(ModelBuilder.Perspective.FIXED).rotation(0, 0, 0);
         builder.transforms().transform(ModelBuilder.Perspective.FIXED).translation(0, 0, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).scale(0.5F, 0.5F, 0.5F);
+        builder.transforms().transform(ModelBuilder.Perspective.FIXED).scale(0.5F * scale);
 
         builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).rotation(0, 90, 0);
         builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).translation(-2.5F, 1F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).scale(0.4F, 0.4F, 0.4F);
+        builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).scale(0.4F * scale);
 
         builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).rotation(75, 90, 0);
         builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).translation(-2.5F, 2.5F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).scale(0.375F, 0.375F, 0.375F);
+        builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).scale(0.375F * scale);
+    }
+
+    public static <T extends ModelBuilder<T>> void rotateToBlockStyle(T builder) {
+        ModelHelper.rotateToBlockStyle(builder, 1.0F);
     }
 }

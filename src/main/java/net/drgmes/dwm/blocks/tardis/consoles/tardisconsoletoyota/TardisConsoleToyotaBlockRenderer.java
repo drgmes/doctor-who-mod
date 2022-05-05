@@ -1,10 +1,10 @@
-package net.drgmes.dwm.blocks.consoles.tardisconsoletoyota;
+package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
-import net.drgmes.dwm.blocks.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
+import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;

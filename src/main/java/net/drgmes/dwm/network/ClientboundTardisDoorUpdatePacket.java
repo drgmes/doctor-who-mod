@@ -3,7 +3,7 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.blocks.tardisdoor.TardisDoorBlock;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -40,8 +40,8 @@ public class ClientboundTardisDoorUpdatePacket {
                 final Minecraft mc = Minecraft.getInstance();
                 final BlockState blockState = mc.level.getBlockState(blockPos);
 
-                if (blockState.getBlock() instanceof TardisDoorBlock) {
-                    mc.level.setBlock(blockPos, blockState.setValue(TardisDoorBlock.OPEN, doorsOpened), 10);
+                if (blockState.getBlock() instanceof TardisDoorsPoliceBoxBlock) {
+                    mc.level.setBlock(blockPos, blockState.setValue(TardisDoorsPoliceBoxBlock.OPEN, doorsOpened), 10);
                     mc.level.levelEvent(mc.player, doorsOpened ? 1006 : 1012, blockPos, 0);
                     mc.level.gameEvent(mc.player, doorsOpened ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                     success.set(true);

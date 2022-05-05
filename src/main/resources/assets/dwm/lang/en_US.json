@@ -1,7 +1,7 @@
 {
   "itemGroup.dwm": "DoctorWhoMod",
 
-  "block.dwm.tardis_exterior": "Tardis",
-  "block.dwm.tardis_door": "Tardis Door",
-  "block.dwm.tardis_console_toyota": "Toyota Console"
+  "block.dwm.tardis_exterior_police_box": "Tardis Police Box",
+  "block.dwm.tardis_doors_police_box": "Tardis Police Box Doors",
+  "block.dwm.tardis_console_toyota": "Tardis Toyota Console"
 }

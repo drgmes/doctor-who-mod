@@ -1,10 +1,10 @@
-package net.drgmes.dwm.blocks.tardisexterior;
+package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
-import net.drgmes.dwm.blocks.tardisexterior.models.TardisPoliceBoxExteriorModel;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
 import net.drgmes.dwm.common.boti.BotiEntraceData;
 import net.drgmes.dwm.common.boti.BotiManager;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -20,15 +20,15 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisExteriorBlockEntity> {
+public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer<TardisExteriorPoliceBoxBlockEntity> {
     private BlockEntityRendererProvider.Context ctx;
 
-    public TardisExteriorBlockRenderer(BlockEntityRendererProvider.Context context) {
+    public TardisExteriorPoliceBoxBlockRenderer(BlockEntityRendererProvider.Context context) {
         this.ctx = context;
     }
 
     @Override
-    public void render(TardisExteriorBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+    public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -36,8 +36,8 @@ public class TardisExteriorBlockRenderer implements BlockEntityRenderer<TardisEx
         DoubleBlockHalf half = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
         if (half != DoubleBlockHalf.LOWER) return;
 
-        ResourceLocation modelResource = TardisPoliceBoxExteriorModel.LAYER_LOCATION.getModel();
-        TardisPoliceBoxExteriorModel model = new TardisPoliceBoxExteriorModel(ctx.bakeLayer(TardisPoliceBoxExteriorModel.LAYER_LOCATION));
+        ResourceLocation modelResource = TardisExteriorPoliceBoxModel.LAYER_LOCATION.getModel();
+        TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(ctx.bakeLayer(TardisExteriorPoliceBoxModel.LAYER_LOCATION));
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(modelResource));
         model.setupAnim(tile.getBlockState());
 
