@@ -13,11 +13,12 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -31,7 +32,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     @Override
-    public void render(BaseTardisConsoleBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+    public void render(BaseTardisConsoleBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
         float rotateDegrees = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
         ModelPart modelRoot = this.ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION);
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(modelRoot);
@@ -46,14 +47,11 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         poseStack.scale(scale, scale, scale);
         poseStack.translate(0, 0.25F, 0);
         this.animate(tile, modelRoot, partialTicks);
-        model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.renderToBuffer(poseStack, vertexConsumer, packedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
         poseStack.popPose();
 
-        poseStack.pushPose();
-        poseStack.translate(0.5, 1F, 0.5);
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees + 60));
-        this.renderScreen(tile, poseStack, buffer);
-        poseStack.popPose();
+        this.renderScreen(tile, poseStack, buffer, packedLight, combinedOverlay, rotateDegrees);
+        this.renderScrewdriver(tile, poseStack, buffer, packedLight, combinedOverlay, rotateDegrees);
     }
 
     @Override
@@ -126,16 +124,22 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         model.xRot += 2F;
     }
 
-    private void renderScreen(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer) {
+    private void renderScreen(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, float rotateDegrees) {
         tile.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
-            if (tile.monitorPage == 1) this.renderScreenPage2(tile, poseStack, buffer, provider);
-            else this.renderScreenPage1(tile, poseStack, buffer, provider);
+            poseStack.pushPose();
+            poseStack.translate(0.5, 1F, 0.5);
+            poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees + 60));
+
+            if (tile.monitorPage == 1) this.renderScreenPage2(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
+            else this.renderScreenPage1(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
+
+            poseStack.popPose();
         });
     }
 
-    private void renderScreenPage1(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, ITardisLevelData provider) {
+    private void renderScreenPage1(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, ITardisLevelData provider) {
         String flight = "NO";
         if (provider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
             if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
@@ -160,7 +164,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
         String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
-        this.printStringsToScreen(poseStack, buffer, 0.002F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[] {
             this.buildScreenParamText("Flight", flight),
             this.buildScreenParamText("Materialized", materialized),
             "",
@@ -178,12 +182,12 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         });
     }
 
-    private void renderScreenPage2(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, ITardisLevelData provider) {
+    private void renderScreenPage2(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, ITardisLevelData provider) {
         String shieldsState = provider.isShieldsEnabled() ? "ON" : "OFF";
         String artronEnergyHarvestingState = provider.isEnergyArtronHarvesting() ? "ON" : "OFF";
         String forgeEnergyHarvestingState = provider.isEnergyForgeHarvesting() ? "ON" : "OFF";
 
-        this.printStringsToScreen(poseStack, buffer, 0.002F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[] {
             this.buildScreenParamText("Shields", shieldsState),
             this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
             this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),
@@ -191,6 +195,26 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
             this.buildScreenParamText("Artron Energy", provider.getEnergyArtron() + " AE"),
             this.buildScreenParamText("Forge Energy", provider.getEnergyForge() + " FE"),
         });
+    }
+
+    private void renderScrewdriver(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, float rotateDegrees) {
+        if (tile.screwdriverItemStack != null && !tile.screwdriverItemStack.isEmpty()) {
+            Minecraft mc = Minecraft.getInstance();
+            float scale = 0.25F;
+
+            poseStack.pushPose();
+            poseStack.translate(0.5, 1.25F, 0.5);
+            poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
+            poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
+            poseStack.mulPose(Vector3f.YP.rotationDegrees(rotateDegrees));
+            poseStack.translate(0.5545F, 0.065F, 0.545F);
+            poseStack.mulPose(Vector3f.YN.rotationDegrees(30));
+            poseStack.mulPose(Vector3f.ZN.rotationDegrees(-15));
+            poseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
+            poseStack.scale(scale, scale, scale);
+            mc.getItemRenderer().renderStatic(mc.player, tile.screwdriverItemStack, TransformType.NONE, false, poseStack, buffer, mc.level, packedLight, combinedOverlay, 0);
+            poseStack.popPose();
+        }
     }
 
     private String buildScreenParamText(String title, String appendInput) {
@@ -205,7 +229,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         return title + ": " + " ".repeat((lineWidth - font.width(str)) / font.width(" ")) + append;
     }
 
-    private void printStringsToScreen(PoseStack poseStack, MultiBufferSource buffer, float scaling, String[] lines) {
+    private void printStringsToScreen(PoseStack poseStack, MultiBufferSource buffer, int packedLight, float scaling, String[] lines) {
         Font font = this.ctx.getFont();
 
         poseStack.pushPose();
@@ -224,7 +248,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
                 buffer,
                 false,
                 0,
-                LightTexture.FULL_BRIGHT
+                packedLight
             );
         }
 

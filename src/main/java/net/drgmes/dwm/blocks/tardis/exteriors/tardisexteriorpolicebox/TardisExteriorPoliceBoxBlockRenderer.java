@@ -28,7 +28,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
     }
 
     @Override
-    public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedOverlay, int packedLight) {
+    public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -49,7 +49,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
 
         poseStack.pushPose();
         this.setupModelView(poseStack, face, true);
-        model.renderToBuffer(poseStack, vertexConsumer, combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
+        model.renderToBuffer(poseStack, vertexConsumer, packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
         poseStack.popPose();
 
         BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID);
@@ -57,14 +57,14 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         entraceData.setDoorsRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
             this.setupModelView(innerPoseStack, face, true);
-            model.renderDoorsToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
+            model.renderDoorsToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
             this.setupModelView(innerPoseStack, face, true);
-            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), combinedOverlay, packedLight, 1, 1, 1, alphaClamped);
+            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 

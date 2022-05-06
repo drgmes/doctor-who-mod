@@ -2,11 +2,16 @@ package net.drgmes.dwm.items.screwdriver;
 
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class ScrewdriverItemBuilder extends ItemBuilder {
     public ScrewdriverItemBuilder(String name) {
         super(name, () -> new ScrewdriverItem(getItemProperties()));
+    }
+
+    public static Item.Properties getItemProperties() {
+        return ItemBuilder.getItemProperties().stacksTo(1);
     }
 
     @Override

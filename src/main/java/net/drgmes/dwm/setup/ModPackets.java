@@ -3,6 +3,7 @@ package net.drgmes.dwm.setup;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
@@ -42,6 +43,10 @@ public class ModPackets {
         INSTANCE.messageBuilder(ClientboundTardisConsoleControlsUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleControlsUpdatePacket::encode).decoder(ClientboundTardisConsoleControlsUpdatePacket::new)
             .consumer(ClientboundTardisConsoleControlsUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisConsoleScrewdriverSlotUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::encode).decoder(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::new)
+            .consumer(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisConsoleWorldDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleWorldDataUpdatePacket::encode).decoder(ClientboundTardisConsoleWorldDataUpdatePacket::new)

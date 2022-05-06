@@ -11,16 +11,23 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTy
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
+import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,8 +36,9 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
-    public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public TardisConsoleType consoleType;
+    public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
+    public ItemStack screwdriverItemStack = ItemStack.EMPTY;
     public int monitorPage = 0;
 
     private final LazyOptional<ITardisLevelData> tardisDataHolder;
@@ -64,6 +72,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.controlsStorage.save(tag);
 
         tag.putInt("monitorPage", this.monitorPage);
+        ContainerHelper.saveAllItems(tag, NonNullList.withSize(1, this.screwdriverItemStack), true);
     }
 
     @Override
@@ -72,6 +81,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.controlsStorage.load(tag);
 
         this.monitorPage = tag.getInt("monitorPage");
+
+        NonNullList<ItemStack> itemStacks = NonNullList.withSize(1, ItemStack.EMPTY);
+        if (tag.contains("Items", 9)) {
+            ContainerHelper.loadAllItems(tag, itemStacks);
+            this.screwdriverItemStack = itemStacks.get(0);
+        }
     }
 
     @Override
@@ -159,16 +174,58 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         ModPackets.send(level.getChunkAt(this.worldPosition), packet);
     }
 
-    public void useControl(TardisConsoleControlEntry control, InteractionHand hand) {
+    public void sendScrewdriverSlotUpdatePacket() {
+        ClientboundTardisConsoleScrewdriverSlotUpdatePacket packet = new ClientboundTardisConsoleScrewdriverSlotUpdatePacket(this.worldPosition, this.screwdriverItemStack);
+        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
+    }
+
+    public void useControl(TardisConsoleControlEntry control, InteractionHand hand, Entity entity) {
         // Monitor
-        if (hand == InteractionHand.OFF_HAND && control.role == TardisConsoleControlRoles.MONITOR) {
+        if (control.role == TardisConsoleControlRoles.MONITOR && hand == InteractionHand.OFF_HAND) {
             System.out.println("Monitor"); // TODO
             return;
         }
 
         // Telepatic Interface
-        if (hand == InteractionHand.OFF_HAND && control.role == TardisConsoleControlRoles.TELEPATIC_INTERFACE) {
+        if (control.role == TardisConsoleControlRoles.TELEPATIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
             System.out.println("Telepatic Interface"); // TODO
+            return;
+        }
+
+        // Screwdriver Slot
+        if (control.role == TardisConsoleControlRoles.SCREWDRIVER_SLOT && hand == InteractionHand.OFF_HAND && entity instanceof Player player) {
+            boolean isChanged = false;
+
+            if (this.screwdriverItemStack.isEmpty()) {
+                ItemStack mainHandItem = player.getMainHandItem();
+                ItemStack offHandItem = player.getOffhandItem();
+
+                if (mainHandItem.getItem() instanceof ScrewdriverItem) {
+                    this.screwdriverItemStack = mainHandItem;
+                    player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                    isChanged = true;
+                }
+                else if (offHandItem.getItem() instanceof ScrewdriverItem) {
+                    this.screwdriverItemStack = offHandItem;
+                    player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
+                    isChanged = true;
+                }
+            }
+            else if (player.getMainHandItem().isEmpty()) {
+                player.setItemInHand(InteractionHand.MAIN_HAND, this.screwdriverItemStack);
+                this.screwdriverItemStack = ItemStack.EMPTY;
+                isChanged = true;
+            }
+            else if (player.getInventory().add(this.screwdriverItemStack)) {
+                this.screwdriverItemStack = ItemStack.EMPTY;
+                isChanged = true;
+            }
+
+            if (isChanged) {
+                this.sendScrewdriverSlotUpdatePacket();
+                this.setChanged();
+            }
+
             return;
         }
 

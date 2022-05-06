@@ -28,7 +28,7 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
     }
 
     @Override
-    public void render(TardisDoorsPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int combinedOverlay, int packedLight) {
+    public void render(TardisDoorsPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int combinedOverlay) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
 
@@ -43,8 +43,8 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
 
         poseStack.pushPose();
         this.setupModelView(poseStack, face, true);
-        model.renderToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
-        model.renderDoorsToBuffer(poseStack, buffer, combinedOverlay, packedLight, 1, 1, 1, 1);
+        model.renderToBuffer(poseStack, buffer, packedLight, combinedOverlay, 1, 1, 1, 1);
+        model.renderDoorsToBuffer(poseStack, buffer, packedLight, combinedOverlay, 1, 1, 1, 1);
         poseStack.popPose();
 
         BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
@@ -52,7 +52,7 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
         entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
             this.setupModelView(innerPoseStack, face, true);
-            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), combinedOverlay, packedLight, 1, 1, 1, 1);
+            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), packedLight, combinedOverlay, 1, 1, 1, 1);
             innerPoseStack.popPose();
         });
 

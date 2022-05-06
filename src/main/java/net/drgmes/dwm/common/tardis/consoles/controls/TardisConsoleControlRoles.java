@@ -4,6 +4,7 @@ public enum TardisConsoleControlRoles {
     NONE(TardisConsoleControlRoleTypes.NONE),
     MONITOR(TardisConsoleControlRoleTypes.NONE),
     TELEPATIC_INTERFACE(TardisConsoleControlRoleTypes.NONE),
+    SCREWDRIVER_SLOT(TardisConsoleControlRoleTypes.NONE),
     DOORS(TardisConsoleControlRoleTypes.BOOLEAN),
     SHIELDS(TardisConsoleControlRoleTypes.BOOLEAN),
     LIGHT(TardisConsoleControlRoleTypes.BOOLEAN),

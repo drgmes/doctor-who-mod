@@ -9,9 +9,9 @@ public class TardisConsoleTypeToyota extends TardisConsoleType {
     public TardisConsoleTypeToyota() {
         this.addControlEntry(TardisConsoleControlRoles.MONITOR, TardisConsoleControlEntryTypes.OTHER, new Vec3(-0.4F, 0.5F, -0.7F), "controls/control_monitor", ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM);
         this.addControlEntry(TardisConsoleControlRoles.TELEPATIC_INTERFACE, TardisConsoleControlEntryTypes.OTHER, new Vec3(0.45F, 0.4F, -0.75F), "controls/control_telepatic_interface", ModEntities.TARDIS_CONSOLE_CONTROL_LARGE);
+        this.addControlEntry(TardisConsoleControlRoles.SCREWDRIVER_SLOT, TardisConsoleControlEntryTypes.OTHER, new Vec3(0.535F, 0.55F, 0.5425F), "screwdriver_slot");
 
         this.addControlEntry(TardisConsoleControlRoles.MATERIALIZATION, TardisConsoleControlEntryTypes.SLIDER, new Vec3(0.855F, 0.575F, -0.0775F), "controls/control_sliders_v/control_slider_v_3$_handle", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);
-
         this.addControlEntry(TardisConsoleControlRoles.MONITOR_PAGE_PREV, TardisConsoleControlEntryTypes.BUTTON, new Vec3(-0.1315F, 0.6F, -0.735F), "controls/control_buttons/control_button_7$_r1", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);
         this.addControlEntry(TardisConsoleControlRoles.MONITOR_PAGE_NEXT, TardisConsoleControlEntryTypes.BUTTON, new Vec3(-0.1875F, 0.6F, -0.705F), "controls/control_buttons/control_button_8$_r1", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);
         this.addControlEntry(TardisConsoleControlRoles.DIM_PREV, TardisConsoleControlEntryTypes.BUTTON, new Vec3(-0.4975F, 0.6F, -0.5295F), "controls/control_buttons/control_button_9$_r1", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);

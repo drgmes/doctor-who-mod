@@ -2,12 +2,15 @@ package net.drgmes.dwm.blocks.tardis.consoles;
 
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.RegistryObject;
 
 public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEntity> extends BaseRotatableWaterloggedEntityBlock {
@@ -40,5 +43,16 @@ public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEnt
         }
 
         super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        if (level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+            Vec3 pos = Vec3.atBottomCenterOf(blockPos);
+            Containers.dropItemStack(level, pos.x, pos.y, pos.z, tardisConsoleBlockEntity.screwdriverItemStack);
+            level.updateNeighbourForOutputSignal(blockPos, this);
+        }
+
+        super.playerWillDestroy(level, blockPos, blockState, player);
     }
 }

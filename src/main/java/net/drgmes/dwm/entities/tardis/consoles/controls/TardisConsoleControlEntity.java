@@ -48,7 +48,7 @@ public class TardisConsoleControlEntity extends Entity {
         if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
         if (this.consoleBlockEntity == null) return InteractionResult.PASS;
 
-        this.consoleBlockEntity.useControl(this.controlEntry, hand);
+        this.consoleBlockEntity.useControl(this.controlEntry, hand, player);
         return InteractionResult.SUCCESS;
     }
 
@@ -56,7 +56,7 @@ public class TardisConsoleControlEntity extends Entity {
     public boolean skipAttackInteraction(Entity entity) {
         if (this.consoleBlockEntity == null) return false;
 
-        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND);
+        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND, entity);
         return true;
     }
 
