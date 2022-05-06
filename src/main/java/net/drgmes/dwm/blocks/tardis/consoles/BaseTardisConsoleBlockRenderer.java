@@ -1,10 +1,9 @@
-package net.drgmes.dwm.entities.tardis.consoles.renderers;
+package net.drgmes.dwm.blocks.tardis.consoles;
 
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
-import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;

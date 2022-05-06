@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.base.blockentities;
+package net.drgmes.dwm.blocks.tardis.consoles;
 
 import java.util.ArrayList;
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
@@ -13,7 +14,6 @@ import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
-import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper.TardisTeleporter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

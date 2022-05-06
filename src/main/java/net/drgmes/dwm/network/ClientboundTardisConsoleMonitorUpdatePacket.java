@@ -3,7 +3,7 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;

@@ -1,7 +1,7 @@
 package net.drgmes.dwm.entities.tardis.consoles.controls;
 
+import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
-import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.world.InteractionHand;

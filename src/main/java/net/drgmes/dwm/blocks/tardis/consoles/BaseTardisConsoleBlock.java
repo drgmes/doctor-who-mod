@@ -1,6 +1,6 @@
-package net.drgmes.dwm.utils.base.blocks;
+package net.drgmes.dwm.blocks.tardis.consoles;
 
-import net.drgmes.dwm.utils.base.blockentities.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
