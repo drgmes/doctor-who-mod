@@ -16,6 +16,7 @@ import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.drgmes.dwm.utils.helpers.TardisHelper.TardisTeleporter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
@@ -40,6 +41,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private final ITardisLevelData tardisData;
     private boolean isMaterialized = true;
+    private boolean needsRerunRemat = false;
     private float tickForErrorSound = 0;
 
     public float dematTickInProgress = 0;
@@ -56,6 +58,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     @Override
     public void load(CompoundTag tag) {
         this.isMaterialized = tag.getBoolean("isMaterialized");
+        this.needsRerunRemat = tag.getBoolean("needsRerunRemat");
         this.dematTickInProgress = tag.getFloat("dematTickInProgress");
         this.rematTickInProgress = tag.getFloat("rematTickInProgress");
         this.dematTickInProgressGoal = tag.getFloat("dematTickInProgressGoal");
@@ -68,6 +71,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         CompoundTag tag = new CompoundTag();
 
         tag.putBoolean("isMaterialized", this.isMaterialized);
+        tag.putBoolean("needsRerunRemat", this.needsRerunRemat);
         tag.putFloat("dematTickInProgress", this.dematTickInProgress);
         tag.putFloat("rematTickInProgress", this.rematTickInProgress);
         tag.putFloat("dematTickInProgressGoal", this.dematTickInProgressGoal);
@@ -79,6 +83,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void tick() {
+        if (this.needsRerunRemat) {
+            this.remat();
+            this.needsRerunRemat = false;
+        }
+
         if (this.tickForErrorSound > 0) {
             this.tickForErrorSound--;
         }
@@ -203,6 +212,13 @@ public class TardisSystemMaterialization implements ITardisSystem {
             ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
             if (exteriorLevel == null) return false;
 
+            BlockPos initialExteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+            if (!this.needsRerunRemat) {
+                this.addChunkToLoader(exteriorLevel, initialExteriorBlockPos);
+                this.needsRerunRemat = true;
+                return false;
+            }
+
             if (this.findSafePosition()) {
                 BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
@@ -223,8 +239,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     tardisExteriorBlockEntity.tardisLevelUUID = level.dimension().location().getPath();
 
                     this.isMaterialized = true;
+                    this.needsRerunRemat = false;
                     this.rematTickInProgressGoal = DWM.TIMINGS.REMAT;
                     this.rematTickInProgress = this.rematTickInProgressGoal;
+                    this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
                     this.sendExteriorUpdatePacket(false, true);
                     this.playLandingSound();
 
@@ -251,6 +269,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
             else if (!this.tryLandToForeignTardis()) {
                 this.playErrorSound();
             }
+
+            this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
         }
 
         return false;
@@ -299,6 +319,34 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         return false;
+    }
+
+    private void addChunkToLoader(ServerLevel level, BlockPos blockPos) {
+        level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+            SectionPos pos = SectionPos.of(blockPos);
+            int radius = 1;
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (Math.abs(x) == radius && Math.abs(z) == radius) continue;
+                    levelProvider.add(pos.offset(x, 0, z), blockPos);
+                }
+            }
+        });
+    }
+
+    private void removeChunkFromLoader(ServerLevel level, BlockPos blockPos) {
+        level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+            SectionPos pos = SectionPos.of(blockPos);
+            int radius = 1;
+
+            for (int x = -radius; x <= radius; x++) {
+                for (int z = -radius; z <= radius; z++) {
+                    if (Math.abs(x) == radius && Math.abs(z) == radius) continue;
+                    levelProvider.remove(pos.offset(x, 0, z), blockPos);
+                }
+            }
+        });
     }
 
     private boolean findSafePosition() {

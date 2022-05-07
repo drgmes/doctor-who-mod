@@ -23,6 +23,7 @@ import net.drgmes.dwm.setup.ModPackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
@@ -30,7 +31,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -156,12 +156,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     public void unloadAll() {
         this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            ChunkPos pos = this.level.getChunk(this.worldPosition).getPos();
+            SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = 3;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.remove(new ChunkPos(pos.x + x - radius, pos.z + z - radius), this.worldPosition);
+                    levelProvider.remove(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });
@@ -169,12 +169,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     public void loadAll() {
         this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            ChunkPos pos = this.level.getChunk(this.worldPosition).getPos();
+            SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = 3;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.add(new ChunkPos(pos.x + x - radius, pos.z + z - radius), this.worldPosition);
+                    levelProvider.add(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });

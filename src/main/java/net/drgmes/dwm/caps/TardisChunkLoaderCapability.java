@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.LongArrayTag;
 import net.minecraft.server.level.ServerChunkCache;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 
 public class TardisChunkLoaderCapability implements ITardisChunkLoader {
-    private Map<ChunkPos, List<BlockPos>> chunks = new HashMap<>();
+    private Map<SectionPos, List<BlockPos>> chunks = new HashMap<>();
 
     private ServerLevel level;
 
@@ -28,14 +29,14 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
 
-        for (Map.Entry<ChunkPos, List<BlockPos>> entry : this.chunks.entrySet()) {
+        for (Map.Entry<SectionPos, List<BlockPos>> entry : this.chunks.entrySet()) {    
             CompoundTag chunkTag = new CompoundTag();
-            chunkTag.putLong("chunk", entry.getKey().toLong());
+            chunkTag.putLong("chunk", entry.getKey().chunk().toLong());
 
             LongArrayTag blocks = new LongArrayTag(entry.getValue().stream().map(BlockPos::asLong).collect(Collectors.toList()));
             chunkTag.put("blocks", blocks);
 
-            tag.put(entry.getKey().x + ";" + entry.getKey().z, chunkTag);
+            tag.put(entry.getKey().getX() + ";" + entry.getKey().getZ(), chunkTag);
         }
 
         return tag;
@@ -45,7 +46,7 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
     public void deserializeNBT(CompoundTag tag) {
         for (String key : tag.getAllKeys()) {
             CompoundTag chunkTag = tag.getCompound(key);
-            ChunkPos chunk = new ChunkPos(chunkTag.getLong("chunk"));
+            SectionPos chunk = SectionPos.of(new ChunkPos(chunkTag.getLong("chunk")), 0);
 
             LongArrayTag blocks = (LongArrayTag) chunkTag.get("blocks");
             Arrays.stream(blocks.getAsLongArray()).mapToObj(BlockPos::of).forEach(pos -> this.add(chunk, pos));
@@ -58,31 +59,31 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
     }
 
     @Override
-    public void add(ChunkPos chunkPos, BlockPos blockPos) {
-        if (this.chunks.containsKey(chunkPos) && this.chunks.get(chunkPos).contains(blockPos)) {
+    public void add(SectionPos sectionPos, BlockPos blockPos) {
+        if (this.chunks.containsKey(sectionPos) && this.chunks.get(sectionPos).contains(blockPos)) {
             return;
         }
 
-        if (!this.chunks.containsKey(chunkPos)) {
-            this.chunks.put(chunkPos, new LinkedList<>());
-            this.level.setChunkForced(chunkPos.x, chunkPos.z, true);
+        if (!this.chunks.containsKey(sectionPos)) {
+            this.chunks.put(sectionPos, new LinkedList<>());
+            this.level.setChunkForced(sectionPos.getX(), sectionPos.getZ(), true);
         }
 
-        this.chunks.get(chunkPos).add(blockPos);
+        this.chunks.get(sectionPos).add(blockPos);
     }
 
     @Override
-    public void remove(ChunkPos chunkPos, BlockPos blockPos) {
-        if (!this.chunks.containsKey(chunkPos) || !this.chunks.get(chunkPos).contains(blockPos)) {
+    public void remove(SectionPos sectionPos, BlockPos blockPos) {
+        if (!this.chunks.containsKey(sectionPos) || !this.chunks.get(sectionPos).contains(blockPos)) {
             return;
         }
 
-        if (this.chunks.get(chunkPos).size() == 1) {
-            this.level.setChunkForced(chunkPos.x, chunkPos.z, false);
-            this.chunks.remove(chunkPos);
+        if (this.chunks.get(sectionPos).size() == 1) {
+            this.level.setChunkForced(sectionPos.getX(), sectionPos.getZ(), false);
+            this.chunks.remove(sectionPos);
         }
         else {
-            this.chunks.get(chunkPos).remove(blockPos);
+            this.chunks.get(sectionPos).remove(blockPos);
         }
     }
 
@@ -92,9 +93,9 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
         int tickSpeed = this.level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
         if (tickSpeed <= 0) return;
 
-        for (ChunkPos pos : this.chunks.keySet()) {
-            if (chunkProvider.chunkMap.getPlayers(pos, false).size() == 0) {
-                this.level.tickChunk(this.level.getChunk(pos.x, pos.z), tickSpeed);
+        for (SectionPos pos : this.chunks.keySet()) {
+            if (chunkProvider.chunkMap.getPlayers(pos.chunk(), false).size() == 0) {
+                this.level.tickChunk(this.level.getChunk(pos.getX(), pos.getZ()), tickSpeed);
             }
         }
     }

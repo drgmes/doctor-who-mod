@@ -8,11 +8,11 @@ import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -87,12 +87,12 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
 
     public void unloadAll() {
         this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            ChunkPos chunkPos = this.level.getChunk(this.worldPosition).getPos();
+            SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = DWM.CHUNKS_UPDATE_RADIUS;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.remove(new ChunkPos(chunkPos.x + x - radius, chunkPos.z + z - radius), this.worldPosition);
+                    levelProvider.remove(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });
@@ -100,12 +100,12 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
 
     public void loadAll() {
         this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            ChunkPos chunkPos = this.level.getChunk(this.worldPosition).getPos();
+            SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = DWM.CHUNKS_UPDATE_RADIUS;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.add(new ChunkPos(chunkPos.x + x - radius, chunkPos.z + z - radius), this.worldPosition);
+                    levelProvider.add(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });

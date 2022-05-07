@@ -3,10 +3,10 @@ package net.drgmes.dwm.caps;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -15,8 +15,8 @@ import net.minecraftforge.common.util.LazyOptional;
 public interface ITardisChunkLoader extends INBTSerializable<CompoundTag> {
     ServerLevel getLevel();
 
-    void add(ChunkPos chunkPos, BlockPos blockPos);
-    void remove(ChunkPos chunkPos, BlockPos blockPos);
+    void add(SectionPos sectionPos, BlockPos blockPos);
+    void remove(SectionPos sectionPos, BlockPos blockPos);
 
     void tick();
 
