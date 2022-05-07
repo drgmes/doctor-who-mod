@@ -10,6 +10,8 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryT
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
@@ -38,7 +40,9 @@ import net.minecraftforge.common.util.LazyOptional;
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public TardisConsoleType consoleType;
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
+
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
+    public float tickInProgress = 0;
     public int monitorPage = 0;
 
     private final LazyOptional<ITardisLevelData> tardisDataHolder;
@@ -136,6 +140,18 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
 
         this.animateControls();
+
+        this.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+            if (provider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem && flightSystem.inProgress()) {
+                this.tickInProgress++;
+                this.tickInProgress %= 60;
+            }
+
+            if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem && materializationSystem.inProgress()) {
+                this.tickInProgress++;
+                this.tickInProgress %= 60;
+            }
+        });
     }
 
     public void unloadAll() {

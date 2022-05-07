@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner;
 
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -13,8 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
+    public boolean inProgress = false;
     public float tickInProgress = 0;
-    public boolean inProgress;
 
     public TardisToyotaSpinnerBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_TOYOTA_SPINNER.get(), blockPos, blockState);
@@ -33,13 +34,26 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
     public void tick() {
         if (!this.level.isClientSide && this.checkTileIsInATardis()) {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (levelProvider.isValid() && levelProvider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-                    if (this.inProgress != flightSystem.inProgress()) {
-                        this.inProgress = flightSystem.inProgress();
+                boolean prevInProgress = this.inProgress;
 
-                        ClientboundTardisToyotaSpinnerUpdatePacket packet = new ClientboundTardisToyotaSpinnerUpdatePacket(this.worldPosition, this.inProgress);
-                        ModPackets.send(level.getChunkAt(this.worldPosition), packet);
+                if (levelProvider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+                    if (!this.inProgress && materializationSystem.inProgress()) {
+                        this.inProgress = true;
                     }
+                    else if (this.inProgress && !materializationSystem.inProgress()) {
+                        this.inProgress = false;
+                    }
+                }
+
+                if (levelProvider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+                    if (!this.inProgress && flightSystem.inProgress()) {
+                        this.inProgress = true;
+                    }
+                }
+
+                if (prevInProgress != this.inProgress) {
+                    ClientboundTardisToyotaSpinnerUpdatePacket packet = new ClientboundTardisToyotaSpinnerUpdatePacket(this.worldPosition, this.inProgress);
+                    ModPackets.send(level.getChunkAt(this.worldPosition), packet);
                 }
             });
         }

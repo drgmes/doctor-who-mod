@@ -37,6 +37,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         ModelPart modelRoot = this.ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION);
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(modelRoot);
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
+        model.setupAnim(tile);
 
         float scale = 0.4F;
         poseStack.pushPose();
