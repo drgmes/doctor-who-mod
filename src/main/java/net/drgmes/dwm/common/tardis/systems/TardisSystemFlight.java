@@ -20,6 +20,7 @@ public class TardisSystemFlight implements ITardisSystem {
 
     public float tickInProgress = 0;
     public float tickInProgressGoal = 0;
+    public float destinationDistanceRate = 0;
 
     public TardisSystemFlight(ITardisLevelData tardisData) {
         this.tardisData = tardisData;
@@ -29,6 +30,7 @@ public class TardisSystemFlight implements ITardisSystem {
     public void load(CompoundTag tag) {
         this.tickInProgress = tag.getFloat("tickInProgress");
         this.tickInProgressGoal = tag.getFloat("tickInProgressGoal");
+        this.destinationDistanceRate = tag.getFloat("destinationDistanceRate");
     }
 
     @Override
@@ -37,6 +39,7 @@ public class TardisSystemFlight implements ITardisSystem {
 
         tag.putFloat("tickInProgress", this.tickInProgress);
         tag.putFloat("tickInProgressGoal", this.tickInProgressGoal);
+        tag.putFloat("destinationDistanceRate", this.destinationDistanceRate);
 
         return tag;
     }
@@ -44,12 +47,12 @@ public class TardisSystemFlight implements ITardisSystem {
     @Override
     public void tick() {
         if (this.tickInProgress > 0) {
-            this.tickInProgress--;
+            this.tickInProgress -= this.destinationDistanceRate;
 
             this.playFlySound();
             if (this.tickInProgress == 1) this.land();
-            if (this.tickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
-            if (this.tickInProgress % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
+            if ((this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardisData.updateConsoleTiles();
+            if ((this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
         }
     }
 
@@ -79,12 +82,13 @@ public class TardisSystemFlight implements ITardisSystem {
                 BlockPos destExteriorPosition = this.tardisData.getDestinationExteriorPosition();
                 ResourceKey<Level> currExteriorDimension = this.tardisData.getCurrentExteriorDimension();
                 ResourceKey<Level> destExteriorDimension = this.tardisData.getDestinationExteriorDimension();
-                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 10);
-                float timeToFly = Math.min(4000, DWM.TIMINGS.FLIGHT_LOOP * distance) * (currExteriorDimension != destExteriorDimension ? 2 : 1);
+                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 40);
+                float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
 
                 this.isSoundFlyPlayed = false;
+                this.tickInProgress = timeToFly;
                 this.tickInProgressGoal = timeToFly;
-                this.tickInProgress = this.tickInProgressGoal;
+                this.destinationDistanceRate = timeToFly / Math.min(4000, timeToFly);
             });
         }
 
@@ -105,6 +109,7 @@ public class TardisSystemFlight implements ITardisSystem {
         if (this.tardisData.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization rematSystem) {
             this.isSoundFlyPlayed = false;
             this.tickInProgress = 0;
+            this.destinationDistanceRate = 0;
             this.tardisData.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
             this.tardisData.setDimension(this.tardisData.getDestinationExteriorDimension(), true);
             this.tardisData.setFacing(this.tardisData.getDestinationExteriorFacing(), true);
