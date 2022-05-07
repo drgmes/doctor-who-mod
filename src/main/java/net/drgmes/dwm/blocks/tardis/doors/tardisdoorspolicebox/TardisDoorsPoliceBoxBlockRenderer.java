@@ -39,7 +39,7 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
         ResourceLocation modelResource = TardisDoorsPoliceBoxModel.LAYER_LOCATION.getModel();
         TardisDoorsPoliceBoxModel model = new TardisDoorsPoliceBoxModel(ctx.bakeLayer(TardisDoorsPoliceBoxModel.LAYER_LOCATION));
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutout(modelResource));
-        model.setupAnim(tile.getBlockState());
+        model.setupAnim(tile);
 
         poseStack.pushPose();
         this.setupModelView(poseStack, face, true);

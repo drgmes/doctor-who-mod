@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -15,7 +16,6 @@ import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -35,10 +35,10 @@ public class TardisExteriorPoliceBoxModel extends EntityModel<Entity> {
         this.door_right = root.getChild("door_right");
     }
 
-    public void setupAnim(BlockState blockState) {
+    public void setupAnim(TardisExteriorPoliceBoxBlockEntity tile) {
         float doorAngle = 1.46F;
 
-        if (blockState.getValue(BlockStateProperties.OPEN)) {
+        if (tile.getBlockState().getValue(BlockStateProperties.OPEN)) {
             this.door_left.yRot = -doorAngle;
             this.door_right.yRot = doorAngle;
         }

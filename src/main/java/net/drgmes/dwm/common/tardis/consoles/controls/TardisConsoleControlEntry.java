@@ -7,7 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class TardisConsoleControlEntry {
@@ -31,7 +31,7 @@ public class TardisConsoleControlEntry {
 
     public TardisConsoleControlEntity createEntity(BaseTardisConsoleBlockEntity tile, Level level, BlockPos blockPos) {
         TardisConsoleControlEntity entity = this.getEntityType().create(level);
-        Direction direction = level.getBlockState(blockPos).getValue(HorizontalDirectionalBlock.FACING);
+        Direction direction = level.getBlockState(blockPos).getValue(BlockStateProperties.HORIZONTAL_FACING);
         Vec3 pos = Vec3.atCenterOf(blockPos).add(this.position.yRot(1.57F * ((direction.toYRot() - 90) / -90)));
 
         entity.setPos(pos);

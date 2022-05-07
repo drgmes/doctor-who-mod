@@ -3,8 +3,7 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -13,26 +12,22 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ClientboundTardisConsoleControlsUpdatePacket {
+public class ClientboundTardisEngineUpdatePacket {
     private final BlockPos blockPos;
-    private final TardisConsoleControlsStorage controlsStorage;
+    private final CompoundTag tag;
 
-    public ClientboundTardisConsoleControlsUpdatePacket(BlockPos blockPos, TardisConsoleControlsStorage controlsStorage) {
+    public ClientboundTardisEngineUpdatePacket(BlockPos blockPos, CompoundTag tag) {
         this.blockPos = blockPos;
-        this.controlsStorage = controlsStorage;
+        this.tag = tag;
     }
 
-    public ClientboundTardisConsoleControlsUpdatePacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), new TardisConsoleControlsStorage());
-        this.controlsStorage.load(buffer.readNbt());
+    public ClientboundTardisEngineUpdatePacket(FriendlyByteBuf buffer) {
+        this(buffer.readBlockPos(), buffer.readNbt());
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        CompoundTag tag = new CompoundTag();
-        this.controlsStorage.save(tag);
-
         buffer.writeBlockPos(this.blockPos);
-        buffer.writeNbt(tag);
+        buffer.writeNbt(this.tag);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -43,9 +38,9 @@ public class ClientboundTardisConsoleControlsUpdatePacket {
             public void run() {
                 final Minecraft mc = Minecraft.getInstance();
 
-                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-                    tardisConsoleBlockEntity.controlsStorage = controlsStorage;
-                    tardisConsoleBlockEntity.setChanged();
+                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisEngineBlockEntity tardisEngineBlockEntity) {
+                    tardisEngineBlockEntity.load(tag);
+                    tardisEngineBlockEntity.setChanged();
                     success.set(true);
                 }
             }

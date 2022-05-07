@@ -39,9 +39,9 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay);
-        controls.render(poseStack, buffer, packedLight, packedOverlay);
-        screwdriver_slot.render(poseStack, buffer, packedLight, packedOverlay);
+        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        controls.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        screwdriver_slot.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
         rotor_glass.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha * 0.15F);
     }
 

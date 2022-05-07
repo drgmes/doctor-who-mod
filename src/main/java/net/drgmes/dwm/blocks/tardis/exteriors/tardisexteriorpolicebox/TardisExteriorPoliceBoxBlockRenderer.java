@@ -39,7 +39,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         ResourceLocation modelResource = TardisExteriorPoliceBoxModel.LAYER_LOCATION.getModel();
         TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(ctx.bakeLayer(TardisExteriorPoliceBoxModel.LAYER_LOCATION));
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(modelResource));
-        model.setupAnim(tile.getBlockState());
+        model.setupAnim(tile);
 
         float speed = 0.3F;
         float intense = 0.4F;

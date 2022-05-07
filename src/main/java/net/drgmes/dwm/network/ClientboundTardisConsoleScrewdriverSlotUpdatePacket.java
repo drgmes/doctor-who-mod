@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -39,11 +38,9 @@ public class ClientboundTardisConsoleScrewdriverSlotUpdatePacket {
             public void run() {
                 final Minecraft mc = Minecraft.getInstance();
 
-                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity baseTardisConsoleBlockEntity) {
-                    BlockState blockState = baseTardisConsoleBlockEntity.getBlockState();
-                    baseTardisConsoleBlockEntity.screwdriverItemStack = screwdriverItemStack;
-                    baseTardisConsoleBlockEntity.getLevel().sendBlockUpdated(blockPos, blockState, blockState, 3);
-                    baseTardisConsoleBlockEntity.setChanged();
+                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+                    tardisConsoleBlockEntity.screwdriverItemStack = screwdriverItemStack;
+                    tardisConsoleBlockEntity.setChanged();
                     success.set(true);
                 }
             }

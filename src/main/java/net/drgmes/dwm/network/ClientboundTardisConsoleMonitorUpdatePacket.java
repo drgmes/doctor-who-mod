@@ -7,7 +7,6 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -37,12 +36,10 @@ public class ClientboundTardisConsoleMonitorUpdatePacket {
             @Override
             public void run() {
                 final Minecraft mc = Minecraft.getInstance();
-                final BlockEntity blockEntity = mc.level.getBlockEntity(blockPos);
 
-                if (blockEntity instanceof BaseTardisConsoleBlockEntity baseTardisConsoleBlockEntity) {
-                    baseTardisConsoleBlockEntity.monitorPage = monitorPage;
-                    blockEntity.getLevel().sendBlockUpdated(blockPos, blockEntity.getBlockState(), blockEntity.getBlockState(), 3);
-                    blockEntity.setChanged();
+                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+                    tardisConsoleBlockEntity.monitorPage = monitorPage;
+                    tardisConsoleBlockEntity.setChanged();
                     success.set(true);
                 }
             }

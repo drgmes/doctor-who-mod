@@ -2,8 +2,12 @@
   "itemGroup.dwm": "DoctorWhoMod",
 
   "block.dwm.tardis_exterior_police_box": "Tardis Police Box",
+
   "block.dwm.tardis_doors_police_box": "Tardis Police Box Doors",
+
   "block.dwm.tardis_console_toyota": "Tardis Toyota Console",
+
+  "block.dwm.tardis_engine_toyota": "Tardis Toyota Engine",
 
   "item.dwm.screwdriver_11": "11th Doctor's Sonic Screwdriver",
   "item.dwm.screwdriver_12": "12th Doctor's Sonic Screwdriver",
