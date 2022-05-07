@@ -153,8 +153,15 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
-            provider.setDoorsState(!provider.isDoorsOpened(), true);
-            provider.updateConsoleTiles();
+            if (player.isShiftKeyDown()) {
+                provider.setDoorsLockState(player, !provider.isDoorsLocked(), true);
+                provider.updateConsoleTiles();
+                return;
+            }
+
+            if (provider.setDoorsOpenState(!provider.isDoorsOpened(), true)) {
+                provider.updateConsoleTiles();
+            }
         });
 
         return InteractionResult.sidedSuccess(level.isClientSide);

@@ -29,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
@@ -47,6 +48,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     private int energyForge = 0;
     private int xyzStep = 1;
 
+    private boolean doorsLocked = true;
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
@@ -106,6 +108,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         tdTag.putInt("energyForge", this.energyForge);
         tdTag.putInt("xyzStep", this.xyzStep);
 
+        tdTag.putBoolean("doorsLocked", this.doorsLocked);
         tdTag.putBoolean("doorsOpened", this.doorsOpened);
         tdTag.putBoolean("shieldsEnabled", this.shieldsEnabled);
         tdTag.putBoolean("energyArtronHarvesting", this.energyArtronHarvesting);
@@ -141,6 +144,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         this.energyForge = tdTag.getInt("energyForge");
         this.xyzStep = tdTag.getInt("xyzStep");
 
+        this.doorsLocked = tdTag.getBoolean("doorsLocked");
         this.doorsOpened = tdTag.getBoolean("doorsOpened");
         this.shieldsEnabled = tdTag.getBoolean("shieldsEnabled");
         this.energyArtronHarvesting = tdTag.getBoolean("energyArtronHarvesting");
@@ -169,6 +173,11 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public boolean isValid() {
         return this.currExteriorDimension != null;
+    }
+
+    @Override
+    public boolean isDoorsLocked() {
+        return this.doorsLocked;
     }
 
     @Override
@@ -299,87 +308,120 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev) {
+    public boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorDimension = this.currExteriorDimension;
         this.currExteriorDimension = dimension;
+        return true;
     }
 
     @Override
-    public void setDestinationDimension(ResourceKey<Level> dimension) {
+    public boolean setDestinationDimension(ResourceKey<Level> dimension) {
         this.destExteriorDimension = dimension;
+        return true;
     }
 
     @Override
-    public void setEntraceFacing(Direction direction) {
+    public boolean setEntraceFacing(Direction direction) {
         this.entraceFacing = direction;
+        return true;
     }
 
     @Override
-    public void setFacing(Direction direction, boolean shouldUpdatePrev) {
+    public boolean setFacing(Direction direction, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorFacing = this.currExteriorFacing;
         this.currExteriorFacing = direction;
+        return true;
     }
 
     @Override
-    public void setDestinationFacing(Direction direction) {
+    public boolean setDestinationFacing(Direction direction) {
         this.destExteriorFacing = direction;
+        return true;
     }
 
     @Override
-    public void setEntracePosition(BlockPos blockPos) {
+    public boolean setEntracePosition(BlockPos blockPos) {
         this.entracePosition = blockPos.immutable();
+        return true;
     }
 
     @Override
-    public void setPosition(BlockPos blockPos, boolean shouldUpdatePrev) {
+    public boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorPosition = this.currExteriorPosition;
         this.currExteriorPosition = blockPos.immutable();
+        return true;
     }
 
     @Override
-    public void setDestinationPosition(BlockPos blockPos) {
+    public boolean setDestinationPosition(BlockPos blockPos) {
         this.destExteriorPosition = blockPos.immutable();
+        return true;
     }
 
     @Override
-    public void setDoorsState(boolean flag, boolean shouldUpdate) {
-        if (flag && this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            if (!materializationSystem.isMaterialized()) return;
+    public boolean setDoorsLockState(Player player, boolean flag, boolean shouldUpdate) {
+        if (this.doorsLocked == flag) return false;
+        this.doorsLocked = flag;
+
+        if (shouldUpdate) {
+            this.updateDoorTiles();
         }
 
-        if (this.doorsOpened == flag) return;
+        if (flag) {
+            this.setDoorsOpenState(false, shouldUpdate);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean setDoorsOpenState(boolean flag, boolean shouldUpdate) {
+        if (flag && this.isDoorsLocked()) return false;
+
+        if (flag && this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            if (!materializationSystem.isMaterialized()) return false;
+        }
+
+        if (this.doorsOpened == flag) return false;
         this.doorsOpened = flag;
 
         if (shouldUpdate) {
             this.updateDoorTiles();
             this.updateExterior();
         }
+
+        return true;
     }
 
     @Override
-    public void setLightState(boolean flag, boolean shouldUpdate) {
-        if (this.lightEnabled == flag) return;
+    public boolean setLightState(boolean flag, boolean shouldUpdate) {
+        if (this.lightEnabled == flag) return false;
         this.lightEnabled = flag;
 
         if (shouldUpdate) {
             this.updateExterior();
         }
+
+        return true;
     }
 
     @Override
-    public void setShieldsState(boolean flag, boolean shouldUpdate) {
-        if (this.shieldsEnabled == flag) return;
+    public boolean setShieldsState(boolean flag, boolean shouldUpdate) {
+        if (this.shieldsEnabled == flag) return false;
         this.shieldsEnabled = flag;
+        return true;
     }
 
     @Override
-    public void setEnergyArtronHarvesting(boolean flag) {
+    public boolean setEnergyArtronHarvesting(boolean flag) {
         this.energyArtronHarvesting = flag;
+        return true;
     }
 
     @Override
-    public void setEnergyForgeHarvesting(boolean flag) {
+    public boolean setEnergyForgeHarvesting(boolean flag) {
         this.energyForgeHarvesting = flag;
+        return true;
     }
 
     @Override
@@ -521,7 +563,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         // Only if Tardis materialized
         if (isMaterialized) {
             // Doors
-            this.setDoorsState((boolean) controlsStorage.get(TardisConsoleControlRoles.DOORS), true);
+            this.setDoorsOpenState((boolean) controlsStorage.get(TardisConsoleControlRoles.DOORS), true);
 
             // Light
             this.setLightState((boolean) controlsStorage.get(TardisConsoleControlRoles.LIGHT), true);

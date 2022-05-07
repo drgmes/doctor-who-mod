@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
@@ -26,6 +27,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     ITardisSystem getSystem(Class<? extends ITardisSystem> system);
 
     boolean isValid();
+    boolean isDoorsLocked();
     boolean isDoorsOpened();
     boolean isLightEnabled();
     boolean isShieldsEnabled();
@@ -57,22 +59,23 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 
-    void setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
-    void setDestinationDimension(ResourceKey<Level> dimension);
+    boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
+    boolean setDestinationDimension(ResourceKey<Level> dimension);
 
-    void setEntraceFacing(Direction direction);
-    void setFacing(Direction direction, boolean shouldUpdatePrev);
-    void setDestinationFacing(Direction direction);
+    boolean setEntraceFacing(Direction direction);
+    boolean setFacing(Direction direction, boolean shouldUpdatePrev);
+    boolean setDestinationFacing(Direction direction);
 
-    void setEntracePosition(BlockPos blockPos);
-    void setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
-    void setDestinationPosition(BlockPos blockPos);
+    boolean setEntracePosition(BlockPos blockPos);
+    boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
+    boolean setDestinationPosition(BlockPos blockPos);
 
-    void setDoorsState(boolean flag, boolean shouldUpdate);
-    void setLightState(boolean flag, boolean shouldUpdate);
-    void setShieldsState(boolean flag, boolean shouldUpdate);
-    void setEnergyArtronHarvesting(boolean flag);
-    void setEnergyForgeHarvesting(boolean flag);
+    boolean setDoorsLockState(Player player, boolean flag, boolean shouldUpdate);
+    boolean setDoorsOpenState(boolean flag, boolean shouldUpdate);
+    boolean setLightState(boolean flag, boolean shouldUpdate);
+    boolean setShieldsState(boolean flag, boolean shouldUpdate);
+    boolean setEnergyArtronHarvesting(boolean flag);
+    boolean setEnergyForgeHarvesting(boolean flag);
 
     void updateDoorTiles();
     void updateConsoleTiles();

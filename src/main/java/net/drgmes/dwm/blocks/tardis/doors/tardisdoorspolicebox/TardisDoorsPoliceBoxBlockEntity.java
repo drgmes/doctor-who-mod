@@ -42,9 +42,9 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
             if (!this.level.isClientSide) {
                 this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                     if (!levelProvider.isValid()) return;
-    
+
                     levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorsPoliceBoxBlock.FACING));
-                    levelProvider.setEntracePosition(this.getBlockPos());
+                    levelProvider.setEntracePosition(this.worldPosition);
                     levelProvider.getDoorTiles().add(this);
                     levelProvider.updateDoorTiles();
                 });

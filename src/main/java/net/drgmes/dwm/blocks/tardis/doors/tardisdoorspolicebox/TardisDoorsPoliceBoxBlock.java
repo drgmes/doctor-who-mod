@@ -121,7 +121,7 @@ public class TardisDoorsPoliceBoxBlock extends BaseRotatableWaterloggedEntityBlo
 
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {
-       return PushReaction.DESTROY;
+       return PushReaction.IGNORE;
     }
 
     @Override
@@ -131,8 +131,15 @@ public class TardisDoorsPoliceBoxBlock extends BaseRotatableWaterloggedEntityBlo
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
-            provider.setDoorsState(!provider.isDoorsOpened(), true);
-            provider.updateConsoleTiles();
+            if (player.isShiftKeyDown()) {
+                provider.setDoorsLockState(null, !provider.isDoorsLocked(), true);
+                provider.updateConsoleTiles();
+                return;
+            }
+
+            if (provider.setDoorsOpenState(!provider.isDoorsOpened(), true)) {
+                provider.updateConsoleTiles();
+            }
         });
 
         return InteractionResult.sidedSuccess(level.isClientSide);
