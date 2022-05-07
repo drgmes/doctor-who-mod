@@ -5,9 +5,11 @@ import java.util.function.Supplier;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.DataGenerators;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -139,7 +141,7 @@ public class Registration {
 
     public static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> factory, RegistryObject<? extends Block> block) {
         return Registration.BLOCK_ENTITIES.register(name, () -> (
-            BlockEntityType.Builder.of(factory, block.get()).build(null)
+            BlockEntityType.Builder.of(factory, block.get()).build(Util.fetchChoiceType(References.BLOCK_ENTITY, name))
         ));
     }
 

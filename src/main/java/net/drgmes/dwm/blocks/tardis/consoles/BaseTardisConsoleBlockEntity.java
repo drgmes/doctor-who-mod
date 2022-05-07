@@ -34,6 +34,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -59,6 +60,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.tardisData = new TardisLevelDataCapability(this.level);
         this.tardisDataHolder = LazyOptional.of(() -> this.tardisData);
     }
+
+	@Override
+	public AABB getRenderBoundingBox() {
+		return new AABB(this.worldPosition).inflate(3, 4, 3);
+	}
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

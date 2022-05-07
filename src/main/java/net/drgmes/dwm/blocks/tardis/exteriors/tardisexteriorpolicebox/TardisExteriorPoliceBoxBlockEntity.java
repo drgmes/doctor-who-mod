@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
@@ -29,6 +30,11 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
     public TardisExteriorPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_EXTERIOR.get(), blockPos, blockState);
     }
+
+	@Override
+	public AABB getRenderBoundingBox() {
+		return new AABB(this.worldPosition).inflate(3, 4, 3);
+	}
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 
 public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
     public String tardisLevelUUID;
@@ -15,6 +16,11 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
     public TardisDoorsPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_DOOR.get(), blockPos, blockState);
     }
+
+	@Override
+	public AABB getRenderBoundingBox() {
+		return new AABB(this.worldPosition).inflate(3, 4, 3);
+	}
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
