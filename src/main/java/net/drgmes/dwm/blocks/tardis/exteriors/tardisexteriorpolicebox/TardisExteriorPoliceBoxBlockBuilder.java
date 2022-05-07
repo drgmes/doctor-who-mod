@@ -41,7 +41,7 @@ public class TardisExteriorPoliceBoxBlockBuilder extends BlockBuilder {
     @Override
     public void registerItemModel(ModItemModelProvider provider) {
         ItemModelBuilder builder = provider.getBuilder(this.name);
-        ModelHelper.applyExternalOBJModel(builder, "item/exteriors/" + this.getResourceName(), true);
+        ModelHelper.applyExternalOBJModel(builder, "item/tardis/exteriors/" + this.getResourceName(), true);
         ModelHelper.rotateToBlockStyle(builder, 0.7F);
 
         builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-5F, -2.25F, 0);

@@ -6,6 +6,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleTo
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 
 public class ModBlocks {
@@ -22,6 +23,9 @@ public class ModBlocks {
 
     // Tardis Engines
     public static final BlockBuilder TARDIS_ENGINE_TOYOTA = new TardisEngineToyotaBlockBuilder("tardis_engine_toyota");
+
+    // Tardis Decorations
+    public static final BlockBuilder TARDIS_TOYOTA_SPINNER = new TardisToyotaSpinnerBlockBuilder("tardis_toyota_spinner");
 
     public static void init() {
     }

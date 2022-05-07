@@ -33,7 +33,7 @@ public abstract class BaseTardisConsoleBlockBuilder extends BlockBuilder {
     @Override
     public void registerItemModel(ModItemModelProvider provider) {
         ItemModelBuilder builder = provider.getBuilder(this.name);
-        ModelHelper.applyExternalOBJModel(builder, "item/consoles/" + this.getResourceName(), true);
+        ModelHelper.applyExternalOBJModel(builder, "item/tardis/consoles/" + this.getResourceName(), true);
         ModelHelper.rotateToBlockStyle(builder, 0.15F);
 
         builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-1.25F, -5F, 0);

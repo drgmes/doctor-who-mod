@@ -4,6 +4,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleTo
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -38,6 +39,16 @@ public class ModBlockEntities {
         "tardis_engine_toyota",
         TardisEngineToyotaBlockEntity::new,
         ModBlocks.TARDIS_ENGINE_TOYOTA.blockObject
+    );
+
+    ////////////////////////
+    // Tardis Decorations //
+    ////////////////////////
+
+    public static final RegistryObject<BlockEntityType<TardisToyotaSpinnerBlockEntity>> TARDIS_TOYOTA_SPINNER = Registration.registerBlockEntity(
+        "tardis_toyota_spinner",
+        TardisToyotaSpinnerBlockEntity::new,
+        ModBlocks.TARDIS_TOYOTA_SPINNER.blockObject
     );
 
     public static void init() {

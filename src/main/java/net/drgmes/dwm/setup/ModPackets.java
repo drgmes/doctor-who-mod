@@ -8,6 +8,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -56,6 +57,10 @@ public class ModPackets {
         INSTANCE.messageBuilder(ClientboundTardisConsoleWorldDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleWorldDataUpdatePacket::encode).decoder(ClientboundTardisConsoleWorldDataUpdatePacket::new)
             .consumer(ClientboundTardisConsoleWorldDataUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisToyotaSpinnerUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisToyotaSpinnerUpdatePacket::encode).decoder(ClientboundTardisToyotaSpinnerUpdatePacket::new)
+            .consumer(ClientboundTardisToyotaSpinnerUpdatePacket::handle).add();
     }
 
     public static void send(Object packet) {
