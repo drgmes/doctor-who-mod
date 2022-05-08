@@ -8,7 +8,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisExteriorDematPacket;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
@@ -155,14 +155,14 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.dematTickInProgressGoal = DWM.TIMINGS.DEMAT;
             this.dematTickInProgress = this.dematTickInProgressGoal;
 
-            this.tardisData.setDoorsOpenState(false, true);
-            this.tardisData.setLightState(false, true);
-            this.tardisData.setShieldsState(false, true);
+            this.tardisData.setDoorsOpenState(false);
+            this.tardisData.setLightState(false);
+            this.tardisData.setShieldsState(false);
             this.tardisData.setEnergyArtronHarvesting(false);
             this.tardisData.setEnergyForgeHarvesting(false);
             this.tardisData.updateConsoleTiles();
 
-            this.sendExteriorUpdatePacket(true, false);
+            this.updateExterior(true, false);
             this.playTakeoffSound();
             return false;
         }
@@ -243,7 +243,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     this.rematTickInProgressGoal = DWM.TIMINGS.REMAT;
                     this.rematTickInProgress = this.rematTickInProgressGoal;
                     this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
-                    this.sendExteriorUpdatePacket(false, true);
+                    this.updateExterior(false, true);
                     this.playLandingSound();
 
                     this.rematConsumers.add(() -> {
@@ -256,7 +256,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                         }
 
                         this.tardisData.updateConsoleTiles();
-                        this.sendExteriorUpdatePacket(false, false);
+                        this.updateExterior(false, false);
                     });
 
                     return true;
@@ -413,7 +413,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
     }
 
-    private void sendExteriorUpdatePacket(boolean demat, boolean remat) {
+    private void updateExterior(boolean demat, boolean remat) {
         ServerLevel level = this.tardisData.getLevel();
         if (level == null) return;
 
@@ -427,13 +427,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
             else if (!this.inProgress()) tardisExteriorBlockEntity.resetMaterializationState(this.isMaterialized);
         }
 
-        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(
-            exteriorBlockPos,
-            this.tardisData.isLightEnabled(),
-            this.tardisData.isDoorsOpened(),
-            demat,
-            remat
-        ));
+        if (demat) {
+            ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorDematPacket(exteriorBlockPos));
+        }
     }
 
     private void playSound(SoundEvent soundEvent) {

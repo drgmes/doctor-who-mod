@@ -132,14 +132,11 @@ public class TardisDoorsPoliceBoxBlock extends BaseRotatableWaterloggedEntityBlo
             if (!provider.isValid()) return;
 
             if (player.isShiftKeyDown()) {
-                if (provider.setDoorsLockState(null, !provider.isDoorsLocked(), true)) {
-                    provider.updateConsoleTiles();
-                }
-
+                provider.setDoorsLockState(!provider.isDoorsLocked(), null);
                 return;
             }
 
-            if (provider.setDoorsOpenState(!provider.isDoorsOpened(), true)) {
+            if (provider.setDoorsOpenState(!provider.isDoorsOpened())) {
                 provider.updateConsoleTiles();
             }
         });

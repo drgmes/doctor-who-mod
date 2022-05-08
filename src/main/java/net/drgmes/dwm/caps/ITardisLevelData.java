@@ -56,8 +56,8 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     int getXYZStep();
     int getEnergyArtron();
     int getEnergyForge();
-    TardisDoorsPoliceBoxBlockEntity getMainDoorTile();
-    List<TardisDoorsPoliceBoxBlockEntity> getDoorTiles();
+    TardisDoorsPoliceBoxBlockEntity getMainInteriorDoorTile();
+    List<TardisDoorsPoliceBoxBlockEntity> getInteriorDoorTiles();
     BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 
@@ -74,16 +74,14 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
     boolean setDestinationPosition(BlockPos blockPos);
 
-    boolean setDoorsLockState(Player player, boolean flag, boolean shouldUpdate);
-    boolean setDoorsOpenState(boolean flag, boolean shouldUpdate);
-    boolean setLightState(boolean flag, boolean shouldUpdate);
-    boolean setShieldsState(boolean flag, boolean shouldUpdate);
+    boolean setDoorsLockState(boolean flag, Player player);
+    boolean setDoorsOpenState(boolean flag);
+    boolean setLightState(boolean flag);
+    boolean setShieldsState(boolean flag);
     boolean setEnergyArtronHarvesting(boolean flag);
     boolean setEnergyForgeHarvesting(boolean flag);
 
-    void updateDoorTiles();
     void updateConsoleTiles();
-
     void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage);
     void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage);
     void tick();

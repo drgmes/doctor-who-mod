@@ -45,8 +45,7 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
 
                     levelProvider.setEntraceFacing(this.getBlockState().getValue(TardisDoorsPoliceBoxBlock.FACING));
                     levelProvider.setEntracePosition(this.worldPosition);
-                    levelProvider.getDoorTiles().add(this);
-                    levelProvider.updateDoorTiles();
+                    levelProvider.getInteriorDoorTiles().add(this);
                 });
             }
         }
@@ -55,7 +54,7 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-            if (levelProvider.isValid()) levelProvider.getDoorTiles().remove(this);
+            if (levelProvider.isValid()) levelProvider.getInteriorDoorTiles().remove(this);
         });
 
         super.setRemoved();
