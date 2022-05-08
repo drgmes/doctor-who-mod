@@ -16,6 +16,8 @@ import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
@@ -421,6 +423,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
             if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
             else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
+
+            ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), new ClientboundTardisInteriorDoorsUpdatePacket(tile.getBlockPos(), this.isDoorsOpened()));
         });
 
         this.updateExterior();
@@ -652,5 +656,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 exteriorLevel.setBlock(exteriorBlockPos.above(), exteriorBlockState, 3);
             }
         }
+
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), false));
     }
 }

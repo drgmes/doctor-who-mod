@@ -7,7 +7,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.network.ClientboundTardisExteriorDematPacket;
+import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
@@ -429,9 +429,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
             else if (!this.inProgress()) tardisExteriorBlockEntity.resetMaterializationState(this.isMaterialized);
         }
 
-        if (demat) {
-            ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorDematPacket(exteriorBlockPos));
-        }
+        if (!demat) return;
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardisData.isDoorsOpened(), true));
     }
 
     private void playFailSound() {

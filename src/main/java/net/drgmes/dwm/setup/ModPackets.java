@@ -6,7 +6,8 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisExteriorDematPacket;
+import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,9 +30,13 @@ public class ModPackets {
     public static void setup() {
         int index = 0;
 
-        INSTANCE.messageBuilder(ClientboundTardisExteriorDematPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-            .encoder(ClientboundTardisExteriorDematPacket::encode).decoder(ClientboundTardisExteriorDematPacket::new)
-            .consumer(ClientboundTardisExteriorDematPacket::handle).add();
+        INSTANCE.messageBuilder(ClientboundTardisExteriorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisExteriorUpdatePacket::encode).decoder(ClientboundTardisExteriorUpdatePacket::new)
+            .consumer(ClientboundTardisExteriorUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisInteriorDoorsUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisInteriorDoorsUpdatePacket::encode).decoder(ClientboundTardisInteriorDoorsUpdatePacket::new)
+            .consumer(ClientboundTardisInteriorDoorsUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisEngineUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisEngineUpdatePacket::encode).decoder(ClientboundTardisEngineUpdatePacket::new)

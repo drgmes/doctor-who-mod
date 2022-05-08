@@ -3,27 +3,31 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ClientboundTardisExteriorDematPacket {
+public class ClientboundTardisInteriorDoorsUpdatePacket {
     private final BlockPos blockPos;
+    private final boolean isDoorsOpened;
 
-    public ClientboundTardisExteriorDematPacket(BlockPos blockPos) {
+    public ClientboundTardisInteriorDoorsUpdatePacket(BlockPos blockPos, boolean isDoorsOpened) {
         this.blockPos = blockPos;
+        this.isDoorsOpened = isDoorsOpened;
     }
 
-    public ClientboundTardisExteriorDematPacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos());
+    public ClientboundTardisInteriorDoorsUpdatePacket(FriendlyByteBuf buffer) {
+        this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.blockPos);
+        buffer.writeBoolean(this.isDoorsOpened);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -33,9 +37,10 @@ public class ClientboundTardisExteriorDematPacket {
             @Override
             public void run() {
                 final Minecraft mc = Minecraft.getInstance();
+                final BlockState blockState = mc.level.getBlockState(blockPos);
 
-                if (mc.level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
-                    tardisExteriorBlockEntity.demat();
+                if (blockState.getBlock() instanceof TardisDoorsPoliceBoxBlock && blockState.getValue(TardisDoorsPoliceBoxBlock.OPEN) != isDoorsOpened) {
+                    mc.level.setBlock(blockPos, blockState.setValue(TardisDoorsPoliceBoxBlock.OPEN, isDoorsOpened), 10);
                     success.set(true);
                 }
             }
