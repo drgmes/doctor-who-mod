@@ -4,8 +4,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.boti.BotiBlocksStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModDimensions;
@@ -56,7 +56,7 @@ public class TardisHelper {
         });
     }
 
-    public static ServerLevel getOrCreateTardisLevel(TardisExteriorPoliceBoxBlockEntity tile, Level level) {
+    public static ServerLevel getOrCreateTardisLevel(BaseTardisExteriorBlockEntity tile, Level level) {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
@@ -67,7 +67,7 @@ public class TardisHelper {
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             try {
                 provider.setDimension(level.dimension(), false);
-                provider.setFacing(tile.getBlockState().getValue(TardisExteriorPoliceBoxBlock.FACING), false);
+                provider.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
                 provider.setPosition(tile.getBlockPos(), false);
             } catch(Exception e) {
                 System.out.println(e);
@@ -107,7 +107,7 @@ public class TardisHelper {
         );
     }
 
-    private static Consumer<ServerLevel> getTardisConsoleRoomBuilder(TardisExteriorPoliceBoxBlockEntity tile) {
+    private static Consumer<ServerLevel> getTardisConsoleRoomBuilder(BaseTardisExteriorBlockEntity tile) {
         final String room = tile.tardisConsoleRoom;
 
         return (level) -> {

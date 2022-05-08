@@ -2,8 +2,8 @@ package net.drgmes.dwm.items.tardiskey;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -62,7 +62,7 @@ public class TardisKeyItem extends Item {
         ItemStack itemStack = context.getItemInHand();
         CompoundTag tag = itemStack.getOrCreateTag();
 
-        if (blockState.getBlock() instanceof TardisExteriorPoliceBoxBlock && blockState.getValue(TardisExteriorPoliceBoxBlock.HALF) == DoubleBlockHalf.UPPER) {
+        if (blockState.getBlock() instanceof BaseTardisExteriorBlock && blockState.getValue(BaseTardisExteriorBlock.HALF) == DoubleBlockHalf.UPPER) {
             blockPos = blockPos.below();
             blockState = level.getBlockState(blockPos);
         }
@@ -72,7 +72,7 @@ public class TardisKeyItem extends Item {
             tardisLevel = (ServerLevel) level;
         }
 
-        if (level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
+        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (level.isClientSide) return InteractionResult.FAIL;
             tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
         }

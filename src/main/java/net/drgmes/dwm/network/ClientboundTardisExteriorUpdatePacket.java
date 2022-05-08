@@ -3,8 +3,8 @@ package net.drgmes.dwm.network;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -43,13 +43,13 @@ public class ClientboundTardisExteriorUpdatePacket {
                 final Minecraft mc = Minecraft.getInstance();
                 final BlockState blockState = mc.level.getBlockState(blockPos);
 
-                if (demat && mc.level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
+                if (demat && mc.level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
                     tardisExteriorBlockEntity.demat();
                     success.set(true);
                 }
 
-                if (blockState.getBlock() instanceof TardisExteriorPoliceBoxBlock && blockState.getValue(TardisExteriorPoliceBoxBlock.OPEN) != isDoorsOpened) {
-                    mc.level.setBlock(blockPos, blockState.setValue(TardisExteriorPoliceBoxBlock.OPEN, isDoorsOpened), 10);
+                if (blockState.getBlock() instanceof BaseTardisExteriorBlock && blockState.getValue(BaseTardisExteriorBlock.OPEN) != isDoorsOpened) {
+                    mc.level.setBlock(blockPos, blockState.setValue(BaseTardisExteriorBlock.OPEN, isDoorsOpened), 10);
                     success.set(true);
                 }
             }
