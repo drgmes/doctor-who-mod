@@ -110,6 +110,13 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
 
         if (level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.remat();
+
+            ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+            if (tardisLevel == null) return;
+
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+                if (provider.isValid()) provider.setOwnerUUID(entity.getUUID());
+            });
         }
     }
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
@@ -43,6 +44,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     private List<TardisDoorsPoliceBoxBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
     private Level level;
+    private UUID owner;
 
     private int energyArtron = 0;
     private int energyForge = 0;
@@ -79,30 +81,40 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         CompoundTag tag = new CompoundTag();
         CompoundTag tdTag = new CompoundTag();
 
-        tdTag.putString("prevExteriorDimension", this.getPreviousExteriorDimension().location().toString());
-        tdTag.putString("currExteriorDimension", this.getCurrentExteriorDimension().location().toString());
-        tdTag.putString("destExteriorDimension", this.getDestinationExteriorDimension().location().toString());
+        if (this.owner != null) tdTag.putUUID("owner", this.owner);
 
-        tdTag.putString("entraceFacing", this.getEntraceFacing().getName());
-        tdTag.putString("prevExteriorFacing", this.getPreviousExteriorFacing().getName());
-        tdTag.putString("currExteriorFacing", this.getCurrentExteriorFacing().getName());
-        tdTag.putString("destExteriorFacing", this.getDestinationExteriorFacing().getName());
+        if (this.prevExteriorDimension != null) tdTag.putString("prevExteriorDimension", this.prevExteriorDimension.location().toString());
+        if (this.currExteriorDimension != null) tdTag.putString("currExteriorDimension", this.currExteriorDimension.location().toString());
+        if (this.destExteriorDimension != null) tdTag.putString("destExteriorDimension", this.destExteriorDimension.location().toString());
 
-        tdTag.putInt("entracePositionX", this.getEntracePosition().getX());
-        tdTag.putInt("entracePositionY", this.getEntracePosition().getY());
-        tdTag.putInt("entracePositionZ", this.getEntracePosition().getZ());
+        if (this.entraceFacing != null) tdTag.putString("entraceFacing", this.entraceFacing.getName());
+        if (this.prevExteriorFacing != null) tdTag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
+        if (this.currExteriorFacing != null) tdTag.putString("currExteriorFacing", this.currExteriorFacing.getName());
+        if (this.destExteriorFacing != null) tdTag.putString("destExteriorFacing", this.destExteriorFacing.getName());
 
-        tdTag.putInt("prevExteriorPositionX", this.getPreviousExteriorPosition().getX());
-        tdTag.putInt("prevExteriorPositionY", this.getPreviousExteriorPosition().getY());
-        tdTag.putInt("prevExteriorPositionZ", this.getPreviousExteriorPosition().getZ());
+        if (this.entracePosition != null) {
+            tdTag.putInt("entracePositionX", this.entracePosition.getX());
+            tdTag.putInt("entracePositionY", this.entracePosition.getY());
+            tdTag.putInt("entracePositionZ", this.entracePosition.getZ());
+        }
 
-        tdTag.putInt("currExteriorPositionX", this.getCurrentExteriorPosition().getX());
-        tdTag.putInt("currExteriorPositionY", this.getCurrentExteriorPosition().getY());
-        tdTag.putInt("currExteriorPositionZ", this.getCurrentExteriorPosition().getZ());
+        if (this.prevExteriorPosition != null) {
+            tdTag.putInt("prevExteriorPositionX", this.prevExteriorPosition.getX());
+            tdTag.putInt("prevExteriorPositionY", this.prevExteriorPosition.getY());
+            tdTag.putInt("prevExteriorPositionZ", this.prevExteriorPosition.getZ());
+        }
 
-        tdTag.putInt("destExteriorPositionX", this.getDestinationExteriorPosition().getX());
-        tdTag.putInt("destExteriorPositionY", this.getDestinationExteriorPosition().getY());
-        tdTag.putInt("destExteriorPositionZ", this.getDestinationExteriorPosition().getZ());
+        if (this.currExteriorPosition != null) {
+            tdTag.putInt("currExteriorPositionX", this.currExteriorPosition.getX());
+            tdTag.putInt("currExteriorPositionY", this.currExteriorPosition.getY());
+            tdTag.putInt("currExteriorPositionZ", this.currExteriorPosition.getZ());
+        }
+
+        if (this.destExteriorPosition != null) {
+            tdTag.putInt("destExteriorPositionX", this.destExteriorPosition.getX());
+            tdTag.putInt("destExteriorPositionY", this.destExteriorPosition.getY());
+            tdTag.putInt("destExteriorPositionZ", this.destExteriorPosition.getZ());
+        }
 
         tdTag.putInt("energyArtron", this.energyArtron);
         tdTag.putInt("energyForge", this.energyForge);
@@ -126,19 +138,21 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     public void deserializeNBT(CompoundTag tag) {
         CompoundTag tdTag = tag.getCompound("tardisdim");
 
-        this.prevExteriorDimension = this.getDimensionByKey(tdTag, "prevExteriorDimension");
-        this.currExteriorDimension = this.getDimensionByKey(tdTag, "currExteriorDimension");
-        this.destExteriorDimension = this.getDimensionByKey(tdTag, "destExteriorDimension");
+        if (tdTag.contains("owner")) this.owner = tdTag.getUUID("owner");
 
-        this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
-        this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
-        this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
-        this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
+        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = this.getDimensionByKey(tdTag, "prevExteriorDimension");
+        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = this.getDimensionByKey(tdTag, "currExteriorDimension");
+        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = this.getDimensionByKey(tdTag, "destExteriorDimension");
 
-        this.entracePosition = this.getBlockPosByKey(tdTag, "entracePosition");
-        this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
-        this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
-        this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
+        if (tdTag.contains("entraceFacing")) this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
+        if (tdTag.contains("prevExteriorFacing")) this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
+        if (tdTag.contains("currExteriorFacing")) this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
+        if (tdTag.contains("destExteriorFacing")) this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
+
+        if (tdTag.contains("entracePositionX")) this.entracePosition = this.getBlockPosByKey(tdTag, "entracePosition");
+        if (tdTag.contains("prevExteriorPositionX")) this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
+        if (tdTag.contains("currExteriorPositionX")) this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
+        if (tdTag.contains("destExteriorPositionX")) this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
 
         this.energyArtron = tdTag.getInt("energyArtron");
         this.energyForge = tdTag.getInt("energyForge");
@@ -151,7 +165,9 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         this.energyForgeHarvesting = tdTag.getBoolean("energyForgeHarvesting");
 
         this.getSystems().values().forEach((system) -> {
-            system.load(tdTag.getCompound(system.getClass().getName()));
+            if (tdTag.contains(system.getClass().getName())) {
+                system.load(tdTag.getCompound(system.getClass().getName()));
+            }
         });
     }
 
@@ -203,6 +219,11 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public boolean isEnergyForgeHarvesting() {
         return this.energyForgeHarvesting;
+    }
+
+    @Override
+    public UUID getOwnerUUID() {
+        return this.owner;
     }
 
     @Override
@@ -308,6 +329,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public boolean setOwnerUUID(UUID uuid) {
+        this.owner = uuid;
+        return true;
+    }
+
+    @Override
     public boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorDimension = this.currExteriorDimension;
         this.currExteriorDimension = dimension;
@@ -360,6 +387,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public boolean setDoorsLockState(Player player, boolean flag, boolean shouldUpdate) {
+        if (player != null && this.getOwnerUUID() != null && player.getUUID() != this.getOwnerUUID()) return false;
+
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
 

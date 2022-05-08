@@ -2,6 +2,7 @@ package net.drgmes.dwm.caps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
@@ -35,6 +36,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean isEnergyForgeHarvesting();
 
     ServerLevel getLevel();
+    UUID getOwnerUUID();
 
     ResourceKey<Level> getPreviousExteriorDimension();
     ResourceKey<Level> getCurrentExteriorDimension();
@@ -58,6 +60,8 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     List<TardisDoorsPoliceBoxBlockEntity> getDoorTiles();
     BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
+
+    boolean setOwnerUUID(UUID uuid);
 
     boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
     boolean setDestinationDimension(ResourceKey<Level> dimension);
