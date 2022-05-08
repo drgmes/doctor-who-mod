@@ -37,7 +37,7 @@ public class ItemBuilder {
 
     public void registerItemModel(ModItemModelProvider provider) {
         ModelFile itemGenerated = provider.getExistingFile(provider.mcLoc("item/generated"));
-        provider.getBuilder(this.name).parent(itemGenerated).texture("layer0", "item/" + this.name);
+        provider.getBuilder("item/" + this.name).parent(itemGenerated).texture("layer0", "item/" + this.name);
     }
 
     public void registerRecipe(ModRecipeProvider provider, Consumer<FinishedRecipe> consumer) {
