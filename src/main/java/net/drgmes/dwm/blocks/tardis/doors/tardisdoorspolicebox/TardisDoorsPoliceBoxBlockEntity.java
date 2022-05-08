@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -36,7 +36,7 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
     public void onLoad() {
         super.onLoad();
 
-        if (this.checkTileIsInATardis()) {
+        if (TardisHelper.isTardisDimension(this.level)) {
             this.tardisLevelUUID = this.level.dimension().location().getPath();
 
             if (!this.level.isClientSide) {
@@ -59,9 +59,5 @@ public class TardisDoorsPoliceBoxBlockEntity extends BlockEntity {
         });
 
         super.setRemoved();
-    }
-
-    private boolean checkTileIsInATardis() {
-        return this.level != null && this.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
     }
 }

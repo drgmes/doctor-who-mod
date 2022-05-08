@@ -111,7 +111,7 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
         if (level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.remat();
 
-            ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+            ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
             if (tardisLevel == null) return;
 
             tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
@@ -154,15 +154,17 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
             if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return InteractionResult.PASS;
         }
 
-        ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+        ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel == null) return InteractionResult.FAIL;
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
 
             if (player.isShiftKeyDown()) {
-                provider.setDoorsLockState(player, !provider.isDoorsLocked(), true);
-                provider.updateConsoleTiles();
+                if (provider.setDoorsLockState(player, !provider.isDoorsLocked(), true)) {
+                    provider.updateConsoleTiles();
+                }
+
                 return;
             }
 
@@ -184,13 +186,13 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
             TardisHelper.saveBlocksForBoti(level, blockPos, tardisExteriorBlockEntity.getTardisLevelUUID() + "-exterior");
         }
 
-        ServerLevel tardisLevel = this.getTardisDimension(level, blockPos);
+        ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel != null) TardisHelper.teleportToTardis(entity, tardisLevel);
     }
 
-    private ServerLevel getTardisDimension(Level level, BlockPos blockPos) {
+    private ServerLevel getTardisLevel(Level level, BlockPos blockPos) {
         if (level.getBlockEntity(blockPos) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
-            return tardisExteriorBlockEntity.getTardisDimension(level);
+            return tardisExteriorBlockEntity.getTardisLevel(level);
         }
 
         return null;

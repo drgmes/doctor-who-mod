@@ -1,6 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.engines;
 
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -27,9 +26,5 @@ public abstract class BaseTardisEngineBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         return this.saveWithoutMetadata();
-    }
-
-    private boolean checkTileIsInATardis() {
-        return this.level != null && this.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
     }
 }

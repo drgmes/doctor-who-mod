@@ -301,7 +301,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (exteriorLevel == null) return false;
 
         if (exteriorLevel.getBlockEntity(this.tardisData.getCurrentExteriorPosition()) instanceof TardisExteriorPoliceBoxBlockEntity tardisExteriorBlockEntity) {
-            ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisDimension(exteriorLevel);
+            ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisLevel(exteriorLevel);
             if (foreignTardisLevel != null) {
                 foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                     if (levelProvider.isValid() && !levelProvider.isShieldsEnabled()) {

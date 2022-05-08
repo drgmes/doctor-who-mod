@@ -19,16 +19,14 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisDoorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -140,9 +138,9 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         if (tdTag.contains("owner")) this.owner = tdTag.getUUID("owner");
 
-        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = this.getDimensionByKey(tdTag, "prevExteriorDimension");
-        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = this.getDimensionByKey(tdTag, "currExteriorDimension");
-        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = this.getDimensionByKey(tdTag, "destExteriorDimension");
+        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getLevelKey(tag.getString("prevExteriorDimension"));
+        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getLevelKey(tag.getString("currExteriorDimension"));
+        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getLevelKey(tag.getString("destExteriorDimension"));
 
         if (tdTag.contains("entraceFacing")) this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
         if (tdTag.contains("prevExteriorFacing")) this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
@@ -563,7 +561,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 List<ResourceKey<Level>> levelKeys = new ArrayList<>();
 
                 levels.keySet().forEach((key) -> {
-                    if (levels.get(key).dimensionTypeRegistration().is(ModDimensionTypes.TARDIS)) return;
+                    if (TardisHelper.isTardisDimension(levels.get(key))) return;
                     if (key == this.level.dimension()) return;
                     levelKeys.add(key);
                 });
@@ -614,10 +612,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     public void tick() {
         if (this.level.isClientSide || !this.isValid()) return;
         this.getSystems().values().forEach((system) -> system.tick());
-    }
-
-    private ResourceKey<Level> getDimensionByKey(CompoundTag tag, String key) {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(tag.getString(key)));
     }
 
     private Direction getDirectionByKey(CompoundTag tag, String key) {

@@ -18,8 +18,8 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -129,7 +129,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public void init() {
         this.createControls();
 
-        if (!this.level.isClientSide && this.checkTileIsInATardis()) {
+        if (!this.level.isClientSide && TardisHelper.isTardisDimension(this.level)) {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                 if (!levelProvider.isValid()) return;
 
@@ -263,7 +263,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket();
             this.setChanged();
 
-            if (!this.checkTileIsInATardis()) {
+            if (!TardisHelper.isTardisDimension(this.level)) {
                 this.sendControlsUpdatePacket();
                 return;
             }
@@ -307,9 +307,5 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private void removeControls() {
         for (TardisConsoleControlEntity control : this.controls) control.discard();
         this.controls.clear();
-    }
-
-    private boolean checkTileIsInATardis() {
-        return this.level != null && this.level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
     }
 }

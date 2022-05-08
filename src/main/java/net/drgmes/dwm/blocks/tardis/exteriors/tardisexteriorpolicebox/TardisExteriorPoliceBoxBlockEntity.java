@@ -145,7 +145,7 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
         return this.tardisLevelUUID;
     }
 
-    public ServerLevel getTardisDimension(Level level) {
-        return TardisHelper.setupTardis(this, level);
+    public ServerLevel getTardisLevel(Level level) {
+        return TardisHelper.getOrCreateTardisLevel(this, level);
     }
 }
