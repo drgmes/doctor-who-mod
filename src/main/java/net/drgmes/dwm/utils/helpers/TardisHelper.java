@@ -61,7 +61,7 @@ public class TardisHelper {
         if (server == null) return null;
 
         String id = tile.getTardisLevelUUID();
-        ResourceKey<Level> levelKey = DimensionHelper.getLevelKey(id);
+        ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
         ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(tile), TardisHelper::tardisDimensionBuilder);
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
@@ -84,7 +84,7 @@ public class TardisHelper {
 
     public static void registerOldTardises(MinecraftServer server) {
         for (String id : ModDimensions.TARDISES) {
-            if (server.getLevel(DimensionHelper.getLevelKey(id)) != null) continue;
+            if (server.getLevel(DimensionHelper.getModLevelKey(id)) != null) continue;
             DimensionHelper.getOrCreateLevelStatic(server, id, TardisHelper::tardisDimensionBuilder);
         }
     }

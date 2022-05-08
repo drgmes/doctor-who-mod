@@ -29,6 +29,10 @@ import net.minecraftforge.event.world.WorldEvent;
 
 public class DimensionHelper {
     public static ResourceKey<Level> getLevelKey(String id) {
+        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(id));
+    }
+
+    public static ResourceKey<Level> getModLevelKey(String id) {
         return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(DWM.MODID, id));
     }
 
@@ -40,7 +44,7 @@ public class DimensionHelper {
     }
 
     public static ServerLevel getLevel(MinecraftServer server, String id) {
-        return DimensionHelper.getLevel(server, DimensionHelper.getLevelKey(id));
+        return DimensionHelper.getLevel(server, DimensionHelper.getModLevelKey(id));
     }
 
     public static ServerLevel getOrCreateLevel(MinecraftServer server, String id, Consumer<ServerLevel> initialConsumer, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
@@ -62,7 +66,7 @@ public class DimensionHelper {
         Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
 
         ServerLevel overworld = server.getLevel(Level.OVERWORLD);
-        ResourceKey<Level> levelKey = DimensionHelper.getLevelKey(id);
+        ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
         ResourceKey<LevelStem> levelStemKey = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, levelKey.location());
         LevelStem levelStem = dimensionFactory.apply(server, levelStemKey);
 

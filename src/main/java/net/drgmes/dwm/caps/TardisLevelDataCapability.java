@@ -136,9 +136,9 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         if (tdTag.contains("owner")) this.owner = tdTag.getUUID("owner");
 
-        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getLevelKey(tag.getString("prevExteriorDimension"));
-        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getLevelKey(tag.getString("currExteriorDimension"));
-        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getLevelKey(tag.getString("destExteriorDimension"));
+        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("prevExteriorDimension"));
+        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("currExteriorDimension"));
+        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("destExteriorDimension"));
 
         if (tdTag.contains("entraceFacing")) this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
         if (tdTag.contains("prevExteriorFacing")) this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
