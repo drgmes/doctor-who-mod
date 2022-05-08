@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.UUID;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
@@ -39,7 +39,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(14).immutable();
     private Direction entraceFacing = Direction.SOUTH;
 
-    private List<TardisDoorsPoliceBoxBlockEntity> doorTiles = new ArrayList<>();
+    private List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
     private Level level;
     private UUID owner;
@@ -311,13 +311,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public TardisDoorsPoliceBoxBlockEntity getMainInteriorDoorTile() {
+    public BaseTardisDoorsBlockEntity getMainInteriorDoorTile() {
         int size = this.doorTiles.size();
         return size > 0 ? this.doorTiles.get(size - 1) : null;
     }
 
     @Override
-    public List<TardisDoorsPoliceBoxBlockEntity> getInteriorDoorTiles() {
+    public List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles() {
         return this.doorTiles;
     }
 

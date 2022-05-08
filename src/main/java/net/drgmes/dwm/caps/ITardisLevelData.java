@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -57,8 +57,8 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     int getXYZStep();
     int getEnergyArtron();
     int getEnergyForge();
-    TardisDoorsPoliceBoxBlockEntity getMainInteriorDoorTile();
-    List<TardisDoorsPoliceBoxBlockEntity> getInteriorDoorTiles();
+    BaseTardisDoorsBlockEntity getMainInteriorDoorTile();
+    List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles();
     BaseTardisConsoleBlockEntity getMainConsoleTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
 

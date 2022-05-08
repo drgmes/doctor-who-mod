@@ -54,7 +54,7 @@ public class TardisExteriorPoliceBoxBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerBlockEntityRenderer(ModBlockEntities.TARDIS_EXTERIOR.get(), TardisExteriorPoliceBoxBlockRenderer::new);
+        event.registerBlockEntityRenderer(ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX.get(), TardisExteriorPoliceBoxBlockRenderer::new);
     }
 
     @Override

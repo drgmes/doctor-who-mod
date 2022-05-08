@@ -1,7 +1,7 @@
 package net.drgmes.dwm.items.tardiskey;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -67,7 +67,7 @@ public class TardisKeyItem extends Item {
             blockState = level.getBlockState(blockPos);
         }
 
-        if (level.getBlockEntity(blockPos) instanceof TardisDoorsPoliceBoxBlockEntity tardisDoorsBlockEntity && TardisHelper.isTardisDimension(level)) {
+        if (level.getBlockEntity(blockPos) instanceof BaseTardisDoorsBlockEntity tardisDoorsBlockEntity && TardisHelper.isTardisDimension(level)) {
             if (level.isClientSide) return InteractionResult.FAIL;
             tardisLevel = (ServerLevel) level;
         }

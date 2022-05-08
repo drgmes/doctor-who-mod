@@ -52,7 +52,7 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_EXTERIOR.get(), (l, bp, bs, blockEntity) -> {
+        return createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX.get(), (l, bp, bs, blockEntity) -> {
             ((TardisExteriorPoliceBoxBlockEntity) blockEntity).tick();
         });
     }

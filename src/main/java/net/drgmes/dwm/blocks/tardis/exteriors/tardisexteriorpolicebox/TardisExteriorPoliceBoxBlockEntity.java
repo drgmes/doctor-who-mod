@@ -27,7 +27,7 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
     private boolean inDematProgress = false;
 
     public TardisExteriorPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(ModBlockEntities.TARDIS_EXTERIOR.get(), blockPos, blockState);
+        super(ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX.get(), blockPos, blockState);
     }
 
 	@Override

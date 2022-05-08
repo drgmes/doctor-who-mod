@@ -9,13 +9,22 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
-    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR = Registration.registerBlockEntity(
+
+    //////////////////////
+    // Tardis Exteriors //
+    //////////////////////
+
+    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR_POLICE_BOX = Registration.registerBlockEntity(
         "tardis_exterior_police_box",
         TardisExteriorPoliceBoxBlockEntity::new,
         ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.blockObject
     );
 
-    public static final RegistryObject<BlockEntityType<TardisDoorsPoliceBoxBlockEntity>> TARDIS_DOOR = Registration.registerBlockEntity(
+    //////////////////
+    // Tardis Doors //
+    //////////////////
+
+    public static final RegistryObject<BlockEntityType<TardisDoorsPoliceBoxBlockEntity>> TARDIS_DOORS_POLICE_BOX = Registration.registerBlockEntity(
         "tardis_doors_police_box",
         TardisDoorsPoliceBoxBlockEntity::new,
         ModBlocks.TARDIS_DOORS_POLICE_BOX.blockObject
