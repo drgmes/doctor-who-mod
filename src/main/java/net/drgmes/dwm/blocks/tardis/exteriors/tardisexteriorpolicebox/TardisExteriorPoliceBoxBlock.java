@@ -188,7 +188,13 @@ public class TardisExteriorPoliceBoxBlock extends BaseRotatableWaterloggedEntity
         }
 
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
-        if (tardisLevel != null) TardisHelper.teleportToTardis(entity, tardisLevel);
+        if (tardisLevel != null) {
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
+                if (provider.isValid() && provider.isDoorsOpened()) {
+                    TardisHelper.teleportToTardis(entity, tardisLevel);
+                }
+            });
+        }
     }
 
     private ServerLevel getTardisLevel(Level level, BlockPos blockPos) {
