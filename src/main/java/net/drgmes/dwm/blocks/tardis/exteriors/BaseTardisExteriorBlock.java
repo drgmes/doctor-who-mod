@@ -1,11 +1,13 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -157,6 +159,27 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
             if (!provider.isValid()) return;
+
+            String tardisDimUUID = provider.getLevel().dimension().location().getPath();
+            ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
+            CompoundTag heldItemTag = heldItem.getOrCreateTag();
+
+            if (heldItem.getItem() instanceof TardisKeyItem) {
+                if (!heldItemTag.contains("tardisDimUUID")) {
+                    if (!provider.getOwnerUUID().equals(player.getUUID())) return;
+                    heldItemTag.putString("tardisDimUUID", tardisDimUUID);
+                }
+
+                if (!heldItemTag.getString("tardisDimUUID").equalsIgnoreCase(tardisDimUUID)) {
+                    return;
+                }
+
+                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
+                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                }
+
+                return;
+            }
 
             if (player.isShiftKeyDown()) {
                 if (provider.setDoorsLockState(!provider.isDoorsLocked(), player)) {
