@@ -1,6 +1,8 @@
 package net.drgmes.dwm;
 
 import net.drgmes.dwm.setup.Registration;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.common.Mod;
 
@@ -14,6 +16,11 @@ public class DWM {
         public static final float REMAT = 180;
         public static final float FLIGHT_LOOP = 32;
         public static final float ERROR_SOUND = 120;
+    }
+
+    public static class TEXTS {
+        public static final Component TARDIS_DOORS_LOCKED = new TranslatableComponent("message.tardis.control.role.doors.locked");
+        public static final Component TARDIS_DOORS_UNLOCKED = new TranslatableComponent("message.tardis.control.role.doors.unlocked");
     }
 
     public static class LOCS {

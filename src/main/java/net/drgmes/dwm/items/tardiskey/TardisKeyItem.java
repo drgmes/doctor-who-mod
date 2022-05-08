@@ -1,5 +1,6 @@
 package net.drgmes.dwm.items.tardiskey;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
@@ -87,8 +88,13 @@ public class TardisKeyItem extends Item {
                     tag.putString("tardisDimUUID", tardisDimUUID);
                 }
 
-                if (!tag.getString("tardisDimUUID").equalsIgnoreCase(tardisDimUUID)) return;
-                provider.setDoorsLockState(!provider.isDoorsLocked(), null);
+                if (!tag.getString("tardisDimUUID").equalsIgnoreCase(tardisDimUUID)) {
+                    return;
+                }
+
+                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
+                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                }
             });
 
             return InteractionResult.FAIL;

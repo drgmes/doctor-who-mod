@@ -25,6 +25,8 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
@@ -202,6 +204,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand, Entity entity) {
+        if (!(entity instanceof Player player)) return;
+
         // Monitor
         if (control.role == TardisConsoleControlRoles.MONITOR && hand == InteractionHand.OFF_HAND) {
             System.out.println("Monitor"); // TODO
@@ -215,7 +219,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
 
         // Screwdriver Slot
-        if (control.role == TardisConsoleControlRoles.SCREWDRIVER_SLOT && hand == InteractionHand.OFF_HAND && entity instanceof Player player) {
+        if (control.role == TardisConsoleControlRoles.SCREWDRIVER_SLOT && hand == InteractionHand.OFF_HAND) {
             boolean isChanged = false;
 
             if (this.screwdriverItemStack.isEmpty()) {
@@ -270,6 +274,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
                 if (levelProvider.isValid()) levelProvider.applyControlsStorageToData(this.controlsStorage);
+
+                try {
+                    this.displayNotification(levelProvider, this.controlsStorage, control.role, player);
+                } catch (Exception e) {
+                }
             });
         }
     }
@@ -307,5 +316,57 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private void removeControls() {
         for (TardisConsoleControlEntity control : this.controls) control.discard();
         this.controls.clear();
+    }
+
+    private void displayNotification(ITardisLevelData provider, TardisConsoleControlsStorage controlsStorage, TardisConsoleControlRoles role, Player player) {
+        Object value = controlsStorage.get(role);
+        boolean isInFlight = false;
+        boolean isMaterialized = false;
+
+        // Flight
+        if (provider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+            isInFlight = flightSystem.inProgress();
+        }
+
+        // Materialization
+        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+            isMaterialized = materializationSystem.isMaterialized();
+        }
+
+        Component component = switch (role) {
+            case DOORS, SHIELDS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING
+            -> !isMaterialized ? null : new TranslatableComponent(role.message + ((boolean) value ? ".active" : ".inactive"));
+
+            case HANDBRAKE
+            -> new TranslatableComponent(role.message + ((boolean) value ? ".active" : ".inactive"));
+
+            case SAFE_DIRECTION
+            -> new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + value));
+
+            case FACING
+            -> isInFlight ? null : new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + value));
+
+            case XYZSTEP
+            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getXYZStep());
+
+            case XSET
+            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getX());
+
+            case YSET
+            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getY());
+
+            case ZSET
+            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getZ());
+
+            case DIM_PREV, DIM_NEXT
+            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorDimension().location().getPath().replace("_", " ").toUpperCase());
+
+            default
+            -> isInFlight || role.message == null ? null : new TranslatableComponent(role.message, value);
+        };
+
+        if (component != null) {
+            player.displayClientMessage(component, true);
+        }
     }
 }

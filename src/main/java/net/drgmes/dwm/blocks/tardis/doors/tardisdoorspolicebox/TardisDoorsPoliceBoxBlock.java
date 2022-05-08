@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -132,7 +133,10 @@ public class TardisDoorsPoliceBoxBlock extends BaseRotatableWaterloggedEntityBlo
             if (!provider.isValid()) return;
 
             if (player.isShiftKeyDown()) {
-                provider.setDoorsLockState(!provider.isDoorsLocked(), null);
+                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
+                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                }
+
                 return;
             }
 
