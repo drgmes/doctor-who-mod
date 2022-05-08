@@ -47,6 +47,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     Direction getCurrentExteriorFacing();
     Direction getDestinationExteriorFacing();
 
+    BlockPos getCorePosition();
     BlockPos getEntracePosition();
     BlockPos getPreviousExteriorPosition();
     BlockPos getCurrentExteriorPosition();

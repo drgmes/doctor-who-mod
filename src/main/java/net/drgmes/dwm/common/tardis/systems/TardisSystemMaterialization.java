@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
@@ -19,8 +18,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -163,7 +160,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardisData.updateConsoleTiles();
 
             this.updateExterior(true, false);
-            this.playTakeoffSound();
+            ModSounds.playTardisTakeoffSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
             return false;
         }
 
@@ -201,6 +198,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     public boolean remat() {
         if (this.inProgress()) return false;
+
+        if (!this.tardisData.isValid()) {
+            this.playFailSound();
+            return false;
+        }
 
         if (this.isMaterialized) {
             this.runRematConsumers();
@@ -244,7 +246,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     this.rematTickInProgress = this.rematTickInProgressGoal;
                     this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
                     this.updateExterior(false, true);
-                    this.playLandingSound();
+                    ModSounds.playTardisLandingSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
 
                     this.rematConsumers.add(() -> {
                         AABB aabb = AABB.ofSize(Vec3.atBottomCenterOf(exteriorBlockPos), 0.5, 1, 0.5);
@@ -262,12 +264,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     return true;
                 }
                 else {
-                    this.playErrorSound();
+                    this.playFailSound();
                     this.demat();
                 }
             }
             else if (!this.tryLandToForeignTardis()) {
-                this.playErrorSound();
+                this.playFailSound();
             }
 
             this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
@@ -310,7 +312,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                         this.tardisData.setPosition(levelProvider.getEntracePosition().relative(levelProvider.getEntraceFacing()), false);
                         this.remat();
                     } else {
-                        this.playErrorSound();
+                        this.playFailSound();
                     }
                 });
 
@@ -432,24 +434,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
     }
 
-    private void playSound(SoundEvent soundEvent) {
-        BaseTardisConsoleBlockEntity consoleTile = this.tardisData.getMainConsoleTile();
-        BlockPos blockPos = consoleTile != null ? consoleTile.getBlockPos() : this.tardisData.getEntracePosition();
-        this.tardisData.getLevel().playSound(null, blockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
-    }
-
-    private void playTakeoffSound() {
-        this.playSound(ModSounds.TARDIS_TAKEOFF.get());
-    }
-
-    private void playLandingSound() {
-        this.playSound(ModSounds.TARDIS_LAND.get());
-    }
-
-    private void playErrorSound() {
+    private void playFailSound() {
         if (this.tickForErrorSound > 0) return;
-
         this.tickForErrorSound = DWM.TIMINGS.ERROR_SOUND;
-        this.playSound(ModSounds.TARDIS_ERROR.get());
+        ModSounds.playTardisFailSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
     }
 }

@@ -12,7 +12,6 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -119,12 +118,12 @@ public class TardisExteriorPoliceBoxBlockEntity extends BlockEntity {
 
     public void remat() {
         this.inRematProgress = true;
-        this.level.playSound(null, this.worldPosition, ModSounds.TARDIS_LAND.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+        ModSounds.playTardisLandingSound(this.level, this.worldPosition);
     }
 
     public void demat() {
         this.inDematProgress = true;
-        this.level.playSound(null, this.worldPosition, ModSounds.TARDIS_TAKEOFF.get(), SoundSource.BLOCKS, 1.0F, 1.0F);
+        ModSounds.playTardisTakeoffSound(this.level, this.worldPosition);
     }
 
     public void resetMaterializationState(boolean flag) {

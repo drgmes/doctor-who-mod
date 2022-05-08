@@ -18,6 +18,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
@@ -25,9 +26,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -186,7 +184,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public boolean isValid() {
-        return this.currExteriorDimension != null;
+        return this.currExteriorDimension != null && this.currExteriorPosition != null && this.currExteriorFacing != null;
     }
 
     @Override
@@ -262,6 +260,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public Direction getDestinationExteriorFacing() {
         return this.destExteriorFacing != null ? this.destExteriorFacing : this.getCurrentExteriorFacing();
+    }
+
+    @Override
+    public BlockPos getCorePosition() {
+        BaseTardisConsoleBlockEntity tardisConsoleBlockEntity = this.getMainConsoleTile();
+        return tardisConsoleBlockEntity != null ? tardisConsoleBlockEntity.getBlockPos() : this.getEntracePosition();
     }
 
     @Override
@@ -390,12 +394,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
 
-        if (flag) this.playLockSound(this.level, this.getEntracePosition());
-        else this.playUnlockSound(this.level, this.getEntracePosition());
+        if (flag) ModSounds.playTardisDoorsLockSound(this.level, this.getEntracePosition());
+        else ModSounds.playTardisDoorsUnlockSound(this.level, this.getEntracePosition());
 
         ServerLevel exteriorLevel = this.level.getServer().getLevel(this.getCurrentExteriorDimension());
-        if (flag) this.playLockSound(exteriorLevel, this.getCurrentExteriorPosition());
-        else this.playUnlockSound(exteriorLevel, this.getCurrentExteriorPosition());
+        if (flag) ModSounds.playTardisDoorsLockSound(exteriorLevel, this.getCurrentExteriorPosition());
+        else ModSounds.playTardisDoorsUnlockSound(exteriorLevel, this.getCurrentExteriorPosition());
 
         if (flag) this.setDoorsOpenState(false);
         return true;
@@ -415,8 +419,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         this.doorTiles.forEach((tile) -> {
             this.level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(TardisDoorsPoliceBoxBlock.OPEN, flag), 3);
 
-            if (flag) this.playOpenSound(this.level, this.getEntracePosition());
-            else this.playCloseSound(this.level, this.getEntracePosition());
+            if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
+            else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
         });
 
         this.updateExterior();
@@ -428,8 +432,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.lightEnabled == flag) return false;
         this.lightEnabled = flag;
 
-        if (flag) this.playLightOnSound(this.level, this.getEntracePosition());
-        else this.playLightOffSound(this.level, this.getEntracePosition());
+        if (flag) ModSounds.playTardisLightOnSound(this.level, this.getCorePosition());
+        else ModSounds.playTardisLightOffSound(this.level, this.getCorePosition());
 
         this.updateExterior();
         return true;
@@ -440,8 +444,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.shieldsEnabled == flag) return false;
         this.shieldsEnabled = flag;
 
-        if (flag) this.playShieldsOnSound(this.level, this.getEntracePosition());
-        else this.playShieldsOffSound(this.level, this.getEntracePosition());
+        if (flag) ModSounds.playTardisShieldsOnSound(this.level, this.getCorePosition());
+        else ModSounds.playTardisShieldsOffSound(this.level, this.getCorePosition());
 
         return true;
     }
@@ -630,13 +634,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         if (exteriorBlockState.getBlock() instanceof TardisExteriorPoliceBoxBlock) {
             if (exteriorBlockState.getValue(TardisExteriorPoliceBoxBlock.OPEN) != this.isDoorsOpened()) {
-                if (this.isDoorsOpened()) this.playOpenSound(exteriorLevel, exteriorBlockPos);
-                else this.playCloseSound(exteriorLevel, exteriorBlockPos);
+                if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(exteriorLevel, exteriorBlockPos);
+                else ModSounds.playTardisDoorsCloseSound(exteriorLevel, exteriorBlockPos);
             }
 
             if (exteriorBlockState.getValue(TardisExteriorPoliceBoxBlock.LIT) != this.isLightEnabled()) {
-                if (this.isLightEnabled()) this.playLightOnSound(exteriorLevel, exteriorBlockPos);
-                else this.playLightOffSound(exteriorLevel, exteriorBlockPos);
+                if (this.isLightEnabled()) ModSounds.playTardisLightOnSound(exteriorLevel, exteriorBlockPos);
+                else ModSounds.playTardisLightOffSound(exteriorLevel, exteriorBlockPos);
             }
 
             exteriorBlockState = exteriorBlockState.setValue(TardisExteriorPoliceBoxBlock.OPEN, this.isDoorsOpened());
@@ -648,41 +652,5 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 exteriorLevel.setBlock(exteriorBlockPos.above(), exteriorBlockState, 3);
             }
         }
-    }
-
-    private void playSound(Level level, BlockPos blockPos, SoundEvent sound) {
-        level.playSound(null, blockPos, sound, SoundSource.BLOCKS, 1.0F, 1.0F);
-    }
-
-    private void playUnlockSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.IRON_DOOR_OPEN);
-    }
-
-    private void playLockSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.IRON_DOOR_CLOSE);
-    }
-
-    private void playOpenSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.WOODEN_DOOR_OPEN);
-    }
-
-    private void playCloseSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.WOODEN_DOOR_CLOSE);
-    }
-
-    private void playLightOnSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.ENDER_EYE_LAUNCH);
-    }
-
-    private void playLightOffSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.ENDER_EYE_LAUNCH);
-    }
-
-    private void playShieldsOnSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.BEACON_ACTIVATE);
-    }
-
-    private void playShieldsOffSound(Level level, BlockPos blockPos) {
-        this.playSound(level, blockPos, SoundEvents.BEACON_DEACTIVATE);
     }
 }

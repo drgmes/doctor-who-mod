@@ -1,15 +1,12 @@
 package net.drgmes.dwm.common.tardis.systems;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -122,15 +119,9 @@ public class TardisSystemFlight implements ITardisSystem {
         return false;
     }
 
-    public void playSound(SoundEvent soundEvent) {
-        BaseTardisConsoleBlockEntity consoleTile = this.tardisData.getMainConsoleTile();
-        BlockPos blockPos = consoleTile != null ? consoleTile.getBlockPos() : this.tardisData.getEntracePosition();
-        this.tardisData.getLevel().playSound(null, blockPos, soundEvent, SoundSource.BLOCKS, 1.0F, 1.0F);
-    }
-
     private void playFlySound() {
         if (this.isSoundFlyPlayed) return;
-        this.playSound(ModSounds.TARDIS_FLY.get());
+        ModSounds.playTardisFlySound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
         this.isSoundFlyPlayed = true;
     }
 }

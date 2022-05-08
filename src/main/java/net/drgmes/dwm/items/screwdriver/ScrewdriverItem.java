@@ -3,7 +3,6 @@ package net.drgmes.dwm.items.screwdriver;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -21,7 +20,7 @@ public class ScrewdriverItem extends Item {
         ItemStack itemStack = player.getItemInHand(hand);
 
         if (Screwdriver.interact(level, player, hand, PlayerHelper.pick(player, 40D))) {
-            level.playSound(null, player.blockPosition(), ModSounds.SCREWDRIVER_MAIN.get(), SoundSource.PLAYERS, 0.25F, 1F);
+            ModSounds.playScrewdriverMainSound(level, player.blockPosition());
             return InteractionResultHolder.success(itemStack);
         }
 
