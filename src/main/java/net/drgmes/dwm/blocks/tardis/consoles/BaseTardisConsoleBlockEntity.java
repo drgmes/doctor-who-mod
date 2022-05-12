@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoles;
 
 import java.util.ArrayList;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.TardisLevelDataCapability;
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
@@ -35,9 +36,12 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -220,6 +224,41 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         // Telepathic Interface
         if (control.role == TardisConsoleControlRoles.TELEPATHIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
+            ItemStack mainHandItemStack = player.getMainHandItem();
+            ItemStack offHandItemStack = player.getOffhandItem();
+
+            if (mainHandItemStack.getItem() instanceof MapItem || offHandItemStack.getItem() instanceof MapItem) {
+                ItemStack itemStack = mainHandItemStack.getItem() instanceof MapItem ? mainHandItemStack : offHandItemStack;
+                MapItemSavedData mapData = MapItem.getSavedData(itemStack, level);
+                if (mapData == null) return;
+
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+                    if (!levelProvider.isValid()) return;
+                    if (mapData.dimension == levelProvider.getLevel().dimension()) return;
+
+                    if (levelProvider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem && flightSystem.inProgress()) {
+                        return;
+                    }
+
+                    if (levelProvider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem && materializationSystem.inProgress()) {
+                        return;
+                    }
+
+                    BlockPos blockPos = new BlockPos(mapData.x, levelProvider.getDestinationExteriorPosition().getY(), mapData.z);
+                    for (MapDecoration decoration : mapData.getDecorations()) {
+                        blockPos = blockPos.offset(decoration.getX() - 1, 0, decoration.getY() - 1);
+                        break;
+                    }
+
+                    player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
+                    levelProvider.setDestinationDimension(mapData.dimension);
+                    levelProvider.setDestinationPosition(blockPos);
+                    levelProvider.updateConsoleTiles();
+                });
+
+                return;
+            }
+
             this.sendTelepathicInterfaceOpenPacket(player);
             return;
         }

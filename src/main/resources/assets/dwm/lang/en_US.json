@@ -22,6 +22,7 @@
 	"screen.dwm.telepathic_interface.cancel": "Cancel",
 	"screen.dwm.telepathic_interface.accept": "Find",
 
+	"message.dwm.tardis.telepathic_interface.map.loaded": "Map Coordinates Loaded",
 	"message.dwm.tardis.telepathic_interface.biome.found": "Biome \u00A7aFound",
 	"message.dwm.tardis.telepathic_interface.biome.not_found": "Biome \u00A7cNot Found",
 	"message.dwm.tardis.telepathic_interface.structure.found": "Structure \u00A7aFound",
