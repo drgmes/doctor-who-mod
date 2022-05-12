@@ -264,7 +264,7 @@ public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implement
         Registry<T> registry = mc.level.registryAccess().registryOrThrow(registryKey);
         List<Entry<ResourceLocation, DataType>> list = new ArrayList<>(
             registry.keySet().stream()
-            .filter((res) -> res != ModDimensionTypes.TARDIS.location())
+            .filter((res) -> !res.equals(ModDimensionTypes.TARDIS.location()))
             .map((res) -> Map.entry(res, type)).toList()
         );
 
