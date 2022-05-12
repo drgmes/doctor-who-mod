@@ -20,8 +20,8 @@ public class DWM {
     }
 
     public static class TEXTS {
-        public static final Component TARDIS_DOORS_LOCKED = new TranslatableComponent("message.tardis.control.role.doors.locked");
-        public static final Component TARDIS_DOORS_UNLOCKED = new TranslatableComponent("message.tardis.control.role.doors.unlocked");
+        public static final Component TARDIS_DOORS_LOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.locked");
+        public static final Component TARDIS_DOORS_UNLOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
     }
 
     public static class LOCS {

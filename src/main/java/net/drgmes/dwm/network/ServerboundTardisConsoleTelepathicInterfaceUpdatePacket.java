@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleTelepathicInterfaceScreen.DataType;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
@@ -55,11 +56,11 @@ public class ServerboundTardisConsoleTelepathicInterfaceUpdatePacket {
 
                 if (this.entry.getValue() == DataType.BIOME) {
                     String msg = this.findBiome(level, provider) ? "found" : "not_found";
-                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message.tardis.telepathic_interface.biome." + msg), true);
+                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg), true);
                 }
                 else if (this.entry.getValue() == DataType.STRUCTURE) {
                     String msg = this.findStructure(level, provider) ? "found" : "not_found";
-                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message.tardis.telepathic_interface.structure." + msg), true);
+                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg), true);
                 }
 
                 success.set(true);
