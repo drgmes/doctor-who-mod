@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 import com.mojang.datafixers.util.Pair;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleTelepathicInterfaceScreen.DataType;
+import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen.DataType;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization.TardisSystemMaterializationSafeDirection;
@@ -29,14 +29,14 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ServerboundTardisConsoleTelepathicInterfaceUpdatePacket {
+public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
     public final Entry<ResourceLocation, DataType> entry;
 
-    public ServerboundTardisConsoleTelepathicInterfaceUpdatePacket(Entry<ResourceLocation, DataType> entry) {
+    public ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket(Entry<ResourceLocation, DataType> entry) {
         this.entry = entry;
     }
 
-    public ServerboundTardisConsoleTelepathicInterfaceUpdatePacket(FriendlyByteBuf buffer) {
+    public ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket(FriendlyByteBuf buffer) {
         this(Map.entry(buffer.readResourceLocation(), DataType.valueOf(buffer.readUtf())));
     }
 
@@ -62,9 +62,9 @@ public class ServerboundTardisConsoleTelepathicInterfaceUpdatePacket {
                     String msg = this.findStructure(level, provider) ? "found" : "not_found";
                     ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg), true);
                 }
-
-                success.set(true);
             });
+
+            success.set(true);
         });
 
         ctx.get().setPacketHandled(true);

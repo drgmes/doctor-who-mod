@@ -22,6 +22,13 @@ public class DWM {
     public static class TEXTS {
         public static final Component TARDIS_DOORS_LOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.locked");
         public static final Component TARDIS_DOORS_UNLOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
+
+        public static final Component TELEPATHIC_INTERFACE_NAME = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface");
+        public static final Component TELEPATHIC_INTERFACE_NAME_LOCATIONS = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.locations");
+        public static final Component TELEPATHIC_INTERFACE_NAME_BANNERS = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.banners");
+        public static final Component TELEPATHIC_INTERFACE_FLD_SEARCH = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.search");
+        public static final Component TELEPATHIC_INTERFACE_BTN_CANCEL = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.cancel");
+        public static final Component TELEPATHIC_INTERFACE_BTN_ACCEPT = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.accept");
     }
 
     public static class LOCS {

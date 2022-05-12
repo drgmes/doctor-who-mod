@@ -4,13 +4,15 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceOpenPacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceUpdatePacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -32,13 +34,21 @@ public class ModPackets {
     public static void setup() {
         int index = 0;
 
-        INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceUpdatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-            .encoder(ServerboundTardisConsoleTelepathicInterfaceUpdatePacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceUpdatePacket::new)
-            .consumer(ServerboundTardisConsoleTelepathicInterfaceUpdatePacket::handle).add();
+        INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::new)
+            .consumer(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::handle).add();
 
-        INSTANCE.messageBuilder(ClientboundTardisConsoleTelepathicInterfaceOpenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-            .encoder(ClientboundTardisConsoleTelepathicInterfaceOpenPacket::encode).decoder(ClientboundTardisConsoleTelepathicInterfaceOpenPacket::new)
-            .consumer(ClientboundTardisConsoleTelepathicInterfaceOpenPacket::handle).add();
+        INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::new)
+            .consumer(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket::encode).decoder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket::new)
+            .consumer(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket::encode).decoder(ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket::new)
+            .consumer(ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisExteriorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisExteriorUpdatePacket::encode).decoder(ClientboundTardisExteriorUpdatePacket::new)

@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleTelepathicInterfaceScreen;
+import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -12,14 +12,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ClientboundTardisConsoleTelepathicInterfaceOpenPacket {
+public class ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket {
     private final BlockPos blockPos;
 
-    public ClientboundTardisConsoleTelepathicInterfaceOpenPacket(BlockPos blockPos) {
+    public ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket(BlockPos blockPos) {
         this.blockPos = blockPos;
     }
 
-    public ClientboundTardisConsoleTelepathicInterfaceOpenPacket(FriendlyByteBuf buffer) {
+    public ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos());
     }
 
@@ -36,7 +36,7 @@ public class ClientboundTardisConsoleTelepathicInterfaceOpenPacket {
                 final Minecraft mc = Minecraft.getInstance();
 
                 if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-                    mc.setScreen(new BaseTardisConsoleTelepathicInterfaceScreen(tardisConsoleBlockEntity));
+                    mc.setScreen(new TardisConsoleTelepathicInterfaceLocationsScreen(tardisConsoleBlockEntity));
                     success.set(true);
                 }
             }

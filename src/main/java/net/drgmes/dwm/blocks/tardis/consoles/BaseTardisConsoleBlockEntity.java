@@ -18,7 +18,8 @@ import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceOpenPacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -40,15 +41,15 @@ import net.minecraft.world.item.MapItem;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
-    public TardisConsoleType consoleType;
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
+    public TardisConsoleType consoleType;
 
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
     public float tickInProgress = 0;
@@ -209,8 +210,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         ModPackets.send(level.getChunkAt(this.worldPosition), packet);
     }
 
-    public void sendTelepathicInterfaceOpenPacket(ServerPlayer player) {
-        ModPackets.send(player, new ClientboundTardisConsoleTelepathicInterfaceOpenPacket(this.worldPosition));
+    public void sendTelepathicInterfaceLocationsOpenPacket(ServerPlayer player) {
+        ModPackets.send(player, new ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket(this.worldPosition));
+    }
+
+    public void sendTelepathicInterfaceMapBannersOpenPacket(ServerPlayer player, MapItemSavedData mapData) {
+        ModPackets.send(player, new ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket(this.worldPosition, mapData));
     }
 
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand, Entity entity) {
@@ -244,13 +249,22 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                         return;
                     }
 
-                    BlockPos blockPos = new BlockPos(mapData.x, levelProvider.getDestinationExteriorPosition().getY(), mapData.z);
-                    for (MapDecoration decoration : mapData.getDecorations()) {
-                        blockPos = blockPos.offset(decoration.getX() - 1, 0, decoration.getY() - 1);
-                        break;
+                    BlockPos destExteriorPosition = levelProvider.getDestinationExteriorPosition();
+                    BlockPos blockPos = new BlockPos(mapData.x, destExteriorPosition.getY(), mapData.z);
+
+                    if (mapData.getBanners().size() > 1) {
+                        this.sendTelepathicInterfaceMapBannersOpenPacket(player, mapData);
+                        return;
+                    }
+                    else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBanner banner) {
+                        String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
+                        player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
+                        blockPos = banner.getPos();
+                    }
+                    else {
+                        player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
                     }
 
-                    player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
                     levelProvider.setDestinationDimension(mapData.dimension);
                     levelProvider.setDestinationPosition(blockPos);
                     levelProvider.updateConsoleTiles();
@@ -259,7 +273,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 return;
             }
 
-            this.sendTelepathicInterfaceOpenPacket(player);
+            this.sendTelepathicInterfaceLocationsOpenPacket(player);
             return;
         }
 
