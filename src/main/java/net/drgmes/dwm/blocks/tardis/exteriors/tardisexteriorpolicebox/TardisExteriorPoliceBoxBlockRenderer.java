@@ -28,6 +28,11 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
     }
 
     @Override
+    public int getViewDistance() {
+       return 256;
+    }
+
+    @Override
     public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
