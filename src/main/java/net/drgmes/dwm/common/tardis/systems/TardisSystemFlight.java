@@ -47,9 +47,9 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tickInProgress -= this.destinationDistanceRate;
 
             this.playFlySound();
-            if (this.tickInProgress == 1) this.land();
-            if ((this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardisData.updateConsoleTiles();
-            if ((this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
+            if ((int) this.tickInProgress <= 1) this.land();
+            if ((int) (this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardisData.updateConsoleTiles();
+            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
         }
     }
 

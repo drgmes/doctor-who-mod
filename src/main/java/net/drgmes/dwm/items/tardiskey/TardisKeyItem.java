@@ -22,7 +22,7 @@ public class TardisKeyItem extends Item {
         CompoundTag tag = itemStack.getOrCreateTag();
         InteractionResultHolder<ItemStack> pass = InteractionResultHolder.pass(itemStack);
 
-        if (level.isClientSide) return pass;    
+        if (level.isClientSide) return pass;
         if (!tag.contains("tardisDimUUID")) return pass;
 
         ServerLevel tardisLevel = DimensionHelper.getLevel(level.getServer(), tag.getString("tardisDimUUID"));
