@@ -6,8 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TardisDoorsPoliceBoxBlockEntity extends BaseTardisDoorsBlockEntity {
-    public String tardisLevelUUID;
-
     public TardisDoorsPoliceBoxBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_DOORS_POLICE_BOX.get(), blockPos, blockState);
     }
