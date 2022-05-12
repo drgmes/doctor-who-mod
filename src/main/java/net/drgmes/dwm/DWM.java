@@ -4,6 +4,7 @@ import net.drgmes.dwm.setup.Registration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod(DWM.MODID)
@@ -28,8 +29,14 @@ public class DWM {
     }
 
     public static class TEXTURES {
-        public static final ResourceLocation GUI_TEST = new ResourceLocation(DWM.MODID, "textures/gui/test.png");
-        public static final int[] GUI_TEST_SIZE = new int[]{224, 176};
+        public static class GUI {
+            public static class TARDIS {
+                public static class CONSOLE {
+                    public static final ResourceLocation TELEPATHIC_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/console/telepathic_interface.png");
+                    public static final Vec2 TELEPATHIC_INTERFACE_SIZE = new Vec2(403, 303);
+                }
+            }
+        }
     }
 
     public DWM() {

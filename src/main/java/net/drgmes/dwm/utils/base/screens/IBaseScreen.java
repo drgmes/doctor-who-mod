@@ -10,6 +10,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
 
 public interface IBaseScreen {
     public static final Supplier<HashMap<String, Integer>> createData = () -> new HashMap<>();
@@ -24,7 +25,7 @@ public interface IBaseScreen {
 
     ResourceLocation getBackground();
 
-    int[] getBackgroundSize();
+    Vec2 getBackgroundSize();
 
     void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY);
 
@@ -39,19 +40,20 @@ public interface IBaseScreen {
         this.renderTitle(poseStack);
     }
 
-    default int[] getRenderStartPos() {
-        return new int[]{
-            (this.getWidth() - this.getBackgroundSize()[0] + 12) / 2,
-            (this.getHeight() - this.getBackgroundSize()[1]) / 2
-        };
+    default Vec2 getRenderStartPos() {
+        return new Vec2(
+            (this.getWidth() - this.getBackgroundSize().x) / 2,
+            (this.getHeight() - this.getBackgroundSize().y) / 2
+        );
     }
 
-    default int[] getRenderPos(int offsetX, int offsetY) {
-        final int[] startPos = this.getRenderStartPos();
-        final int x = startPos[0] + offsetX;
-        final int y = startPos[1] + offsetY;
+    default Vec2 getRenderPos(float offsetX, float offsetY) {
+        final Vec2 pos = this.getRenderStartPos();
+        return new Vec2(pos.x + offsetX, pos.y + offsetY);
+    }
 
-        return new int[]{ x, y };
+    default Vec2 getTitleRenderPos() {
+        return this.getRenderPos(0, 0);
     }
 
     default void renderImage(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY, ResourceLocation image) {
@@ -63,13 +65,17 @@ public interface IBaseScreen {
         poseStack.popPose();
     }
 
-    default void renderImage(PoseStack poseStack, int[] pos, int[] size, ResourceLocation image) {
-        this.renderImage(poseStack, pos[0], pos[1], 0, 0, size[0], size[1], size[0], size[1], image);
+    default void renderImage(PoseStack poseStack, float x, float y, float textureX, float textureY, float textureWidth, float textureHeight, float textureClipX, float textureClipY, ResourceLocation image) {
+        this.renderImage(poseStack, (int) x, (int) y, (int) textureX, (int) textureY, (int) textureWidth, (int) textureHeight, (int) textureClipX, (int) textureClipY, image);
+    }
+
+    default void renderImage(PoseStack poseStack, Vec2 pos, Vec2 size, ResourceLocation image) {
+        this.renderImage(poseStack, pos.x, pos.y, 0, 0, size.x, size.y, size.x, size.y, image);
     }
 
     default void renderTitle(PoseStack poseStack) {
-        int[] pos = this.getRenderPos(60, 7);
-        this.getFont().drawShadow(poseStack, this.getTitle(), pos[0], pos[1], 0xE0E0E0);
+        Vec2 pos = this.getTitleRenderPos();
+        this.getFont().drawShadow(poseStack, this.getTitle(), pos.x, pos.y, 0xE0E0E0);
     }
 
     default void renderBackground(PoseStack poseStack, int mouseX, int mouseY) {

@@ -17,6 +17,7 @@ import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceOpenPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -28,6 +29,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -203,8 +205,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         ModPackets.send(level.getChunkAt(this.worldPosition), packet);
     }
 
+    public void sendTelepathicInterfaceOpenPacket(ServerPlayer player) {
+        ModPackets.send(player, new ClientboundTardisConsoleTelepathicInterfaceOpenPacket(this.worldPosition));
+    }
+
     public void useControl(TardisConsoleControlEntry control, InteractionHand hand, Entity entity) {
-        if (!(entity instanceof Player player)) return;
+        if (!(entity instanceof ServerPlayer player)) return;
 
         // Monitor
         if (control.role == TardisConsoleControlRoles.MONITOR && hand == InteractionHand.OFF_HAND) {
@@ -212,9 +218,9 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             return;
         }
 
-        // Telepatic Interface
-        if (control.role == TardisConsoleControlRoles.TELEPATIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
-            System.out.println("Telepatic Interface"); // TODO
+        // Telepathic Interface
+        if (control.role == TardisConsoleControlRoles.TELEPATHIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
+            this.sendTelepathicInterfaceOpenPacket(player);
             return;
         }
 

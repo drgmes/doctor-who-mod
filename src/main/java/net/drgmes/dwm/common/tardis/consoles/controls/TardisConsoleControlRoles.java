@@ -3,7 +3,7 @@ package net.drgmes.dwm.common.tardis.consoles.controls;
 public enum TardisConsoleControlRoles {
     NONE(TardisConsoleControlRoleTypes.NONE, null),
     MONITOR(TardisConsoleControlRoleTypes.NONE, null),
-    TELEPATIC_INTERFACE(TardisConsoleControlRoleTypes.NONE, null),
+    TELEPATHIC_INTERFACE(TardisConsoleControlRoleTypes.NONE, null),
     SCREWDRIVER_SLOT(TardisConsoleControlRoleTypes.NONE, null),
     DOORS(TardisConsoleControlRoleTypes.BOOLEAN, "message.tardis.control.role.doors"),
     SHIELDS(TardisConsoleControlRoleTypes.BOOLEAN, "message.tardis.control.role.shields"),

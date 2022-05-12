@@ -8,7 +8,7 @@ import net.minecraft.world.phys.Vec3;
 public class TardisConsoleTypeToyota extends TardisConsoleType {
     public TardisConsoleTypeToyota() {
         this.addControlEntry(TardisConsoleControlRoles.MONITOR, TardisConsoleControlEntryTypes.OTHER, new Vec3(-0.4F, 0.5F, -0.7F), "controls/control_monitor", ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM);
-        this.addControlEntry(TardisConsoleControlRoles.TELEPATIC_INTERFACE, TardisConsoleControlEntryTypes.OTHER, new Vec3(0.45F, 0.4F, -0.75F), "controls/control_telepatic_interface", ModEntities.TARDIS_CONSOLE_CONTROL_LARGE);
+        this.addControlEntry(TardisConsoleControlRoles.TELEPATHIC_INTERFACE, TardisConsoleControlEntryTypes.OTHER, new Vec3(0.45F, 0.4F, -0.75F), "controls/control_telepathic_interface", ModEntities.TARDIS_CONSOLE_CONTROL_LARGE);
         this.addControlEntry(TardisConsoleControlRoles.SCREWDRIVER_SLOT, TardisConsoleControlEntryTypes.OTHER, new Vec3(0.535F, 0.55F, 0.5425F), "screwdriver_slot");
 
         this.addControlEntry(TardisConsoleControlRoles.MATERIALIZATION, TardisConsoleControlEntryTypes.SLIDER, new Vec3(0.855F, 0.575F, -0.0775F), "controls/control_sliders_v/control_slider_v_3$_handle", ModEntities.TARDIS_CONSOLE_CONTROL_SMALL);

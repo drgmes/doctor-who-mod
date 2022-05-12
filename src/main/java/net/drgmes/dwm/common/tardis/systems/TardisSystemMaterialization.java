@@ -125,6 +125,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return !this.inProgress() && this.isMaterialized;
     }
 
+    public void setSafeDirection(TardisSystemMaterializationSafeDirection value) {
+        this.safeDirection = value;
+    }
+
     public void setSafeDirection(int value) {
         if (value == 0) this.safeDirection = TardisSystemMaterializationSafeDirection.TOP;
         else if (value == 1) this.safeDirection = TardisSystemMaterializationSafeDirection.BOTTOM;

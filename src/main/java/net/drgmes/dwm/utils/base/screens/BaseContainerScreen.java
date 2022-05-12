@@ -2,13 +2,13 @@ package net.drgmes.dwm.utils.base.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.drgmes.dwm.DWM;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -19,8 +19,9 @@ public class BaseContainerScreen<T extends AbstractContainerMenu> extends Abstra
     public BaseContainerScreen(T menu, Inventory inventory, Component component) {
         super(menu, inventory, component);
 
-        this.imageWidth = this.getBackgroundSize()[0];
-        this.imageHeight = this.getBackgroundSize()[1];
+        Vec2 backgroundSize = this.getBackgroundSize();
+        this.imageWidth = (int) backgroundSize.x;
+        this.imageHeight = (int) backgroundSize.y;
     }
 
     @Override
@@ -45,12 +46,12 @@ public class BaseContainerScreen<T extends AbstractContainerMenu> extends Abstra
 
     @Override
     public ResourceLocation getBackground() {
-        return DWM.TEXTURES.GUI_TEST;
+        return null;
     }
 
     @Override
-    public int[] getBackgroundSize() {
-        return DWM.TEXTURES.GUI_TEST_SIZE;
+    public Vec2 getBackgroundSize() {
+        return new Vec2(0, 0);
     }
 
     @Override

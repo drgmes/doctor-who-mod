@@ -17,6 +17,16 @@
 
 	"item.dwm.tardis_key_1": "Tardis Key",
 
+	"screen.dwm.telepathic_interface": "Telepathic Interface",
+	"screen.dwm.telepathic_interface.search": "Search",
+	"screen.dwm.telepathic_interface.cancel": "Cancel",
+	"screen.dwm.telepathic_interface.accept": "Find",
+
+	"message.tardis.telepathic_interface.biome.found": "Biome \u00A7aFound",
+	"message.tardis.telepathic_interface.biome.not_found": "Biome \u00A7cNot Found",
+	"message.tardis.telepathic_interface.structure.found": "Structure \u00A7aFound",
+	"message.tardis.telepathic_interface.structure.not_found": "Structure \u00A7cNot Found",
+
 	"message.tardis.control.role.doors.locked": "Doors \u00A7eLocked",
 	"message.tardis.control.role.doors.unlocked": "Doors \u00A7eUnlocked",
 	"message.tardis.control.role.doors.active": "Doors \u00A7eOpened",
