@@ -25,6 +25,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
@@ -54,20 +55,6 @@ public class Registration {
         modEventBus.addListener(ModRenderers::setup);
         modEventBus.addListener(ModRenderers::setupLayerDefinitions);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new DistExecutor.SafeRunnable() {
-            @Override
-            public void run() {
-                modEventBus.addListener(Registration::setupClient);
-            }
-        });
-
-        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> new DistExecutor.SafeRunnable() {
-            @Override
-            public void run() {
-                modEventBus.addListener(Registration::setupServer);
-            }
-        });
-
         ITEMS.register(modEventBus);
         BLOCKS.register(modEventBus);
         ENTITIES.register(modEventBus);
@@ -88,6 +75,22 @@ public class Registration {
         ModCapabilities.init();
         ModWorldGen.init();
         ModSounds.init();
+
+        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
+
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new DistExecutor.SafeRunnable() {
+            @Override
+            public void run() {
+                modEventBus.addListener(Registration::setupClient);
+            }
+        });
+
+        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> new DistExecutor.SafeRunnable() {
+            @Override
+            public void run() {
+                modEventBus.addListener(Registration::setupServer);
+            }
+        });
     }
 
     @OnlyIn(Dist.CLIENT)

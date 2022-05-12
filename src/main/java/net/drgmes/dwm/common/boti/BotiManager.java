@@ -17,6 +17,7 @@ import com.mojang.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.setup.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LightTexture;
@@ -88,9 +89,11 @@ public class BotiManager {
         setupFBO();
         setFBOColor();
 
-        poseStack.pushPose();
-        draw(entraceData, poseStack, matrix4f, partialTicks);
-        poseStack.popPose();
+        if (ModConfig.CLIENT.enableBoti.get()) {
+            poseStack.pushPose();
+            draw(entraceData, poseStack, matrix4f, partialTicks);
+            poseStack.popPose();
+        }
 
         BufferBuilder underlyingBuffer = Tesselator.getInstance().getBuilder();
         BufferSource imBuffer = MultiBufferSource.immediate(underlyingBuffer);
