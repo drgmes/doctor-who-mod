@@ -47,7 +47,7 @@ public class BotiManager {
     private static boolean inRenderProcess;
 
     @SubscribeEvent
-    public static void removeHighlight(DrawSelectionEvent event) {
+    public static void onDrawSelection(DrawSelectionEvent event) {
         if (event.getTarget() instanceof BlockHitResult blockHitResult) {
             Block hitBlock = mc.level.getBlockState(blockHitResult.getBlockPos()).getBlock();
 
@@ -59,7 +59,7 @@ public class BotiManager {
     }
 
     @SubscribeEvent
-    public static void onRenderWorldLast(RenderLevelLastEvent event) {
+    public static void onRenderLevelLast(RenderLevelLastEvent event) {
         PoseStack poseStack = event.getPoseStack();
         Vec3 proj = mc.gameRenderer.getMainCamera().getPosition();
 

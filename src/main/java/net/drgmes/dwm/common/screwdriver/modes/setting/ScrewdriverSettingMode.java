@@ -1,8 +1,9 @@
-package net.drgmes.dwm.common.screwdriver.modes;
+package net.drgmes.dwm.common.screwdriver.modes.setting;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
+import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;

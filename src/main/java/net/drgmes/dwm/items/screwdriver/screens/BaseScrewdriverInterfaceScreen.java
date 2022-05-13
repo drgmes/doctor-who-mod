@@ -16,9 +16,9 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
 public class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScreen {
-    protected final static int PADDING = 5;
-    protected final static int BACKGROUND_BORDERS = 19;
-    protected final static int BUTTON_HEIGHT = 20;
+    protected static final int PADDING = 5;
+    protected static final int BACKGROUND_BORDERS = 19;
+    protected static final int BUTTON_HEIGHT = 20;
 
     protected final ItemStack screwdriverItemStack;
     protected final boolean isMainHand;

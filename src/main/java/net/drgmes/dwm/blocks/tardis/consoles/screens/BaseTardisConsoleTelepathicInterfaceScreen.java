@@ -15,9 +15,9 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
 public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
-    protected final static int LINE_PADDING = 3;
-    protected final static int BUTTON_HEIGHT = 20;
-    protected final static int BACKGROUND_BORDERS = 24;
+    protected static final int LINE_PADDING = 3;
+    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int BACKGROUND_BORDERS = 24;
 
     protected final BaseTardisConsoleBlockEntity tardisConsoleBlockEntity;
 

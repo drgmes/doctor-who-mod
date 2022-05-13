@@ -2,8 +2,8 @@ package net.drgmes.dwm.common.screwdriver;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
-import net.drgmes.dwm.common.screwdriver.modes.ScrewdriverScanMode;
-import net.drgmes.dwm.common.screwdriver.modes.ScrewdriverSettingMode;
+import net.drgmes.dwm.common.screwdriver.modes.scan.ScrewdriverScanMode;
+import net.drgmes.dwm.common.screwdriver.modes.setting.ScrewdriverSettingMode;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
 import net.minecraft.nbt.CompoundTag;

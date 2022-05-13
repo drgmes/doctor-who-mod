@@ -78,27 +78,27 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public static void onItemUseOnBlock(PlayerInteractEvent.RightClickBlock e) {
-        Item mainHandItem = e.getPlayer().getMainHandItem().getItem();
-        Item offHandItem = e.getPlayer().getOffhandItem().getItem();
+    public static void onItemUseOnBlock(PlayerInteractEvent.RightClickBlock event) {
+        Item mainHandItem = event.getPlayer().getMainHandItem().getItem();
+        Item offHandItem = event.getPlayer().getOffhandItem().getItem();
 
-        if (e.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
-            e.setCanceled(true);
+        if (event.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
+            event.setCanceled(true);
         }
     }
 
     @SubscribeEvent
-    public static void onItemUseOnEntity(PlayerInteractEvent.EntityInteract e) {
-        Item mainHandItem = e.getPlayer().getMainHandItem().getItem();
-        Item offHandItem = e.getPlayer().getOffhandItem().getItem();
+    public static void onItemUseOnEntity(PlayerInteractEvent.EntityInteract event) {
+        Item mainHandItem = event.getPlayer().getMainHandItem().getItem();
+        Item offHandItem = event.getPlayer().getOffhandItem().getItem();
 
-        if (e.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
-            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return;
-            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return;
-            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return;
-            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return;
+        if (event.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
+            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return;
+            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return;
+            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return;
+            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return;
 
-            e.setCanceled(true);
+            event.setCanceled(true);
         }
     }
 }

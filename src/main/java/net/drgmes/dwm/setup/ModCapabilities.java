@@ -29,8 +29,8 @@ public class ModCapabilities {
         Bindings.getForgeBus().get().addGenericListener(Level.class, ModCapabilities::attachWorldCaps);
     }
 
-    public static void register(RegisterCapabilitiesEvent e) {
-        e.register(ChunkTracker.class);
+    public static void register(RegisterCapabilitiesEvent event) {
+        event.register(ChunkTracker.class);
     }
 
     public static void attachWorldCaps(AttachCapabilitiesEvent<Level> event) {
