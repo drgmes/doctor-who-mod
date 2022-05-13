@@ -7,7 +7,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec2;
@@ -53,21 +56,21 @@ public class ScrewdriverScanModeOverlay {
         final Minecraft mc = Minecraft.getInstance();
         final int screenWidth = mc.getWindow().getGuiScaledWidth();
         final int screenHeight = mc.getWindow().getGuiScaledHeight();
+        final int maxTextLength = 139;
+
+        List<FormattedCharSequence> titleLines = Language.getInstance().getVisualOrder(mc.font.getSplitter().splitLines(title, maxTextLength, Style.EMPTY));
 
         float titleLineHeight = mc.font.lineHeight + LINE_MARGIN;
         float lineHeight = mc.font.lineHeight * LINE_SCALE + LINE_MARGIN;
-        float height = titleLineHeight + lineHeight * lines.size() - LINE_MARGIN;
+        float height = titleLineHeight * titleLines.size() + lineHeight * lines.size() - LINE_MARGIN * 2;
 
-        int width = mc.font.width(title);
-        for (Component line : lines) {
-            int lineWidth = (int) (mc.font.width(line) * LINE_SCALE);
-            if (lineWidth > width) width = lineWidth;
+        Vec2 pos = new Vec2(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING);
+        float y = pos.y;
+        
+        for (FormattedCharSequence titleLine : titleLines) {
+            mc.font.drawShadow(poseStack, titleLine, pos.x, y, 0xFFFFFF);
+            y += titleLineHeight;
         }
-
-        Vec2 pos = new Vec2(screenWidth - width - PADDING, screenHeight - height - PADDING - 20);
-        float y = pos.y + titleLineHeight;
-
-        mc.font.drawShadow(poseStack, title, pos.x, pos.y, 0xFFFFFF);
 
         poseStack.pushPose();
         poseStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
