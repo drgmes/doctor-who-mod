@@ -1,8 +1,9 @@
 package net.drgmes.dwm.items.screwdriver;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.PlayerHelper;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +20,16 @@ public class ScrewdriverItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
 
-        if (Screwdriver.interact(level, player, hand, PlayerHelper.pick(player, 40D))) {
+        if (player.isShiftKeyDown()) {
+            if (level.isClientSide) {
+                Minecraft mc = Minecraft.getInstance();
+                mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, hand == InteractionHand.MAIN_HAND));
+            }
+
+            return InteractionResultHolder.consume(itemStack);
+        }
+
+        if (Screwdriver.interact(level, player, hand)) {
             ModSounds.playScrewdriverMainSound(level, player.blockPosition());
             return InteractionResultHolder.success(itemStack);
         }

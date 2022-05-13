@@ -39,15 +39,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 
-public class ScrewdriverSettingMode implements IScrewdriverMode {
+public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     public static ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
-
-    // -------------------- //
-    // Interact with Blocks //
-    // -------------------- //
 
     @Override
     public boolean interactWithBlock(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!super.interactWithBlock(level, player, hand, hitResult)) return false;
+
         Minecraft mc = Minecraft.getInstance();
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
@@ -143,12 +141,10 @@ public class ScrewdriverSettingMode implements IScrewdriverMode {
         return interactWithBlockProperty(level, player, blockPos);
     }
 
-    // ---------------------- //
-    // Interact with Entities //
-    // ---------------------- //
-
     @Override
     public boolean interactWithEntity(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
+        if (!super.interactWithEntity(level, player, hand, hitResult)) return false;
+
         Entity entity = hitResult.getEntity();
 
         // Trader Llama
@@ -224,10 +220,6 @@ public class ScrewdriverSettingMode implements IScrewdriverMode {
 
         return false;
     }
-
-    // ------- //
-    // Helpers //
-    // ------- //
 
     private boolean interactWithBlockProperty(Level level, Player player, BlockPos blockPos) {
         BlockState blockState = level.getBlockState(blockPos);

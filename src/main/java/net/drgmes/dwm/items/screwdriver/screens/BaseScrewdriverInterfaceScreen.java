@@ -1,32 +1,37 @@
-package net.drgmes.dwm.blocks.tardis.consoles.screens;
+package net.drgmes.dwm.items.screwdriver.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.screwdriver.Screwdriver.ScrewdriverMode;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
-public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
-    protected final static int LINE_PADDING = 3;
+public class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScreen {
+    protected final static int PADDING = 5;
+    protected final static int BACKGROUND_BORDERS = 19;
     protected final static int BUTTON_HEIGHT = 20;
-    protected final static int BACKGROUND_BORDERS = 24;
 
-    protected final BaseTardisConsoleBlockEntity tardisConsoleBlockEntity;
+    protected final ItemStack screwdriverItemStack;
+    protected final boolean isMainHand;
 
-    protected Button cancelButton;
-    protected Button acceptButton;
+    protected ScrewdriverMode mode;
 
-    public BaseTardisConsoleTelepathicInterfaceScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME);
-        this.tardisConsoleBlockEntity = tardisConsoleBlockEntity;
+    public BaseScrewdriverInterfaceScreen(ItemStack screwdriverItemStack, boolean isMainHand) {
+        super(DWM.TEXTS.SCREWDRIVER_INTERFACE_NAME);
+
+        this.screwdriverItemStack = screwdriverItemStack;
+        this.isMainHand = isMainHand;
+
+        this.mode = Screwdriver.getInteractionMode(this.screwdriverItemStack);
     }
 
     @Override
@@ -51,12 +56,12 @@ public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implement
 
     @Override
     public ResourceLocation getBackground() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE;
+        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN;
     }
 
     @Override
     public Vec2 getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.scale(0.795F);
+        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN_SIZE.scale(0.65F);
     }
 
     @Override
@@ -71,24 +76,12 @@ public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implement
 
     @Override
     public Vec2 getTitleRenderPos() {
-        return this.getRenderPos(23, 8);
+        return this.getRenderPos(23, 6);
     }
 
     @Override
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-
-        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
-        int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT + 1);
-
-        Vec2 cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS - 1, buttonOffset);
-        this.cancelButton = new Button((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.onClose());
-
-        Vec2 acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 1, buttonOffset);
-        this.acceptButton = new Button((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
-
-        this.addRenderableWidget(this.cancelButton);
-        this.addRenderableWidget(this.acceptButton);
     }
 
     @Override
@@ -130,11 +123,6 @@ public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implement
     }
 
     protected void onDone() {
-        this.tardisConsoleBlockEntity.setChanged();
         this.minecraft.setScreen((Screen) null);
-    }
-
-    protected void apply() {
-        this.onDone();
     }
 }
