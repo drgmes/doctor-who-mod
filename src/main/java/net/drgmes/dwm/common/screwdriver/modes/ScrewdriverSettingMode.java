@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 
 public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     public static ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
@@ -207,15 +207,14 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         }
 
         // Fireball
-        if (entity instanceof Fireball) {
-            try {
-                Method method = entity.getClass().getDeclaredMethod("onHit", HitResult.class);
-                method.setAccessible(true);
-                method.invoke(entity, hitResult);
-                return true;
-            }
-            catch (Exception e) {
-            }
+        if (entity instanceof Fireball fireball) {
+            Vec3 vec3 = player.getLookAngle();
+            fireball.setDeltaMovement(vec3);
+            fireball.xPower = vec3.x * 0.1D;
+            fireball.yPower = vec3.y * 0.1D;
+            fireball.zPower = vec3.z * 0.1D;
+            fireball.setOwner(player);
+            return true;
         }
 
         return false;
