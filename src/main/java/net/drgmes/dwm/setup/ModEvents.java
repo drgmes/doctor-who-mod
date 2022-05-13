@@ -78,7 +78,7 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public void onItemUseOnBlock(PlayerInteractEvent.RightClickBlock e) {
+    public static void onItemUseOnBlock(PlayerInteractEvent.RightClickBlock e) {
         Item mainHandItem = e.getPlayer().getMainHandItem().getItem();
         Item offHandItem = e.getPlayer().getOffhandItem().getItem();
 
@@ -88,11 +88,16 @@ public class ModEvents {
     }
 
     @SubscribeEvent
-    public void onItemUseOnEntity(PlayerInteractEvent.EntityInteract e) {
+    public static void onItemUseOnEntity(PlayerInteractEvent.EntityInteract e) {
         Item mainHandItem = e.getPlayer().getMainHandItem().getItem();
         Item offHandItem = e.getPlayer().getOffhandItem().getItem();
 
         if (e.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
+            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return;
+            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return;
+            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return;
+            if (e.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return;
+
             e.setCanceled(true);
         }
     }
