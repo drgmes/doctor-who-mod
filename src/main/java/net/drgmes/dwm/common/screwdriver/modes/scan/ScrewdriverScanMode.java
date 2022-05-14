@@ -79,7 +79,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         if (entity instanceof LivingEntity livingEntity) {
             double health = livingEntity.getHealth();
             double maxHealth = livingEntity.getMaxHealth();
-            lines.add(new TextComponent("Health: " + health + " / " + maxHealth));
+            lines.add(new TextComponent("Health: " + String.format("%.1f", health) + " / " + String.format("%.1f", maxHealth)));
 
             int armor = livingEntity.getArmorValue();
             if (armor > 0) lines.add(new TextComponent("Armor: " + armor));
