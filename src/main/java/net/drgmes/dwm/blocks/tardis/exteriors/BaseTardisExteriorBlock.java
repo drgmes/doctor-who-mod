@@ -114,8 +114,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
             if (tardisLevel == null) return;
 
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (provider.isValid()) provider.setOwnerUUID(entity.getUUID());
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (tardis.isValid()) tardis.setOwnerUUID(entity.getUUID());
             });
         }
     }
@@ -157,16 +157,16 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel == null) return InteractionResult.FAIL;
 
-        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (!provider.isValid()) return;
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (!tardis.isValid()) return;
 
-            String tardisDimUUID = provider.getLevel().dimension().location().getPath();
+            String tardisDimUUID = tardis.getLevel().dimension().location().getPath();
             ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
             CompoundTag heldItemTag = heldItem.getOrCreateTag();
 
             if (heldItem.getItem() instanceof TardisKeyItem) {
                 if (!heldItemTag.contains("tardisDimUUID")) {
-                    if (!provider.getOwnerUUID().equals(player.getUUID())) return;
+                    if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
                     heldItemTag.putString("tardisDimUUID", tardisDimUUID);
                 }
 
@@ -174,23 +174,25 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                     return;
                 }
 
-                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
-                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
+                    player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    tardis.updateConsoleTiles();
                 }
 
                 return;
             }
 
             if (player.isShiftKeyDown()) {
-                if (provider.setDoorsLockState(!provider.isDoorsLocked(), player)) {
-                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), player)) {
+                    player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    tardis.updateConsoleTiles();
                 }
 
                 return;
             }
 
-            if (provider.setDoorsOpenState(!provider.isDoorsOpened())) {
-                provider.updateConsoleTiles();
+            if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
+                tardis.updateConsoleTiles();
             }
         });
 
@@ -209,8 +211,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel != null) {
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (provider.isValid() && provider.isDoorsOpened()) {
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (tardis.isValid() && tardis.isDoorsOpened()) {
                     TardisHelper.teleportToTardis(entity, tardisLevel);
                 }
             });

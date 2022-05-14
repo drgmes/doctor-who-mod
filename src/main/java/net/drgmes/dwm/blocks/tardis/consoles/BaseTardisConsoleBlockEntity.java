@@ -20,6 +20,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -116,8 +117,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     @Override
     public void setRemoved() {
-        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-            if (levelProvider.isValid()) levelProvider.getConsoleTiles().remove(this);
+        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (tardis.isValid()) tardis.getConsoleTiles().remove(this);
         });
 
         this.removeControls();
@@ -138,18 +139,23 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public void init() {
         this.createControls();
 
-        if (!this.level.isClientSide && TardisHelper.isTardisDimension(this.level)) {
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (!levelProvider.isValid()) return;
-
-                levelProvider.getConsoleTiles().add(this);
-                levelProvider.updateConsoleTiles();
-            });
+        if (TardisHelper.isTardisDimension(this.level)) {
+            if (!this.level.isClientSide) {
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                    if (!tardis.isValid()) return;
+    
+                    tardis.getConsoleTiles().add(this);
+                    tardis.updateConsoleTiles();
+                });
+            }
+            else {
+                ModPackets.INSTANCE.sendToServer(new ServerboundTardisConsoleLevelDataUpdatePacket(this.worldPosition));
+            }
         }
     }
 
     public void tick() {
-        if (!level.isClientSide && this.timeToInit > 0) {
+        if (this.timeToInit > 0) {
             --this.timeToInit;
             if (this.timeToInit == 0) this.init();
         }
@@ -170,26 +176,26 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     public void unloadAll() {
-        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((tardis) -> {
             SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = 3;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.remove(pos.offset(x, 0, z), this.worldPosition);
+                    tardis.remove(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });
     }
 
     public void loadAll() {
-        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
+        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((tardis) -> {
             SectionPos pos = SectionPos.of(this.worldPosition);
             int radius = 3;
 
             for (int x = -radius; x <= radius; x++) {
                 for (int z = -radius; z <= radius; z++) {
-                    levelProvider.add(pos.offset(x, 0, z), this.worldPosition);
+                    tardis.add(pos.offset(x, 0, z), this.worldPosition);
                 }
             }
         });
@@ -237,19 +243,19 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 MapItemSavedData mapData = MapItem.getSavedData(itemStack, level);
                 if (mapData == null) return;
 
-                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                    if (!levelProvider.isValid()) return;
-                    if (mapData.dimension == levelProvider.getLevel().dimension()) return;
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                    if (!tardis.isValid()) return;
+                    if (mapData.dimension == tardis.getLevel().dimension()) return;
 
-                    if (levelProvider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem && flightSystem.inProgress()) {
+                    if (tardis.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem && flightSystem.inProgress()) {
                         return;
                     }
 
-                    if (levelProvider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem && materializationSystem.inProgress()) {
+                    if (tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem && materializationSystem.inProgress()) {
                         return;
                     }
 
-                    BlockPos destExteriorPosition = levelProvider.getDestinationExteriorPosition();
+                    BlockPos destExteriorPosition = tardis.getDestinationExteriorPosition();
                     BlockPos blockPos = new BlockPos(mapData.x, destExteriorPosition.getY(), mapData.z);
 
                     if (mapData.getBanners().size() > 1) {
@@ -265,9 +271,9 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                         player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
                     }
 
-                    levelProvider.setDestinationDimension(mapData.dimension);
-                    levelProvider.setDestinationPosition(blockPos);
-                    levelProvider.updateConsoleTiles();
+                    tardis.setDestinationDimension(mapData.dimension);
+                    tardis.setDestinationPosition(blockPos);
+                    tardis.updateConsoleTiles();
                 });
 
                 return;
@@ -331,11 +337,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 return;
             }
 
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                if (levelProvider.isValid()) levelProvider.applyControlsStorageToData(this.controlsStorage);
+            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (tardis.isValid()) tardis.applyControlsStorageToData(this.controlsStorage);
 
                 try {
-                    this.displayNotification(levelProvider, this.controlsStorage, control.role, player);
+                    this.displayNotification(tardis, this.controlsStorage, control.role, player);
                 } catch (Exception e) {
                 }
             });
@@ -344,6 +350,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
     private void createControls() {
         if (this.controls.size() == this.consoleType.controlEntries.size()) return;
+        if (this.level.isClientSide) return;
         this.removeControls();
 
         for (TardisConsoleControlEntry controlEntry : this.consoleType.controlEntries.values()) {

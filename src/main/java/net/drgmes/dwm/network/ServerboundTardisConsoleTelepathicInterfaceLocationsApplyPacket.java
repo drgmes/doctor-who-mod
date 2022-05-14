@@ -51,15 +51,15 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         ctx.get().enqueueWork(() -> {
             if (!(ctx.get().getSender().level instanceof ServerLevel level)) return;
 
-            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (!provider.isValid()) return;
+            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (!tardis.isValid()) return;
 
                 if (this.entry.getValue() == DataType.BIOME) {
-                    String msg = this.findBiome(level, provider) ? "found" : "not_found";
+                    String msg = this.findBiome(level, tardis) ? "found" : "not_found";
                     ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg), true);
                 }
                 else if (this.entry.getValue() == DataType.STRUCTURE) {
-                    String msg = this.findStructure(level, provider) ? "found" : "not_found";
+                    String msg = this.findStructure(level, tardis) ? "found" : "not_found";
                     ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg), true);
                 }
             });

@@ -2,17 +2,18 @@ package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -43,6 +44,10 @@ public class ModPackets {
         INSTANCE.messageBuilder(ServerboundScrewdriverUpdatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundScrewdriverUpdatePacket::encode).decoder(ServerboundScrewdriverUpdatePacket::new)
             .consumer(ServerboundScrewdriverUpdatePacket::handle).add();
+
+        INSTANCE.messageBuilder(ServerboundTardisConsoleLevelDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisConsoleLevelDataUpdatePacket::encode).decoder(ServerboundTardisConsoleLevelDataUpdatePacket::new)
+            .consumer(ServerboundTardisConsoleLevelDataUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::new)
@@ -84,9 +89,9 @@ public class ModPackets {
             .encoder(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::encode).decoder(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::new)
             .consumer(ClientboundTardisConsoleScrewdriverSlotUpdatePacket::handle).add();
 
-        INSTANCE.messageBuilder(ClientboundTardisConsoleWorldDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-            .encoder(ClientboundTardisConsoleWorldDataUpdatePacket::encode).decoder(ClientboundTardisConsoleWorldDataUpdatePacket::new)
-            .consumer(ClientboundTardisConsoleWorldDataUpdatePacket::handle).add();
+        INSTANCE.messageBuilder(ClientboundTardisConsoleLevelDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundTardisConsoleLevelDataUpdatePacket::encode).decoder(ClientboundTardisConsoleLevelDataUpdatePacket::new)
+            .consumer(ClientboundTardisConsoleLevelDataUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisToyotaSpinnerUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisToyotaSpinnerUpdatePacket::encode).decoder(ClientboundTardisToyotaSpinnerUpdatePacket::new)

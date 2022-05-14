@@ -107,16 +107,16 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
 
-        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (!provider.isValid()) return;
+        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (!tardis.isValid()) return;
 
-            String tardisDimUUID = provider.getLevel().dimension().location().getPath();
+            String tardisDimUUID = tardis.getLevel().dimension().location().getPath();
             ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
             CompoundTag heldItemTag = heldItem.getOrCreateTag();
 
             if (heldItem.getItem() instanceof TardisKeyItem) {
                 if (!heldItemTag.contains("tardisDimUUID")) {
-                    if (!provider.getOwnerUUID().equals(player.getUUID())) return;
+                    if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
                     heldItemTag.putString("tardisDimUUID", tardisDimUUID);
                 }
 
@@ -124,23 +124,25 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
                     return;
                 }
 
-                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
-                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
+                    player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    tardis.updateConsoleTiles();
                 }
 
                 return;
             }
 
             if (player.isShiftKeyDown()) {
-                if (provider.setDoorsLockState(!provider.isDoorsLocked(), null)) {
-                    player.displayClientMessage(provider.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
+                    player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    tardis.updateConsoleTiles();
                 }
 
                 return;
             }
 
-            if (provider.setDoorsOpenState(!provider.isDoorsOpened())) {
-                provider.updateConsoleTiles();
+            if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
+                tardis.updateConsoleTiles();
             }
         });
 
@@ -154,8 +156,8 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
 
         TardisHelper.saveBlocksForBoti(level, blockPos, level.dimension().location().getPath());
 
-        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (provider.isValid() && provider.isDoorsOpened()) {
+        level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (tardis.isValid() && tardis.isDoorsOpened()) {
                 TardisHelper.teleportFromTardis(entity, level.getServer());
             }
         });

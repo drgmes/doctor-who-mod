@@ -15,7 +15,7 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStora
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.drgmes.dwm.network.ClientboundTardisConsoleWorldDataUpdatePacket;
+import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -418,15 +418,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.doorsOpened == flag) return false;
         this.doorsOpened = flag;
 
-        this.doorTiles.forEach((tile) -> {
-            this.level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(BaseTardisDoorsBlock.OPEN, flag), 3);
-
-            if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
-            else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
-
-            ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), new ClientboundTardisInteriorDoorsUpdatePacket(tile.getBlockPos(), this.isDoorsOpened()));
-        });
-
+        this.updateDoorsTiles();
         this.updateExterior();
         return true;
     }
@@ -467,6 +459,18 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public void updateDoorsTiles() {
+        this.doorTiles.forEach((tile) -> {
+            this.level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), 3);
+
+            if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
+            else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
+
+            ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), new ClientboundTardisInteriorDoorsUpdatePacket(tile.getBlockPos(), this.isDoorsOpened()));
+        });
+    }
+
+    @Override
     public void updateConsoleTiles() {
         this.consoleTiles.forEach((tile) -> {
             this.applyDataToControlsStorage(tile.controlsStorage);
@@ -477,7 +481,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 provider.deserializeNBT(tag);
                 tile.setChanged();
 
-                ClientboundTardisConsoleWorldDataUpdatePacket packet = new ClientboundTardisConsoleWorldDataUpdatePacket(tile.getBlockPos(), tag);
+                ClientboundTardisConsoleLevelDataUpdatePacket packet = new ClientboundTardisConsoleLevelDataUpdatePacket(tile.getBlockPos(), tag);
                 ModPackets.send(level.getChunkAt(tile.getBlockPos()), packet);
             });
         });

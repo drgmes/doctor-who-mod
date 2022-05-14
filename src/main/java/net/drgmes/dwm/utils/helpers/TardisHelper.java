@@ -37,22 +37,22 @@ public class TardisHelper {
     public static void teleportToTardis(Entity entity, ServerLevel destination) {
         if (destination == null || entity.level.dimension() == destination.dimension() || !TardisHelper.isTardisDimension(destination)) return;
 
-        destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            entity.setYRot(provider.getEntraceFacing().toYRot());
-            entity.changeDimension(destination, new TardisTeleporter(provider.getEntracePosition().relative(provider.getEntraceFacing())));
+        destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            entity.setYRot(tardis.getEntraceFacing().toYRot());
+            entity.changeDimension(destination, new TardisTeleporter(tardis.getEntracePosition().relative(tardis.getEntraceFacing())));
         });
     }
 
     public static void teleportFromTardis(Entity entity, MinecraftServer server) {
         if (server == null || !TardisHelper.isTardisDimension(entity.level)) return;
 
-        entity.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (!provider.isValid()) return;
+        entity.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (!tardis.isValid()) return;
 
-            ServerLevel level = server.getLevel(provider.getCurrentExteriorDimension());
+            ServerLevel level = server.getLevel(tardis.getCurrentExteriorDimension());
             if (level != null) {
-                entity.setYRot(provider.getCurrentExteriorFacing().toYRot());
-                entity.changeDimension(level, new TardisTeleporter(provider.getCurrentExteriorRelativePosition()));
+                entity.setYRot(tardis.getCurrentExteriorFacing().toYRot());
+                entity.changeDimension(level, new TardisTeleporter(tardis.getCurrentExteriorRelativePosition()));
             }
         });
     }
@@ -65,10 +65,10 @@ public class TardisHelper {
         ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
         ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(tile), TardisHelper::tardisDimensionBuilder);
 
-        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            provider.setDimension(level.dimension(), false);
-            provider.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
-            provider.setPosition(tile.getBlockPos(), false);
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            tardis.setDimension(level.dimension(), false);
+            tardis.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
+            tardis.setPosition(tile.getBlockPos(), false);
         });
 
         if (server.getLevel(levelKey) != null) return tardisLevel;

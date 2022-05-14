@@ -309,11 +309,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (exteriorLevel.getBlockEntity(this.tardisData.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisLevel(exteriorLevel);
             if (foreignTardisLevel != null) {
-                foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                    if (levelProvider.isValid() && !levelProvider.isShieldsEnabled()) {
-                        this.tardisData.setDimension(levelProvider.getLevel().dimension(), false);
-                        this.tardisData.setFacing(levelProvider.getEntraceFacing(), false);
-                        this.tardisData.setPosition(levelProvider.getEntracePosition().relative(levelProvider.getEntraceFacing()), false);
+                foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                    if (tardis.isValid() && !tardis.isShieldsEnabled()) {
+                        this.tardisData.setDimension(tardis.getLevel().dimension(), false);
+                        this.tardisData.setFacing(tardis.getEntraceFacing(), false);
+                        this.tardisData.setPosition(tardis.getEntracePosition().relative(tardis.getEntraceFacing()), false);
                         this.remat();
                     } else {
                         this.playFailSound();

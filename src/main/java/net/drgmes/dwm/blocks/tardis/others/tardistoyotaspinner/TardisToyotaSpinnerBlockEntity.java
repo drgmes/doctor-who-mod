@@ -39,10 +39,10 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
 
     public void tick() {
         if (!this.level.isClientSide && TardisHelper.isTardisDimension(this.level)) {
-            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
+            this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                 boolean prevInProgress = this.inProgress;
 
-                if (levelProvider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
+                if (tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
                     if (!this.inProgress && materializationSystem.inProgress()) {
                         this.inProgress = true;
                     }
@@ -51,7 +51,7 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
                     }
                 }
 
-                if (levelProvider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+                if (tardis.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
                     if (!this.inProgress && flightSystem.inProgress()) {
                         this.inProgress = true;
                     }

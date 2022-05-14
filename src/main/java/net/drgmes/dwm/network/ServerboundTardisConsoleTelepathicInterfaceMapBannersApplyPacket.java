@@ -37,15 +37,15 @@ public class ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket {
         ctx.get().enqueueWork(() -> {
             if (!(ctx.get().getSender().level instanceof ServerLevel level)) return;
 
-            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (!provider.isValid()) return;
+            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (!tardis.isValid()) return;
 
                 String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
                 ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
 
-                provider.setDestinationDimension(mapData.dimension);
-                provider.setDestinationPosition(banner.getPos());
-                provider.updateConsoleTiles();
+                tardis.setDestinationDimension(mapData.dimension);
+                tardis.setDestinationPosition(banner.getPos());
+                tardis.updateConsoleTiles();
             });
 
             success.set(true);

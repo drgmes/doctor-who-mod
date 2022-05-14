@@ -13,16 +13,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ClientboundTardisConsoleWorldDataUpdatePacket {
+public class ClientboundTardisConsoleLevelDataUpdatePacket {
     private final BlockPos blockPos;
     private final CompoundTag tardisWorldData;
 
-    public ClientboundTardisConsoleWorldDataUpdatePacket(BlockPos blockPos, CompoundTag tardisWorldData) {
+    public ClientboundTardisConsoleLevelDataUpdatePacket(BlockPos blockPos, CompoundTag tardisWorldData) {
         this.blockPos = blockPos;
         this.tardisWorldData = tardisWorldData;
     }
 
-    public ClientboundTardisConsoleWorldDataUpdatePacket(FriendlyByteBuf buffer) {
+    public ClientboundTardisConsoleLevelDataUpdatePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readNbt());
     }
 

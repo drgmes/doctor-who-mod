@@ -40,12 +40,13 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
             this.tardisLevelUUID = this.level.dimension().location().getPath();
 
             if (!this.level.isClientSide) {
-                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-                    if (!levelProvider.isValid()) return;
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                    if (!tardis.isValid()) return;
 
-                    levelProvider.setEntraceFacing(this.getBlockState().getValue(BaseTardisDoorsBlock.FACING));
-                    levelProvider.setEntracePosition(this.worldPosition);
-                    levelProvider.getInteriorDoorTiles().add(this);
+                    tardis.setEntraceFacing(this.getBlockState().getValue(BaseTardisDoorsBlock.FACING));
+                    tardis.setEntracePosition(this.worldPosition);
+                    tardis.getInteriorDoorTiles().add(this);
+                    tardis.updateDoorsTiles();
                 });
             }
         }
@@ -53,8 +54,8 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
 
     @Override
     public void setRemoved() {
-        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((levelProvider) -> {
-            if (levelProvider.isValid()) levelProvider.getInteriorDoorTiles().remove(this);
+        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (tardis.isValid()) tardis.getInteriorDoorTiles().remove(this);
         });
 
         super.setRemoved();

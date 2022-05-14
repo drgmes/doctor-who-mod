@@ -27,14 +27,14 @@ public class TardisKeyItem extends Item {
 
         ServerLevel tardisLevel = DimensionHelper.getLevel(level.getServer(), tag.getString("tardisDimUUID"));
         if (tardisLevel != null) {
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (!provider.isValid()) return;
-                if (provider.isDoorsLocked()) return;
-                if (provider.getLevel() != level && provider.getCurrentExteriorDimension() != level.dimension()) return;
-                if (provider.getLevel() != level && provider.getCurrentExteriorPosition().distManhattan(player.blockPosition()) > 10) return;
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (!tardis.isValid()) return;
+                if (tardis.isDoorsLocked()) return;
+                if (tardis.getLevel() != level && tardis.getCurrentExteriorDimension() != level.dimension()) return;
+                if (tardis.getLevel() != level && tardis.getCurrentExteriorPosition().distManhattan(player.blockPosition()) > 10) return;
 
-                if (provider.setDoorsOpenState(!provider.isDoorsOpened())) {
-                    provider.updateConsoleTiles();
+                if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
+                    tardis.updateConsoleTiles();
                 }
             });
 

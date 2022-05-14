@@ -8,13 +8,11 @@ import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.world.data.TardisLevelData;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -68,15 +66,6 @@ public class ModEvents {
 
         if (TardisHelper.isTardisDimension(level)) {
             level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent(ITardisLevelData::tick);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        if (event.getPlayer() instanceof ServerPlayer serverPlayer) {
-            serverPlayer.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                if (provider.isValid()) provider.updateConsoleTiles();
-            });
         }
     }
 

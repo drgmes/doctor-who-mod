@@ -82,6 +82,7 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
     boolean setEnergyArtronHarvesting(boolean flag);
     boolean setEnergyForgeHarvesting(boolean flag);
 
+    void updateDoorsTiles();
     void updateConsoleTiles();
     void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage);
     void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage);
