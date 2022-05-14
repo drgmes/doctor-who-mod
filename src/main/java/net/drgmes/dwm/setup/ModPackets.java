@@ -12,6 +12,7 @@ import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUpdatePacket;
+import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +35,10 @@ public class ModPackets {
 
     public static void setup() {
         int index = 0;
+
+        INSTANCE.messageBuilder(ServerboundScrewdriverUsePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundScrewdriverUsePacket::encode).decoder(ServerboundScrewdriverUsePacket::new)
+            .consumer(ServerboundScrewdriverUsePacket::handle).add();
 
         INSTANCE.messageBuilder(ServerboundScrewdriverUpdatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundScrewdriverUpdatePacket::encode).decoder(ServerboundScrewdriverUpdatePacket::new)

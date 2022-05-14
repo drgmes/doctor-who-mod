@@ -43,26 +43,35 @@ public class Screwdriver {
         }
     }
 
-    public static boolean interact(Level level, Player player, InteractionHand hand) {
+    public static boolean interact(Level level, Player player, InteractionHand hand, boolean isAlternativeAction) {
+        boolean wasUsed = false;
         ItemStack itemStack = player.getItemInHand(hand);
-        if (!(itemStack.getItem() instanceof ScrewdriverItem)) return false;
+        if (!(itemStack.getItem() instanceof ScrewdriverItem screwdriverItem)) return false;
+        if (player.getCooldowns().isOnCooldown(screwdriverItem)) return false;
 
         BaseScrewdriverMode mode = getInteractionMode(itemStack).getInstance();
         HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(itemStack));
-
-        if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) {
-            return false;
-        }
+        if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) return false;
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
-            return mode.interactWithBlock(level, player, hand, (BlockHitResult) hitResult);
+            if (!(wasUsed = mode.interactWithBlock(level, player, hand, (BlockHitResult) hitResult, isAlternativeAction))) {
+                if (isAlternativeAction) wasUsed = mode.interactWithBlockAlternative(level, player, hand, (BlockHitResult) hitResult);
+                else wasUsed = mode.interactWithBlockNative(level, player, hand, (BlockHitResult) hitResult);
+            }
+        }
+        else if (hitResult.getType() == HitResult.Type.ENTITY) {
+            if (!(wasUsed = mode.interactWithEntity(level, player, hand, (EntityHitResult) hitResult, isAlternativeAction))) {
+                if (isAlternativeAction) wasUsed = mode.interactWithEntityAlternative(level, player, hand, (EntityHitResult) hitResult);
+                else wasUsed = mode.interactWithEntityNative(level, player, hand, (EntityHitResult) hitResult);
+            }
         }
 
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            return mode.interactWithEntity(level, player, hand, (EntityHitResult) hitResult);
-        }
+        if (wasUsed) player.getCooldowns().addCooldown(screwdriverItem, getInteractionCooldownTime(itemStack));
+        return wasUsed;
+    }
 
-        return false;
+    public static int getInteractionCooldownTime(ItemStack itemStack) {
+        return 4;
     }
 
     public static double getInteractionDistance(ItemStack itemStack) {

@@ -4,13 +4,16 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisChunkLoader;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
+import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.world.data.TardisLevelData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -99,6 +102,30 @@ public class ModEvents {
             if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return;
 
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerUseLeftClickWithEmpty(PlayerInteractEvent.LeftClickEmpty event) {
+        if (event.getItemStack().getItem() instanceof ScrewdriverItem screwdriverItem) {
+            ModPackets.INSTANCE.sendToServer(new ServerboundScrewdriverUsePacket(event.getItemStack(), event.getHand(), true));
+            if (event.isCancelable()) event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerUseLeftClickWithBlock(PlayerInteractEvent.LeftClickBlock event) {
+        if (event.getItemStack().getItem() instanceof ScrewdriverItem screwdriverItem) {
+            screwdriverItem.useScrewdriver(event.getWorld(), event.getPlayer(), event.getHand(), true);
+            if (event.isCancelable()) event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAttackEntity(AttackEntityEvent event) {
+        if (event.getPlayer().getMainHandItem().getItem() instanceof ScrewdriverItem screwdriverItem) {
+            screwdriverItem.useScrewdriver(event.getPlayer().level, event.getPlayer(), InteractionHand.MAIN_HAND, true);
+            if (event.isCancelable()) event.setCanceled(true);
         }
     }
 }

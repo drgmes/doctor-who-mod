@@ -2,7 +2,6 @@ package net.drgmes.dwm.common.screwdriver.modes.scan;
 
 import java.util.List;
 
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.drgmes.dwm.DWM;

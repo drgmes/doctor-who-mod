@@ -3,6 +3,8 @@ package net.drgmes.dwm.common.screwdriver.modes.setting;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -44,29 +46,21 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     public static ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
 
     @Override
-    public boolean interactWithBlock(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!super.interactWithBlock(level, player, hand, hitResult)) return false;
-
+    public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
         Minecraft mc = Minecraft.getInstance();
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
 
-        // Torch
-        if (block instanceof TorchBlock) {
-            if (!level.isClientSide && player.isShiftKeyDown()) {
-                level.destroyBlock(blockPos, true);
-                return true;
-            }
+        // Tardis Exterior Block
+        if (block instanceof BaseTardisExteriorBlock) {
+            return false;
         }
 
-        // Glass Pane
-        if (block instanceof IronBarsBlock && blockState.getMaterial() == Material.GLASS) {
-            if (!level.isClientSide && player.isShiftKeyDown()) {
-                level.destroyBlock(blockPos, true);
-                return true;
-            }
+        // Tardis Doors Block
+        if (block instanceof BaseTardisDoorsBlock) {
+            return false;
         }
 
         // Bell
@@ -86,24 +80,15 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
         // Dispenser
         if (block instanceof DispenserBlock dispenserBlock) {
-            if (!level.isClientSide) {
-                dispenserBlock.tick(blockState, (ServerLevel) level, blockPos, level.random);
-            }
-
-            blockState = blockState.setValue(DispenserBlock.TRIGGERED, true);
-            level.setBlock(blockPos, blockState, 3);
-            blockState = blockState.setValue(DispenserBlock.TRIGGERED, false);
-            level.setBlock(blockPos, blockState, 3);
+            if (!level.isClientSide) dispenserBlock.tick(blockState, (ServerLevel) level, blockPos, level.random);
+            level.setBlock(blockPos, blockState.setValue(DispenserBlock.TRIGGERED, true), 3);
+            level.setBlock(blockPos, blockState.setValue(DispenserBlock.TRIGGERED, false), 3);
             return true;
         }
 
         // Jukebox
         if (block instanceof JukeboxBlock jukeboxBlock) {
-            if (player.isShiftKeyDown()) {
-                jukeboxBlock.use(blockState, level, blockPos, player, hand, hitResult);
-                return true;
-            }
-            else if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
+            if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
                 ItemStack disk = jukeboxBlockEntity.getRecord();
 
                 if (disk != null) {
@@ -115,22 +100,9 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
         // NoteBlock
         if (block instanceof NoteBlock noteBlock) {
-            if (player.isShiftKeyDown()) {
-                blockState = blockState.cycle(NoteBlock.INSTRUMENT);
-                level.setBlock(blockPos, blockState, 3);
-            }
-
-            if (mc.options.keySprint.isDown()) {
-                blockState = blockState.cycle(NoteBlock.NOTE);
-                level.setBlock(blockPos, blockState, 3);
-            }
-
             noteBlock.triggerEvent(blockState, level, blockPos, 0, 0);
-
-            blockState = blockState.setValue(NoteBlock.POWERED, true);
-            level.setBlock(blockPos, blockState, 3);
-            blockState = blockState.setValue(NoteBlock.POWERED, false);
-            level.setBlock(blockPos, blockState, 3);
+            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, true), 3);
+            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, false), 3);
             return true;
         }
 
@@ -143,10 +115,51 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     }
 
     @Override
-    public boolean interactWithEntity(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!super.interactWithEntity(level, player, hand, hitResult)) return false;
+    public boolean interactWithBlockAlternative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        BlockPos blockPos = hitResult.getBlockPos();
+        BlockState blockState = level.getBlockState(blockPos);
+        Block block = blockState.getBlock();
 
+        // Torch
+        if (block instanceof TorchBlock) {
+            if (player.isShiftKeyDown()) {
+                if (!level.isClientSide) level.destroyBlock(blockPos, true);
+                return true;
+            }
+        }
+
+        // Glass Pane
+        if (block instanceof IronBarsBlock && blockState.getMaterial() == Material.GLASS) {
+            if (player.isShiftKeyDown()) {
+                if (!level.isClientSide) level.destroyBlock(blockPos, true);
+                return true;
+            }
+        }
+
+        // Jukebox
+        if (block instanceof JukeboxBlock jukeboxBlock) {
+            jukeboxBlock.use(blockState, level, blockPos, player, hand, hitResult);
+            return true;
+        }
+
+        // NoteBlock
+        if (block instanceof NoteBlock noteBlock) {
+            blockState = player.isShiftKeyDown() ? blockState.cycle(NoteBlock.INSTRUMENT) : blockState.cycle(NoteBlock.NOTE);
+            level.setBlock(blockPos, blockState, 3);
+
+            noteBlock.triggerEvent(blockState, level, blockPos, 0, 0);
+            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, true), 3);
+            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, false), 3);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
         Entity entity = hitResult.getEntity();
+        if (!this.checkIsValidHitEntity(entity)) return false;
 
         // Trader Llama
         if (entity instanceof TraderLlama traderLlama) {
@@ -232,14 +245,12 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         };
 
         for (Property<?> prop : props) {
-            if (blockState.hasProperty(prop) && !level.isClientSide) {
-                blockState = blockState.cycle(prop);
-                level.setBlock(blockPos, blockState, 3);
+            if (blockState.hasProperty(prop)) {
+                if (!level.isClientSide) level.setBlock(blockPos, blockState.cycle(prop), 3);
                 return true;
             }
         }
 
-        System.out.println(blockState);
         return false;
     }
 }
