@@ -502,7 +502,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         controlsStorage.values.put(TardisConsoleControlRoles.LIGHT, this.isLightEnabled());
         controlsStorage.values.put(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, this.isEnergyArtronHarvesting());
         controlsStorage.values.put(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING, this.isEnergyForgeHarvesting());
-        controlsStorage.values.put(TardisConsoleControlRoles.FACING, this.getDestinationExteriorFacing().ordinal() - 2);
+        controlsStorage.values.put(TardisConsoleControlRoles.FACING, switch (this.getDestinationExteriorFacing()) {
+            default -> 0;
+            case EAST -> 1;
+            case SOUTH -> 2;
+            case WEST -> 3;
+        });
     }
 
     @Override
@@ -533,7 +538,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (!isInFlight) {
             // Facing
             int facing = (int) controlsStorage.get(TardisConsoleControlRoles.FACING);
-            this.destExteriorFacing = Direction.values()[(facing < 0 ? TardisConsoleControlRoles.FACING.maxIntValue + facing : facing) + 2];
+            this.destExteriorFacing = switch (facing >= 0 ? facing : TardisConsoleControlRoles.FACING.maxIntValue + facing) {
+                default -> Direction.NORTH;
+                case 1 -> Direction.EAST;
+                case 2 -> Direction.SOUTH;
+                case 3 -> Direction.WEST;
+            };
 
             // X Set
             int xSet = (int) controlsStorage.get(TardisConsoleControlRoles.XSET);

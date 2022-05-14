@@ -412,7 +412,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             -> new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + value));
 
             case FACING
-            -> isInFlight ? null : new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + value));
+            -> isInFlight ? null : new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + (provider.getDestinationExteriorFacing().ordinal() - 2)));
 
             case XYZSTEP
             -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getXYZStep());
