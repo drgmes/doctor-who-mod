@@ -13,7 +13,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IBaseScreen {
+public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IBaseScreen {
     protected int frame = 0;
 
     public BaseContainerScreen(T menu, Inventory inventory, Component component) {
@@ -42,6 +42,11 @@ public class BaseContainerScreen<T extends AbstractContainerMenu> extends Abstra
     @Override
     public Component getTitle() {
         return this.title;
+    }
+
+    @Override
+    public Component getTitleComponent() {
+        return this.getTitle();
     }
 
     @Override

@@ -14,7 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
-public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
+public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
     protected static final int LINE_PADDING = 3;
     protected static final int BUTTON_HEIGHT = 20;
     protected static final int BACKGROUND_BORDERS = 24;
@@ -47,6 +47,11 @@ public class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implement
     @Override
     public Component getTitle() {
         return this.title;
+    }
+
+    @Override
+    public Component getTitleComponent() {
+        return this.getTitle();
     }
 
     @Override

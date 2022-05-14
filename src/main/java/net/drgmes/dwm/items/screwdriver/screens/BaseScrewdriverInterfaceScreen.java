@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
-public class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScreen {
+public abstract class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScreen {
     protected static final int PADDING = 5;
     protected static final int BACKGROUND_BORDERS = 19;
     protected static final int BUTTON_HEIGHT = 20;
@@ -52,6 +52,11 @@ public class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScree
     @Override
     public Component getTitle() {
         return this.title;
+    }
+
+    @Override
+    public Component getTitleComponent() {
+        return this.getTitle();
     }
 
     @Override

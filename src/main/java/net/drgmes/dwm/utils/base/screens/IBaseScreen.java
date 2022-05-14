@@ -21,7 +21,7 @@ public interface IBaseScreen {
 
     Font getFont();
 
-    Component getTitle();
+    Component getTitleComponent();
 
     ResourceLocation getBackground();
 
@@ -75,7 +75,7 @@ public interface IBaseScreen {
 
     default void renderTitle(PoseStack poseStack) {
         Vec2 pos = this.getTitleRenderPos();
-        this.getFont().drawShadow(poseStack, this.getTitle(), pos.x, pos.y, 0xE0E0E0);
+        this.getFont().drawShadow(poseStack, this.getTitleComponent(), pos.x, pos.y, 0xE0E0E0);
     }
 
     default void renderBackground(PoseStack poseStack, int mouseX, int mouseY) {
