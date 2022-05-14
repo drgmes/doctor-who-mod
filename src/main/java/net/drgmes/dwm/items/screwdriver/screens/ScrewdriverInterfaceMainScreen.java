@@ -18,7 +18,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
 
     @Override
     protected void init() {
-        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2 - PADDING * 3) / 2;
+        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2 - PADDING * 2);
         int buttonOffset = (int) (BACKGROUND_BORDERS + PADDING);
 
         Vec2 modeButtonPos = this.getRenderPos(BACKGROUND_BORDERS + PADDING, buttonOffset);

@@ -20,8 +20,11 @@
 
 	"item.dwm.tardis_key_1": "Tardis Key",
 
+	"title.dwm.tardis_uuid": "Tardis: %s",
+	"title.dwm.screwdriver.mode": "Mode: %s",
 	"title.dwm.screwdriver.mode.scan": "Scan",
 	"title.dwm.screwdriver.mode.setting": "Setting",
+	"title.dwm.screwdriver.mode.tardis_relocation": "TARDIS Relocation",
 
 	"screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
@@ -71,5 +74,7 @@
 	"message.dwm.tardis.control.role.xset": "X: %s",
 	"message.dwm.tardis.control.role.yset": "Y: %s",
 	"message.dwm.tardis.control.role.zset": "Z: %s",
-	"message.dwm.tardis.control.role.xyzstep": "Scaling: %s"
+	"message.dwm.tardis.control.role.xyzstep": "Scaling: %s",
+
+	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s"
 }

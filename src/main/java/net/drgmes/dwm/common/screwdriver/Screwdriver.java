@@ -4,8 +4,10 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.drgmes.dwm.common.screwdriver.modes.scan.ScrewdriverScanMode;
 import net.drgmes.dwm.common.screwdriver.modes.setting.ScrewdriverSettingMode;
+import net.drgmes.dwm.common.screwdriver.modes.tardis.ScrewdriverTardisMode;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -19,7 +21,8 @@ import net.minecraft.world.phys.HitResult;
 public class Screwdriver {
     public static enum ScrewdriverMode {
         SCAN(ScrewdriverScanMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SCAN),
-        SETTING(ScrewdriverSettingMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SETTING);
+        SETTING(ScrewdriverSettingMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SETTING),
+        TARDIS_RELOCATION(ScrewdriverTardisMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_TARDIS_RELOCATION);
 
         private BaseScrewdriverMode mode;
         private Component title;
@@ -78,20 +81,30 @@ public class Screwdriver {
         return 100D;
     }
 
+    public static CompoundTag getData(ItemStack itemStack) {
+        return itemStack.getOrCreateTagElement("screwdriverData");
+    }
+
     public static ScrewdriverMode getInteractionMode(ItemStack itemStack) {
         ScrewdriverMode mode = null;
-        CompoundTag tag = getCompoundTag(itemStack);
+        CompoundTag tag = getData(itemStack);
         if (tag.contains("mode")) mode = ScrewdriverMode.valueOf(tag.getString("mode"));
 
         return mode != null ? mode : ScrewdriverMode.SCAN;
     }
 
     public static ScrewdriverMode setInteractionMode(ItemStack itemStack, ScrewdriverMode mode) {
-        getCompoundTag(itemStack).putString("mode", mode.name());
+        getData(itemStack).putString("mode", mode.name());
         return mode;
     }
 
-    private static CompoundTag getCompoundTag(ItemStack itemStack) {
-        return itemStack.getOrCreateTagElement("screwdriverData");
+    public static String getTardisUUID(ItemStack itemStack) {
+        CompoundTag tag = getData(itemStack);
+        return !tag.contains("tardisDimUUID") ? "" : tag.getString("tardisDimUUID");
+    }
+
+    public static void assingTardisUUID(ItemStack itemStack, Level level) {
+        if (!TardisHelper.isTardisDimension(level)) return;
+        Screwdriver.getData(itemStack).putString("tardisDimUUID", level.dimension().location().getPath());
     }
 }

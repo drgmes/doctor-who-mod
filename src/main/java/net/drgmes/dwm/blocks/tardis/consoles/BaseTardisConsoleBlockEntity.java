@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.TardisLevelDataCapability;
+import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
@@ -313,6 +314,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             }
 
             if (isChanged) {
+                if (this.screwdriverItemStack != null) Screwdriver.assingTardisUUID(this.screwdriverItemStack, this.level);
                 this.sendScrewdriverSlotUpdatePacket();
                 this.setChanged();
             }

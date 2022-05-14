@@ -1,23 +1,49 @@
 package net.drgmes.dwm.items.screwdriver;
 
+import java.util.List;
+
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class ScrewdriverItem extends Item {
     public ScrewdriverItem(Item.Properties props) {
         super(props);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(TextComponent.EMPTY);
+
+        MutableComponent mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
+        MutableComponent modeText = new TranslatableComponent("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+        list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+
+        String tardisDimUUID = Screwdriver.getTardisUUID(itemStack);
+        if (tardisDimUUID != "") {
+            MutableComponent tardis = new TextComponent(tardisDimUUID.substring(0, 8));
+            MutableComponent tardisText = new TranslatableComponent("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+            list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+        }
+
+        super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 
     @Override

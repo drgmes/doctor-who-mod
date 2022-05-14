@@ -41,6 +41,7 @@ public class DWM {
 
         public static final Component SCREWDRIVER_MODE_SCAN = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.scan");
         public static final Component SCREWDRIVER_MODE_SETTING = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.setting");
+        public static final Component SCREWDRIVER_MODE_TARDIS_RELOCATION = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation");
 
         public static final Component SCREWDRIVER_INTERFACE_NAME = new TranslatableComponent("screen." + DWM.MODID + ".screwdriver_interface.title");
         public static final Function<Screwdriver.ScrewdriverMode, Component> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> new TranslatableComponent("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle());
