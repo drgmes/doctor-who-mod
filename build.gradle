@@ -17,7 +17,7 @@ apply plugin: 'net.minecraftforge.gradle'
 
 version = '1.0'
 group = 'net.drgmes.dwm'
-archivesBaseName = 'dwm'
+archivesBaseName = 'DoctorWhoMod'
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
@@ -97,7 +97,7 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.18.2-40.0.42'
+    minecraft 'net.minecraftforge:forge:1.18.2-40.1.19'
 }
 
 jar {

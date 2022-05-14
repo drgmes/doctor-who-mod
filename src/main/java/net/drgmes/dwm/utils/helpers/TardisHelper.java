@@ -65,13 +65,9 @@ public class TardisHelper {
         ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(tile), TardisHelper::tardisDimensionBuilder);
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            try {
                 provider.setDimension(level.dimension(), false);
                 provider.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
                 provider.setPosition(tile.getBlockPos(), false);
-            } catch(Exception e) {
-                System.out.println(e);
-            }
         });
 
         if (server.getLevel(levelKey) != null) return tardisLevel;

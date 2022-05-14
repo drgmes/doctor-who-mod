@@ -2,6 +2,10 @@ package net.drgmes.dwm;
 
 import java.util.function.Function;
 
+import com.mojang.logging.LogUtils;
+
+import org.slf4j.Logger;
+
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.setup.Registration;
 import net.minecraft.network.chat.Component;
@@ -12,6 +16,8 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod(DWM.MODID)
 public class DWM {
+    public static final Logger LOGGER = LogUtils.getLogger();
+
     public static final String MODID = "dwm";
     public static final int CHUNKS_UPDATE_RADIUS = 2;
 

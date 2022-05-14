@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.consoles;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
@@ -43,7 +44,7 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
                     if (controlEntry.type == TardisConsoleControlEntryTypes.SLIDER) this.animateSlider(model, (int) value, controlRole, partialTicks);
                     if (controlEntry.type == TardisConsoleControlEntryTypes.ROTATOR) this.animateRotator(model, controlRole.maxIntValue + (int) value, controlRole, partialTicks);
                 }
-    
+
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER && value instanceof Boolean) this.activateLever(model, (boolean) value, controlRole, partialTicks);
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.LEVER && value instanceof Integer) this.activateLever(model, (int) value, controlRole, partialTicks);
                 else if (controlEntry.type == TardisConsoleControlEntryTypes.BUTTON && value instanceof Boolean) this.activateButton(model, (boolean) value, controlRole, partialTicks);
@@ -54,7 +55,7 @@ public abstract class BaseTardisConsoleBlockRenderer implements BlockEntityRende
             }
         }
         catch (Exception e) {
-            System.out.println(e);
+            DWM.LOGGER.error("Error in animating ModelPart");
         }
     }
 
