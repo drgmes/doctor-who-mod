@@ -18,6 +18,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -65,9 +66,9 @@ public class TardisHelper {
         ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(tile), TardisHelper::tardisDimensionBuilder);
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-                provider.setDimension(level.dimension(), false);
-                provider.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
-                provider.setPosition(tile.getBlockPos(), false);
+            provider.setDimension(level.dimension(), false);
+            provider.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
+            provider.setPosition(tile.getBlockPos(), false);
         });
 
         if (server.getLevel(levelKey) != null) return tardisLevel;
@@ -126,6 +127,11 @@ public class TardisHelper {
             entity = repositionEntity.apply(false);
             entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
             return entity;
+        }
+
+        @Override
+        public boolean playTeleportSound(ServerPlayer player, ServerLevel level, ServerLevel destination) {
+            return false;
         }
     }
 }
