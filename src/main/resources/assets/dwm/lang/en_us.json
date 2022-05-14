@@ -1,6 +1,9 @@
 {
 	"itemGroup.dwm": "Doctor Who",
 
+	"key.dwm.categories.main": "Doctor Who",
+	"key.dwm.screwdriver_settings_key": "Screwdriver Settings",
+
 	"block.dwm.tardis_exterior_police_box": "Tardis Police Box",
 
 	"block.dwm.tardis_doors_police_box": "Tardis Police Box Doors",

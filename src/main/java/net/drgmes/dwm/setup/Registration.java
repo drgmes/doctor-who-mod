@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.DataGenerators;
 import net.minecraft.Util;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -95,6 +97,7 @@ public class Registration {
 
     @OnlyIn(Dist.CLIENT)
     public static void setupClient(FMLClientSetupEvent event) {
+        ModKeys.setup();
         ModRender.setup();
         ModContainerScreens.setup();
 
@@ -162,5 +165,11 @@ public class Registration {
 
     public static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(DWM.MODID, name)));
+    }
+
+    public static KeyMapping registerKeyBinding(String name, String category, int keycode) {
+        KeyMapping key = new KeyMapping("key." + DWM.MODID + "." + name, keycode, category);
+        ClientRegistry.registerKeyBinding(key);
+        return key;
     }
 }
