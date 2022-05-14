@@ -365,8 +365,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
         Direction exteriorFacing = this.tardisData.getCurrentExteriorFacing();
         BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
-        BlockPos safePosition = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, exteriorFacing) ? exteriorBlockPos : null;
-        if (this.checkBlockIsReachedMaxHeight(exteriorLevel, exteriorBlockPos, safeDirection)) return false;
+        BlockPos safePosition = null;
 
         if (this.safeDirection == TardisSystemMaterializationSafeDirection.TOP) {
             if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
