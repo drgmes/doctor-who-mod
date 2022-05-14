@@ -44,4 +44,29 @@ public class DWMUtils {
             || !blockState.canOcclude()
         );
     }
+
+    public static String capitaliseAllWords(String str) {
+        if (str == null) return null;
+
+        boolean space = true;
+        StringBuilder buffer = new StringBuilder(str.length());
+
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+
+            if (Character.isWhitespace(ch)) {
+                buffer.append(ch);
+                space = true;
+            }
+            else if (space) {
+                buffer.append(Character.toTitleCase(ch));
+                space = false;
+            }
+            else {
+                buffer.append(ch);
+            }
+        }
+
+        return buffer.toString();
+    }
 }

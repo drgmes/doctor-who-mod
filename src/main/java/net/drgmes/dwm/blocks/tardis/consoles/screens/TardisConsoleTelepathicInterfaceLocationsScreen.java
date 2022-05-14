@@ -11,13 +11,12 @@ import java.util.function.Function;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import org.codehaus.plexus.util.StringUtils;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -217,7 +216,7 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
 
             @Override
             public Component getNarration() {
-                return new TranslatableComponent(StringUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                return new TranslatableComponent(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
             }
 
             @Override

@@ -6,12 +6,11 @@ import java.util.function.Function;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import org.codehaus.plexus.util.StringUtils;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -133,7 +132,7 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
 
             @Override
             public Component getNarration() {
-                return new TranslatableComponent(StringUtils.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
+                return new TranslatableComponent(DWMUtils.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
             }
 
             @Override
