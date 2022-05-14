@@ -15,6 +15,7 @@ import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.drgmes.dwm.utils.helpers.TardisHelper.TardisTeleporter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -362,16 +363,18 @@ public class TardisSystemMaterialization implements ITardisSystem {
         ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
         if (exteriorLevel == null) return false;
 
+        Direction exteriorFacing = this.tardisData.getCurrentExteriorFacing();
         BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
-        BlockPos safePosition = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos) ? exteriorBlockPos : null;
+        BlockPos safePosition = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, exteriorFacing) ? exteriorBlockPos : null;
+        if (this.checkBlockIsReachedMaxHeight(exteriorLevel, exteriorBlockPos, safeDirection)) return false;
 
         if (this.safeDirection == TardisSystemMaterializationSafeDirection.TOP) {
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.TOP);
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.BOTTOM);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
         }
         else if (this.safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) {
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.BOTTOM);
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, TardisSystemMaterializationSafeDirection.TOP);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
+            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
         }
 
         if (safePosition != null) {
@@ -383,7 +386,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return false;
     }
 
-    private BlockPos getSafePosition(ServerLevel exteriorLevel, BlockPos exteriorBlockPos, TardisSystemMaterializationSafeDirection safeDirection) {
+    private BlockPos getSafePosition(ServerLevel exteriorLevel, BlockPos exteriorBlockPos, Direction exteriorFacing, TardisSystemMaterializationSafeDirection safeDirection) {
         if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.below();
         else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.above();
         else return null;
@@ -392,7 +395,21 @@ public class TardisSystemMaterialization implements ITardisSystem {
         do {
             if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.above();
             else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.below();
-            freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos);
+
+            freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, exteriorFacing);
+
+            if (!freeSpaceFound) {
+                for (Direction direction : Direction.values()) {
+                    if (direction == exteriorFacing) continue;
+                    freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, direction);
+
+                    if (freeSpaceFound) {
+                        this.tardisData.setFacing(direction, false);
+                        this.tardisData.setDestinationFacing(direction);
+                        break;
+                    }
+                }
+            }
         } while (!freeSpaceFound && !this.checkBlockIsReachedMaxHeight(exteriorLevel, exteriorBlockPos, safeDirection));
 
         return freeSpaceFound ? exteriorBlockPos : null;
@@ -405,8 +422,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return false;
     }
 
-    private boolean checkBlockIsSafe(Level level, BlockPos blockPos) {
-        BlockPos frontBlockPos = blockPos.relative(this.tardisData.getCurrentExteriorFacing());
+    private boolean checkBlockIsSafe(Level level, BlockPos blockPos, Direction direction) {
+        BlockPos frontBlockPos = blockPos.relative(direction);
 
         boolean isEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos));
         boolean isUpEmpty = DWMUtils.checkBlockIsEmpty(level.getBlockState(blockPos.above()));

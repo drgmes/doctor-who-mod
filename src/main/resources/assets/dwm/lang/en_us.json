@@ -24,7 +24,7 @@
 	"title.dwm.screwdriver.mode": "Mode: %s",
 	"title.dwm.screwdriver.mode.scan": "Scan",
 	"title.dwm.screwdriver.mode.setting": "Setting",
-	"title.dwm.screwdriver.mode.tardis_relocation": "TARDIS Relocation",
+	"title.dwm.screwdriver.mode.tardis_relocation": "Relocation",
 
 	"screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
