@@ -79,7 +79,7 @@ public class TardisSystemFlight implements ITardisSystem {
                 BlockPos destExteriorPosition = this.tardisData.getDestinationExteriorPosition();
                 ResourceKey<Level> currExteriorDimension = this.tardisData.getCurrentExteriorDimension();
                 ResourceKey<Level> destExteriorDimension = this.tardisData.getDestinationExteriorDimension();
-                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 100);
+                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 200);
                 float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
 
                 this.isSoundFlyPlayed = false;
