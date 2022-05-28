@@ -11,14 +11,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent;
 
-public class ServerboundTardisConsoleLevelDataUpdatePacket {
+public class ServerboundTardisConsoleInitPacket {
     private final BlockPos blockPos;
 
-    public ServerboundTardisConsoleLevelDataUpdatePacket(BlockPos blockPos) {
+    public ServerboundTardisConsoleInitPacket(BlockPos blockPos) {
         this.blockPos = blockPos;
     }
 
-    public ServerboundTardisConsoleLevelDataUpdatePacket(FriendlyByteBuf buffer) {
+    public ServerboundTardisConsoleInitPacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos());
     }
 

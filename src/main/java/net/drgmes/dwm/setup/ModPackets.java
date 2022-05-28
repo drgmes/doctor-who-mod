@@ -13,9 +13,10 @@ import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleLevelDataUpdatePacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
+import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -45,9 +46,13 @@ public class ModPackets {
             .encoder(ServerboundScrewdriverUpdatePacket::encode).decoder(ServerboundScrewdriverUpdatePacket::new)
             .consumer(ServerboundScrewdriverUpdatePacket::handle).add();
 
-        INSTANCE.messageBuilder(ServerboundTardisConsoleLevelDataUpdatePacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-            .encoder(ServerboundTardisConsoleLevelDataUpdatePacket::encode).decoder(ServerboundTardisConsoleLevelDataUpdatePacket::new)
-            .consumer(ServerboundTardisConsoleLevelDataUpdatePacket::handle).add();
+        INSTANCE.messageBuilder(ServerboundTardisInteriorDoorsInitPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisInteriorDoorsInitPacket::encode).decoder(ServerboundTardisInteriorDoorsInitPacket::new)
+            .consumer(ServerboundTardisInteriorDoorsInitPacket::handle).add();
+
+        INSTANCE.messageBuilder(ServerboundTardisConsoleInitPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisConsoleInitPacket::encode).decoder(ServerboundTardisConsoleInitPacket::new)
+            .consumer(ServerboundTardisConsoleInitPacket::handle).add();
 
         INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket::new)

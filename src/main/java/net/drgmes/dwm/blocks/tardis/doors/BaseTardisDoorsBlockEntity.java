@@ -1,6 +1,8 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
+import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -35,21 +37,7 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-
-        if (TardisHelper.isTardisDimension(this.level)) {
-            this.tardisLevelUUID = this.level.dimension().location().getPath();
-
-            if (!this.level.isClientSide) {
-                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-                    if (!tardis.isValid()) return;
-
-                    tardis.setEntraceFacing(this.getBlockState().getValue(BaseTardisDoorsBlock.FACING));
-                    tardis.setEntracePosition(this.worldPosition);
-                    tardis.getInteriorDoorTiles().add(this);
-                    tardis.updateDoorsTiles();
-                });
-            }
-        }
+        this.init();
     }
 
     @Override
@@ -59,5 +47,26 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
         });
 
         super.setRemoved();
+    }
+
+    public void init() {
+        if (TardisHelper.isTardisDimension(this.level)) {
+            this.tardisLevelUUID = this.level.dimension().location().getPath();
+
+            if (!this.level.isClientSide) {
+                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                    if (!tardis.isValid()) return;
+                    if (tardis.getInteriorDoorTiles().contains(this)) return;
+
+                    tardis.setEntraceFacing(this.getBlockState().getValue(BaseTardisDoorsBlock.FACING));
+                    tardis.setEntracePosition(this.worldPosition);
+                    tardis.getInteriorDoorTiles().add(this);
+                    tardis.updateDoorsTiles();
+                });
+            }
+            else {
+                ModPackets.INSTANCE.sendToServer(new ServerboundTardisInteriorDoorsInitPacket(this.worldPosition));
+            }
+        }
     }
 }

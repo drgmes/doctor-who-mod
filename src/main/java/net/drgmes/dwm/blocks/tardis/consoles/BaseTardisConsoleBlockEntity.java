@@ -21,7 +21,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleLevelDataUpdatePacket;
+import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -144,13 +144,14 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             if (!this.level.isClientSide) {
                 this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                     if (!tardis.isValid()) return;
-    
+                    if (tardis.getConsoleTiles().contains(this)) return;
+
                     tardis.getConsoleTiles().add(this);
                     tardis.updateConsoleTiles();
                 });
             }
             else {
-                ModPackets.INSTANCE.sendToServer(new ServerboundTardisConsoleLevelDataUpdatePacket(this.worldPosition));
+                ModPackets.INSTANCE.sendToServer(new ServerboundTardisConsoleInitPacket(this.worldPosition));
             }
         }
     }
