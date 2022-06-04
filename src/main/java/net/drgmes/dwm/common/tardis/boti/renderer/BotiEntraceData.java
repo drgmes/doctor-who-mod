@@ -1,10 +1,11 @@
-package net.drgmes.dwm.common.boti;
+package net.drgmes.dwm.common.tardis.boti.renderer;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
@@ -12,6 +13,8 @@ import net.minecraft.world.phys.Vec3;
 public class BotiEntraceData {
     private final Vec3 position;
     private final String tardisLevelUUID;
+
+    private BotiStorage botiStorage;
     private Consumer<PoseStack> botiTransformer;
     private BiConsumer<PoseStack, MultiBufferSource> doorsRenderer;
     private BiConsumer<PoseStack, MultiBufferSource> botiRenderer;
@@ -31,6 +34,14 @@ public class BotiEntraceData {
 
     public String getTardisLevelUUID() {
         return this.tardisLevelUUID;
+    }
+
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
+    }
+
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
     }
 
     public void setDoorsRenderer(BiConsumer<PoseStack, MultiBufferSource> consumer) {

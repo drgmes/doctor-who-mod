@@ -5,8 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
-import net.drgmes.dwm.common.boti.BotiEntraceData;
-import net.drgmes.dwm.common.boti.BotiManager;
+import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntraceData;
+import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -53,50 +53,50 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         float alphaClamped = percent < 10 ? 0 : Math.max(0, Math.min(1.0F, alpha));
 
         poseStack.pushPose();
-        this.setupModelView(poseStack, face, true);
+        this.setupModelView(poseStack, face);
         model.renderToBuffer(poseStack, vertexConsumer, packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
         poseStack.popPose();
 
         BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID);
+        entraceData.setBotiStorage(tile.getBotiStorage());
 
         entraceData.setDoorsRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face, true);
+            this.setupModelView(innerPoseStack, face);
             model.renderDoorsToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face, true);
+            this.setupModelView(innerPoseStack, face);
             model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
             innerPoseStack.popPose();
         });
 
         entraceData.setBotiTransformer((innerPoseStack) -> {
-            this.setupModelView(innerPoseStack, face, false);
-            innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
+            innerPoseStack.translate(0.5, 0, 0.5);
+            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+            innerPoseStack.mulPose(Vector3f.YN.rotationDegrees(face.toYRot()));
+            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(entraceData.getBotiStorage().getDirection().toYRot()));
             innerPoseStack.translate(-0.5, 0, -0.5);
         });
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
-            BotiManager.addEntraceData(entraceData);
+            BotiRenderer.addEntraceData(entraceData);
         }
         else {
             entraceData.renderDoors(poseStack, buffer);
         }
     }
 
-    public void setupModelView(PoseStack poseStack, Direction face, boolean scaling) {
+    public void setupModelView(PoseStack poseStack, Direction face) {
+        float scale = 1.25F;
         poseStack.translate(0.5, 0.5, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
         poseStack.translate(0, -1.6, 0);
-
-        if (scaling) {
-            float scale = 1.25F;
-            poseStack.scale(scale, scale + 0.15F, scale);
-        }
+        poseStack.scale(scale, scale + 0.15F, scale);
     }
 }

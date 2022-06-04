@@ -1,4 +1,4 @@
-package net.drgmes.dwm.common.boti;
+package net.drgmes.dwm.common.tardis.boti.renderer;
 
 import java.util.Map;
 
@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -19,15 +20,9 @@ public class BotiVBO {
     public Map<RenderType, VertexBuffer> vbos = Maps.newHashMap();
 
     public BotiVBO() {
-        init();
-    }
-
-    public void init() {
         for (RenderType type : RenderType.chunkBufferLayers()) {
-            BufferBuilder buffer = new BufferBuilder(format.getVertexSize());
-
+            sources.put(type, MultiBufferSource.immediate(new BufferBuilder(format.getVertexSize())));
             vbos.put(type, new VertexBuffer());
-            sources.put(type, MultiBufferSource.immediate(buffer));
         }
     }
 
@@ -39,12 +34,12 @@ public class BotiVBO {
         return this.vbos.getOrDefault(type, this.vbos.get(RenderType.solid()));
     }
 
-    public BufferSource getBufferSource(RenderType type) {
-        return this.sources.getOrDefault(type, this.sources.get(RenderType.solid()));
-    }
-
     public BufferBuilder getBufferBuilder(RenderType type) {
         return (BufferBuilder) this.getBufferSource(type).getBuffer(type);
+    }
+
+    public BufferSource getBufferSource(RenderType type) {
+        return this.sources.getOrDefault(type, this.sources.get(RenderType.solid()));
     }
 
     public void resetData(RenderType type) {
@@ -53,16 +48,10 @@ public class BotiVBO {
     }
 
     public void upload(RenderType type) {
-        BufferBuilder bb = this.getBufferBuilder(type);
+        BufferBuilder builder = this.getBufferBuilder(type);
 
-        if (bb.building()) {
-            bb.end();
-        }
-
-        try {
-            this.getVBO(type).upload(bb);
-        } catch (Exception e) {
-        }
+        if (builder.building()) builder.end();
+        this.getVBO(type).upload(builder);
     }
 
     public void unbind(RenderType type) {
@@ -71,15 +60,14 @@ public class BotiVBO {
         VertexBuffer.unbind();
     }
 
-    public void draw(Matrix4f matrix) {
+    public void draw(Matrix4f matrix4f) {
         for (RenderType type : this.vbos.keySet()) {
             this.begin(type);
-            format.setupBufferState();
+            // format.setupBufferState();
             type.setupRenderState();
-            this.getVBO(type).draw();
-            // this.getVBO(type).drawWithShader(matrix, matrix, GameRenderer.getBlockShader());
+            this.getVBO(type).drawWithShader(matrix4f, matrix4f, GameRenderer.getBlockShader());
             type.clearRenderState();
-            format.clearBufferState();
+            // format.clearBufferState();
             VertexBuffer.unbind();
         }
     }

@@ -1,9 +1,11 @@
-package net.drgmes.dwm.common.boti;
+package net.drgmes.dwm.common.tardis.boti.renderer;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
+
+import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
@@ -14,9 +16,10 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
-import org.lwjgl.opengl.GL11;
-
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
+import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockEntityWrapper;
+import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockWrapper;
 import net.drgmes.dwm.setup.ModConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -24,21 +27,26 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = DWM.MODID)
-public class BotiManager {
+public class BotiRenderer {
     private static final List<BotiEntraceData> entracesData = new ArrayList<>();
     private static final Minecraft mc = Minecraft.getInstance();
     private static final BotiVBO vbo = new BotiVBO();
@@ -60,23 +68,28 @@ public class BotiManager {
 
     @SubscribeEvent
     public static void onRenderLevelLast(RenderLevelLastEvent event) {
-        PoseStack poseStack = event.getPoseStack();
-        Vec3 proj = mc.gameRenderer.getMainCamera().getPosition();
+        if (ModConfig.CLIENT.botiEnabled.get()) {
+            PoseStack poseStack = event.getPoseStack();
+            Vec3 proj = mc.gameRenderer.getMainCamera().getPosition();
 
-        inRenderProcess = true;
-        poseStack.pushPose();
-
-        for (BotiEntraceData entraceData : entracesData) {
+            inRenderProcess = true;
             poseStack.pushPose();
-            poseStack.translate(-proj.x, -proj.y, -proj.z);
-            poseStack.translate(entraceData.getPosition().x(), entraceData.getPosition().y(), entraceData.getPosition().z());
-            start(entraceData, poseStack, event.getProjectionMatrix(), event.getPartialTick());
+
+            for (BotiEntraceData entraceData : entracesData) {
+                if (entraceData.getBotiStorage() == null) continue;
+
+                poseStack.pushPose();
+                poseStack.translate(-proj.x, -proj.y, -proj.z);
+                poseStack.translate(entraceData.getPosition().x(), entraceData.getPosition().y(), entraceData.getPosition().z());
+                start(entraceData, poseStack, event.getProjectionMatrix(), event.getPartialTick());
+                poseStack.popPose();
+            }
+
             poseStack.popPose();
+            inRenderProcess = false;
         }
 
         entracesData.clear();
-        poseStack.popPose();
-        inRenderProcess = false;
     }
 
     public static void addEntraceData(BotiEntraceData entraceData) {
@@ -89,11 +102,9 @@ public class BotiManager {
         setupFBO();
         setFBOColor();
 
-        if (ModConfig.CLIENT.enableBoti.get()) {
-            poseStack.pushPose();
-            draw(entraceData, poseStack, matrix4f, partialTicks);
-            poseStack.popPose();
-        }
+        poseStack.pushPose();
+        draw(entraceData, poseStack, matrix4f, partialTicks);
+        poseStack.popPose();
 
         BufferBuilder underlyingBuffer = Tesselator.getInstance().getBuilder();
         BufferSource imBuffer = MultiBufferSource.immediate(underlyingBuffer);
@@ -105,7 +116,7 @@ public class BotiManager {
 
         setupStencil(poseStack, imBuffer, entraceData::renderBoti);
         fbo.blitToScreen(fbo.viewWidth, fbo.viewHeight, true);
-        endStencil(poseStack, imBuffer, entraceData::renderBoti);
+        endStencil();
 
         RenderSystem.resetTextureMatrix();
         endFBO();
@@ -113,49 +124,83 @@ public class BotiManager {
 
     @SuppressWarnings("deprecation")
     private static void draw(BotiEntraceData entraceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
-        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-        mc.textureManager.bindForSetup(TextureAtlas.LOCATION_BLOCKS);
         entraceData.transformBoti(poseStack);
-        poseStack.translate(0, -2, 0);
+        GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
-        BotiBlocksStorage storage = BotiBlocksStorage.getStorage(entraceData.getTardisLevelUUID());
+        poseStack.pushPose();
+        mc.textureManager.bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 
-        if (storage.isUpdated || true) {
-            storage.isUpdated = false;
+        BotiStorage botiStorage = entraceData.getBotiStorage();
+        if (botiStorage.isUpdated || true) {
+            botiStorage.isUpdated = false;
 
             for (RenderType type : RenderType.chunkBufferLayers()) {
                 vbo.begin(type);
                 type.setupRenderState();
                 vbo.resetData(type);
 
-                boolean hasRenderedInLayer = false;
+                boolean isRendered = false;
+                PoseStack innerPoseStack = poseStack;
+                // PoseStack innerPoseStack = new PoseStack();
 
-                for (Entry<BlockPos, BlockState> entry : storage.blockEntries.entrySet()) {
+                for (Entry<BlockPos, BotiBlockEntityWrapper> entry : botiStorage.blockEntities.entrySet()) {
                     Vec3 pos = Vec3.atLowerCornerOf(entry.getKey());
-                    BlockState blockState = entry.getValue();
+
+                    BotiBlockEntityWrapper botiBlockEntityWrapper = entry.getValue();
+                    BlockState blockState = botiBlockEntityWrapper.getBlockState();
+                    BlockEntity blockEntity = botiBlockEntityWrapper.createBlockEntity(mc.level);
 
                     poseStack.pushPose();
                     poseStack.translate(pos.x(), pos.y(), pos.z());
 
-                    if (blockState.getFluidState().isEmpty()) {
-                        if (ItemBlockRenderTypes.canRenderInLayer(blockState, type)) {
-                            mc.getBlockRenderer().renderSingleBlock(blockState, poseStack, vbo.getBufferSource(type), LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, EmptyModelData.INSTANCE);
-                            hasRenderedInLayer = true;
+                    if (ItemBlockRenderTypes.canRenderInLayer(blockState, type)) {
+                        BlockEntityRenderer<BlockEntity> renderer = mc.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+                        if (renderer != null) {
+                            renderer.render(blockEntity, partialTicks, poseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
+                            botiStorage.blocks.remove(entry.getKey());
+                            isRendered = true;
                         }
-                    }
-                    else if (ItemBlockRenderTypes.canRenderInLayer(blockState.getFluidState(), type)) {
-                        if (!vbo.getBufferBuilder(type).building()) {
-                            vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
-                        }
-
-                        mc.getBlockRenderer().renderLiquid(entry.getKey(), mc.level, vbo.getBufferBuilder(type), blockState, blockState.getFluidState());
-                        hasRenderedInLayer = true;
                     }
 
                     poseStack.popPose();
                 }
 
-                if (hasRenderedInLayer) {
+                for (Entry<BlockPos, BotiBlockWrapper> entry : botiStorage.blocks.entrySet()) {
+                    Vec3 pos = Vec3.atLowerCornerOf(entry.getKey());
+
+                    BotiBlockWrapper botiBlockWrapper = entry.getValue();
+                    BlockPos blockPos = botiBlockWrapper.getBlockPos();
+                    BlockState blockState = botiBlockWrapper.getBlockState();
+                    FluidState fluidState = botiBlockWrapper.getFluidState();
+
+                    innerPoseStack.pushPose();
+                    innerPoseStack.translate(pos.x(), pos.y(), pos.z());
+
+                    if (fluidState.isEmpty()) {
+                        if (ItemBlockRenderTypes.canRenderInLayer(blockState, type)) {
+                            IModelData modelData = EmptyModelData.INSTANCE;
+
+                            if (blockState.getBlock() instanceof EntityBlock entityBlock) {
+                                BlockEntity blockEntity = entityBlock.newBlockEntity(blockPos, blockState);
+                                if (blockEntity != null && blockEntity.getModelData() != null) {
+                                    modelData = blockEntity.getModelData();
+                                }
+                            }
+
+                            mc.getBlockRenderer().renderSingleBlock(blockState, innerPoseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData);
+                            isRendered = true;
+                        }
+                    }
+                    else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
+                        if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
+                        mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);
+                        isRendered = true;
+                    }
+
+                    innerPoseStack.popPose();
+                }
+
+                if (isRendered) {
                     vbo.upload(type);
                 }
 
@@ -168,6 +213,8 @@ public class BotiManager {
             vbo.draw(poseStack.last().pose());
             poseStack.popPose();
         }
+
+        poseStack.popPose();
     }
 
     private static void setupFBO() {
@@ -219,16 +266,8 @@ public class BotiManager {
 
     }
 
-    private static void endStencil(PoseStack poseStack, BufferSource buffer, BiConsumer<PoseStack, BufferSource> consumer) {
+    private static void endStencil() {
         GL11.glDisable(GL11.GL_STENCIL_TEST);
         GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-
-        GL11.glColorMask(false, false, false, false);
-        RenderSystem.depthMask(false);
-        // consumer.accept(poseStack, buffer);
-        buffer.endBatch();
-
-        RenderSystem.depthMask(true);
-        GL11.glColorMask(true, true, true, true);
     }
 }

@@ -205,10 +205,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
 
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisHelper.saveBlocksForBoti(level, blockPos, tardisExteriorBlockEntity.getTardisLevelUUID() + "-exterior");
-        }
-
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel != null) {
             tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {

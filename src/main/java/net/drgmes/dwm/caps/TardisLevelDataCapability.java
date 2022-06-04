@@ -10,6 +10,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
@@ -19,6 +20,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -41,6 +43,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     private List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
     private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
+    private BotiStorage botiStorage = new BotiStorage();
     private Level level;
     private UUID owner;
 
@@ -227,6 +230,16 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public ServerLevel getLevel() {
         return this.level instanceof ServerLevel serverLevel ? serverLevel : null;
+    }
+
+    @Override
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
+    }
+
+    @Override
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
     }
 
     @Override
@@ -459,6 +472,23 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public void updateBoti() {
+        if (this.level.players().size() == 0) return;
+        if (!this.isValid() || !(this.level instanceof ServerLevel serverLevel)) return;
+        if (!(this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) || !materializationSystem.isMaterialized()) return;
+
+        ServerLevel exteriorLevel = this.level.getServer().getLevel(this.getCurrentExteriorDimension());
+        if (exteriorLevel == null) return;
+
+        this.botiStorage.setDirection(this.getCurrentExteriorFacing());
+        this.botiStorage.setRadius(ModConfig.CLIENT.botiExteriorRadius.get());
+        this.botiStorage.setDistance(ModConfig.CLIENT.botiExteriorDistance.get());
+        this.botiStorage.updateBoti(exteriorLevel, this.getCurrentExteriorPosition());
+
+        ModPackets.send(serverLevel, this.getBotiUpdatePacket());
+    }
+
+    @Override
     public void updateDoorsTiles() {
         this.doorTiles.forEach((tile) -> {
             this.level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), 3);
@@ -487,6 +517,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         });
     }
 
+    @Override
     public void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage) {
         if (this.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
             controlsStorage.values.put(TardisConsoleControlRoles.STARTER, flightSystem.inProgress());
@@ -629,8 +660,11 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public void tick() {
-        if (this.level.isClientSide || !this.isValid()) return;
+        if (!this.isValid()) return;
+        if (this.level.isClientSide) return;
+
         this.getSystems().values().forEach((system) -> system.tick());
+        if (this.level.getGameTime() % 100 == 0) this.updateBoti();
     }
 
     private Direction getDirectionByKey(CompoundTag tag, String key) {

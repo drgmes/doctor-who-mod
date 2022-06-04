@@ -1,6 +1,7 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.network.ClientboundBotiUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
@@ -18,6 +19,7 @@ import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocatio
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.network.NetworkDirection;
@@ -61,6 +63,10 @@ public class ModPackets {
         INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::new)
             .consumer(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::handle).add();
+
+        INSTANCE.messageBuilder(ClientboundBotiUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+            .encoder(ClientboundBotiUpdatePacket::encode).decoder(ClientboundBotiUpdatePacket::new)
+            .consumer(ClientboundBotiUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket::encode).decoder(ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket::new)
@@ -113,5 +119,9 @@ public class ModPackets {
 
     public static void send(ServerPlayer serverPlayer, Object packet) {
         ModPackets.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), packet);
+    }
+
+    public static void send(ServerLevel level, Object packet) {
+        ModPackets.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), packet);
     }
 }

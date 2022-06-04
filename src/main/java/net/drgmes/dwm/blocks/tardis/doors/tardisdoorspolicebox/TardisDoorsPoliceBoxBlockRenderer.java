@@ -5,8 +5,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
-import net.drgmes.dwm.common.boti.BotiEntraceData;
-import net.drgmes.dwm.common.boti.BotiManager;
+import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntraceData;
+import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
+import net.drgmes.dwm.setup.ModCapabilities;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -42,41 +44,43 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
         model.setupAnim(tile);
 
         poseStack.pushPose();
-        this.setupModelView(poseStack, face, true);
+        this.setupModelView(poseStack, face);
         model.renderToBuffer(poseStack, buffer, packedLight, combinedOverlay, 1, 1, 1, 1);
         model.renderDoorsToBuffer(poseStack, buffer, packedLight, combinedOverlay, 1, 1, 1, 1);
         poseStack.popPose();
 
-        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
+        Minecraft mc = Minecraft.getInstance();
+        mc.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
+            entraceData.setBotiStorage(tardis.getBotiStorage());
 
-        entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
-            innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face, true);
-            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), packedLight, combinedOverlay, 1, 1, 1, 1);
-            innerPoseStack.popPose();
+            entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
+                innerPoseStack.pushPose();
+                this.setupModelView(innerPoseStack, face);
+                model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), packedLight, combinedOverlay, 1, 1, 1, 1);
+                innerPoseStack.popPose();
+            });
+
+            entraceData.setBotiTransformer((innerPoseStack) -> {
+                innerPoseStack.translate(0.5, 0, 0.5);
+                innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
+                innerPoseStack.mulPose(Vector3f.YN.rotationDegrees(face.toYRot()));
+                innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(entraceData.getBotiStorage().getDirection().toYRot()));
+                innerPoseStack.translate(-0.5, 0, -0.5);
+            });
+
+            if (blockState.getValue(BlockStateProperties.OPEN)) {
+                BotiRenderer.addEntraceData(entraceData);
+            }
         });
-
-        entraceData.setBotiTransformer((innerPoseStack) -> {
-            this.setupModelView(innerPoseStack, face, false);
-            innerPoseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            innerPoseStack.translate(-0.5, -0.15, 0);
-        });
-
-        if (blockState.getValue(BlockStateProperties.OPEN)) {
-            BotiManager.addEntraceData(entraceData);
-        }
     }
 
-    public void setupModelView(PoseStack poseStack, Direction face, boolean scaling) {
+    public void setupModelView(PoseStack poseStack, Direction face) {
+        float scale = 1.5F;
         poseStack.translate(0.5, 2.25, 0.5);
         poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
         poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
         poseStack.translate(0, 0, -0.31F);
-
-        if (scaling) {
-            float scale = 1.5F;
-            poseStack.scale(scale, scale, scale);
-        }
+        poseStack.scale(scale, scale, scale);
     }
 }

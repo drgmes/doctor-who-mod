@@ -37,7 +37,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private final List<Runnable> dematConsumers = new ArrayList<>();
     private final List<Runnable> rematConsumers = new ArrayList<>();
 
-    private final ITardisLevelData tardisData;
+    private final ITardisLevelData tardis;
     private boolean isMaterialized = true;
     private boolean needsRerunRemat = false;
     private float tickForErrorSound = 0;
@@ -48,8 +48,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public float rematTickInProgressGoal = 0;
     public TardisSystemMaterializationSafeDirection safeDirection;
 
-    public TardisSystemMaterialization(ITardisLevelData tardisData) {
-        this.tardisData = tardisData;
+    public TardisSystemMaterialization(ITardisLevelData tardis) {
+        this.tardis = tardis;
         this.safeDirection = TardisSystemMaterializationSafeDirection.TOP;
     }
 
@@ -94,12 +94,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
             if (this.inDematProgress()) {
                 this.dematTickInProgress--;
                 if (!this.inDematProgress()) this.demat();
-                else if (this.dematTickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
+                else if (this.dematTickInProgress % 3 == 0) this.tardis.updateConsoleTiles();
             }
             else if (this.inRematProgress()) {
                 this.rematTickInProgress--;
                 if (!this.inRematProgress()) this.remat();
-                else if (this.rematTickInProgress % 3 == 0) this.tardisData.updateConsoleTiles();
+                else if (this.rematTickInProgress % 3 == 0) this.tardis.updateConsoleTiles();
             }
         }
     }
@@ -137,7 +137,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     public boolean setMaterializationState(boolean flag) {
-        if (this.tardisData.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+        if (this.tardis.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
             if (flightSystem.inProgress()) return false;
         }
 
@@ -157,29 +157,29 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.dematTickInProgressGoal = DWM.TIMINGS.DEMAT;
             this.dematTickInProgress = this.dematTickInProgressGoal;
 
-            this.tardisData.setDoorsOpenState(false);
-            this.tardisData.setLightState(false);
-            this.tardisData.setShieldsState(false);
-            this.tardisData.setEnergyArtronHarvesting(false);
-            this.tardisData.setEnergyForgeHarvesting(false);
-            this.tardisData.updateConsoleTiles();
+            this.tardis.setDoorsOpenState(false);
+            this.tardis.setLightState(false);
+            this.tardis.setShieldsState(false);
+            this.tardis.setEnergyArtronHarvesting(false);
+            this.tardis.setEnergyForgeHarvesting(false);
+            this.tardis.updateConsoleTiles();
 
             this.updateExterior(true, false);
-            ModSounds.playTardisTakeoffSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
+            ModSounds.playTardisTakeoffSound(this.tardis.getLevel(), this.tardis.getCorePosition());
             return false;
         }
 
-        ServerLevel level = this.tardisData.getLevel();
+        ServerLevel level = this.tardis.getLevel();
         if (level != null) {
-            ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+            ServerLevel exteriorLevel = level.getServer().getLevel(this.tardis.getCurrentExteriorDimension());
             if (exteriorLevel == null) return false;
 
             this.isMaterialized = false;
             this.dematTickInProgressGoal = 0;
-            this.tardisData.updateConsoleTiles();
+            this.tardis.updateConsoleTiles();
 
             DWMUtils.runInThread("materialization", () -> {
-                BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+                BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
                 if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
@@ -204,7 +204,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public boolean remat() {
         if (this.inProgress()) return false;
 
-        if (!this.tardisData.isValid()) {
+        if (!this.tardis.isValid()) {
             this.playFailSound();
             return false;
         }
@@ -214,12 +214,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
             return true;
         }
 
-        ServerLevel level = this.tardisData.getLevel();
+        ServerLevel level = this.tardis.getLevel();
         if (level != null) {
-            ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+            ServerLevel exteriorLevel = level.getServer().getLevel(this.tardis.getCurrentExteriorDimension());
             if (exteriorLevel == null) return false;
 
-            BlockPos initialExteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+            BlockPos initialExteriorBlockPos = this.tardis.getCurrentExteriorPosition();
             if (!this.needsRerunRemat) {
                 this.addChunkToLoader(exteriorLevel, initialExteriorBlockPos);
                 this.needsRerunRemat = true;
@@ -227,13 +227,13 @@ public class TardisSystemMaterialization implements ITardisSystem {
             }
 
             if (this.findSafePosition()) {
-                BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+                BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
                 BlockState exteriorUpBlockState = exteriorLevel.getBlockState(exteriorBlockPos.above());
                 BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().defaultBlockState();
                 BlockState tardisExteriorDownBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().defaultBlockState();
 
-                tardisExteriorBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.FACING, this.tardisData.getCurrentExteriorFacing());
+                tardisExteriorBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
                 tardisExteriorBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().is(FluidTags.WATER));
 
                 tardisExteriorDownBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
@@ -251,18 +251,18 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     this.rematTickInProgress = this.rematTickInProgressGoal;
                     this.removeChunkFromLoader(exteriorLevel, initialExteriorBlockPos);
                     this.updateExterior(false, true);
-                    ModSounds.playTardisLandingSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
+                    ModSounds.playTardisLandingSound(this.tardis.getLevel(), this.tardis.getCorePosition());
 
                     this.rematConsumers.add(() -> {
                         AABB aabb = AABB.ofSize(Vec3.atBottomCenterOf(exteriorBlockPos), 0.5, 1, 0.5);
-                        BlockPos entracePosition = this.tardisData.getEntracePosition().relative(this.tardisData.getEntraceFacing());
+                        BlockPos entracePosition = this.tardis.getEntracePosition().relative(this.tardis.getEntraceFacing());
                         List<Entity> entities = exteriorLevel.getEntitiesOfClass(Entity.class, aabb);
 
                         for (Entity entity : entities) {
-                            entity.changeDimension(this.tardisData.getLevel(), new TardisTeleporter(entracePosition));
+                            entity.changeDimension(this.tardis.getLevel(), new TardisTeleporter(entracePosition));
                         }
 
-                        this.tardisData.updateConsoleTiles();
+                        this.tardis.updateConsoleTiles();
                         this.updateExterior(false, false);
                     });
 
@@ -301,20 +301,20 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private boolean tryLandToForeignTardis() {
         if (this.safeDirection != TardisSystemMaterializationSafeDirection.NONE) return false;
 
-        ServerLevel level = this.tardisData.getLevel();
+        ServerLevel level = this.tardis.getLevel();
         if (level == null) return false;
 
-        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardis.getCurrentExteriorDimension());
         if (exteriorLevel == null) return false;
 
-        if (exteriorLevel.getBlockEntity(this.tardisData.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+        if (exteriorLevel.getBlockEntity(this.tardis.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisLevel(exteriorLevel);
             if (foreignTardisLevel != null) {
                 foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                     if (tardis.isValid() && !tardis.isShieldsEnabled()) {
-                        this.tardisData.setDimension(tardis.getLevel().dimension(), false);
-                        this.tardisData.setFacing(tardis.getEntraceFacing(), false);
-                        this.tardisData.setPosition(tardis.getEntracePosition().relative(tardis.getEntraceFacing()), false);
+                        this.tardis.setDimension(tardis.getLevel().dimension(), false);
+                        this.tardis.setFacing(tardis.getEntraceFacing(), false);
+                        this.tardis.setPosition(tardis.getEntracePosition().relative(tardis.getEntraceFacing()), false);
                         this.remat();
                     } else {
                         this.playFailSound();
@@ -357,14 +357,14 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private boolean findSafePosition() {
-        ServerLevel level = this.tardisData.getLevel();
+        ServerLevel level = this.tardis.getLevel();
         if (level == null) return false;
 
-        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardis.getCurrentExteriorDimension());
         if (exteriorLevel == null) return false;
 
-        Direction exteriorFacing = this.tardisData.getCurrentExteriorFacing();
-        BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
+        Direction exteriorFacing = this.tardis.getCurrentExteriorFacing();
+        BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
         BlockPos safePosition = null;
 
         if (this.safeDirection == TardisSystemMaterializationSafeDirection.TOP) {
@@ -377,8 +377,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         if (safePosition != null) {
-            this.tardisData.setPosition(safePosition, false);
-            this.tardisData.setDestinationPosition(safePosition);
+            this.tardis.setPosition(safePosition, false);
+            this.tardis.setDestinationPosition(safePosition);
             return true;
         }
 
@@ -403,8 +403,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, direction);
 
                     if (freeSpaceFound) {
-                        this.tardisData.setFacing(direction, false);
-                        this.tardisData.setDestinationFacing(direction);
+                        this.tardis.setFacing(direction, false);
+                        this.tardis.setDestinationFacing(direction);
                         break;
                     }
                 }
@@ -436,11 +436,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private void updateExterior(boolean demat, boolean remat) {
-        ServerLevel level = this.tardisData.getLevel();
+        ServerLevel level = this.tardis.getLevel();
         if (level == null) return;
 
-        BlockPos exteriorBlockPos = this.tardisData.getCurrentExteriorPosition();
-        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardisData.getCurrentExteriorDimension());
+        BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
+        ServerLevel exteriorLevel = level.getServer().getLevel(this.tardis.getCurrentExteriorDimension());
         if (exteriorLevel == null) return;
 
         if (exteriorLevel.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
@@ -450,12 +450,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         if (!demat) return;
-        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardisData.isDoorsOpened(), true));
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), true));
     }
 
     private void playFailSound() {
         if (this.tickForErrorSound > 0) return;
         this.tickForErrorSound = DWM.TIMINGS.ERROR_SOUND;
-        ModSounds.playTardisFailSound(this.tardisData.getLevel(), this.tardisData.getCorePosition());
+        ModSounds.playTardisFailSound(this.tardis.getLevel(), this.tardis.getCorePosition());
     }
 }

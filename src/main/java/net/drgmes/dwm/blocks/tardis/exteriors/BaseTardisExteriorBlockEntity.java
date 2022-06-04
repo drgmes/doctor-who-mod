@@ -3,7 +3,11 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 import java.util.UUID;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.boti.IBoti;
+import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.setup.ModCapabilities;
+import net.drgmes.dwm.setup.ModConfig;
+import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
@@ -17,9 +21,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
+public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implements IBoti {
     public String tardisLevelUUID;
     public String tardisConsoleRoom = "toyota_natured";
+
+    private BotiStorage botiStorage = new BotiStorage();
 
     private int tickInProgress = 0;
     private boolean isMaterialized = false;
@@ -71,6 +77,34 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
         this.inDematProgress = tag.getBoolean("inDematProgress");
     }
 
+    @Override
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
+    }
+
+    @Override
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
+    }
+
+    @Override
+    public void updateBoti() {
+        if (this.level.isClientSide) return;
+        if (!this.isMaterialized) return;
+
+        ServerLevel tardisLevel = this.getTardisLevel(this.level);
+        if (tardisLevel == null) return;
+
+        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            this.botiStorage.setDirection(tardis.getEntraceFacing());
+            this.botiStorage.setRadius(ModConfig.CLIENT.botiInteriorRadius.get());
+            this.botiStorage.setDistance(ModConfig.CLIENT.botiInteriorDistance.get());
+            this.botiStorage.updateBoti(tardisLevel, tardis.getEntracePosition());
+
+            ModPackets.send(this.level.getChunkAt(this.worldPosition), this.getBotiUpdatePacket(this.worldPosition));
+        });
+    }
+
     public void tick() {
         float goal = this.inRematProgress ? DWM.TIMINGS.REMAT : (this.inDematProgress ? DWM.TIMINGS.DEMAT : 0);
 
@@ -88,6 +122,8 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
                 this.tickInProgress = 0;
             }
         }
+
+        if (this.level.getGameTime() % 40 == 0) this.updateBoti();
     }
 
     public void unloadAll() {

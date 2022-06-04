@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
+import net.drgmes.dwm.common.tardis.boti.IBoti;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -22,7 +23,7 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public interface ITardisLevelData extends INBTSerializable<CompoundTag> {
+public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
     void addSystem(ITardisSystem system);
     Map<Class<? extends ITardisSystem>, ITardisSystem> getSystems();
     ITardisSystem getSystem(Class<? extends ITardisSystem> system);
