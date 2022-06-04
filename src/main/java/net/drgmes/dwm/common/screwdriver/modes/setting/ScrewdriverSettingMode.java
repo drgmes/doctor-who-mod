@@ -23,6 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BellBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
@@ -61,8 +62,8 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
         // TNT
         if (block instanceof TntBlock tntBlock) {
-            // tntBlock.catchFire(blockState, level, blockPos, null, player);
-            // level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 11);
+            tntBlock.onCaughtFire(blockState, level, blockPos, null, player);
+            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 11);
             return true;
         }
 
