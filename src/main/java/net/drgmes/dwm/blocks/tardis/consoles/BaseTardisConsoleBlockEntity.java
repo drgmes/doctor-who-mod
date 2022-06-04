@@ -287,6 +287,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         // Screwdriver Slot
         if (control.role == TardisConsoleControlRoles.SCREWDRIVER_SLOT && hand == InteractionHand.OFF_HAND) {
+            Screwdriver.assingTardisUUID(this.screwdriverItemStack, this.level);
+
             boolean isChanged = false;
 
             if (this.screwdriverItemStack.isEmpty()) {
@@ -315,7 +317,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             }
 
             if (isChanged) {
-                if (this.screwdriverItemStack != null) Screwdriver.assingTardisUUID(this.screwdriverItemStack, this.level);
+                Screwdriver.assingTardisUUID(this.screwdriverItemStack, this.level);
                 this.sendScrewdriverSlotUpdatePacket();
                 this.setChanged();
             }

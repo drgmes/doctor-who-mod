@@ -62,12 +62,12 @@ public class ScrewdriverItem extends Item {
         if (!entity.level.isClientSide || mc.screen != null || !(entity instanceof Player player)) return;
 
         if (ModKeys.SCREWDRIVER_SETTINGS.isDown()) {
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == this) {
+            if (player.getItemInHand(InteractionHand.MAIN_HAND).equals(itemStack, false)) {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, true));
                 return;
             }
     
-            if (player.getItemInHand(InteractionHand.OFF_HAND).getItem() == this) {
+            if (player.getItemInHand(InteractionHand.OFF_HAND).equals(itemStack, false)) {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, false));
                 return;
             }

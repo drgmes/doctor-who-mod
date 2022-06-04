@@ -30,6 +30,8 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
+        if (!this.checkIsValidHitBlock(blockState)) return false;
+
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
 
         List<Component> lines = new ArrayList<>();

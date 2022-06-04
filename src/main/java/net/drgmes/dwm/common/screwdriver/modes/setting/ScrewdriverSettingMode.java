@@ -3,8 +3,6 @@ package net.drgmes.dwm.common.screwdriver.modes.setting;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -48,18 +46,10 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
+        if (!this.checkIsValidHitBlock(blockState)) return false;
+
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
-
-        // Tardis Exterior Block
-        if (block instanceof BaseTardisExteriorBlock) {
-            return false;
-        }
-
-        // Tardis Doors Block
-        if (block instanceof BaseTardisDoorsBlock) {
-            return false;
-        }
 
         // Bell
         if (block instanceof BellBlock bellBlock) {

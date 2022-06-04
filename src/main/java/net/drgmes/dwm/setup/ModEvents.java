@@ -1,6 +1,9 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlock;
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.caps.ITardisChunkLoader;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
@@ -11,6 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -75,6 +79,11 @@ public class ModEvents {
         Item offHandItem = event.getPlayer().getOffhandItem().getItem();
 
         if (event.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
+            BlockState blockState = event.getWorld().getBlockState(event.getHitVec().getBlockPos());
+            if (blockState.getBlock() instanceof BaseTardisConsoleBlock) return;
+            if (blockState.getBlock() instanceof BaseTardisExteriorBlock) return;
+            if (blockState.getBlock() instanceof BaseTardisDoorsBlock) return;
+
             event.setCanceled(true);
         }
     }
