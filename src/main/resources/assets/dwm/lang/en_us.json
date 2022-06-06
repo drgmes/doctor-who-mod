@@ -13,6 +13,8 @@
 	"block.dwm.tardis_engine_toyota": "Tardis Toyota Engine",
 
 	"block.dwm.tardis_toyota_spinner": "Tardis Toyota Spinner",
+	"block.dwm.tardis_room_creator": "Tardis Rooms Creator",
+	"block.dwm.tardis_room_destroyer": "Tardis Rooms Destroyer",
 
 	"item.dwm.screwdriver_11": "11th Doctor's Sonic Screwdriver",
 	"item.dwm.screwdriver_12": "12th Doctor's Sonic Screwdriver",
@@ -21,13 +23,38 @@
 	"item.dwm.tardis_key_1": "Tardis Key",
 
 	"title.dwm.tardis_uuid": "Tardis: %s",
+
 	"title.dwm.screwdriver.mode": "Mode: %s",
 	"title.dwm.screwdriver.mode.scan": "Scan",
 	"title.dwm.screwdriver.mode.setting": "Setting",
 	"title.dwm.screwdriver.mode.tardis_relocation": "Relocation",
 
+	"title.dwm.ars.categories.back": "[Go Back]",
+	"title.dwm.ars.category.rooms": "Rooms",
+	"title.dwm.ars.category.rooms.tag": "Rooms",
+	"title.dwm.ars.category.rooms.wooden": "Wooden Rooms",
+	"title.dwm.ars.category.rooms.wooden.tag": "Wooden",
+	"title.dwm.ars.category.rooms.tech": "Tech Rooms",
+	"title.dwm.ars.category.rooms.tech.tag": "Tech",
+	"title.dwm.ars.category.hallways": "Hallways",
+	"title.dwm.ars.category.hallways.tag": "Hallways",
+	"title.dwm.ars.category.hallways.wooden": "Wooden Hallways",
+	"title.dwm.ars.category.hallways.wooden.tag": "Wooden",
+	"title.dwm.ars.category.hallways.tech": "Tech Hallways",
+	"title.dwm.ars.category.hallways.tech.tag": "Tech",
+
+	"title.dwm.ars.room.hallway_tech_short": "Tech Hallway Short",
+	"title.dwm.ars.room.hallway_tech_medium": "Tech Hallway Medium",
+	"title.dwm.ars.room.hallway_tech_long": "Tech Hallway Long",
+
 	"screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
+
+	"screen.dwm.ars_interface.title": "Architectural Reconfiguration System",
+	"screen.dwm.ars_interface.field.search": "Search",
+	"screen.dwm.ars_interface.button.cancel": "Cancel",
+	"screen.dwm.ars_interface.button.generate": "Generate Room",
+	"screen.dwm.ars_interface.button.destroy": "Destroy Room",
 
 	"screen.dwm.telepathic_interface.title": "Telepathic Interface",
 	"screen.dwm.telepathic_interface.title.locations": "Telepathic Interface: Choose a Location",
@@ -35,6 +62,13 @@
 	"screen.dwm.telepathic_interface.field.search": "Search",
 	"screen.dwm.telepathic_interface.button.cancel": "Cancel",
 	"screen.dwm.telepathic_interface.button.accept": "Find",
+
+	"message.dwm.tardis.ars_interface.generated.success": "Room \u00A7aGenerated",
+	"message.dwm.tardis.ars_interface.generated.failed": "Room \u00A7cNot Generated",
+	"message.dwm.tardis.ars_interface.generated.failed.details": "ERROR! Area is not clear. Problem point at: %s",
+
+	"message.dwm.tardis.ars_interface.destroy.success": "Room \u00A7aDestroyed",
+	"message.dwm.tardis.ars_interface.destroy.failed": "Room \u00A7cNot Destroyed",
 
 	"message.dwm.tardis.telepathic_interface.map.loaded": "Map Coords \u00A7aLoaded",
 	"message.dwm.tardis.telepathic_interface.map.loaded.banner": "%s Banner Coords \u00A7aLoaded",

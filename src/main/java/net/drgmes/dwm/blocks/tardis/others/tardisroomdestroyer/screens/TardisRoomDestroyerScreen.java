@@ -1,9 +1,11 @@
-package net.drgmes.dwm.blocks.tardis.consoles.screens;
+package net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlockEntity;
+import net.drgmes.dwm.network.ServerboundTardisRoomsDestroyerApplyPacket;
+import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -14,19 +16,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
-public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
-    protected static final int LINE_PADDING = 3;
-    protected static final int BUTTON_HEIGHT = 20;
-    protected static final int BACKGROUND_BORDERS = 24;
+public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int BACKGROUND_BORDERS = 24;
 
-    protected final BaseTardisConsoleBlockEntity tardisConsoleBlockEntity;
+    private final TardisRoomDestroyerBlockEntity tardisRoomDestroyerBlockEntity;
 
-    protected Button cancelButton;
-    protected Button acceptButton;
+    private Button cancelButton;
+    private Button acceptButton;
 
-    public BaseTardisConsoleTelepathicInterfaceScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME);
-        this.tardisConsoleBlockEntity = tardisConsoleBlockEntity;
+    public TardisRoomDestroyerScreen(TardisRoomDestroyerBlockEntity tardisRoomDestroyerBlockEntity) {
+        super(DWM.TEXTS.ARS_INTERFACE_NAME);
+        this.tardisRoomDestroyerBlockEntity = tardisRoomDestroyerBlockEntity;
     }
 
     @Override
@@ -56,12 +57,12 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
 
     @Override
     public ResourceLocation getBackground() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE;
+        return DWM.TEXTURES.GUI.TARDIS.ARS_INTERFACE;
     }
 
     @Override
     public Vec2 getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.scale(0.795F);
+        return DWM.TEXTURES.GUI.TARDIS.ARS_INTERFACE_SIZE.scale(0.795F);
     }
 
     @Override
@@ -83,17 +84,18 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
     protected void init() {
         this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
 
+        int buttonHeight = 20;
         int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
-        int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT + 1);
+        int buttonOffset = (int) (this.getBackgroundSize().y / 2 - BACKGROUND_BORDERS / 2 - buttonHeight / 2);
 
-        Vec2 cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS - 1, buttonOffset);
-        this.cancelButton = new Button((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.onClose());
+        Vec2 acceptButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2 - buttonWidth / 2, buttonOffset);
+        this.acceptButton = new Button((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_DESTROY, (b) -> this.apply());
 
-        Vec2 acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 1, buttonOffset);
-        this.acceptButton = new Button((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
+        Vec2 cancelButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2 - buttonWidth / 2, buttonOffset + buttonHeight + 1);
+        this.cancelButton = new Button((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.onClose());
 
-        this.addRenderableWidget(this.cancelButton);
         this.addRenderableWidget(this.acceptButton);
+        this.addRenderableWidget(this.cancelButton);
     }
 
     @Override
@@ -135,11 +137,14 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
     }
 
     protected void onDone() {
-        this.tardisConsoleBlockEntity.setChanged();
         this.minecraft.setScreen(null);
     }
 
     protected void apply() {
+        if (this.tardisRoomDestroyerBlockEntity.room != null) {
+            ModPackets.INSTANCE.sendToServer(new ServerboundTardisRoomsDestroyerApplyPacket(this.tardisRoomDestroyerBlockEntity.room, this.tardisRoomDestroyerBlockEntity.getBlockPos()));
+        }
+
         this.onDone();
     }
 }

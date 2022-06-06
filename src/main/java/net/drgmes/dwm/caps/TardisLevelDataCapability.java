@@ -38,7 +38,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 public class TardisLevelDataCapability implements ITardisLevelData {
     private Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
 
-    private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(14).immutable();
+    private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(18).immutable();
     private Direction entraceFacing = Direction.SOUTH;
 
     private List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();

@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockEntityWrapper;
 import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockWrapper;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.helpers.LevelHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
@@ -91,12 +92,7 @@ public class BotiStorage {
         this.blocks.clear();
         this.blockEntities.clear();
 
-        Rotation rotation = switch (this.direction) {
-            case WEST -> Rotation.CLOCKWISE_90;
-            case EAST -> Rotation.COUNTERCLOCKWISE_90;
-            case NORTH -> Rotation.CLOCKWISE_180;
-            default -> Rotation.NONE;
-        };
+        Rotation rotation = LevelHelper.getRotation(this.direction);
 
         for (int z = 0; z <= this.distance; z++) {
             int xRadius = z + this.radius;

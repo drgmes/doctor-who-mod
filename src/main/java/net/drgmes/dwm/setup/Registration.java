@@ -4,6 +4,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.ars.ArsCategories;
+import net.drgmes.dwm.common.tardis.ars.ArsRooms;
 import net.drgmes.dwm.data.DataGenerators;
 import net.minecraft.Util;
 import net.minecraft.client.KeyMapping;
@@ -77,6 +79,9 @@ public class Registration {
         ModCapabilities.init();
         ModWorldGen.init();
         ModSounds.init();
+
+        ArsCategories.init();
+        ArsRooms.init();
 
         ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
 

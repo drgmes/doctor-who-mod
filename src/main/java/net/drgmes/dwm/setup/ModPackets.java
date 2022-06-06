@@ -18,6 +18,8 @@ import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
+import net.drgmes.dwm.network.ServerboundTardisRoomsCreatorApplyPacket;
+import net.drgmes.dwm.network.ServerboundTardisRoomsDestroyerApplyPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,6 +65,14 @@ public class ModPackets {
         INSTANCE.messageBuilder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
             .encoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::encode).decoder(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::new)
             .consumer(ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket::handle).add();
+
+        INSTANCE.messageBuilder(ServerboundTardisRoomsDestroyerApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisRoomsDestroyerApplyPacket::encode).decoder(ServerboundTardisRoomsDestroyerApplyPacket::new)
+            .consumer(ServerboundTardisRoomsDestroyerApplyPacket::handle).add();
+
+        INSTANCE.messageBuilder(ServerboundTardisRoomsCreatorApplyPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+            .encoder(ServerboundTardisRoomsCreatorApplyPacket::encode).decoder(ServerboundTardisRoomsCreatorApplyPacket::new)
+            .consumer(ServerboundTardisRoomsCreatorApplyPacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundBotiUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundBotiUpdatePacket::encode).decoder(ClientboundBotiUpdatePacket::new)

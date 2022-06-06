@@ -128,6 +128,6 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     protected void onDone() {
-        this.minecraft.setScreen((Screen) null);
+        this.minecraft.setScreen(null);
     }
 }
