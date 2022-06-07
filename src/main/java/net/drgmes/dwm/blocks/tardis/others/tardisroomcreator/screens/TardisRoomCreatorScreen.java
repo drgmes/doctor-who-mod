@@ -148,6 +148,7 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
         this.listWidget.setSelected(this.selectedRoomEntry);
 
         if (!search.getValue().equals(lastSearch)) {
+            this.selectedRoomEntry = null;
             this.reloadRoomsList();
             this.listWidget.refreshList();
             this.update();

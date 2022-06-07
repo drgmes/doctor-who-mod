@@ -17,6 +17,7 @@ import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocatio
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -25,6 +26,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -84,6 +86,7 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         this.locationsListWidget.setSelected(this.selected);
 
         if (!search.getValue().equals(lastSearch)) {
+            this.selected = null;
             this.reloadLocationsList();
             this.locationsListWidget.refreshList();
             this.update();
@@ -216,7 +219,9 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
 
             @Override
             public Component getNarration() {
-                return new TranslatableComponent(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                MutableComponent narration = new TranslatableComponent(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                narration.setStyle(narration.getStyle().withColor(this.entry.getValue() == DataType.BIOME ? ChatFormatting.GOLD : ChatFormatting.AQUA));
+                return narration;
             }
 
             @Override
