@@ -134,8 +134,8 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
         this.search.setFocus(false);
         this.search.setCanLoseFocus(true);
 
-        this.addRenderableWidget(this.search);
         this.addRenderableWidget(this.listWidget);
+        this.addRenderableWidget(this.search);
         this.addRenderableWidget(this.cancelButton);
         this.addRenderableWidget(this.acceptButton);
 
