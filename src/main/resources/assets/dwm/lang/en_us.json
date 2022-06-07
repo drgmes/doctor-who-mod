@@ -61,6 +61,7 @@
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
 
 	"screen.dwm.ars_interface.title": "Architectural Reconfiguration System",
+	"screen.dwm.ars_interface.message": "Are you sure to destroy",
 	"screen.dwm.ars_interface.field.search": "Search",
 	"screen.dwm.ars_interface.button.cancel": "Cancel",
 	"screen.dwm.ars_interface.button.generate": "Generate Room",

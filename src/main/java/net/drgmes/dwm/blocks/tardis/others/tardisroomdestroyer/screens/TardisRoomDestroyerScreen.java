@@ -7,11 +7,15 @@ import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroy
 import net.drgmes.dwm.network.ServerboundTardisRoomsDestroyerApplyPacket;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
@@ -86,7 +90,7 @@ public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
 
         int buttonHeight = 20;
         int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
-        int buttonOffset = (int) (this.getBackgroundSize().y / 2 - BACKGROUND_BORDERS / 2 - buttonHeight / 2);
+        int buttonOffset = (int) (this.getBackgroundSize().y / 2 - BACKGROUND_BORDERS / 2 - buttonHeight / 2 + BUTTON_HEIGHT);
 
         Vec2 acceptButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2 - buttonWidth / 2, buttonOffset);
         this.acceptButton = new Button((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_DESTROY, (b) -> this.apply());
@@ -122,6 +126,7 @@ public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
 
         GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
         this.renderTitle(poseStack);
+        this.renderConfirmationMessage(poseStack);
 
         super.render(poseStack, mouseX, mouseY, partialTicks);
     }
@@ -134,6 +139,23 @@ public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
     @Override
     public void onClose() {
         this.onDone();
+    }
+
+    protected void renderConfirmationMessage(PoseStack poseStack) {
+        if (this.tardisRoomDestroyerBlockEntity == null || this.tardisRoomDestroyerBlockEntity.room == null) return;
+
+        Component text = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.message");
+        float textX = (this.getBackgroundSize().x - this.font.width(text)) / 2;
+        float textY = (this.getBackgroundSize().y - this.font.lineHeight * 3) / 2 - BUTTON_HEIGHT;
+        Vec2 textPos = this.getRenderPos(textX, textY);
+        this.getFont().drawShadow(poseStack, text, textPos.x, textPos.y, 0xE0E0E0);
+
+        MutableComponent name = this.tardisRoomDestroyerBlockEntity.room.getTitle().copy();
+        name.setStyle(name.getStyle().withColor(ChatFormatting.GOLD));
+        name.append(new TextComponent("?").withStyle(ChatFormatting.WHITE));
+        float nameX = (this.getBackgroundSize().x - this.font.width(name)) / 2;
+        Vec2 namePos = this.getRenderPos(nameX, textY + this.font.lineHeight);
+        this.getFont().drawShadow(poseStack, name, namePos.x, namePos.y, 0xE0E0E0);
     }
 
     protected void onDone() {
