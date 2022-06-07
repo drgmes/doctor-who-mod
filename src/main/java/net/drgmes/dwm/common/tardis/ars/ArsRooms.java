@@ -16,6 +16,11 @@ public class ArsRooms {
     public static final ArsRoom HALLWAY_TECH_TURN_LEFT = register("hallway_tech_turn_left", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_left", ArsCategories.HALLWAYS_TECH);
     public static final ArsRoom HALLWAY_TECH_TURN_RIGHT = register("hallway_tech_turn_right", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_right", ArsCategories.HALLWAYS_TECH);
 
+    public static final ArsRoom ROOM_TECH_SMALL = register("room_tech_small", "title." + DWM.MODID + ".ars.room.room_tech_small", ArsCategories.ROOMS_TECH);
+    public static final ArsRoom ROOM_TECH_MEDIUM = register("room_tech_medium", "title." + DWM.MODID + ".ars.room.room_tech_medium", ArsCategories.ROOMS_TECH);
+    public static final ArsRoom ROOM_TECH_LARGE = register("room_tech_large", "title." + DWM.MODID + ".ars.room.room_tech_large", ArsCategories.ROOMS_TECH);
+    public static final ArsRoom ROOM_TECH_HUGE = register("room_tech_huge", "title." + DWM.MODID + ".ars.room.room_tech_huge", ArsCategories.ROOMS_TECH);
+
     public static void init() {
     }
 

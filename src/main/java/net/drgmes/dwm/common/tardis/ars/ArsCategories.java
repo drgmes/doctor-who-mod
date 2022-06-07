@@ -9,12 +9,12 @@ public class ArsCategories {
     public static final Map<String, ArsCategory> CATEGORIES = new HashMap<>();
 
     public static final ArsCategory ROOMS = registerWithTag("rooms", "title." + DWM.MODID + ".ars.category.rooms");
-    public static final ArsCategory ROOMS_WOODEN = registerWithTag("rooms_wooden", "title." + DWM.MODID + ".ars.category.rooms.wooden", ROOMS);
     public static final ArsCategory ROOMS_TECH = registerWithTag("rooms_tech", "title." + DWM.MODID + ".ars.category.rooms.tech", ROOMS);
+    // public static final ArsCategory ROOMS_WOODEN = registerWithTag("rooms_wooden", "title." + DWM.MODID + ".ars.category.rooms.wooden", ROOMS);
 
     public static final ArsCategory HALLWAYS = registerWithTag("hallways", "title." + DWM.MODID + ".ars.category.hallways");
-    public static final ArsCategory HALLWAYS_WOODEN = registerWithTag("hallways_wooden", "title." + DWM.MODID + ".ars.category.hallways.wooden", HALLWAYS);
     public static final ArsCategory HALLWAYS_TECH = registerWithTag("hallways_tech", "title." + DWM.MODID + ".ars.category.hallways.tech", HALLWAYS);
+    // public static final ArsCategory HALLWAYS_WOODEN = registerWithTag("hallways_wooden", "title." + DWM.MODID + ".ars.category.hallways.wooden", HALLWAYS);
 
     public static void init() {
     }
