@@ -1,6 +1,8 @@
 package net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.screens;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -243,7 +245,18 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     }
 
     protected void reloadCategoriesList() {
-        this.categories = ArsCategories.CATEGORIES.values().stream().filter((category) -> category.getParent() == this.selectedCategory).toList();
+        List<ArsCategory> list = ArsCategories.CATEGORIES.values().stream().filter((category) -> category.getParent() == this.selectedCategory).toList();
+        if (list.size() > 0) {
+            list = new ArrayList<>(list);
+            Collections.sort(list, new Comparator<ArsCategory>() {
+                @Override
+                public int compare(ArsCategory a, ArsCategory b) {
+                    return a.getPath().compareTo(b.getPath());
+                }
+            });
+        }
+
+        this.categories = list;
     }
 
     protected void reloadRoomsList() {
@@ -252,14 +265,25 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
             return;
         }
 
-        this.rooms = ArsRooms.ROOMS.get(this.selectedCategory).values().stream().toList();
-
+        List<ArsRoom> list = ArsRooms.ROOMS.get(this.selectedCategory).values().stream().toList();
         boolean hasSearch = this.search != null && this.search.getValue() != "";
         if (hasSearch) {
             String search = this.search.getValue().toLowerCase();
             this.lastSearch = this.search.getValue();
-            this.rooms = this.rooms.stream().filter((room) -> room.getName().toLowerCase().contains(search)).toList();
+            list = list.stream().filter((room) -> room.getName().toLowerCase().contains(search)).toList();
         }
+
+        if (list.size() > 0) {
+            list = new ArrayList<>(list);
+            Collections.sort(list, new Comparator<ArsRoom>() {
+                @Override
+                public int compare(ArsRoom a, ArsRoom b) {
+                    return a.getName().compareTo(b.getName());
+                }
+            });
+        }
+
+        this.rooms = list;
     }
 
     private class ListWidget extends BaseListWidget {
