@@ -88,7 +88,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.currExteriorDimension != null) tdTag.putString("currExteriorDimension", this.currExteriorDimension.location().toString());
         if (this.destExteriorDimension != null) tdTag.putString("destExteriorDimension", this.destExteriorDimension.location().toString());
 
-        if (this.entraceFacing != null) tdTag.putString("entraceFacing", this.entraceFacing.getName());
         if (this.prevExteriorFacing != null) tdTag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
         if (this.currExteriorFacing != null) tdTag.putString("currExteriorFacing", this.currExteriorFacing.getName());
         if (this.destExteriorFacing != null) tdTag.putString("destExteriorFacing", this.destExteriorFacing.getName());
@@ -145,7 +144,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("currExteriorDimension"));
         if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("destExteriorDimension"));
 
-        if (tdTag.contains("entraceFacing")) this.entraceFacing = this.getDirectionByKey(tdTag, "entraceFacing");
         if (tdTag.contains("prevExteriorFacing")) this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
         if (tdTag.contains("currExteriorFacing")) this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
         if (tdTag.contains("destExteriorFacing")) this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
@@ -259,7 +257,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public Direction getEntraceFacing() {
-        return this.entraceFacing;
+        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockState().getValue(BaseTardisDoorsBlock.FACING) : this.entraceFacing;
     }
 
     @Override
@@ -285,7 +284,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public BlockPos getEntracePosition() {
-        return this.entracePosition;
+        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockPos() : this.entracePosition;
     }
 
     @Override
@@ -324,25 +324,25 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles() {
+        return this.doorTiles;
+    }
+
+    @Override
     public BaseTardisDoorsBlockEntity getMainInteriorDoorTile() {
         int size = this.doorTiles.size();
         return size > 0 ? this.doorTiles.get(size - 1) : null;
     }
 
     @Override
-    public List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles() {
-        return this.doorTiles;
+    public List<BaseTardisConsoleBlockEntity> getConsoleTiles() {
+        return this.consoleTiles;
     }
 
     @Override
     public BaseTardisConsoleBlockEntity getMainConsoleTile() {
         int size = this.consoleTiles.size();
         return size > 0 ? this.consoleTiles.get(size - 1) : null;
-    }
-
-    @Override
-    public List<BaseTardisConsoleBlockEntity> getConsoleTiles() {
-        return this.consoleTiles;
     }
 
     @Override
@@ -365,12 +365,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public boolean setEntraceFacing(Direction direction) {
-        this.entraceFacing = direction;
-        return true;
-    }
-
-    @Override
     public boolean setFacing(Direction direction, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorFacing = this.currExteriorFacing;
         this.currExteriorFacing = direction;
@@ -380,12 +374,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public boolean setDestinationFacing(Direction direction) {
         this.destExteriorFacing = direction;
-        return true;
-    }
-
-    @Override
-    public boolean setEntracePosition(BlockPos blockPos) {
-        this.entracePosition = blockPos.immutable();
         return true;
     }
 

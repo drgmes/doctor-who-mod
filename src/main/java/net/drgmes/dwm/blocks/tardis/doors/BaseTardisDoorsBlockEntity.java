@@ -58,8 +58,6 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
                     if (!tardis.isValid()) return;
                     if (tardis.getInteriorDoorTiles().contains(this)) return;
 
-                    tardis.setEntraceFacing(this.getBlockState().getValue(BaseTardisDoorsBlock.FACING));
-                    tardis.setEntracePosition(this.worldPosition);
                     tardis.getInteriorDoorTiles().add(this);
                     tardis.updateDoorsTiles();
                 });

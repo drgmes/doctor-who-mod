@@ -58,21 +58,19 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
     int getXYZStep();
     int getEnergyArtron();
     int getEnergyForge();
-    BaseTardisDoorsBlockEntity getMainInteriorDoorTile();
     List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles();
-    BaseTardisConsoleBlockEntity getMainConsoleTile();
+    BaseTardisDoorsBlockEntity getMainInteriorDoorTile();
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
+    BaseTardisConsoleBlockEntity getMainConsoleTile();
 
     boolean setOwnerUUID(UUID uuid);
 
     boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
     boolean setDestinationDimension(ResourceKey<Level> dimension);
 
-    boolean setEntraceFacing(Direction direction);
     boolean setFacing(Direction direction, boolean shouldUpdatePrev);
     boolean setDestinationFacing(Direction direction);
 
-    boolean setEntracePosition(BlockPos blockPos);
     boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
     boolean setDestinationPosition(BlockPos blockPos);
 
