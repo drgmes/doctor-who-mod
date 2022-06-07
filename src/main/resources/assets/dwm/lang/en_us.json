@@ -46,6 +46,10 @@
 	"title.dwm.ars.room.hallway_tech_short": "Tech Hallway Short",
 	"title.dwm.ars.room.hallway_tech_medium": "Tech Hallway Medium",
 	"title.dwm.ars.room.hallway_tech_long": "Tech Hallway Long",
+	"title.dwm.ars.room.hallway_tech_junction_x": "Tech Hallway Junction X",
+	"title.dwm.ars.room.hallway_tech_junction_t": "Tech Hallway Junction T",
+	"title.dwm.ars.room.hallway_tech_turn_left": "Tech Hallway Turn Left",
+	"title.dwm.ars.room.hallway_tech_turn_right": "Tech Hallway Turn Right",
 
 	"screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
