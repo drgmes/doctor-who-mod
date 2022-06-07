@@ -56,6 +56,7 @@
 	"title.dwm.ars.room.room_tech_medium": "Tech Room Medium",
 	"title.dwm.ars.room.room_tech_large": "Tech Room Large",
 	"title.dwm.ars.room.room_tech_huge": "Tech Room Huge",
+	"title.dwm.ars.room.room_tech_storage": "Tech Storage",
 
 	"screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
 	"screen.dwm.screwdriver_interface.button.mode": "Mode: %s",

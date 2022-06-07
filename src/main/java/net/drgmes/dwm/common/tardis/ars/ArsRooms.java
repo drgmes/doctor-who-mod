@@ -23,6 +23,8 @@ public class ArsRooms {
     public static final ArsRoom ROOM_TECH_LARGE = register("room_tech_large", "title." + DWM.MODID + ".ars.room.room_tech_large", ArsCategories.ROOMS_TECH);
     public static final ArsRoom ROOM_TECH_HUGE = register("room_tech_huge", "title." + DWM.MODID + ".ars.room.room_tech_huge", ArsCategories.ROOMS_TECH);
 
+    public static final ArsRoom ROOM_TECH_STORAGE = register("room_tech_storage", "title." + DWM.MODID + ".ars.room.room_tech_storage", ArsCategories.ROOMS_TECH);
+
     public static void init() {
     }
 
