@@ -73,4 +73,12 @@ public class ModSounds {
     public static void playScrewdriverMainSound(Level level, BlockPos blockPos) {
         ModSounds.playSound(level, blockPos, ModSounds.SCREWDRIVER_MAIN.get(), 0.25F, 1F);
     }
+
+    public static void playTardisRoomCreatedSound(Level level, BlockPos blockPos) {
+        ModSounds.playSound(level, blockPos, SoundEvents.BEACON_ACTIVATE, 1.0F, 1.0F);
+    }
+
+    public static void playTardisRoomDestroyedSound(Level level, BlockPos blockPos) {
+        ModSounds.playSound(level, blockPos, SoundEvents.BEACON_DEACTIVATE, 1.0F, 1.0F);
+    }
 }

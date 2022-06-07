@@ -7,6 +7,7 @@ import net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.TardisRoomCreatorBl
 import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlock;
 import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlockEntity;
 import net.drgmes.dwm.setup.ModBlocks;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.LevelHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -96,6 +97,7 @@ public class ArsRoom {
                     }
                 });
 
+                ModSounds.playTardisRoomCreatedSound(level, trcBlockPos);
                 return true;
             }
         }
@@ -119,7 +121,7 @@ public class ArsRoom {
                 destroyerBlockPos = destroyerBlockPos.subtract(trdBlocksInfo.get(0).pos.subtract(destroyerBlockPos).rotate(rotation));
             }
 
-            BlockPos creatorBlockPos = trdBlockPos.immutable().relative(direction).atY(trdBlockPos.getY() + 2);
+            BlockPos trcBlockPos = trdBlockPos.immutable().relative(direction).atY(trdBlockPos.getY() + 2);
             placeSettings = placeSettings.setRotation(rotation);
 
             BoundingBox aabb = template.getBoundingBox(placeSettings, destroyerBlockPos);
@@ -131,9 +133,10 @@ public class ArsRoom {
                 }
             }
 
-            this.fillWall(level, rotation, creatorBlockPos, Blocks.GRAY_TERRACOTTA.defaultBlockState());
-            level.setBlock(creatorBlockPos, ModBlocks.TARDIS_ROOM_CREATOR.get().defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, direction), 3);
+            this.fillWall(level, rotation, trcBlockPos, Blocks.GRAY_TERRACOTTA.defaultBlockState());
+            level.setBlock(trcBlockPos, ModBlocks.TARDIS_ROOM_CREATOR.get().defaultBlockState().setValue(BlockStateProperties.HORIZONTAL_FACING, direction), 3);
 
+            ModSounds.playTardisRoomDestroyedSound(level, trcBlockPos);
             return true;
         }
 
