@@ -15,8 +15,10 @@ public class ArsRooms {
     public static final ArsRoom HALLWAY_TECH_JUNCTION_T = register("hallway_tech_junction_t", "title." + DWM.MODID + ".ars.room.hallway_tech_junction_t", ArsCategories.HALLWAYS_TECH);
     public static final ArsRoom HALLWAY_TECH_JUNCTION_T_LEFT = register("hallway_tech_junction_t_left", "title." + DWM.MODID + ".ars.room.hallway_tech_junction_t_left", ArsCategories.HALLWAYS_TECH);
     public static final ArsRoom HALLWAY_TECH_JUNCTION_T_RIGHT = register("hallway_tech_junction_t_right", "title." + DWM.MODID + ".ars.room.hallway_tech_junction_t_right", ArsCategories.HALLWAYS_TECH);
-    public static final ArsRoom HALLWAY_TECH_TURN_LEFT = register("hallway_tech_turn_left", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_left", ArsCategories.HALLWAYS_TECH);
-    public static final ArsRoom HALLWAY_TECH_TURN_RIGHT = register("hallway_tech_turn_right", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_right", ArsCategories.HALLWAYS_TECH);
+    public static final ArsRoom HALLWAY_TECH_TURN_LEFT_SHORT = register("hallway_tech_turn_left_short", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_left_short", ArsCategories.HALLWAYS_TECH);
+    public static final ArsRoom HALLWAY_TECH_TURN_RIGHT_SHORT = register("hallway_tech_turn_right_short", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_right_short", ArsCategories.HALLWAYS_TECH);
+    public static final ArsRoom HALLWAY_TECH_TURN_LEFT_LONG = register("hallway_tech_turn_left_long", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_left_long", ArsCategories.HALLWAYS_TECH);
+    public static final ArsRoom HALLWAY_TECH_TURN_RIGHT_LONG = register("hallway_tech_turn_right_long", "title." + DWM.MODID + ".ars.room.hallway_tech_turn_right_long", ArsCategories.HALLWAYS_TECH);
 
     public static final ArsRoom ROOM_TECH_SMALL = register("room_tech_small", "title." + DWM.MODID + ".ars.room.room_tech_small", ArsCategories.ROOMS_TECH);
     public static final ArsRoom ROOM_TECH_MEDIUM = register("room_tech_medium", "title." + DWM.MODID + ".ars.room.room_tech_medium", ArsCategories.ROOMS_TECH);
