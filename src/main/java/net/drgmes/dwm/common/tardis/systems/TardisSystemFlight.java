@@ -3,6 +3,7 @@ package net.drgmes.dwm.common.tardis.systems;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -85,7 +86,7 @@ public class TardisSystemFlight implements ITardisSystem {
                 this.isSoundFlyPlayed = false;
                 this.tickInProgress = timeToFly;
                 this.tickInProgressGoal = timeToFly;
-                this.destinationDistanceRate = timeToFly / Math.min(4000, timeToFly);
+                this.destinationDistanceRate = timeToFly / Math.min(ModConfig.COMMON.tardisMaxFlightTime.get(), timeToFly);
             });
         }
 
