@@ -19,6 +19,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -50,18 +51,22 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
 
         ctx.get().enqueueWork(() -> {
             if (!(ctx.get().getSender().level instanceof ServerLevel level)) return;
+            System.out.println(level.registryAccess().registry(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY));
 
             level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
+                Component message = null;
 
                 if (this.entry.getValue() == DataType.BIOME) {
                     String msg = this.findBiome(level, tardis) ? "found" : "not_found";
-                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg), true);
+                    message = new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg);
                 }
-                else if (this.entry.getValue() == DataType.STRUCTURE) {
-                    String msg = this.findStructure(level, tardis) ? "found" : "not_found";
-                    ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg), true);
+                else if (this.entry.getValue() == DataType.CONFIGURED_STRUCTURE) {
+                    String msg = this.findConfiguredStructure(level, tardis) ? "found" : "not_found";
+                    message = new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg);
                 }
+
+                if (message != null) ctx.get().getSender().displayClientMessage(message, true);
             });
 
             success.set(true);
@@ -107,7 +112,7 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         return true;
     }
 
-    private boolean findStructure(Level level, ITardisLevelData provider) {
+    private boolean findConfiguredStructure(Level level, ITardisLevelData provider) {
         BlockPos exteriorPos = provider.getDestinationExteriorPosition();
         ServerLevel exteriorLevel = level.getServer().getLevel(provider.getDestinationExteriorDimension());
         if (exteriorLevel == null) return false;

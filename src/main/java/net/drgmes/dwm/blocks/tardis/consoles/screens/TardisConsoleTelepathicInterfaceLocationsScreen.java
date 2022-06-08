@@ -2,7 +2,6 @@ package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -14,7 +13,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
 import net.minecraft.ChatFormatting;
@@ -22,20 +20,18 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.core.Registry;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 
 public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
     public static enum DataType {
         BIOME,
-        STRUCTURE
+        CONFIGURED_STRUCTURE
     }
 
     private LocationsListWidget locationsListWidget;
@@ -46,10 +42,10 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
     private EditBox search;
     private String lastSearch;
 
-    public TardisConsoleTelepathicInterfaceLocationsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+    public TardisConsoleTelepathicInterfaceLocationsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, List<Entry<ResourceLocation, DataType>> locations) {
         super(tardisConsoleBlockEntity);
 
-        this.locations = Collections.unmodifiableList(this.createLocationsList());
+        this.locations = Collections.unmodifiableList(locations);
         this.filteredLocations = Collections.unmodifiableList(this.locations);
     }
 
@@ -126,20 +122,11 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         this.update();
     }
 
-    public List<Entry<ResourceLocation, DataType>> createLocationsList() {
-        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>();
-        this.getLocations(Registry.BIOME_REGISTRY, DataType.BIOME).forEach(list::add);
-        this.getLocations(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, DataType.STRUCTURE).forEach(list::add);
-
-        return list;
-    }
-
     public void reloadLocationsList() {
         boolean hasSearch = this.search != null && this.search.getValue() != "";
 
         if (hasSearch) {
             this.lastSearch = this.search.getValue();
-
             this.filteredLocations = this.locations.stream().filter((str) -> (
                 str.getKey().getPath().toLowerCase().contains(this.search.getValue().toLowerCase())
             )).toList();
@@ -152,27 +139,6 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
 
     public <T extends ObjectSelectionList.Entry<T>> void buildLocationsList(Consumer<T> consumer, Function<Entry<ResourceLocation, DataType>, T> entry) {
         this.filteredLocations.forEach((location) -> consumer.accept(entry.apply(location)));
-    }
-
-    private <T> List<Entry<ResourceLocation, DataType>> getLocations(ResourceKey<Registry<T>> registryKey, DataType type) {
-        Minecraft mc = Minecraft.getInstance();
-        Registry<T> registry = mc.level.registryAccess().registryOrThrow(registryKey);
-        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>(
-            registry.keySet().stream()
-            .filter((res) -> !res.equals(ModDimensionTypes.TARDIS.location()))
-            .map((res) -> Map.entry(res, type)).toList()
-        );
-
-        if (list.size() > 0) {
-            Collections.sort(list, new Comparator<Entry<ResourceLocation, DataType>>() {
-                @Override
-                public int compare(Entry<ResourceLocation, DataType> a, Entry<ResourceLocation, DataType> b) {
-                    return a.getKey().getPath().compareTo(b.getKey().getPath());
-                }
-            });
-        }
-
-        return list;
     }
 
     private class LocationsListWidget extends ObjectSelectionList<LocationsListWidget.LocationEntry> {
@@ -221,7 +187,11 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
             @Override
             public Component getNarration() {
                 MutableComponent narration = new TranslatableComponent(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
-                narration.setStyle(narration.getStyle().withColor(this.entry.getValue() == DataType.BIOME ? ChatFormatting.GOLD : ChatFormatting.AQUA));
+                ChatFormatting format = ChatFormatting.WHITE;
+                if (this.entry.getValue() == DataType.BIOME) format = ChatFormatting.GOLD;
+                else if (this.entry.getValue() == DataType.CONFIGURED_STRUCTURE) format = ChatFormatting.AQUA;
+
+                narration.setStyle(narration.getStyle().withColor(format));
                 return narration;
             }
 
