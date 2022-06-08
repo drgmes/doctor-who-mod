@@ -192,9 +192,9 @@ public class BotiRenderer {
                         }
                     }
                     else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
-                        if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
-                        mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);
-                        isRendered = true;
+                        // if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
+                        // mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);
+                        // isRendered = true;
                     }
 
                     innerPoseStack.popPose();
