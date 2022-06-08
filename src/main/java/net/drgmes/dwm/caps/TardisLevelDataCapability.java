@@ -10,6 +10,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
@@ -444,6 +445,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (flag) ModSounds.playTardisShieldsOnSound(this.level, this.getCorePosition());
         else ModSounds.playTardisShieldsOffSound(this.level, this.getCorePosition());
 
+        this.updateExterior();
         return true;
     }
 
@@ -673,6 +675,14 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
 
         if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock) {
+            if (exteriorLevel.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                if (tardisExteriorBlockEntity.shieldsEnabled != this.isShieldsEnabled()) {
+                    tardisExteriorBlockEntity.shieldsEnabled = this.isShieldsEnabled();
+                    if (this.isShieldsEnabled()) ModSounds.playTardisShieldsOnSound(exteriorLevel, exteriorBlockPos);
+                    else ModSounds.playTardisShieldsOffSound(exteriorLevel, exteriorBlockPos);
+                }
+            }
+
             if (exteriorBlockState.getValue(BaseTardisExteriorBlock.OPEN) != this.isDoorsOpened()) {
                 if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(exteriorLevel, exteriorBlockPos);
                 else ModSounds.playTardisDoorsCloseSound(exteriorLevel, exteriorBlockPos);
@@ -693,6 +703,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
             }
         }
 
-        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), false));
+        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isShieldsEnabled(), false));
     }
 }

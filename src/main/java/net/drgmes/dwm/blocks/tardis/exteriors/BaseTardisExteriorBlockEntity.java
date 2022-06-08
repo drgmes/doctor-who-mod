@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
+import java.util.List;
 import java.util.UUID;
 
 import net.drgmes.dwm.DWM;
@@ -15,15 +16,18 @@ import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implements IBoti {
-    public String tardisLevelUUID;
     public String tardisConsoleRoom = "toyota_natured";
+    public String tardisLevelUUID;
+    public boolean shieldsEnabled;
 
     private BotiStorage botiStorage = new BotiStorage();
 
@@ -124,6 +128,20 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         }
 
         if (this.level.getGameTime() % 40 == 0) this.updateBoti();
+
+        if (!this.level.isClientSide) {
+            if (this.shieldsEnabled) {
+                double radius = 6.0D;
+                Vec3 blockPosVec = Vec3.atBottomCenterOf(this.getBlockPos());
+                List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, AABB.ofSize(blockPosVec, radius, radius, radius));
+
+                for (Entity entity : entities) {
+                    double distance = blockPosVec.distanceTo(entity.position());
+                    Vec3 deltaMovement = entity.position().subtract(blockPosVec).scale(radius / distance / 10);
+                    entity.setDeltaMovement(deltaMovement);
+                }
+            }
+        }
     }
 
     public void unloadAll() {

@@ -16,21 +16,24 @@ import net.minecraftforge.network.NetworkEvent;
 public class ClientboundTardisExteriorUpdatePacket {
     private final BlockPos blockPos;
     private final boolean isDoorsOpened;
+    private final boolean isShieldsEnabled;
     private final boolean demat;
 
-    public ClientboundTardisExteriorUpdatePacket(BlockPos blockPos, boolean isDoorsOpened, boolean demat) {
+    public ClientboundTardisExteriorUpdatePacket(BlockPos blockPos, boolean isDoorsOpened, boolean isShieldsEnabled, boolean demat) {
         this.blockPos = blockPos;
         this.isDoorsOpened = isDoorsOpened;
+        this.isShieldsEnabled = isShieldsEnabled;
         this.demat = demat;
     }
 
     public ClientboundTardisExteriorUpdatePacket(FriendlyByteBuf buffer) {
-        this(buffer.readBlockPos(), buffer.readBoolean(), buffer.readBoolean());
+        this(buffer.readBlockPos(), buffer.readBoolean(), buffer.readBoolean(), buffer.readBoolean());
     }
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.blockPos);
         buffer.writeBoolean(this.isDoorsOpened);
+        buffer.writeBoolean(this.isShieldsEnabled);
         buffer.writeBoolean(this.demat);
     }
 
@@ -43,8 +46,9 @@ public class ClientboundTardisExteriorUpdatePacket {
                 final Minecraft mc = Minecraft.getInstance();
                 final BlockState blockState = mc.level.getBlockState(blockPos);
 
-                if (demat && mc.level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                    tardisExteriorBlockEntity.demat();
+                if (mc.level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                    if (demat) tardisExteriorBlockEntity.demat();
+                    tardisExteriorBlockEntity.shieldsEnabled = isShieldsEnabled;
                     success.set(true);
                 }
 
