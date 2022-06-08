@@ -47,6 +47,7 @@ public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.
     }
 
     public void refreshList() {
+        this.setScrollAmount(0);
         this.clearEntries();
     }
 

@@ -199,6 +199,7 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         }
 
         public void refreshList() {
+            this.setScrollAmount(0);
             this.clearEntries();
             this.parent.buildLocationsList(this::addEntry, (item) -> new LocationEntry(item, this.parent));
         }
