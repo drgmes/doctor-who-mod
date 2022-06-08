@@ -19,7 +19,6 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModPackets;
@@ -420,6 +419,9 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.doorsOpened == flag) return false;
         this.doorsOpened = flag;
 
+        if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
+        else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
+
         this.updateDoorsTiles();
         this.updateExterior();
         return true;
@@ -474,19 +476,15 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         this.botiStorage.setRadius(ModConfig.CLIENT.botiExteriorRadius.get());
         this.botiStorage.setDistance(ModConfig.CLIENT.botiExteriorDistance.get());
         this.botiStorage.updateBoti(exteriorLevel, this.getCurrentExteriorPosition());
-
-        ModPackets.send(serverLevel, this.getBotiUpdatePacket());
+        this.updateDoorsTiles();
     }
 
     @Override
     public void updateDoorsTiles() {
         this.doorTiles.forEach((tile) -> {
             this.level.setBlock(tile.getBlockPos(), tile.getBlockState().setValue(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), 3);
-
-            if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntracePosition());
-            else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntracePosition());
-
-            ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), new ClientboundTardisInteriorDoorsUpdatePacket(tile.getBlockPos(), this.isDoorsOpened()));
+            tile.setBotiStorage(this.botiStorage);
+            ModPackets.send((ServerLevel) this.level, this.getBotiUpdatePacket(tile.getBlockPos()));
         });
     }
 
@@ -502,7 +500,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 tile.setChanged();
 
                 ClientboundTardisConsoleLevelDataUpdatePacket packet = new ClientboundTardisConsoleLevelDataUpdatePacket(tile.getBlockPos(), tag);
-                ModPackets.send(level.getChunkAt(tile.getBlockPos()), packet);
+                ModPackets.send(this.level.getChunkAt(tile.getBlockPos()), packet);
             });
         });
     }

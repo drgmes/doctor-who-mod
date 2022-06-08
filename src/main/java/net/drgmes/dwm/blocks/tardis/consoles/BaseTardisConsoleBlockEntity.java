@@ -58,7 +58,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public int monitorPage = 0;
 
     private final LazyOptional<ITardisLevelData> tardisDataHolder;
-    private ITardisLevelData tardisData;
+    private final ITardisLevelData tardisData;
 
     private ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
     private int timeToInit = 0;

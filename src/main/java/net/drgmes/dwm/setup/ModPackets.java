@@ -10,7 +10,6 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocatio
 import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
 import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisInteriorDoorsUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUpdatePacket;
 import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
@@ -89,10 +88,6 @@ public class ModPackets {
         INSTANCE.messageBuilder(ClientboundTardisExteriorUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisExteriorUpdatePacket::encode).decoder(ClientboundTardisExteriorUpdatePacket::new)
             .consumer(ClientboundTardisExteriorUpdatePacket::handle).add();
-
-        INSTANCE.messageBuilder(ClientboundTardisInteriorDoorsUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-            .encoder(ClientboundTardisInteriorDoorsUpdatePacket::encode).decoder(ClientboundTardisInteriorDoorsUpdatePacket::new)
-            .consumer(ClientboundTardisInteriorDoorsUpdatePacket::handle).add();
 
         INSTANCE.messageBuilder(ClientboundTardisEngineUpdatePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
             .encoder(ClientboundTardisEngineUpdatePacket::encode).decoder(ClientboundTardisEngineUpdatePacket::new)

@@ -1,5 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
+import net.drgmes.dwm.common.tardis.boti.IBoti;
+import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
@@ -12,8 +14,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
-public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
+public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements IBoti {
     public String tardisLevelUUID;
+
+    private BotiStorage botiStorage = new BotiStorage();
 
     public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
@@ -47,6 +51,20 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
         });
 
         super.setRemoved();
+    }
+
+    @Override
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
+    }
+
+    @Override
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
+    }
+
+    @Override
+    public void updateBoti() {
     }
 
     public void init() {

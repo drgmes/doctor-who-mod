@@ -9,10 +9,6 @@ public interface IBoti {
     BotiStorage getBotiStorage();
     void updateBoti();
 
-    default ClientboundBotiUpdatePacket getBotiUpdatePacket() {
-        return new ClientboundBotiUpdatePacket(getBotiStorage());
-    }
-
     default ClientboundBotiUpdatePacket getBotiUpdatePacket(BlockPos blockPos) {
         return new ClientboundBotiUpdatePacket(blockPos, getBotiStorage());
     }
