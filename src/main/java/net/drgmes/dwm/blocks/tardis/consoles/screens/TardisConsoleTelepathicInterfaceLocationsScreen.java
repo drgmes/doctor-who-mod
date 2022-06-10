@@ -163,7 +163,7 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
 
             @Override
             public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
-                LocationsListWidget.this.setSelected(this);
+                LocationsListWidget.this.parent.setSelected(this);
                 return super.mouseClicked(mouseX, mouseY, partialTicks);
             }
         }

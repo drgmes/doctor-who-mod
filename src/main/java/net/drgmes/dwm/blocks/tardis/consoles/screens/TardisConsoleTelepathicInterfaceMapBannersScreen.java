@@ -104,7 +104,7 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
 
             @Override
             public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
-                BannersListWidget.this.setSelected(this);
+                BannersListWidget.this.parent.setSelected(this);
                 return super.mouseClicked(mouseX, mouseY, partialTicks);
             }
         }
