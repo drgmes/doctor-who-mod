@@ -1,22 +1,15 @@
 package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
 import java.util.Collection;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec2;
@@ -83,50 +76,25 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
         this.update();
     }
 
-    public <T extends ObjectSelectionList.Entry<T>> void buildBannersList(Consumer<T> consumer, Function<MapBanner, T> entry) {
-        this.banners.forEach((banner) -> consumer.accept(entry.apply(banner)));
-    }
-
-    private class BannersListWidget extends ObjectSelectionList<BannersListWidget.BannerEntry> {
+    private class BannersListWidget extends BaseListWidget {
         private final TardisConsoleTelepathicInterfaceMapBannersScreen parent;
 
         public BannersListWidget(TardisConsoleTelepathicInterfaceMapBannersScreen parent, int width, int height, Vec2 pos) {
-            super(parent.minecraft, width, height, (int) pos.y, (int) pos.y + height, parent.font.lineHeight + LINE_PADDING * 2);
+            super(parent.minecraft, parent.font, width, height, LINE_PADDING, pos);
             this.parent = parent;
-
-            this.refreshList();
-            this.setLeftPos((int) pos.x);
-            this.setRenderBackground(false);
-            this.setRenderTopAndBottom(false);
-        }
-
-        @Override
-        protected int getScrollbarPosition() {
-            return this.getRight() - 5;
-        }
-
-        @Override
-        public int getRowWidth() {
-            return this.width;
+            this.init();
         }
 
         public void refreshList() {
-            this.clearEntries();
-            this.parent.buildBannersList(this::addEntry, (item) -> new BannerEntry(item, this.parent));
+            super.refreshList();
+            this.parent.banners.forEach((banner) -> this.addEntry(new BannerEntry(banner)));
         }
 
-        @Override
-        public NarratableEntry.NarrationPriority narrationPriority() {
-            return NarratableEntry.NarrationPriority.NONE;
-        }
-
-        private class BannerEntry extends ObjectSelectionList.Entry<BannerEntry> {
-            private final TardisConsoleTelepathicInterfaceMapBannersScreen parent;
+        private class BannerEntry extends BaseListWidget.BaseListEntry {
             private final MapBanner banner;
 
-            public BannerEntry(MapBanner banner, TardisConsoleTelepathicInterfaceMapBannersScreen parent) {
+            public BannerEntry(MapBanner banner) {
                 this.banner = banner;
-                this.parent = parent;
             }
 
             @Override
@@ -135,16 +103,9 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
             }
 
             @Override
-            public void render(PoseStack poseStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
-                Component name = this.getNarration();
-                font.drawShadow(poseStack, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(name, width))), left + LINE_PADDING, top + 2, 0xFFFFFF);
-            }
-
-            @Override
             public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
-                this.parent.setSelected(this);
                 BannersListWidget.this.setSelected(this);
-                return false;
+                return super.mouseClicked(mouseX, mouseY, partialTicks);
             }
         }
     }

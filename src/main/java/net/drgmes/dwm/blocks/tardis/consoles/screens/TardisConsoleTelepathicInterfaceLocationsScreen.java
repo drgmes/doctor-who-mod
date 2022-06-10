@@ -5,24 +5,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
@@ -136,51 +129,25 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         this.filteredLocations = this.locations;
     }
 
-    public <T extends ObjectSelectionList.Entry<T>> void buildLocationsList(Consumer<T> consumer, Function<Entry<ResourceLocation, DataType>, T> entry) {
-        this.filteredLocations.forEach((location) -> consumer.accept(entry.apply(location)));
-    }
-
-    private class LocationsListWidget extends ObjectSelectionList<LocationsListWidget.LocationEntry> {
+    private class LocationsListWidget extends BaseListWidget {
         private final TardisConsoleTelepathicInterfaceLocationsScreen parent;
 
         public LocationsListWidget(TardisConsoleTelepathicInterfaceLocationsScreen parent, int width, int height, Vec2 pos) {
-            super(parent.minecraft, width, height, (int) pos.y, (int) pos.y + height, parent.font.lineHeight + LINE_PADDING * 2);
+            super(parent.minecraft, parent.font, width, height, LINE_PADDING, pos);
             this.parent = parent;
-
-            this.refreshList();
-            this.setLeftPos((int) pos.x);
-            this.setRenderBackground(false);
-            this.setRenderTopAndBottom(false);
-        }
-
-        @Override
-        protected int getScrollbarPosition() {
-            return this.getRight() - 5;
-        }
-
-        @Override
-        public int getRowWidth() {
-            return this.width;
+            this.init();
         }
 
         public void refreshList() {
-            this.setScrollAmount(0);
-            this.clearEntries();
-            this.parent.buildLocationsList(this::addEntry, (item) -> new LocationEntry(item, this.parent));
+            super.refreshList();
+            this.parent.filteredLocations.forEach((location) -> this.addEntry(new LocationEntry(location)));
         }
 
-        @Override
-        public NarratableEntry.NarrationPriority narrationPriority() {
-            return NarratableEntry.NarrationPriority.NONE;
-        }
-
-        private class LocationEntry extends ObjectSelectionList.Entry<LocationEntry> {
-            private final TardisConsoleTelepathicInterfaceLocationsScreen parent;
+        private class LocationEntry extends BaseListWidget.BaseListEntry {
             private final Map.Entry<ResourceLocation, DataType> entry;
 
-            public LocationEntry(Map.Entry<ResourceLocation, DataType> entry, TardisConsoleTelepathicInterfaceLocationsScreen parent) {
+            public LocationEntry(Map.Entry<ResourceLocation, DataType> entry) {
                 this.entry = entry;
-                this.parent = parent;
             }
 
             @Override
@@ -195,16 +162,9 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
             }
 
             @Override
-            public void render(PoseStack poseStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
-                Component name = this.getNarration();
-                font.drawShadow(poseStack, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(name, width))), left + LINE_PADDING, top + 2, 0xFFFFFF);
-            }
-
-            @Override
             public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
-                this.parent.setSelected(this);
                 LocationsListWidget.this.setSelected(this);
-                return false;
+                return super.mouseClicked(mouseX, mouseY, partialTicks);
             }
         }
     }
