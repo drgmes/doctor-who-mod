@@ -6,6 +6,7 @@ import java.util.List;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -28,13 +29,16 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.IronBarsBlock;
 import net.minecraft.world.level.block.JukeboxBlock;
 import net.minecraft.world.level.block.NoteBlock;
+import net.minecraft.world.level.block.SculkSensorBlock;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.TorchBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
+import net.minecraft.world.level.block.entity.SculkShriekerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -51,6 +55,18 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
+
+        // SculkShriekerBlock
+        if (blockEntity instanceof SculkShriekerBlockEntity sculkShriekerBlockEntity) {
+            if (!level.isClientSide) sculkShriekerBlockEntity.tryShriek((ServerLevel) level, (ServerPlayer) player);
+            return true;
+        }
+
+        // SculkSensorBlock
+        if (block instanceof SculkSensorBlock sculkSensorBlock) {
+            level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
+            return true;
+        }
 
         // Bell
         if (block instanceof BellBlock bellBlock) {

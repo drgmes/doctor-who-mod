@@ -82,7 +82,7 @@ public class ScrewdriverItem extends Item {
         ItemStack itemStack = player.getItemInHand(hand);
 
         if (Screwdriver.interact(level, player, hand, isAlternativeAction)) {
-            player.gameEvent(GameEvent.FLAP);
+            level.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, player.blockPosition());
             ModSounds.playScrewdriverMainSound(level, player.blockPosition());
             return InteractionResultHolder.success(itemStack);
         }
