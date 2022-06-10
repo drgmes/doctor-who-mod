@@ -33,7 +33,9 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
 
         if (!this.checkIsValidHitBlock(blockState)) return false;
+
         level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
+        level.gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(null, blockState));
 
         List<Component> lines = new ArrayList<>();
         MutableComponent title = blockState.getBlock().getName().copy();
@@ -68,7 +70,9 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         Entity entity = hitResult.getEntity();
 
         if (!this.checkIsValidHitEntity(entity)) return false;
+
         level.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, entity.blockPosition());
+        level.gameEvent(GameEvent.PROJECTILE_LAND, entity.blockPosition(), GameEvent.Context.of(null, null));
 
         List<Component> lines = new ArrayList<>();
         MutableComponent title = entity.getType().getDescription().copy();
