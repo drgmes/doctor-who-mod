@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.others.tardisroomcreator;
 
 import net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.screens.TardisRoomCreatorScreen;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlock;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +20,7 @@ public class TardisRoomCreatorBlock extends BaseRotatableWaterloggedBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if (!TardisHelper.isTardisDimension(level)) return InteractionResult.PASS;
         if (player.isSpectator()) return InteractionResult.PASS;
         if (!level.isClientSide) return InteractionResult.SUCCESS;
 

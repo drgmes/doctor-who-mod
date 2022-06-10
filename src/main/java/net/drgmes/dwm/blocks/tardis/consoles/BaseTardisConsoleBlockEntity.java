@@ -236,6 +236,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         // Telepathic Interface
         if (control.role == TardisConsoleControlRoles.TELEPATHIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
+            if (!TardisHelper.isTardisDimension(entity.level)) return;
+
             ItemStack mainHandItemStack = player.getMainHandItem();
             ItemStack offHandItemStack = player.getOffhandItem();
 
