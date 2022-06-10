@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -29,9 +30,10 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
-        if (!this.checkIsValidHitBlock(blockState)) return false;
-
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
+
+        if (!this.checkIsValidHitBlock(blockState)) return false;
+        level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
 
         List<Component> lines = new ArrayList<>();
         MutableComponent title = blockState.getBlock().getName().copy();
@@ -64,7 +66,9 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
     @Override
     public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
         Entity entity = hitResult.getEntity();
+
         if (!this.checkIsValidHitEntity(entity)) return false;
+        level.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, entity.blockPosition());
 
         List<Component> lines = new ArrayList<>();
         MutableComponent title = entity.getType().getDescription().copy();
