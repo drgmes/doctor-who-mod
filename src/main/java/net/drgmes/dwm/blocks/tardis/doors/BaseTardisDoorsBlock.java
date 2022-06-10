@@ -105,8 +105,6 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
-
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
 

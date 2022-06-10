@@ -144,7 +144,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
             blockPos = blockPos.below();
             blockState = level.getBlockState(blockPos);
@@ -155,7 +154,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         }
 
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
-        if (tardisLevel == null) return InteractionResult.FAIL;
+        if (tardisLevel == null) return InteractionResult.SUCCESS;
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
