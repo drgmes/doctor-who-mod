@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[40,)"
+loaderVersion="[41,)"
 license="All rights reserved"
 
 [[mods]]
 modId="dwm"
 version="${file.jarVersion}"
-displayName="DoctorWhoMod"
+displayName="Doctor Who Mod"
 logoFile="dwm.png"
 authors="DrGmes"
 description='''...'''
@@ -13,13 +13,13 @@ description='''...'''
 [[dependencies.dwm]]
     modId="forge"
     mandatory=true
-    versionRange="[40,)"
+    versionRange="[41,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.dwm]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.18.2,1.19)"
+    versionRange="[1.19,1.20)"
     ordering="NONE"
     side="BOTH"

@@ -14,8 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +42,7 @@ public class ArsRoom {
     }
 
     public Component getTitle() {
-        return new TranslatableComponent(this.title);
+        return Component.translatable(this.title);
     }
 
     public ArsCategory getCategory() {
@@ -77,10 +75,10 @@ public class ArsRoom {
                     for (double z = aabb.minZ(); z <= aabb.maxZ(); z++) {
                         BlockPos bp = new BlockPos(x, y, z);
                         if (!level.getBlockState(bp).isAir()) {
-                            MutableComponent posText = new TextComponent("[" + bp.getX() + " " + bp.getY() + " " + bp.getZ() + "]");
+                            MutableComponent posText = Component.literal("[" + bp.getX() + " " + bp.getY() + " " + bp.getZ() + "]");
                             posText.setStyle(posText.getStyle().withColor(ChatFormatting.YELLOW));
 
-                            player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.ars_interface.generated.failed.details", posText), false);
+                            player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.ars_interface.generated.failed.details", posText), false);
                             return false;
                         }
                     }

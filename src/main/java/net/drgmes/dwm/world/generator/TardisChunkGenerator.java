@@ -17,21 +17,20 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
-import net.minecraft.world.level.StructureFeatureManager;
+import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.Climate;
-import net.minecraft.world.level.biome.Climate.Sampler;
 import net.minecraft.world.level.biome.FixedBiomeSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.GenerationStep.Carving;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureManager;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 public class TardisChunkGenerator extends ChunkGenerator {
     public static final Codec<TardisChunkGenerator> CODEC = RecordCodecBuilder.create((builder) -> {
@@ -61,18 +60,8 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public ChunkGenerator withSeed(long seedIn) {
-        return this;
-    }
-
-    @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, StructureFeatureManager structures, ChunkAccess chunk) {
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
         return CompletableFuture.completedFuture(chunk);
-    }
-
-    @Override
-    public Sampler climateSampler() {
-        return Climate.empty();
     }
 
     @Override
@@ -96,37 +85,37 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getBaseHeight(int x, int z, Types types, LevelHeightAccessor level) {
+    public int getBaseHeight(int x, int z, Heightmap.Types types, LevelHeightAccessor level, RandomState randomState) {
         return 0;
     }
 
     @Override
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level) {
+    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState randomState) {
         return new NoiseColumn(0, new BlockState[0]);
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> list, BlockPos blockPos) {
+    public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
     }
 
     @Override
-    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunkAccess, StructureFeatureManager structures) {
+    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunkAccess, StructureManager structureManager) {
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion region, long seed, BiomeManager biomeManager, StructureFeatureManager structureManager, ChunkAccess chunkAccess, Carving carvingType) {
+    public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, Carving carvingType) {
     }
 
     @Override
-    public void buildSurface(WorldGenRegion region, StructureFeatureManager manager, ChunkAccess chunkAccess) {
+    public void buildSurface(WorldGenRegion region, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
     }
 
     @Override
-    public void createReferences(WorldGenLevel world, StructureFeatureManager structures, ChunkAccess chunk) {
+    public void createReferences(WorldGenLevel world, StructureManager structureManager, ChunkAccess chunk) {
     }
 
     @Override
-    public void createStructures(RegistryAccess registries, StructureFeatureManager structures, ChunkAccess chunk, StructureManager templates, long seed) {
+    public void createStructures(RegistryAccess registries, RandomState randomState, StructureManager structureManager, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, long seed) {
     }
 
     @Override

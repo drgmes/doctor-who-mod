@@ -79,7 +79,7 @@ public class ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket {
     private static List<Entry<ResourceLocation, DataType>> createLocationsListFromRegistry() {
         List<Entry<ResourceLocation, DataType>> list = new ArrayList<>();
         getLocationsForRegistry(Registry.BIOME_REGISTRY, DataType.BIOME).forEach(list::add);
-        getLocationsForRegistry(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, DataType.CONFIGURED_STRUCTURE).forEach(list::add);
+        getLocationsForRegistry(Registry.STRUCTURE_REGISTRY, DataType.STRUCTURE).forEach(list::add);
 
         return list;
     }

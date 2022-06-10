@@ -19,7 +19,12 @@ public class BotiVBO {
     public Map<RenderType, BufferSource> sources = Maps.newHashMap();
     public Map<RenderType, VertexBuffer> vbos = Maps.newHashMap();
 
-    public BotiVBO() {
+    private boolean isInited = false;
+
+    public void init() {
+        if (this.isInited) return;
+        this.isInited = true;
+
         for (RenderType type : RenderType.chunkBufferLayers()) {
             sources.put(type, MultiBufferSource.immediate(new BufferBuilder(format.getVertexSize())));
             vbos.put(type, new VertexBuffer());
@@ -48,10 +53,7 @@ public class BotiVBO {
     }
 
     public void upload(RenderType type) {
-        BufferBuilder builder = this.getBufferBuilder(type);
-
-        if (builder.building()) builder.end();
-        this.getVBO(type).upload(builder);
+        this.getVBO(type).upload(this.getBufferBuilder(type).end());
     }
 
     public void unbind(RenderType type) {

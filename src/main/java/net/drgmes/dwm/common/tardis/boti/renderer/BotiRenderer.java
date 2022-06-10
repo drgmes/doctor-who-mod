@@ -13,7 +13,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 
 import net.drgmes.dwm.DWM;
@@ -99,6 +98,7 @@ public class BotiRenderer {
     }
 
     public static void start(BotiEntraceData entraceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
+        vbo.init();
         setupFBO();
         setFBOColor();
 
@@ -139,7 +139,7 @@ public class BotiRenderer {
                 type.setupRenderState();
                 vbo.resetData(type);
 
-                boolean isRendered = false;
+                // boolean isRendered = false;
                 PoseStack innerPoseStack = poseStack;
                 // PoseStack innerPoseStack = new PoseStack();
 
@@ -158,7 +158,7 @@ public class BotiRenderer {
                         if (renderer != null) {
                             renderer.render(blockEntity, partialTicks, poseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY);
                             botiStorage.blocks.remove(entry.getKey());
-                            isRendered = true;
+                            // isRendered = true;
                         }
                     }
 
@@ -188,10 +188,11 @@ public class BotiRenderer {
                             }
 
                             mc.getBlockRenderer().renderSingleBlock(blockState, innerPoseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData);
-                            isRendered = true;
+                            // isRendered = true;
                         }
                     }
                     else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
+                        // TODO
                         // if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
                         // mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);
                         // isRendered = true;
@@ -200,19 +201,21 @@ public class BotiRenderer {
                     innerPoseStack.popPose();
                 }
 
-                if (isRendered) {
-                    vbo.upload(type);
-                }
+                // TODO
+                // if (isRendered) {
+                //     vbo.upload(type);
+                // }
 
                 vbo.unbind(type);
                 type.clearRenderState();
             }
         }
-        else {
-            poseStack.pushPose();
-            vbo.draw(poseStack.last().pose());
-            poseStack.popPose();
-        }
+        // TODO
+        // else {
+        //     poseStack.pushPose();
+        //     vbo.draw(poseStack.last().pose());
+        //     poseStack.popPose();
+        // }
 
         poseStack.popPose();
     }

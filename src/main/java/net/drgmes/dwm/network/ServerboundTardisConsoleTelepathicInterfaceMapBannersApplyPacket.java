@@ -7,7 +7,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
@@ -41,7 +41,7 @@ public class ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket {
                 if (!tardis.isValid()) return;
 
                 String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
-                ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
+                ctx.get().getSender().displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
 
                 tardis.setDestinationDimension(mapData.dimension);
                 tardis.setDestinationPosition(banner.getPos());

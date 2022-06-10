@@ -11,38 +11,38 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.registries.RegistryObject;
 
-public class StructureBuilder {
+public class FeatureBuilder {
     public final String name;
-    public final RegistryObject<StructureFeature<?>> structureObject;
+    public final RegistryObject<Feature<?>> featureObject;
 
     public final TagKey<Biome> biomeTag;
     public final ArrayList<TagKey<Biome>> biomeTags = new ArrayList<>();
     public final ArrayList<ResourceKey<Biome>> biomes = new ArrayList<>();
 
 
-    public StructureBuilder(String name, Supplier<StructureFeature<?>> structureFeature) {
+    public FeatureBuilder(String name, Supplier<Feature<?>> Structure) {
         ResourceLocation loc = new ResourceLocation(DWM.MODID, name);
 
         this.name = name;
         this.biomeTag = TagKey.create(Registry.BIOME_REGISTRY, loc);
-        this.structureObject = Registration.registerStructure(name, structureFeature);
+        this.featureObject = Registration.registerFeature(name, Structure);
 
-        ModStructures.STRUCTURE_BUILDERS.add(this);
+        ModStructures.FEATURE_BUILDERS.add(this);
     }
 
-    public StructureFeature<?> get() {
-        return this.structureObject.get();
+    public Feature<?> get() {
+        return this.featureObject.get();
     }
 
-    public StructureBuilder addBiomeTag(TagKey<Biome> biomeTag) {
+    public FeatureBuilder addBiomeTag(TagKey<Biome> biomeTag) {
         this.biomeTags.add(biomeTag);
         return this;
     }
 
-    public StructureBuilder addBiome(ResourceKey<Biome> biome) {
+    public FeatureBuilder addBiome(ResourceKey<Biome> biome) {
         this.biomes.add(biome);
         return this;
     }

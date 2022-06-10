@@ -2,7 +2,7 @@ package net.drgmes.dwm.data.common;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModStructures;
-import net.drgmes.dwm.utils.builders.world.StructureBuilder;
+import net.drgmes.dwm.utils.builders.world.FeatureBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.tags.BiomeTagsProvider;
 import net.minecraft.resources.ResourceKey;
@@ -17,7 +17,7 @@ public class ModBiomeTagsProvider extends BiomeTagsProvider {
 
     @Override
     protected void addTags() {
-        for (StructureBuilder structureBuilder : ModStructures.STRUCTURE_BUILDERS) {
+        for (FeatureBuilder structureBuilder : ModStructures.FEATURE_BUILDERS) {
             for (TagKey<Biome> biomeTag : structureBuilder.biomeTags) {
                 this.tag(structureBuilder.biomeTag).addTag(biomeTag);
             }

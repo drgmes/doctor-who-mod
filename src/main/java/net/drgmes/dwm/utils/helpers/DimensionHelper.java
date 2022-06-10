@@ -86,7 +86,7 @@ public class DimensionHelper {
         }
 
         DerivedLevelData derivedLevelInfo = new DerivedLevelData(serverConfig, serverConfig.overworldData());
-        ServerLevel level = new ServerLevel(server, executor, levelSave, derivedLevelInfo, levelKey, levelStem.typeHolder(), chunkListener, levelStem.generator(), worldGenSettings.isDebug(), BiomeManager.obfuscateSeed(worldGenSettings.seed()), ImmutableList.of(), false);
+        ServerLevel level = new ServerLevel(server, executor, levelSave, derivedLevelInfo, levelKey, levelStem, chunkListener, worldGenSettings.isDebug(), BiomeManager.obfuscateSeed(worldGenSettings.seed()), ImmutableList.of(), false);
 
         overworld.getWorldBorder().addListener(new BorderChangeListener.DelegateBorderChangeListener(level.getWorldBorder()));
         map.put(levelKey, level);

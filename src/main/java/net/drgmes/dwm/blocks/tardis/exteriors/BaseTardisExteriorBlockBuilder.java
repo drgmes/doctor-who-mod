@@ -8,11 +8,11 @@ import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
@@ -43,7 +43,7 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
         ModelHelper.applyExternalOBJModel(builder, "item/tardis/exteriors/" + this.getResourceName(), true);
         ModelHelper.rotateToBlockStyle(builder, 0.7F);
 
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-5F, -2.25F, 0);
+        builder.transforms().transform(TransformType.GUI).translation(-5F, -2.25F, 0);
     }
 
     @Override

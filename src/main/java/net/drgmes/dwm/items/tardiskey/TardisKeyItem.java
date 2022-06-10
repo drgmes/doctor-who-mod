@@ -8,8 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -29,8 +27,8 @@ public class TardisKeyItem extends Item {
         CompoundTag tag = itemStack.getOrCreateTag();
 
         if (tag.contains("tardisDimUUID")) {
-            MutableComponent tardis = new TextComponent(tag.getString("tardisDimUUID").substring(0, 8));
-            MutableComponent tardisText = new TranslatableComponent("title.dwm.tardis_uuid", tardis.setStyle(tardis.getStyle().withColor(ChatFormatting.GOLD)));
+            MutableComponent tardis = Component.literal(tag.getString("tardisDimUUID").substring(0, 8));
+            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(tardis.getStyle().withColor(ChatFormatting.GOLD)));
             list.add(tardisText.setStyle(tardis.getStyle().withColor(ChatFormatting.GRAY)));
         }
 

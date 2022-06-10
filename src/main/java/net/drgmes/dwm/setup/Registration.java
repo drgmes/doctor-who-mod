@@ -23,7 +23,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ClientRegistry;
@@ -37,7 +37,6 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class Registration {
@@ -48,7 +47,7 @@ public class Registration {
     public static final DeferredRegister<EntityType<?>> ENTITIES = createRegistry(ForgeRegistries.ENTITIES);
     public static final DeferredRegister<MenuType<?>> CONTAINERS = createRegistry(ForgeRegistries.CONTAINERS);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = createRegistry(ForgeRegistries.BLOCK_ENTITIES);
-    public static final DeferredRegister<StructureFeature<?>> STRUCTURES = createRegistry(ForgeRegistries.STRUCTURE_FEATURES);
+    public static final DeferredRegister<Feature<?>> FEATURES = createRegistry(ForgeRegistries.FEATURES);
     public static final DeferredRegister<Biome> BIOMES = createRegistry(ForgeRegistries.BIOMES);
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = createRegistry(ForgeRegistries.SOUND_EVENTS);
 
@@ -64,7 +63,7 @@ public class Registration {
         ENTITIES.register(modEventBus);
         CONTAINERS.register(modEventBus);
         BLOCK_ENTITIES.register(modEventBus);
-        STRUCTURES.register(modEventBus);
+        FEATURES.register(modEventBus);
         BIOMES.register(modEventBus);
         SOUND_EVENTS.register(modEventBus);
 
@@ -126,7 +125,7 @@ public class Registration {
         });
     }
 
-    public static <T extends IForgeRegistryEntry<T>> DeferredRegister<T> createRegistry(IForgeRegistry<T> registry) {
+    public static <T> DeferredRegister<T> createRegistry(IForgeRegistry<T> registry) {
         return DeferredRegister.create(registry, DWM.MODID);
     }
 
@@ -162,8 +161,8 @@ public class Registration {
         return Registration.CONTAINERS.register(name, () -> new MenuType<>(menuSupplier));
     }
 
-    public static <T extends StructureFeature<?>> RegistryObject<T> registerStructure(String name, Supplier<T> structureSupplier) {
-        return Registration.STRUCTURES.register(name, structureSupplier);
+    public static <T extends Feature<?>> RegistryObject<T> registerFeature(String name, Supplier<T> structureSupplier) {
+        return Registration.FEATURES.register(name, structureSupplier);
     }
 
     public static RegistryObject<Biome> registerBiome(String name, Supplier<Biome> biomeSupplier) {

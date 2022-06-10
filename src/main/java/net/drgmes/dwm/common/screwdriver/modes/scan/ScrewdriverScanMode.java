@@ -8,7 +8,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -47,7 +46,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
                 }
             }
 
-            if (size > 0) lines.add(new TextComponent("Container: " + countItems + " / " + size));
+            if (size > 0) lines.add(Component.literal("Container: " + countItems + " / " + size));
         }
 
         if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
@@ -78,10 +77,10 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         if (entity instanceof LivingEntity livingEntity) {
             double health = livingEntity.getHealth();
             double maxHealth = livingEntity.getMaxHealth();
-            lines.add(new TextComponent("Health: " + String.format("%.1f", health) + " / " + String.format("%.1f", maxHealth)));
+            lines.add(Component.literal("Health: " + String.format("%.1f", health) + " / " + String.format("%.1f", maxHealth)));
 
             int armor = livingEntity.getArmorValue();
-            if (armor > 0) lines.add(new TextComponent("Armor: " + armor));
+            if (armor > 0) lines.add(Component.literal("Armor: " + armor));
         }
 
         ScrewdriverScanModeOverlay.setup(player, title, lines);

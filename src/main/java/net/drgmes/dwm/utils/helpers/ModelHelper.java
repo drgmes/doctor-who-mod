@@ -3,6 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.WallBlock;
@@ -74,11 +75,11 @@ public class ModelHelper {
         builder.texture("wall_x", xTexture);
         builder.texture("wall_y", yTexture);
 
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).rotation(30, 135, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).scale(0.625F, 0.625F, 0.625F);
+        builder.transforms().transform(TransformType.GUI).rotation(30, 135, 0);
+        builder.transforms().transform(TransformType.GUI).scale(0.625F, 0.625F, 0.625F);
 
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).rotation(0, 90, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).scale(0.5F, 0.5F, 0.5F);
+        builder.transforms().transform(TransformType.FIXED).rotation(0, 90, 0);
+        builder.transforms().transform(TransformType.FIXED).scale(0.5F, 0.5F, 0.5F);
 
         builder.element().from(4, 0, 4);
         builder.element(0).to(12, 16, 12);
@@ -100,25 +101,25 @@ public class ModelHelper {
     }
 
     public static <T extends ModelBuilder<T>> void rotateToBlockStyle(T builder, float scale) {
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).rotation(30, 225, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-5.75F, -2.25F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).scale(0.625F * scale);
+        builder.transforms().transform(TransformType.GUI).rotation(30, 225, 0);
+        builder.transforms().transform(TransformType.GUI).translation(-5.75F, -2.25F, 0);
+        builder.transforms().transform(TransformType.GUI).scale(0.625F * scale);
 
-        builder.transforms().transform(ModelBuilder.Perspective.GROUND).rotation(0, 0, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GROUND).translation(0, 3F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.GROUND).scale(0.25F * scale);
+        builder.transforms().transform(TransformType.GROUND).rotation(0, 0, 0);
+        builder.transforms().transform(TransformType.GROUND).translation(0, 3F, 0);
+        builder.transforms().transform(TransformType.GROUND).scale(0.25F * scale);
 
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).rotation(0, 0, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).translation(0, 0, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIXED).scale(0.5F * scale);
+        builder.transforms().transform(TransformType.FIXED).rotation(0, 0, 0);
+        builder.transforms().transform(TransformType.FIXED).translation(0, 0, 0);
+        builder.transforms().transform(TransformType.FIXED).scale(0.5F * scale);
 
-        builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).rotation(0, 90, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).translation(-2.5F, 1F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.FIRSTPERSON_RIGHT).scale(0.4F * scale);
+        builder.transforms().transform(TransformType.FIRST_PERSON_RIGHT_HAND).rotation(0, 90, 0);
+        builder.transforms().transform(TransformType.FIRST_PERSON_RIGHT_HAND).translation(-2.5F, 1F, 0);
+        builder.transforms().transform(TransformType.FIRST_PERSON_RIGHT_HAND).scale(0.4F * scale);
 
-        builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).rotation(75, 90, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).translation(-2.5F, 2.5F, 0);
-        builder.transforms().transform(ModelBuilder.Perspective.THIRDPERSON_RIGHT).scale(0.375F * scale);
+        builder.transforms().transform(TransformType.THIRD_PERSON_RIGHT_HAND).rotation(75, 90, 0);
+        builder.transforms().transform(TransformType.THIRD_PERSON_RIGHT_HAND).translation(-2.5F, 2.5F, 0);
+        builder.transforms().transform(TransformType.THIRD_PERSON_RIGHT_HAND).scale(0.375F * scale);
     }
 
     public static <T extends ModelBuilder<T>> void rotateToBlockStyle(T builder) {

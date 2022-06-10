@@ -25,7 +25,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
@@ -336,7 +335,7 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.GOLD));
                     }
                     else {
-                        narration = new TranslatableComponent("title." + DWM.MODID + ".ars.categories.back");
+                        narration = Component.translatable("title." + DWM.MODID + ".ars.categories.back");
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.YELLOW));
 
                         ArsCategory category = ListWidget.this.parent.selectedCategory;

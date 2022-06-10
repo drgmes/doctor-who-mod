@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.setup.Registration;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.fml.common.Mod;
@@ -29,28 +28,28 @@ public class DWM {
     }
 
     public static class TEXTS {
-        public static final Component TARDIS_DOORS_LOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.locked");
-        public static final Component TARDIS_DOORS_UNLOCKED = new TranslatableComponent("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
+        public static final Component TARDIS_DOORS_LOCKED = Component.translatable("message." + DWM.MODID + ".tardis.control.role.doors.locked");
+        public static final Component TARDIS_DOORS_UNLOCKED = Component.translatable("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
 
-        public static final Component ARS_INTERFACE_NAME = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.title");
-        public static final Component ARS_INTERFACE_FLD_SEARCH = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.field.search");
-        public static final Component ARS_INTERFACE_BTN_CANCEL = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.button.cancel");
-        public static final Component ARS_INTERFACE_BTN_GENERATE = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.button.generate");
-        public static final Component ARS_INTERFACE_BTN_DESTROY = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.button.destroy");
+        public static final Component ARS_INTERFACE_NAME = Component.translatable("screen." + DWM.MODID + ".ars_interface.title");
+        public static final Component ARS_INTERFACE_FLD_SEARCH = Component.translatable("screen." + DWM.MODID + ".ars_interface.field.search");
+        public static final Component ARS_INTERFACE_BTN_CANCEL = Component.translatable("screen." + DWM.MODID + ".ars_interface.button.cancel");
+        public static final Component ARS_INTERFACE_BTN_GENERATE = Component.translatable("screen." + DWM.MODID + ".ars_interface.button.generate");
+        public static final Component ARS_INTERFACE_BTN_DESTROY = Component.translatable("screen." + DWM.MODID + ".ars_interface.button.destroy");
 
-        public static final Component TELEPATHIC_INTERFACE_NAME = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.title");
-        public static final Component TELEPATHIC_INTERFACE_NAME_LOCATIONS = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.title.locations");
-        public static final Component TELEPATHIC_INTERFACE_NAME_BANNERS = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.title.banners");
-        public static final Component TELEPATHIC_INTERFACE_FLD_SEARCH = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.field.search");
-        public static final Component TELEPATHIC_INTERFACE_BTN_CANCEL = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.button.cancel");
-        public static final Component TELEPATHIC_INTERFACE_BTN_ACCEPT = new TranslatableComponent("screen." + DWM.MODID + ".telepathic_interface.button.accept");
+        public static final Component TELEPATHIC_INTERFACE_NAME = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.title");
+        public static final Component TELEPATHIC_INTERFACE_NAME_LOCATIONS = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.title.locations");
+        public static final Component TELEPATHIC_INTERFACE_NAME_BANNERS = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.title.banners");
+        public static final Component TELEPATHIC_INTERFACE_FLD_SEARCH = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.field.search");
+        public static final Component TELEPATHIC_INTERFACE_BTN_CANCEL = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.button.cancel");
+        public static final Component TELEPATHIC_INTERFACE_BTN_ACCEPT = Component.translatable("screen." + DWM.MODID + ".telepathic_interface.button.accept");
 
-        public static final Component SCREWDRIVER_MODE_SCAN = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.scan");
-        public static final Component SCREWDRIVER_MODE_SETTING = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.setting");
-        public static final Component SCREWDRIVER_MODE_TARDIS_RELOCATION = new TranslatableComponent("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation");
+        public static final Component SCREWDRIVER_MODE_SCAN = Component.translatable("title." + DWM.MODID + ".screwdriver.mode.scan");
+        public static final Component SCREWDRIVER_MODE_SETTING = Component.translatable("title." + DWM.MODID + ".screwdriver.mode.setting");
+        public static final Component SCREWDRIVER_MODE_TARDIS_RELOCATION = Component.translatable("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation");
 
-        public static final Component SCREWDRIVER_INTERFACE_NAME = new TranslatableComponent("screen." + DWM.MODID + ".screwdriver_interface.title");
-        public static final Function<Screwdriver.ScrewdriverMode, Component> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> new TranslatableComponent("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle());
+        public static final Component SCREWDRIVER_INTERFACE_NAME = Component.translatable("screen." + DWM.MODID + ".screwdriver_interface.title");
+        public static final Function<Screwdriver.ScrewdriverMode, Component> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> Component.translatable("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle());
     }
 
     public static class LOCS {

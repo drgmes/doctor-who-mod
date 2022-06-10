@@ -17,7 +17,6 @@ import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec2;
@@ -132,7 +131,7 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
 
             @Override
             public Component getNarration() {
-                return new TranslatableComponent(DWMUtils.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
+                return Component.translatable(DWMUtils.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
             }
 
             @Override

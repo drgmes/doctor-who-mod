@@ -11,8 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -30,16 +28,16 @@ public class ScrewdriverItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(TextComponent.EMPTY);
+        list.add(Component.empty());
 
         MutableComponent mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
-        MutableComponent modeText = new TranslatableComponent("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+        MutableComponent modeText = Component.translatable("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
         list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
 
         String tardisDimUUID = Screwdriver.getTardisUUID(itemStack);
         if (tardisDimUUID != "") {
-            MutableComponent tardis = new TextComponent(tardisDimUUID.substring(0, 8));
-            MutableComponent tardisText = new TranslatableComponent("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+            MutableComponent tardis = Component.literal(tardisDimUUID.substring(0, 8));
+            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
             list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
         }
 

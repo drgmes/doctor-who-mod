@@ -9,7 +9,7 @@ import net.drgmes.dwm.common.tardis.ars.ArsRoom;
 import net.drgmes.dwm.common.tardis.ars.ArsRooms;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -39,7 +39,7 @@ public class ServerboundTardisRoomsDestroyerApplyPacket {
             if (!(ctx.get().getSender().level instanceof ServerLevel level)) return;
 
             boolean isRoomGenerated = room.destroy(ctx.get().getSender(), level, blockPos);
-            ctx.get().getSender().displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.ars_interface.destroy." + (isRoomGenerated ? "success" : "failed")), true);
+            ctx.get().getSender().displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.ars_interface.destroy." + (isRoomGenerated ? "success" : "failed")), true);
             success.set(true);
         });
 

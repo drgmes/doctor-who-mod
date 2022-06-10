@@ -11,8 +11,8 @@ import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -34,14 +34,14 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         Optional<ITardisLevelData> tardis = tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).resolve();
         if (tardis.isEmpty()) return false;
 
-        TextComponent x = new TextComponent("" + blockPos.getX());
-        TextComponent y = new TextComponent("" + blockPos.getY());
-        TextComponent z = new TextComponent("" + blockPos.getZ());
+        MutableComponent x = Component.literal("" + blockPos.getX());
+        MutableComponent y = Component.literal("" + blockPos.getY());
+        MutableComponent z = Component.literal("" + blockPos.getZ());
         x.setStyle(x.getStyle().withColor(ChatFormatting.YELLOW));
         y.setStyle(y.getStyle().withColor(ChatFormatting.YELLOW));
         z.setStyle(z.getStyle().withColor(ChatFormatting.YELLOW));
 
-        player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".screwdriver.tardis_relocated", x, y, z), true);
+        player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".screwdriver.tardis_relocated", x, y, z), true);
         tardis.get().setDestinationFacing(Direction.fromYRot(player.getYHeadRot()).getOpposite());
         tardis.get().setDestinationDimension(level.dimension());
         tardis.get().setDestinationPosition(blockPos);

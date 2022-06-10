@@ -24,14 +24,13 @@ import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 
 public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
     public static enum DataType {
         BIOME,
-        CONFIGURED_STRUCTURE
+        STRUCTURE
     }
 
     private LocationsListWidget locationsListWidget;
@@ -186,10 +185,10 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
 
             @Override
             public Component getNarration() {
-                MutableComponent narration = new TranslatableComponent(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                MutableComponent narration = Component.translatable(DWMUtils.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
                 ChatFormatting format = ChatFormatting.WHITE;
                 if (this.entry.getValue() == DataType.BIOME) format = ChatFormatting.GOLD;
-                else if (this.entry.getValue() == DataType.CONFIGURED_STRUCTURE) format = ChatFormatting.AQUA;
+                else if (this.entry.getValue() == DataType.STRUCTURE) format = ChatFormatting.AQUA;
 
                 narration.setStyle(narration.getStyle().withColor(format));
                 return narration;

@@ -31,7 +31,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.ContainerHelper;
@@ -266,11 +265,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                     }
                     else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBanner banner) {
                         String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
-                        player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
+                        player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
                         blockPos = banner.getPos();
                     }
                     else {
-                        player.displayClientMessage(new TranslatableComponent("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
+                        player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
                     }
 
                     tardis.setDestinationDimension(mapData.dimension);
@@ -406,34 +405,34 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         Component component = switch (role) {
             case DOORS, SHIELDS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING
-            -> !isMaterialized ? null : new TranslatableComponent(role.message + ((boolean) value ? ".active" : ".inactive"));
+            -> !isMaterialized ? null : Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
 
             case HANDBRAKE
-            -> new TranslatableComponent(role.message + ((boolean) value ? ".active" : ".inactive"));
+            -> Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
 
             case SAFE_DIRECTION
-            -> new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + value));
+            -> Component.translatable(role.message, Component.translatable(role.message + "." + value));
 
             case FACING
-            -> isInFlight ? null : new TranslatableComponent(role.message, new TranslatableComponent(role.message + "." + (provider.getDestinationExteriorFacing().ordinal() - 2)));
+            -> isInFlight ? null : Component.translatable(role.message, Component.translatable(role.message + "." + (provider.getDestinationExteriorFacing().ordinal() - 2)));
 
             case XYZSTEP
-            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getXYZStep());
+            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getXYZStep());
 
             case XSET
-            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getX());
+            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getX());
 
             case YSET
-            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getY());
+            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getY());
 
             case ZSET
-            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getZ());
+            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getZ());
 
             case DIM_PREV, DIM_NEXT
-            -> isInFlight ? null : new TranslatableComponent(role.message, "\u00A7e" + provider.getDestinationExteriorDimension().location().getPath().replace("_", " ").toUpperCase());
+            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorDimension().location().getPath().replace("_", " ").toUpperCase());
 
             default
-            -> isInFlight || role.message == null ? null : new TranslatableComponent(role.message, value);
+            -> isInFlight || role.message == null ? null : Component.translatable(role.message, value);
         };
 
         if (component != null) {

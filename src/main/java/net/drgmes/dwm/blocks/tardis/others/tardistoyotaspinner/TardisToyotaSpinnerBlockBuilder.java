@@ -8,10 +8,10 @@ import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
 
 public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
@@ -35,7 +35,7 @@ public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
         ModelHelper.applyExternalOBJModel(builder, "item/tardis/others/toyotaspinner/" + this.getResourceName(), true);
         ModelHelper.rotateToBlockStyle(builder, 0.4F);
 
-        builder.transforms().transform(ModelBuilder.Perspective.GUI).translation(-3F, -2.5F, 0);
+        builder.transforms().transform(TransformType.GUI).translation(-3F, -2.5F, 0);
     }
 
     @Override

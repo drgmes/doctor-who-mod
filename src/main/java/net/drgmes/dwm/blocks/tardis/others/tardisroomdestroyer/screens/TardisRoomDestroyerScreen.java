@@ -14,8 +14,6 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
@@ -144,7 +142,7 @@ public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
     protected void renderConfirmationMessage(PoseStack poseStack) {
         if (this.tardisRoomDestroyerBlockEntity == null || this.tardisRoomDestroyerBlockEntity.room == null) return;
 
-        Component text = new TranslatableComponent("screen." + DWM.MODID + ".ars_interface.message");
+        Component text = Component.translatable("screen." + DWM.MODID + ".ars_interface.message");
         float textX = (this.getBackgroundSize().x - this.font.width(text)) / 2;
         float textY = (this.getBackgroundSize().y - this.font.lineHeight * 3) / 2 - BUTTON_HEIGHT;
         Vec2 textPos = this.getRenderPos(textX, textY);
@@ -152,7 +150,7 @@ public class TardisRoomDestroyerScreen extends Screen implements IBaseScreen {
 
         MutableComponent name = this.tardisRoomDestroyerBlockEntity.room.getTitle().copy();
         name.setStyle(name.getStyle().withColor(ChatFormatting.GOLD));
-        name.append(new TextComponent("?").withStyle(ChatFormatting.WHITE));
+        name.append(Component.literal("?").withStyle(ChatFormatting.WHITE));
         float nameX = (this.getBackgroundSize().x - this.font.width(name)) / 2;
         Vec2 namePos = this.getRenderPos(nameX, textY + this.font.lineHeight);
         this.getFont().drawShadow(poseStack, name, namePos.x, namePos.y, 0xE0E0E0);

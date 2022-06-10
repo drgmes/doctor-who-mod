@@ -96,6 +96,6 @@ public class ScrewdriverScanModeOverlay {
         Item offHandItem = player.getOffhandItem().getItem();
         if (!(mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) return;
 
-        render(event.getMatrixStack());
+        render(event.getPoseStack());
     }
 }
