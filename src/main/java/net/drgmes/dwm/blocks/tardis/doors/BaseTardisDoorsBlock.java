@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 
@@ -124,6 +125,7 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
 
                 if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                     player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                     tardis.updateConsoleTiles();
                 }
 
@@ -133,6 +135,7 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
             if (player.isShiftKeyDown()) {
                 if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                     player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                     tardis.updateConsoleTiles();
                 }
 
@@ -140,6 +143,7 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
             }
 
             if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
+                level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
                 tardis.updateConsoleTiles();
             }
         });

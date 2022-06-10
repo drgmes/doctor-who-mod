@@ -20,6 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ScrewdriverItem extends Item {
     public ScrewdriverItem(Item.Properties props) {
@@ -81,6 +82,7 @@ public class ScrewdriverItem extends Item {
         ItemStack itemStack = player.getItemInHand(hand);
 
         if (Screwdriver.interact(level, player, hand, isAlternativeAction)) {
+            player.gameEvent(GameEvent.FLAP);
             ModSounds.playScrewdriverMainSound(level, player.blockPosition());
             return InteractionResultHolder.success(itemStack);
         }

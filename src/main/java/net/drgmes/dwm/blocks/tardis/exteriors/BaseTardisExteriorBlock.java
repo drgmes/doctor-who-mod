@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -153,6 +154,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return InteractionResult.PASS;
         }
 
+        BlockPos finalBlockPos = blockPos;
         ServerLevel tardisLevel = this.getTardisLevel(level, blockPos);
         if (tardisLevel == null) return InteractionResult.SUCCESS;
 
@@ -175,6 +177,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
                 if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                     player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                     tardis.updateConsoleTiles();
                 }
 
@@ -184,6 +187,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             if (player.isShiftKeyDown()) {
                 if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), player)) {
                     player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                    level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                     tardis.updateConsoleTiles();
                 }
 
@@ -191,6 +195,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             }
 
             if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
+                level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                 tardis.updateConsoleTiles();
             }
         });
