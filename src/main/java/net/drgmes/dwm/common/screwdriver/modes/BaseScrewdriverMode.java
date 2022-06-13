@@ -16,33 +16,27 @@ import net.minecraft.world.phys.EntityHitResult;
 
 public abstract class BaseScrewdriverMode {
     public boolean interactWithBlock(Level level, Player player, InteractionHand hand, BlockHitResult hitResult, boolean isAlternativeAction) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
         return false;
     }
 
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
-        return true;
+        return false;
     }
 
     public boolean interactWithBlockAlternative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
-        return true;
+        return false;
     }
 
     public boolean interactWithEntity(Level level, Player player, InteractionHand hand, EntityHitResult hitResult, boolean isAlternativeAction) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
         return false;
     }
 
     public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
-        return true;
+        return false;
     }
 
     public boolean interactWithEntityAlternative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
-        return true;
+        return false;
     }
 
     public void generateVibration(Level level, Player player, BlockPos blockPos) {

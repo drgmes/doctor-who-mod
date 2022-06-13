@@ -27,7 +27,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!super.interactWithBlockNative(level, player, hand, hitResult)) return false;
+        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
 
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
@@ -63,7 +63,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!super.interactWithEntityNative(level, player, hand, hitResult)) return false;
+        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
 
         Entity entity = hitResult.getEntity();
         List<Component> lines = new ArrayList<>();

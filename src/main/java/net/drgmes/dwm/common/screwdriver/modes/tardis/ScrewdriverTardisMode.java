@@ -24,7 +24,7 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!super.interactWithBlockNative(level, player, hand, hitResult)) return false;
+        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
 
         BlockPos blockPos = hitResult.getBlockPos().above();
         String tardisDimUUID = Screwdriver.getTardisUUID(player.getItemInHand(hand));
