@@ -49,10 +49,10 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!super.interactWithBlockNative(level, player, hand, hitResult)) return false;
+
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
-        if (!this.checkIsValidHitBlock(blockState)) return false;
-
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
 
@@ -121,6 +121,8 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithBlockAlternative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!super.interactWithBlockAlternative(level, player, hand, hitResult)) return false;
+
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
         Block block = blockState.getBlock();
@@ -163,8 +165,9 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
+        if (!super.interactWithEntityNative(level, player, hand, hitResult)) return false;
+
         Entity entity = hitResult.getEntity();
-        if (!this.checkIsValidHitEntity(entity)) return false;
 
         // Trader Llama
         if (entity instanceof TraderLlama traderLlama) {

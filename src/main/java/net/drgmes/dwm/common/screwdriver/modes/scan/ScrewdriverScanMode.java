@@ -19,7 +19,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -28,14 +27,11 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (!super.interactWithBlockNative(level, player, hand, hitResult)) return false;
+
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = level.getBlockState(blockPos);
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
-
-        if (!this.checkIsValidHitBlock(blockState)) return false;
-
-        level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
-        level.gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(null, blockState));
 
         List<Component> lines = new ArrayList<>();
         MutableComponent title = blockState.getBlock().getName().copy();
@@ -67,13 +63,9 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
 
     @Override
     public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
+        if (!super.interactWithEntityNative(level, player, hand, hitResult)) return false;
+
         Entity entity = hitResult.getEntity();
-
-        if (!this.checkIsValidHitEntity(entity)) return false;
-
-        level.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, entity.blockPosition());
-        level.gameEvent(GameEvent.PROJECTILE_LAND, entity.blockPosition(), GameEvent.Context.of(null, null));
-
         List<Component> lines = new ArrayList<>();
         MutableComponent title = entity.getType().getDescription().copy();
         title.setStyle(title.getStyle().withColor(ChatFormatting.GOLD));

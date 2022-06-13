@@ -8,6 +8,7 @@ import net.drgmes.dwm.common.screwdriver.modes.tardis.ScrewdriverTardisMode;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -69,7 +70,11 @@ public class Screwdriver {
             }
         }
 
-        if (wasUsed) player.getCooldowns().addCooldown(screwdriverItem, getInteractionCooldownTime(itemStack));
+        if (wasUsed) {
+            player.getCooldowns().addCooldown(screwdriverItem, getInteractionCooldownTime(itemStack));
+            mode.generateVibration(level, player, new BlockPos(hitResult.getLocation()));
+        }
+
         return wasUsed;
     }
 
