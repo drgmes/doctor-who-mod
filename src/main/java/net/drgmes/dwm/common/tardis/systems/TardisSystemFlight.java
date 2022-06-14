@@ -115,6 +115,12 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
             this.tardis.updateConsoleTiles();
 
+            materializationSystem.onFail(() -> {
+                this.isInFlight = false;
+                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false)); 
+                this.tardis.updateConsoleTiles();
+            });
+
             return materializationSystem.remat(() -> {
                 this.isInFlight = false;
                 this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false)); 

@@ -36,6 +36,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private final List<Runnable> dematConsumers = new ArrayList<>();
     private final List<Runnable> rematConsumers = new ArrayList<>();
+    private final List<Runnable> failConsumers = new ArrayList<>();
 
     private final ITardisLevelData tardis;
     private boolean isMaterialized = true;
@@ -205,6 +206,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.inProgress()) return false;
 
         if (!this.tardis.isValid()) {
+            this.runFailConsumers();
             this.playFailSound();
             return false;
         }
@@ -274,6 +276,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 }
             }
             else if (!this.tryLandToForeignTardis()) {
+                this.runFailConsumers();
                 this.playFailSound();
             }
 
@@ -288,6 +291,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return this.remat();
     }
 
+    public void onFail(Runnable consumer) {
+        this.failConsumers.add(consumer);
+    }
+
     private void runDematConsumers() {
         this.dematConsumers.forEach((consumer) -> consumer.run());
         this.dematConsumers.clear();
@@ -296,6 +303,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private void runRematConsumers() {
         this.rematConsumers.forEach((consumer) -> consumer.run());
         this.rematConsumers.clear();
+    }
+
+    private void runFailConsumers() {
+        this.failConsumers.forEach((consumer) -> consumer.run());
+        this.failConsumers.clear();
     }
 
     private boolean tryLandToForeignTardis() {
