@@ -450,7 +450,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         if (!demat) return;
-        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), this.tardis.isShieldsEnabled(), true));
+        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), this.tardis.isShieldsEnabled(), true));
     }
 
     private void playFailSound() {

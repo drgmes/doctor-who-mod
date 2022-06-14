@@ -9,6 +9,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Lifecycle;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
@@ -28,6 +29,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 
 public class DimensionHelper {
+    public static boolean isTardisDimension(Level level) {
+        return level != null && level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
+    }
+
     public static ResourceKey<Level> getLevelKey(String id) {
         return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(id));
     }

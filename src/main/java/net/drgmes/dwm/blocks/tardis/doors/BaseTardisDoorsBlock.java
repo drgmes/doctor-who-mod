@@ -109,17 +109,17 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
 
-            String tardisDimUUID = tardis.getLevel().dimension().location().getPath();
+            String tardisLevelUUID = tardis.getLevel().dimension().location().getPath();
             ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
             CompoundTag heldItemTag = heldItem.getOrCreateTag();
 
             if (heldItem.getItem() instanceof TardisKeyItem) {
-                if (!heldItemTag.contains("tardisDimUUID")) {
+                if (!heldItemTag.contains("tardisLevelUUID")) {
                     if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
-                    heldItemTag.putString("tardisDimUUID", tardisDimUUID);
+                    heldItemTag.putString("tardisLevelUUID", tardisLevelUUID);
                 }
 
-                if (!heldItemTag.getString("tardisDimUUID").equalsIgnoreCase(tardisDimUUID)) {
+                if (!heldItemTag.getString("tardisLevelUUID").equalsIgnoreCase(tardisLevelUUID)) {
                     return;
                 }
 

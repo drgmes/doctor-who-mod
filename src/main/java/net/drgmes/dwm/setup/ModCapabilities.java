@@ -5,7 +5,7 @@ import net.drgmes.dwm.caps.ITardisChunkLoader;
 import net.drgmes.dwm.caps.ITardisChunkLoader.TardisChunkLoaderProvider;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.ITardisLevelData.TardisLevelDataProvider;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ChunkTracker;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +36,7 @@ public class ModCapabilities {
     public static void attachWorldCaps(AttachCapabilitiesEvent<Level> event) {
         Level level = event.getObject();
 
-        if (TardisHelper.isTardisDimension(level)) {
+        if (DimensionHelper.isTardisDimension(level)) {
             TardisLevelDataProvider tardisLevelDataProvider = new TardisLevelDataProvider(level);
             event.addCapability(TARDIS_LOC, tardisLevelDataProvider);
             event.addListener(tardisLevelDataProvider.holder::invalidate);

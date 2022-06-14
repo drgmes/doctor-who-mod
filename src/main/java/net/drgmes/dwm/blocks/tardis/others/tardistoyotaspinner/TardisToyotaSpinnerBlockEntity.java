@@ -6,7 +6,7 @@ import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -38,7 +38,7 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        if (!this.level.isClientSide && TardisHelper.isTardisDimension(this.level)) {
+        if (!this.level.isClientSide && DimensionHelper.isTardisDimension(this.level)) {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                 boolean prevInProgress = this.inProgress;
 

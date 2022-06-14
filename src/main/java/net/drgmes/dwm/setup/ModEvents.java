@@ -8,6 +8,7 @@ import net.drgmes.dwm.caps.ITardisChunkLoader;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.world.data.TardisLevelData;
 import net.minecraft.server.level.ServerLevel;
@@ -68,7 +69,7 @@ public class ModEvents {
 
         level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent(ITardisChunkLoader::tick);
 
-        if (TardisHelper.isTardisDimension(level)) {
+        if (DimensionHelper.isTardisDimension(level)) {
             level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent(ITardisLevelData::tick);
         }
     }

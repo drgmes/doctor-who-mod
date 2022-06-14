@@ -27,8 +27,8 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
 
         BlockPos blockPos = hitResult.getBlockPos().above();
-        String tardisDimUUID = Screwdriver.getTardisUUID(player.getItemInHand(hand));
-        ServerLevel tardisLevel = DimensionHelper.getLevel(level.getServer(), tardisDimUUID);
+        String tardisLevelUUID = Screwdriver.getTardisUUID(player.getItemInHand(hand));
+        ServerLevel tardisLevel = DimensionHelper.getLevel(level.getServer(), tardisLevelUUID);
         if (tardisLevel == null || tardisLevel == level) return false;
 
         Optional<ITardisLevelData> tardis = tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).resolve();

@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer;
 
 import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.screens.TardisRoomDestroyerScreen;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -26,7 +26,7 @@ public class TardisRoomDestroyerBlock extends BaseRotatableWaterloggedEntityBloc
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        if (!TardisHelper.isTardisDimension(level)) return InteractionResult.PASS;
+        if (!DimensionHelper.isTardisDimension(level)) return InteractionResult.PASS;
         if (player.isSpectator()) return InteractionResult.PASS;
         if (!player.isShiftKeyDown()) return InteractionResult.PASS;
         if (!level.isClientSide) return InteractionResult.SUCCESS;

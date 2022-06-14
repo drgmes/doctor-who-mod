@@ -6,8 +6,8 @@ import net.drgmes.dwm.common.screwdriver.modes.scan.ScrewdriverScanMode;
 import net.drgmes.dwm.common.screwdriver.modes.setting.ScrewdriverSettingMode;
 import net.drgmes.dwm.common.screwdriver.modes.tardis.ScrewdriverTardisMode;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -105,11 +105,11 @@ public class Screwdriver {
 
     public static String getTardisUUID(ItemStack itemStack) {
         CompoundTag tag = getData(itemStack);
-        return !tag.contains("tardisDimUUID") ? "" : tag.getString("tardisDimUUID");
+        return !tag.contains("tardisLevelUUID") ? "" : tag.getString("tardisLevelUUID");
     }
 
     public static void assingTardisUUID(ItemStack itemStack, Level level) {
-        if (!TardisHelper.isTardisDimension(level)) return;
-        Screwdriver.getData(itemStack).putString("tardisDimUUID", level.dimension().location().getPath());
+        if (!DimensionHelper.isTardisDimension(level)) return;
+        Screwdriver.getData(itemStack).putString("tardisLevelUUID", level.dimension().location().getPath());
     }
 }

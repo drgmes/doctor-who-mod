@@ -599,7 +599,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
                 List<ResourceKey<Level>> levelKeys = new ArrayList<>();
 
                 levels.keySet().forEach((key) -> {
-                    if (TardisHelper.isTardisDimension(levels.get(key))) return;
+                    if (DimensionHelper.isTardisDimension(levels.get(key))) return;
                     if (key == this.level.dimension()) return;
                     levelKeys.add(key);
                 });
@@ -701,6 +701,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
             }
         }
 
-        ModPackets.send(exteriorLevel.getChunkAt(exteriorBlockPos), new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isShieldsEnabled(), false));
+        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isShieldsEnabled(), false));
     }
 }

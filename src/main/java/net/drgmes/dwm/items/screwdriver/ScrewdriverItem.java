@@ -35,9 +35,9 @@ public class ScrewdriverItem extends Item {
         MutableComponent modeText = Component.translatable("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
         list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
 
-        String tardisDimUUID = Screwdriver.getTardisUUID(itemStack);
-        if (tardisDimUUID != "") {
-            MutableComponent tardis = Component.literal(tardisDimUUID.substring(0, 8));
+        String tardisLevelUUID = Screwdriver.getTardisUUID(itemStack);
+        if (tardisLevelUUID != "") {
+            MutableComponent tardis = Component.literal(tardisLevelUUID.substring(0, 8));
             MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
             list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
         }

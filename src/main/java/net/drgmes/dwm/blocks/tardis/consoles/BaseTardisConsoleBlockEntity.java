@@ -24,7 +24,7 @@ import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBann
 import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -139,7 +139,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public void init() {
         this.createControls();
 
-        if (TardisHelper.isTardisDimension(this.level)) {
+        if (DimensionHelper.isTardisDimension(this.level)) {
             if (!this.level.isClientSide) {
                 this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                     if (!tardis.isValid()) return;
@@ -236,7 +236,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         // Telepathic Interface
         if (control.role == TardisConsoleControlRoles.TELEPATHIC_INTERFACE && hand == InteractionHand.OFF_HAND) {
-            if (!TardisHelper.isTardisDimension(entity.level)) return;
+            if (!DimensionHelper.isTardisDimension(entity.level)) return;
 
             ItemStack mainHandItemStack = player.getMainHandItem();
             ItemStack offHandItemStack = player.getOffhandItem();
@@ -338,7 +338,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket();
             this.setChanged();
 
-            if (!TardisHelper.isTardisDimension(this.level)) {
+            if (!DimensionHelper.isTardisDimension(this.level)) {
                 this.sendControlsUpdatePacket();
                 return;
             }

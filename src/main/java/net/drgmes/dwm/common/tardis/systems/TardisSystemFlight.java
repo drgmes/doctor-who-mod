@@ -13,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class TardisSystemFlight implements ITardisSystem {
     private final ITardisLevelData tardis;
+    private boolean isInFlight = false;
     private boolean isFlightLaunched = false;
     private boolean isSoundFlyPlayed = false;
 
@@ -59,7 +60,7 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public boolean inProgress() {
-        return this.isFlightLaunched || this.tickInProgress > 0;
+        return this.isInFlight || this.isFlightLaunched || this.tickInProgress > 0;
     }
 
     public void setFlight(boolean flag) {
@@ -84,6 +85,7 @@ public class TardisSystemFlight implements ITardisSystem {
                 float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
 
                 this.isSoundFlyPlayed = false;
+                this.isInFlight = true;
                 this.tickInProgress = timeToFly;
                 this.tickInProgressGoal = timeToFly;
                 this.destinationDistanceRate = timeToFly / Math.min(ModConfig.COMMON.tardisMaxFlightTime.get(), timeToFly);
@@ -108,13 +110,15 @@ public class TardisSystemFlight implements ITardisSystem {
             this.isSoundFlyPlayed = false;
             this.tickInProgress = 0;
             this.destinationDistanceRate = 0;
-            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
             this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
             this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
             this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
             this.tardis.updateConsoleTiles();
 
             return materializationSystem.remat(() -> {
+                this.isInFlight = false;
+                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false)); 
+                this.tardis.updateConsoleTiles();
                 this.tardis.updateBoti();
             });
         }

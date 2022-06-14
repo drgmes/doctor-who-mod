@@ -59,7 +59,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
 
-        tag.putString("tardisDimUUID", this.getTardisLevelUUID());
+        tag.putString("tardisLevelUUID", this.getTardisLevelUUID());
         tag.putString("tardisConsoleRoom", this.tardisConsoleRoom);
 
         tag.putInt("tickInProgress", this.tickInProgress);
@@ -72,7 +72,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     public void load(CompoundTag tag) {
         super.load(tag);
 
-        this.tardisLevelUUID = tag.getString("tardisDimUUID");
+        this.tardisLevelUUID = tag.getString("tardisLevelUUID");
         this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
 
         this.tickInProgress = tag.getInt("tickInProgress");
@@ -199,6 +199,6 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     public ServerLevel getTardisLevel(Level level) {
-        return TardisHelper.getOrCreateTardisLevel(this, level);
+        return TardisHelper.getOrCreateTardisLevel(level, this);
     }
 }

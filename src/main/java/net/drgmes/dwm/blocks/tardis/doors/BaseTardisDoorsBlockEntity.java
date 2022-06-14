@@ -5,7 +5,7 @@ import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -68,7 +68,7 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
     }
 
     public void init() {
-        if (TardisHelper.isTardisDimension(this.level)) {
+        if (DimensionHelper.isTardisDimension(this.level)) {
             this.tardisLevelUUID = this.level.dimension().location().getPath();
 
             if (!this.level.isClientSide) {

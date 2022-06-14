@@ -12,6 +12,7 @@ import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.drgmes.dwm.setup.ModEvents;
 import net.drgmes.dwm.world.generator.TardisChunkGenerator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,12 +29,8 @@ import net.minecraftforge.common.util.ITeleporter;
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).immutable();
 
-    public static boolean isTardisDimension(Level level) {
-        return level != null && level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
-    }
-
     public static void teleportToTardis(Entity entity, ServerLevel destination) {
-        if (destination == null || entity.level.dimension() == destination.dimension() || !TardisHelper.isTardisDimension(destination)) return;
+        if (destination == null || entity.level.dimension() == destination.dimension() || !DimensionHelper.isTardisDimension(destination)) return;
 
         destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             entity.setYRot(tardis.getEntraceFacing().toYRot());
@@ -42,7 +39,7 @@ public class TardisHelper {
     }
 
     public static void teleportFromTardis(Entity entity, MinecraftServer server) {
-        if (server == null || !TardisHelper.isTardisDimension(entity.level)) return;
+        if (server == null || !DimensionHelper.isTardisDimension(entity.level)) return;
 
         entity.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
@@ -55,18 +52,17 @@ public class TardisHelper {
         });
     }
 
-    public static ServerLevel getOrCreateTardisLevel(BaseTardisExteriorBlockEntity tile, Level level) {
+    public static ServerLevel getOrCreateTardisLevel(Level level, String id, ResourceKey<Level> dimension, BlockPos blockPos, Direction direction, String room) {
         MinecraftServer server = level.getServer();
         if (server == null) return null;
 
-        String id = tile.getTardisLevelUUID();
         ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
-        ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(tile), TardisHelper::tardisDimensionBuilder);
+        ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(room), TardisHelper::tardisDimensionBuilder);
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            tardis.setDimension(level.dimension(), false);
-            tardis.setFacing(tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING), false);
-            tardis.setPosition(tile.getBlockPos(), false);
+            tardis.setDimension(dimension, false);
+            tardis.setFacing(direction, false);
+            tardis.setPosition(blockPos, false);
         });
 
         if (server.getLevel(levelKey) != null) return tardisLevel;
@@ -75,6 +71,17 @@ public class TardisHelper {
         if (ModEvents.DATA != null) ModEvents.DATA.setDirty();
 
         return tardisLevel;
+    }
+
+    public static ServerLevel getOrCreateTardisLevel(Level level, BaseTardisExteriorBlockEntity tile) {
+        return TardisHelper.getOrCreateTardisLevel(
+            level,
+            tile.getTardisLevelUUID(),
+            level.dimension(),
+            tile.getBlockPos(),
+            tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING),
+            tile.tardisConsoleRoom
+        );
     }
 
     public static void registerOldTardises(MinecraftServer server) {
@@ -91,9 +98,7 @@ public class TardisHelper {
         );
     }
 
-    private static Consumer<ServerLevel> getTardisConsoleRoomBuilder(BaseTardisExteriorBlockEntity tile) {
-        final String room = tile.tardisConsoleRoom;
-
+    private static Consumer<ServerLevel> getTardisConsoleRoomBuilder(String room) {
         return (level) -> {
             if (room == null) return;
 
