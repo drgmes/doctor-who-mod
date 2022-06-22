@@ -1,7 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.consoles;
 
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
@@ -13,6 +11,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
+
+import java.util.function.Supplier;
 
 public abstract class BaseTardisConsoleBlockBuilder extends BlockBuilder {
     public BaseTardisConsoleBlockBuilder(String name, Supplier<? extends BaseTardisConsoleBlock<?>> factory) {

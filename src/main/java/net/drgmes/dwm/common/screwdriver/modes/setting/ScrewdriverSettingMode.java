@@ -1,8 +1,5 @@
 package net.drgmes.dwm.common.screwdriver.modes.setting;
 
-import java.lang.reflect.Method;
-import java.util.List;
-
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -22,16 +19,7 @@ import net.minecraft.world.entity.projectile.Fireball;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BellBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.IronBarsBlock;
-import net.minecraft.world.level.block.JukeboxBlock;
-import net.minecraft.world.level.block.NoteBlock;
-import net.minecraft.world.level.block.SculkSensorBlock;
-import net.minecraft.world.level.block.TntBlock;
-import net.minecraft.world.level.block.TorchBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
 import net.minecraft.world.level.block.entity.SculkShriekerBlockEntity;
@@ -43,6 +31,9 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class ScrewdriverSettingMode extends BaseScrewdriverMode {
     public static ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
@@ -97,7 +88,7 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
                 ItemStack disk = jukeboxBlockEntity.getRecord();
 
                 if (disk != null) {
-                    level.levelEvent((Player) null, 1010, blockPos, Item.getId(disk.getItem()));
+                    level.levelEvent(null, 1010, blockPos, Item.getId(disk.getItem()));
                     return true;
                 }
             }
@@ -223,8 +214,7 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
                 method.invoke(entity, fox.getItemBySlot(EquipmentSlot.MAINHAND));
                 entity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
                 return true;
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
             }
         }
 
@@ -244,7 +234,7 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
     private boolean interactWithBlockProperty(Level level, Player player, BlockPos blockPos) {
         BlockState blockState = level.getBlockState(blockPos);
-        Property<?>[] props = new Property<?>[] {
+        Property<?>[] props = new Property<?>[]{
             BlockStateProperties.POWER,
             BlockStateProperties.OPEN,
             BlockStateProperties.POWERED,

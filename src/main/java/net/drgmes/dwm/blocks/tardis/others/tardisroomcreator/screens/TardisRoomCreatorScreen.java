@@ -1,12 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.screens;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsCategory;
@@ -19,6 +13,7 @@ import net.drgmes.dwm.utils.base.screens.IBaseScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
@@ -28,6 +23,11 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     private static final int LINE_PADDING = 3;
@@ -99,7 +99,7 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
 
     @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        super.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
 
     @Override
@@ -222,11 +222,9 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     protected void setSelectedCategory(ListWidget.ListEntry entry) {
         if (entry.category != null) {
             this.selectedCategory = entry.category;
-        }
-        else if (this.selectedCategory != null && this.selectedCategory.getParent() != null) {
+        } else if (this.selectedCategory != null && this.selectedCategory.getParent() != null) {
             this.selectedCategory = this.selectedCategory.getParent();
-        }
-        else {
+        } else {
             this.selectedCategory = null;
         }
 
@@ -333,8 +331,7 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
                     if (this.category != null) {
                         narration = this.category.getTitle().copy();
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.GOLD));
-                    }
-                    else {
+                    } else {
                         narration = Component.translatable("title." + DWM.MODID + ".ars.categories.back");
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.YELLOW));
 

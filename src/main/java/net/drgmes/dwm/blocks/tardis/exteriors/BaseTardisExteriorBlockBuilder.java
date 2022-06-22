@@ -1,7 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
@@ -14,6 +12,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
+
+import java.util.function.Supplier;
 
 public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
     public BaseTardisExteriorBlockBuilder(String name, Supplier<? extends BaseTardisExteriorBlock<?>> factory) {

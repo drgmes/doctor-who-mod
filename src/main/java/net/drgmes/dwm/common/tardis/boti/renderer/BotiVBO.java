@@ -1,18 +1,17 @@
 package net.drgmes.dwm.common.tardis.boti.renderer;
 
-import java.util.Map;
-
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
-
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.MultiBufferSource.BufferSource;
 import net.minecraft.client.renderer.RenderType;
+
+import java.util.Map;
 
 public class BotiVBO {
     public VertexFormat format = DefaultVertexFormat.BLOCK;

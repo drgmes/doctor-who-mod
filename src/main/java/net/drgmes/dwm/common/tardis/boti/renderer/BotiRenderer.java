@@ -1,12 +1,5 @@
 package net.drgmes.dwm.common.tardis.boti.renderer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.function.BiConsumer;
-
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -14,7 +7,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.math.Matrix4f;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockEntityWrapper;
@@ -43,6 +35,12 @@ import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.function.BiConsumer;
 
 @Mod.EventBusSubscriber(modid = DWM.MODID)
 public class BotiRenderer {
@@ -131,7 +129,7 @@ public class BotiRenderer {
         mc.textureManager.bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 
         BotiStorage botiStorage = entraceData.getBotiStorage();
-        if (botiStorage.isUpdated || true) {
+        if (true) {
             botiStorage.isUpdated = false;
 
             for (RenderType type : RenderType.chunkBufferLayers()) {
@@ -190,8 +188,7 @@ public class BotiRenderer {
                             mc.getBlockRenderer().renderSingleBlock(blockState, innerPoseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData);
                             // isRendered = true;
                         }
-                    }
-                    else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
+                    } else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
                         // TODO
                         // if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
                         // mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);

@@ -29,11 +29,15 @@ public class TardisDoorsPoliceBoxBlock extends BaseTardisDoorsBlock {
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
-        switch(blockState.getValue(FACING)) {
-            case NORTH: return NORTH_AABB;
-            case SOUTH: return SOUTH_AABB;
-            case WEST: return WEST_AABB;
-            default: return EAST_AABB;
+        switch (blockState.getValue(FACING)) {
+            case NORTH:
+                return NORTH_AABB;
+            case SOUTH:
+                return SOUTH_AABB;
+            case WEST:
+                return WEST_AABB;
+            default:
+                return EAST_AABB;
         }
     }
 }

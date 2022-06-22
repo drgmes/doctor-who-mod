@@ -1,24 +1,7 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.network.ClientboundBotiUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
-import net.drgmes.dwm.network.ClientboundTardisEngineUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisToyotaSpinnerUpdatePacket;
-import net.drgmes.dwm.network.ServerboundScrewdriverUpdatePacket;
-import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
-import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
-import net.drgmes.dwm.network.ServerboundTardisRoomsCreatorApplyPacket;
-import net.drgmes.dwm.network.ServerboundTardisRoomsDestroyerApplyPacket;
+import net.drgmes.dwm.network.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

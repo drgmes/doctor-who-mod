@@ -46,15 +46,13 @@ public abstract class BaseScrewdriverMode {
     protected boolean checkIsValidHitBlock(BlockState blockState) {
         if (blockState.getBlock() instanceof BaseTardisConsoleBlock) return false;
         if (blockState.getBlock() instanceof BaseTardisExteriorBlock) return false;
-        if (blockState.getBlock() instanceof BaseTardisDoorsBlock) return false;
-        return true;
+        return !(blockState.getBlock() instanceof BaseTardisDoorsBlock);
     }
 
     protected boolean checkIsValidHitEntity(Entity entity) {
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return false;
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return false;
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return false;
-        return true;
+        return entity.getType() != ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get();
     }
 }

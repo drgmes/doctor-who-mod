@@ -1,10 +1,5 @@
 package net.drgmes.dwm.utils.builders.block;
 
-import java.util.ArrayList;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.data.common.ModLootTableProvider;
@@ -22,6 +17,11 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlockBuilder {
     public final String name;

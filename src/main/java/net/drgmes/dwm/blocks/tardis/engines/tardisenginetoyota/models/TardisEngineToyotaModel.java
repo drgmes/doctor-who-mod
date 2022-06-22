@@ -2,18 +2,13 @@ package net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,52 +23,6 @@ public class TardisEngineToyotaModel extends EntityModel<Entity> {
     public TardisEngineToyotaModel(ModelPart root) {
         this.base = root.getChild("base");
         this.covers = root.getChild("covers");
-    }
-
-    public void setupAnim(TardisEngineToyotaBlockEntity tile) {
-        float coverAngle = -0.5F;
-
-        if (tile.isOpenedCover1) {
-            this.covers.getChild("cover_1").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover2) {
-            this.covers.getChild("cover_2").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover3) {
-            this.covers.getChild("cover_3").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover4) {
-            this.covers.getChild("cover_4").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover5) {
-            this.covers.getChild("cover_5").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover6) {
-            this.covers.getChild("cover_6").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover7) {
-            this.covers.getChild("cover_7").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover8) {
-            this.covers.getChild("cover_8").xRot = coverAngle;
-        }
-    }
-
-    @Override
-    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        covers.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @SuppressWarnings("unused")
@@ -226,5 +175,51 @@ public class TardisEngineToyotaModel extends EntityModel<Entity> {
         PartDefinition cover_8_roundel_6_r1 = cover_8_roundel.addOrReplaceChild("cover_8_roundel_6_r1", CubeListBuilder.create().texOffs(37, 114).addBox(-3.6213F, -0.5F, -1.5F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(37, 160).addBox(2.6213F, -0.5F, -1.5F, 1.0F, 1.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(36, 17).addBox(-1.5F, -0.5F, 2.6213F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(36, 63).addBox(-1.5F, -0.5F, -3.6213F, 3.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 1024, 1024);
+    }
+
+    public void setupAnim(TardisEngineToyotaBlockEntity tile) {
+        float coverAngle = -0.5F;
+
+        if (tile.isOpenedCover1) {
+            this.covers.getChild("cover_1").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover2) {
+            this.covers.getChild("cover_2").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover3) {
+            this.covers.getChild("cover_3").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover4) {
+            this.covers.getChild("cover_4").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover5) {
+            this.covers.getChild("cover_5").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover6) {
+            this.covers.getChild("cover_6").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover7) {
+            this.covers.getChild("cover_7").xRot = coverAngle;
+        }
+
+        if (tile.isOpenedCover8) {
+            this.covers.getChild("cover_8").xRot = coverAngle;
+        }
+    }
+
+    @Override
+    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        covers.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

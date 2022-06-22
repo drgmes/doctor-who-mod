@@ -2,18 +2,13 @@ package net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -32,26 +27,6 @@ public class TardisToyotaSpinnerModel extends EntityModel<Entity> {
         this.rotor_1 = root.getChild("rotor_1");
         this.rotor_2 = root.getChild("rotor_2");
         this.rotor_3 = root.getChild("rotor_3");
-    }
-
-    public void setupAnim(TardisToyotaSpinnerBlockEntity tile) {
-        float angle = 0.035F;
-        this.platform.yRot -= tile.tickInProgress * angle;
-        this.rotor_1.yRot += tile.tickInProgress * angle;
-        this.rotor_2.yRot -= tile.tickInProgress * angle;
-        this.rotor_3.yRot += tile.tickInProgress * angle;
-    }
-
-    @Override
-    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        platform.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        rotor_1.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        rotor_2.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        rotor_3.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @SuppressWarnings("unused")
@@ -111,5 +86,25 @@ public class TardisToyotaSpinnerModel extends EntityModel<Entity> {
         PartDefinition rotor_3_corner_5_r1 = rotor_3_corner.addOrReplaceChild("rotor_3_corner_5_r1", CubeListBuilder.create().texOffs(59, 187).addBox(-0.25F, -3.5F, 18.8457F, 1.0F, 6.0F, 7.0F, new CubeDeformation(0.0F)).texOffs(192, 95).addBox(-0.75F, -3.5F, -25.8457F, 1.0F, 6.0F, 7.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 256, 256);
+    }
+
+    public void setupAnim(TardisToyotaSpinnerBlockEntity tile) {
+        float angle = 0.035F;
+        this.platform.yRot -= tile.tickInProgress * angle;
+        this.rotor_1.yRot += tile.tickInProgress * angle;
+        this.rotor_2.yRot -= tile.tickInProgress * angle;
+        this.rotor_3.yRot += tile.tickInProgress * angle;
+    }
+
+    @Override
+    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        platform.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor_1.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor_2.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor_3.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

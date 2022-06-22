@@ -1,13 +1,13 @@
 package net.drgmes.dwm.items.screwdriver.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.screwdriver.Screwdriver.ScrewdriverMode;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -76,7 +76,7 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
 
     @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        super.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
 
     @Override

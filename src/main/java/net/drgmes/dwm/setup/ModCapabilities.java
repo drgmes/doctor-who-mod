@@ -19,10 +19,12 @@ import net.minecraftforge.fml.Bindings;
 
 public class ModCapabilities {
     public static final ResourceLocation TARDIS_LOC = new ResourceLocation(DWM.MODID, "tardis_data");
-    public static final Capability<ITardisLevelData> TARDIS_DATA = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<ITardisLevelData> TARDIS_DATA = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static final ResourceLocation TARDIS_CHUNK_LOADER_LOC = new ResourceLocation(DWM.MODID, "tardis_chunk_loader");
-    public static final Capability<ITardisChunkLoader> TARDIS_CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>() {});
+    public static final Capability<ITardisChunkLoader> TARDIS_CHUNK_LOADER = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     public static void init() {
         Bindings.getForgeBus().get().addListener(ModCapabilities::register);

@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
 import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntraceData;
 import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
@@ -21,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer<TardisExteriorPoliceBoxBlockEntity> {
-    private BlockEntityRendererProvider.Context ctx;
+    private final BlockEntityRendererProvider.Context ctx;
 
     public TardisExteriorPoliceBoxBlockRenderer(BlockEntityRendererProvider.Context context) {
         this.ctx = context;
@@ -29,7 +28,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
 
     @Override
     public int getViewDistance() {
-       return 256;
+        return 256;
     }
 
     @Override
@@ -84,8 +83,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
             BotiRenderer.addEntraceData(entraceData);
-        }
-        else {
+        } else {
             entraceData.renderDoors(poseStack, buffer);
         }
     }

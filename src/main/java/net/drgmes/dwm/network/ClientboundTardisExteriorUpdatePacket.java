@@ -1,8 +1,5 @@
 package net.drgmes.dwm.network;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -12,6 +9,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ClientboundTardisExteriorUpdatePacket {
     private final BlockPos blockPos;

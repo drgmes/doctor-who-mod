@@ -1,8 +1,5 @@
 package net.drgmes.dwm.utils.builders.world;
 
-import java.util.ArrayList;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModStructures;
 import net.drgmes.dwm.setup.Registration;
@@ -13,6 +10,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class FeatureBuilder {
     public final String name;

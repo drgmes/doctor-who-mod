@@ -1,12 +1,5 @@
 package net.drgmes.dwm.caps;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,10 +9,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameRules;
 
-public class TardisChunkLoaderCapability implements ITardisChunkLoader {
-    private Map<SectionPos, List<BlockPos>> chunks = new HashMap<>();
+import java.util.*;
+import java.util.stream.Collectors;
 
-    private ServerLevel level;
+public class TardisChunkLoaderCapability implements ITardisChunkLoader {
+    private final Map<SectionPos, List<BlockPos>> chunks = new HashMap<>();
+
+    private final ServerLevel level;
 
     public TardisChunkLoaderCapability(ServerLevel level) {
         this.level = level;
@@ -29,7 +25,7 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
 
-        for (Map.Entry<SectionPos, List<BlockPos>> entry : this.chunks.entrySet()) {    
+        for (Map.Entry<SectionPos, List<BlockPos>> entry : this.chunks.entrySet()) {
             CompoundTag chunkTag = new CompoundTag();
             chunkTag.putLong("chunk", entry.getKey().chunk().toLong());
 
@@ -81,8 +77,7 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
         if (this.chunks.get(sectionPos).size() == 1) {
             this.level.setChunkForced(sectionPos.getX(), sectionPos.getZ(), false);
             this.chunks.remove(sectionPos);
-        }
-        else {
+        } else {
             this.chunks.get(sectionPos).remove(blockPos);
         }
     }

@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
@@ -133,7 +132,8 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
             poseStack.translate(0.5, 1F, 0.5);
             poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees + 60));
 
-            if (tile.monitorPage == 1) this.renderScreenPage2(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
+            if (tile.monitorPage == 1)
+                this.renderScreenPage2(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
             else this.renderScreenPage1(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
 
             poseStack.popPose();
@@ -165,7 +165,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
         String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
-        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[]{
             this.buildScreenParamText("Flight", flight),
             this.buildScreenParamText("Materialized", materialized),
             "",
@@ -188,7 +188,7 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String artronEnergyHarvestingState = provider.isEnergyArtronHarvesting() ? "ON" : "OFF";
         String forgeEnergyHarvestingState = provider.isEnergyForgeHarvesting() ? "ON" : "OFF";
 
-        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[] {
+        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[]{
             this.buildScreenParamText("Shields", shieldsState),
             this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
             this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),

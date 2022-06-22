@@ -16,13 +16,14 @@ public interface ITardisChunkLoader extends INBTSerializable<CompoundTag> {
     ServerLevel getLevel();
 
     void add(SectionPos sectionPos, BlockPos blockPos);
+
     void remove(SectionPos sectionPos, BlockPos blockPos);
 
     void tick();
 
-    public static class TardisChunkLoaderProvider implements ICapabilitySerializable<CompoundTag> {
+    class TardisChunkLoaderProvider implements ICapabilitySerializable<CompoundTag> {
         public final LazyOptional<ITardisChunkLoader> holder;
-        private ITardisChunkLoader chunkLoader;
+        private final ITardisChunkLoader chunkLoader;
 
         public TardisChunkLoaderProvider(ServerLevel level) {
             this.chunkLoader = new TardisChunkLoaderCapability(level);

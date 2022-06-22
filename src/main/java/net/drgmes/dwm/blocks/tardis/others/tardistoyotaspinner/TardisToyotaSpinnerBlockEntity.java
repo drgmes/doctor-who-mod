@@ -22,10 +22,10 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
         super(ModBlockEntities.TARDIS_TOYOTA_SPINNER.get(), blockPos, blockState);
     }
 
-	@Override
-	public AABB getRenderBoundingBox() {
-		return new AABB(this.worldPosition).inflate(3, 4, 3);
-	}
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -45,8 +45,7 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
                 if (tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
                     if (!this.inProgress && materializationSystem.inProgress()) {
                         this.inProgress = true;
-                    }
-                    else if (this.inProgress && !materializationSystem.inProgress()) {
+                    } else if (this.inProgress && !materializationSystem.inProgress()) {
                         this.inProgress = false;
                     }
                 }

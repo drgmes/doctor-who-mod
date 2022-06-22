@@ -1,13 +1,13 @@
 package net.drgmes.dwm.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.world.generator.TardisChunkGenerator;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.DimensionType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModDimensions {
     public static final List<String> TARDISES = new ArrayList<>();

@@ -1,7 +1,5 @@
 package net.drgmes.dwm.items.tardiskey;
 
-import java.util.List;
-
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -20,6 +18,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
+
+import java.util.List;
 
 public class TardisKeyItem extends Item {
     public TardisKeyItem(Item.Properties props) {

@@ -1,9 +1,6 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
-import java.util.List;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.minecraft.client.Minecraft;
@@ -18,6 +15,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.gui.GuiUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = DWM.MODID)
 public class ScrewdriverScanModeOverlay {

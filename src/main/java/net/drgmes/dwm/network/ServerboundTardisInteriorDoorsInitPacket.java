@@ -1,13 +1,13 @@
 package net.drgmes.dwm.network;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ServerboundTardisInteriorDoorsInitPacket {
     private final BlockPos blockPos;

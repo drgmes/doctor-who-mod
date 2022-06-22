@@ -2,18 +2,13 @@ package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -30,33 +25,6 @@ public class TardisDoorsPoliceBoxModel extends EntityModel<Entity> {
         this.boti = root.getChild("boti");
         this.door_left = root.getChild("door_left");
         this.door_right = root.getChild("door_right");
-    }
-
-    public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
-        float doorAngle = 1.75F;
-
-        if (tile.getBlockState().getValue(BlockStateProperties.OPEN)) {
-            this.door_left.yRot = -doorAngle;
-            this.door_right.yRot = doorAngle;
-        }
-    }
-
-    @Override
-    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    public void renderDoorsToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        door_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        door_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    public void renderBotiToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        boti.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 
     @SuppressWarnings("unused")
@@ -95,5 +63,32 @@ public class TardisDoorsPoliceBoxModel extends EntityModel<Entity> {
         PartDefinition boti = partdefinition.addOrReplaceChild("boti", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -24.0F, -3.0F, 12.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 128, 128);
+    }
+
+    public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
+        float doorAngle = 1.75F;
+
+        if (tile.getBlockState().getValue(BlockStateProperties.OPEN)) {
+            this.door_left.yRot = -doorAngle;
+            this.door_right.yRot = doorAngle;
+        }
+    }
+
+    @Override
+    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    public void renderDoorsToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        door_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        door_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    }
+
+    public void renderBotiToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        boti.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

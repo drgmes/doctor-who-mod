@@ -23,7 +23,7 @@ public class TardisToyotaSpinnerBlock extends BaseRotatableWaterloggedEntityBloc
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, ModBlockEntities.TARDIS_TOYOTA_SPINNER.get(), (l, bp, bs, blockEntity) -> {
-            ((TardisToyotaSpinnerBlockEntity) blockEntity).tick();
+            blockEntity.tick();
         });
     }
 }

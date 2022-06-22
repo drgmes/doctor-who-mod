@@ -37,7 +37,7 @@ public class TardisEngineToyotaBlockEntity extends BaseTardisEngineBlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        
+
         this.isOpenedCover1 = tag.getBoolean("isOpenedCover1");
         this.isOpenedCover2 = tag.getBoolean("isOpenedCover2");
         this.isOpenedCover3 = tag.getBoolean("isOpenedCover3");

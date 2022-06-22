@@ -1,13 +1,6 @@
 package net.drgmes.dwm.network;
 
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import com.mojang.datafixers.util.Pair;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen.DataType;
 import net.drgmes.dwm.caps.ITardisLevelData;
@@ -28,6 +21,12 @@ import net.minecraft.world.level.levelgen.GenerationStep.Decoration;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraftforge.common.Tags;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
     public final Entry<ResourceLocation, DataType> entry;
@@ -58,8 +57,7 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
                 if (this.entry.getValue() == DataType.BIOME) {
                     String msg = this.findBiome(level, tardis) ? "found" : "not_found";
                     message = Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg);
-                }
-                else if (this.entry.getValue() == DataType.STRUCTURE) {
+                } else if (this.entry.getValue() == DataType.STRUCTURE) {
                     String msg = this.findStructure(level, tardis) ? "found" : "not_found";
                     message = Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg);
                 }

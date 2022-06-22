@@ -1,14 +1,14 @@
 package net.drgmes.dwm.common.tardis.consoles;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
 import net.drgmes.dwm.setup.ModEntities;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TardisConsoleType {
     public static final TardisConsoleType TOYOTA = new TardisConsoleTypeToyota();

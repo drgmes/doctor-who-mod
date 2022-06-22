@@ -2,18 +2,13 @@ package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.models;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,28 +28,7 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         this.controls = root.getChild("controls");
         this.screwdriver_slot = root.getChild("screwdriver_slot");
         this.rotor_glass = root.getChild("rotor_glass");
-		this.rotor_rods = root.getChild("rotor_rods");
-    }
-
-    public void setupAnim(BaseTardisConsoleBlockEntity tile) {
-        float speed = 0.1F;
-        float intense = 6F;
-        float yOffset = (float) Math.cos(tile.tickInProgress * speed) * intense + (1.0F / 100) * tile.tickInProgress;
-
-        this.rotor_rods.y += yOffset;
-    }
-
-    @Override
-    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        controls.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        screwdriver_slot.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        rotor_glass.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha * 0.15F);
-		rotor_rods.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        this.rotor_rods = root.getChild("rotor_rods");
     }
 
     @SuppressWarnings("unused")
@@ -631,5 +605,26 @@ public class TardisConsoleToyotaModel extends EntityModel<Entity> {
         PartDefinition rotor_rod_g_core_4_r1 = rotor_rod_g_core.addOrReplaceChild("rotor_rod_g_core_4_r1", CubeListBuilder.create().texOffs(144, 185).addBox(-0.5F, -33.0F, 0.0137F, 1.0F, 34.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(215, 60).addBox(-0.5F, -33.0F, -1.0137F, 1.0F, 34.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 1.0472F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 512, 512);
+    }
+
+    public void setupAnim(BaseTardisConsoleBlockEntity tile) {
+        float speed = 0.1F;
+        float intense = 6F;
+        float yOffset = (float) Math.cos(tile.tickInProgress * speed) * intense + (1.0F / 100) * tile.tickInProgress;
+
+        this.rotor_rods.y += yOffset;
+    }
+
+    @Override
+    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
+    }
+
+    @Override
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        controls.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        screwdriver_slot.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+        rotor_glass.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha * 0.15F);
+        rotor_rods.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }

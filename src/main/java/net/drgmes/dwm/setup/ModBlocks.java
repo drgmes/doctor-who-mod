@@ -1,7 +1,5 @@
 package net.drgmes.dwm.setup;
 
-import java.util.ArrayList;
-
 import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockBuilder;
@@ -10,6 +8,8 @@ import net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.TardisRoomCreatorBl
 import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+
+import java.util.ArrayList;
 
 public class ModBlocks {
     public static final ArrayList<BlockBuilder> BLOCK_BUILDERS = new ArrayList<>();

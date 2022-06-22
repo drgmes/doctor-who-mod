@@ -1,12 +1,12 @@
 package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -71,7 +71,7 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
 
     @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        super.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
 
     @Override

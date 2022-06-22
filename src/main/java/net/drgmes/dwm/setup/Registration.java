@@ -1,8 +1,5 @@
 package net.drgmes.dwm.setup;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsRooms;
@@ -38,6 +35,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class Registration {
     public static final ModCreativeTab CREATIVE_MODE_TAB = new ModCreativeTab(DWM.MODID);
@@ -108,7 +108,7 @@ public class Registration {
         ModContainerScreens.setup();
 
         Minecraft mc = Minecraft.getInstance();
-        if(!mc.getMainRenderTarget().isStencilEnabled()) {
+        if (!mc.getMainRenderTarget().isStencilEnabled()) {
             event.enqueueWork(() -> mc.getMainRenderTarget().enableStencil());
         }
     }

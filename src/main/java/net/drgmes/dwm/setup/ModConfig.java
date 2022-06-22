@@ -1,8 +1,7 @@
 package net.drgmes.dwm.setup;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import net.minecraftforge.common.ForgeConfigSpec;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class ModConfig {
     public static Common COMMON;
@@ -37,8 +36,8 @@ public class ModConfig {
             builder.push("TARDIS");
 
             tardisMaxFlightTime = builder.comment("Max flight time for Tardis")
-            .translation("config.dwm.tardis.tardisMaxFlightTime")
-            .defineInRange("tardisMaxFlightTime", 4000, 1, Integer.MAX_VALUE);
+                .translation("config.dwm.tardis.tardisMaxFlightTime")
+                .defineInRange("tardisMaxFlightTime", 4000, 1, Integer.MAX_VALUE);
 
             builder.pop();
 
@@ -59,24 +58,24 @@ public class ModConfig {
             builder.push("BOTI");
 
             botiEnabled = builder.comment("Toggle \"The Bigger On the Inside\" effect on the Tardis Interior Door and Tardis Exterior")
-            .translation("config.dwm.tardis.botiEnabled")
-            .define("botiEnabled", true);
+                .translation("config.dwm.tardis.botiEnabled")
+                .define("botiEnabled", true);
 
             botiExteriorDistance = builder.comment("Max distance for rendering \"The Bigger On the Inside\" effect in the Tardis")
-            .translation("config.dwm.tardis.botiExteriorDistance")
-            .defineInRange("botiExteriorDistance", 26, 0, 100);
+                .translation("config.dwm.tardis.botiExteriorDistance")
+                .defineInRange("botiExteriorDistance", 26, 0, 100);
 
             botiExteriorRadius = builder.comment("Max radius for rendering \"The Bigger On the Inside\" effect in the Tardis")
-            .translation("config.dwm.tardis.botiExteriorRadius")
-            .defineInRange("botiExteriorRadius", 5, 0, 100);
+                .translation("config.dwm.tardis.botiExteriorRadius")
+                .defineInRange("botiExteriorRadius", 5, 0, 100);
 
             botiInteriorDistance = builder.comment("Max distance for rendering \"The Bigger On the Inside\" effect outside the Tardis")
-            .translation("config.dwm.tardis.botiInteriorDistance")
-            .defineInRange("botiInteriorDistance", 26, 0, 100);
+                .translation("config.dwm.tardis.botiInteriorDistance")
+                .defineInRange("botiInteriorDistance", 26, 0, 100);
 
             botiInteriorRadius = builder.comment("Max radius for rendering \"The Bigger On the Inside\" effect outside the Tardis")
-            .translation("config.dwm.tardis.botiInteriorRadius")
-            .defineInRange("botiInteriorRadius", 5, 0, 100);
+                .translation("config.dwm.tardis.botiInteriorRadius")
+                .defineInRange("botiInteriorRadius", 5, 0, 100);
 
             builder.pop();
 

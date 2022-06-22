@@ -29,7 +29,8 @@ public class TardisEngineToyotaBlock extends BaseTardisEngineBlock {
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
-        if (!(level.getBlockEntity(blockPos) instanceof TardisEngineToyotaBlockEntity tardisEngineBlockEntity)) return InteractionResult.PASS;
+        if (!(level.getBlockEntity(blockPos) instanceof TardisEngineToyotaBlockEntity tardisEngineBlockEntity))
+            return InteractionResult.PASS;
 
         boolean isChanged = false;
         Direction facing = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
@@ -51,8 +52,7 @@ public class TardisEngineToyotaBlock extends BaseTardisEngineBlock {
 
         if (x > 0 && x <= 3) {
             x += (8 - hit.y) / 2;
-        }
-        else if (x > 7 && x <= 10) {
+        } else if (x > 7 && x <= 10) {
             x -= (8 - hit.y) / 2;
         }
 
@@ -60,52 +60,41 @@ public class TardisEngineToyotaBlock extends BaseTardisEngineBlock {
             if (direction == Direction.NORTH) {
                 tardisEngineBlockEntity.isOpenedCover2 = !tardisEngineBlockEntity.isOpenedCover2;
                 isChanged = true;
-            }
-            else if (direction == Direction.WEST) {
+            } else if (direction == Direction.WEST) {
                 tardisEngineBlockEntity.isOpenedCover2 = !tardisEngineBlockEntity.isOpenedCover2;
                 isChanged = true;
-            }
-            else if (direction == Direction.SOUTH) {
+            } else if (direction == Direction.SOUTH) {
                 tardisEngineBlockEntity.isOpenedCover4 = !tardisEngineBlockEntity.isOpenedCover4;
                 isChanged = true;
-            }
-            else if (direction == Direction.EAST) {
+            } else if (direction == Direction.EAST) {
                 tardisEngineBlockEntity.isOpenedCover8 = !tardisEngineBlockEntity.isOpenedCover8;
                 isChanged = true;
             }
-        }
-        else if (x > 3 && x <= 7) {
+        } else if (x > 3 && x <= 7) {
             if (direction == Direction.NORTH) {
                 tardisEngineBlockEntity.isOpenedCover1 = !tardisEngineBlockEntity.isOpenedCover1;
                 isChanged = true;
-            }
-            else if (direction == Direction.WEST) {
+            } else if (direction == Direction.WEST) {
                 tardisEngineBlockEntity.isOpenedCover3 = !tardisEngineBlockEntity.isOpenedCover3;
                 isChanged = true;
-            }
-            else if (direction == Direction.SOUTH) {
+            } else if (direction == Direction.SOUTH) {
                 tardisEngineBlockEntity.isOpenedCover5 = !tardisEngineBlockEntity.isOpenedCover5;
                 isChanged = true;
-            }
-            else if (direction == Direction.EAST) {
+            } else if (direction == Direction.EAST) {
                 tardisEngineBlockEntity.isOpenedCover7 = !tardisEngineBlockEntity.isOpenedCover7;
                 isChanged = true;
             }
-        }
-        else if (x > 7 && x <= 10) {
+        } else if (x > 7 && x <= 10) {
             if (direction == Direction.NORTH) {
                 tardisEngineBlockEntity.isOpenedCover8 = !tardisEngineBlockEntity.isOpenedCover8;
                 isChanged = true;
-            }
-            else if (direction == Direction.WEST) {
+            } else if (direction == Direction.WEST) {
                 tardisEngineBlockEntity.isOpenedCover4 = !tardisEngineBlockEntity.isOpenedCover4;
                 isChanged = true;
-            }
-            else if (direction == Direction.SOUTH) {
+            } else if (direction == Direction.SOUTH) {
                 tardisEngineBlockEntity.isOpenedCover6 = !tardisEngineBlockEntity.isOpenedCover6;
                 isChanged = true;
-            }
-            else if (direction == Direction.EAST) {
+            } else if (direction == Direction.EAST) {
                 tardisEngineBlockEntity.isOpenedCover6 = !tardisEngineBlockEntity.isOpenedCover6;
                 isChanged = true;
             }

@@ -53,7 +53,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, this.blockEntityTypeObject.get(), (l, bp, bs, blockEntity) -> {
-            ((BaseTardisExteriorBlockEntity) blockEntity).tick();
+            blockEntity.tick();
         });
     }
 

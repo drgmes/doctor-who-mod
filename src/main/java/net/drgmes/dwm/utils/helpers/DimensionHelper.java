@@ -1,13 +1,7 @@
 package net.drgmes.dwm.utils.helpers;
 
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Lifecycle;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
 import net.minecraft.core.Registry;
@@ -27,6 +21,11 @@ import net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess;
 import net.minecraft.world.level.storage.WorldData;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
+
+import java.util.Map;
+import java.util.concurrent.Executor;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 
 public class DimensionHelper {
     public static boolean isTardisDimension(Level level) {
@@ -85,8 +84,7 @@ public class DimensionHelper {
 
         if (levelStemRegistry instanceof WritableRegistry<LevelStem> writableRegistry) {
             writableRegistry.register(levelStemKey, levelStem, Lifecycle.stable());
-        }
-        else {
+        } else {
             throw new IllegalStateException("Unable to register dimension '" + levelStemKey.location() + "'! Registry not writable!");
         }
 

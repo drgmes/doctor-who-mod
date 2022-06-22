@@ -1,8 +1,5 @@
 package net.drgmes.dwm.common.tardis.systems;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
@@ -27,28 +24,22 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class TardisSystemMaterialization implements ITardisSystem {
-    public static enum TardisSystemMaterializationSafeDirection {
-        TOP,
-        BOTTOM,
-        NONE
-    }
+import java.util.ArrayList;
+import java.util.List;
 
+public class TardisSystemMaterialization implements ITardisSystem {
     private final List<Runnable> dematConsumers = new ArrayList<>();
     private final List<Runnable> rematConsumers = new ArrayList<>();
     private final List<Runnable> failConsumers = new ArrayList<>();
-
     private final ITardisLevelData tardis;
-    private boolean isMaterialized = true;
-    private boolean needsRerunRemat = false;
-    private float tickForErrorSound = 0;
-
     public float dematTickInProgress = 0;
     public float rematTickInProgress = 0;
     public float dematTickInProgressGoal = 0;
     public float rematTickInProgressGoal = 0;
     public TardisSystemMaterializationSafeDirection safeDirection;
-
+    private boolean isMaterialized = true;
+    private boolean needsRerunRemat = false;
+    private float tickForErrorSound = 0;
     public TardisSystemMaterialization(ITardisLevelData tardis) {
         this.tardis = tardis;
         this.safeDirection = TardisSystemMaterializationSafeDirection.TOP;
@@ -96,8 +87,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 this.dematTickInProgress--;
                 if (!this.inDematProgress()) this.demat();
                 else if (this.dematTickInProgress % 3 == 0) this.tardis.updateConsoleTiles();
-            }
-            else if (this.inRematProgress()) {
+            } else if (this.inRematProgress()) {
                 this.rematTickInProgress--;
                 if (!this.inRematProgress()) this.remat();
                 else if (this.rematTickInProgress % 3 == 0) this.tardis.updateConsoleTiles();
@@ -106,8 +96,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     public int getProgressPercent() {
-        if (this.dematTickInProgress > 0) return (int) Math.ceil(this.dematTickInProgress / this.dematTickInProgressGoal * 100);
-        if (this.rematTickInProgress > 0) return (int) Math.ceil((this.rematTickInProgressGoal - this.rematTickInProgress) / this.rematTickInProgressGoal * 100);
+        if (this.dematTickInProgress > 0)
+            return (int) Math.ceil(this.dematTickInProgress / this.dematTickInProgressGoal * 100);
+        if (this.rematTickInProgress > 0)
+            return (int) Math.ceil((this.rematTickInProgressGoal - this.rematTickInProgress) / this.rematTickInProgressGoal * 100);
         return this.isMaterialized ? 100 : 0;
     }
 
@@ -269,13 +261,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     });
 
                     return true;
-                }
-                else {
+                } else {
                     this.playFailSound();
                     this.demat();
                 }
-            }
-            else if (!this.tryLandToForeignTardis()) {
+            } else if (!this.tryLandToForeignTardis()) {
                 this.runFailConsumers();
                 this.playFailSound();
             }
@@ -380,12 +370,15 @@ public class TardisSystemMaterialization implements ITardisSystem {
         BlockPos safePosition = null;
 
         if (this.safeDirection == TardisSystemMaterializationSafeDirection.TOP) {
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
-        }
-        else if (this.safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) {
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
-            if (safePosition == null) safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
+            if (safePosition == null)
+                safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
+            if (safePosition == null)
+                safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
+        } else if (this.safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) {
+            if (safePosition == null)
+                safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.BOTTOM);
+            if (safePosition == null)
+                safePosition = this.getSafePosition(exteriorLevel, exteriorBlockPos, exteriorFacing, TardisSystemMaterializationSafeDirection.TOP);
         }
 
         if (safePosition != null) {
@@ -399,13 +392,16 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private BlockPos getSafePosition(ServerLevel exteriorLevel, BlockPos exteriorBlockPos, Direction exteriorFacing, TardisSystemMaterializationSafeDirection safeDirection) {
         if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.below();
-        else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.above();
+        else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM)
+            exteriorBlockPos = exteriorBlockPos.above();
         else return null;
 
         boolean freeSpaceFound = false;
         do {
-            if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.above();
-            else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.below();
+            if (safeDirection == TardisSystemMaterializationSafeDirection.TOP)
+                exteriorBlockPos = exteriorBlockPos.above();
+            else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM)
+                exteriorBlockPos = exteriorBlockPos.below();
 
             freeSpaceFound = this.checkBlockIsSafe(exteriorLevel, exteriorBlockPos, exteriorFacing);
 
@@ -427,8 +423,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private boolean checkBlockIsReachedMaxHeight(Level level, BlockPos blockPos, TardisSystemMaterializationSafeDirection safeDirection) {
-        if (safeDirection == TardisSystemMaterializationSafeDirection.TOP) return blockPos.getY() >= level.getMaxBuildHeight() - 1;
-        else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM) return blockPos.getY() < level.getMinBuildHeight();
+        if (safeDirection == TardisSystemMaterializationSafeDirection.TOP)
+            return blockPos.getY() >= level.getMaxBuildHeight() - 1;
+        else if (safeDirection == TardisSystemMaterializationSafeDirection.BOTTOM)
+            return blockPos.getY() < level.getMinBuildHeight();
 
         return false;
     }
@@ -469,5 +467,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (this.tickForErrorSound > 0) return;
         this.tickForErrorSound = DWM.TIMINGS.ERROR_SOUND;
         ModSounds.playTardisFailSound(this.tardis.getLevel(), this.tardis.getCorePosition());
+    }
+
+    public enum TardisSystemMaterializationSafeDirection {
+        TOP,
+        BOTTOM,
+        NONE
     }
 }

@@ -1,7 +1,6 @@
 package net.drgmes.dwm.utils.base.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.ObjectSelectionList;
@@ -12,9 +11,9 @@ import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.BaseListEntry> {
-    private Font font;
-    private Vec2 pos;
-    private int padding;
+    private final Font font;
+    private final Vec2 pos;
+    private final int padding;
 
     public BaseListWidget(Minecraft mc, Font font, int width, int height, int padding, Vec2 pos) {
         super(mc, width, height, (int) pos.y, (int) pos.y + height, font.lineHeight + padding * 2);

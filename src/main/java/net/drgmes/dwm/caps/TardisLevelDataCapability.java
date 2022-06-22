@@ -1,11 +1,5 @@
 package net.drgmes.dwm.caps;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
@@ -35,16 +29,18 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
+import java.util.*;
+
 public class TardisLevelDataCapability implements ITardisLevelData {
-    private Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
+    private final Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
 
     private BlockPos entracePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(18).immutable();
-    private Direction entraceFacing = Direction.SOUTH;
+    private final Direction entraceFacing = Direction.SOUTH;
 
-    private List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
-    private List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
+    private final List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
+    private final List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
     private BotiStorage botiStorage = new BotiStorage();
-    private Level level;
+    private final Level level;
     private UUID owner;
 
     private int energyArtron = 0;
@@ -84,9 +80,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         if (this.owner != null) tdTag.putUUID("owner", this.owner);
 
-        if (this.prevExteriorDimension != null) tdTag.putString("prevExteriorDimension", this.prevExteriorDimension.location().toString());
-        if (this.currExteriorDimension != null) tdTag.putString("currExteriorDimension", this.currExteriorDimension.location().toString());
-        if (this.destExteriorDimension != null) tdTag.putString("destExteriorDimension", this.destExteriorDimension.location().toString());
+        if (this.prevExteriorDimension != null)
+            tdTag.putString("prevExteriorDimension", this.prevExteriorDimension.location().toString());
+        if (this.currExteriorDimension != null)
+            tdTag.putString("currExteriorDimension", this.currExteriorDimension.location().toString());
+        if (this.destExteriorDimension != null)
+            tdTag.putString("destExteriorDimension", this.destExteriorDimension.location().toString());
 
         if (this.prevExteriorFacing != null) tdTag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
         if (this.currExteriorFacing != null) tdTag.putString("currExteriorFacing", this.currExteriorFacing.getName());
@@ -140,18 +139,27 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         if (tdTag.contains("owner")) this.owner = tdTag.getUUID("owner");
 
-        if (tdTag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("prevExteriorDimension"));
-        if (tdTag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("currExteriorDimension"));
-        if (tdTag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("destExteriorDimension"));
+        if (tdTag.contains("prevExteriorDimension"))
+            this.prevExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("prevExteriorDimension"));
+        if (tdTag.contains("currExteriorDimension"))
+            this.currExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("currExteriorDimension"));
+        if (tdTag.contains("destExteriorDimension"))
+            this.destExteriorDimension = DimensionHelper.getLevelKey(tdTag.getString("destExteriorDimension"));
 
-        if (tdTag.contains("prevExteriorFacing")) this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
-        if (tdTag.contains("currExteriorFacing")) this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
-        if (tdTag.contains("destExteriorFacing")) this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
+        if (tdTag.contains("prevExteriorFacing"))
+            this.prevExteriorFacing = this.getDirectionByKey(tdTag, "prevExteriorFacing");
+        if (tdTag.contains("currExteriorFacing"))
+            this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
+        if (tdTag.contains("destExteriorFacing"))
+            this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
 
         if (tdTag.contains("entracePositionX")) this.entracePosition = this.getBlockPosByKey(tdTag, "entracePosition");
-        if (tdTag.contains("prevExteriorPositionX")) this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
-        if (tdTag.contains("currExteriorPositionX")) this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
-        if (tdTag.contains("destExteriorPositionX")) this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
+        if (tdTag.contains("prevExteriorPositionX"))
+            this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
+        if (tdTag.contains("currExteriorPositionX"))
+            this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
+        if (tdTag.contains("destExteriorPositionX"))
+            this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
 
         this.energyArtron = tdTag.getInt("energyArtron");
         this.energyForge = tdTag.getInt("energyForge");
@@ -231,13 +239,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
     }
 
     @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
     }
 
     @Override
@@ -392,7 +400,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     @Override
     public boolean setDoorsLockState(boolean flag, Player player) {
-        if (player != null && this.getOwnerUUID() != null && !player.getUUID().equals(this.getOwnerUUID())) return false;
+        if (player != null && this.getOwnerUUID() != null && !player.getUUID().equals(this.getOwnerUUID()))
+            return false;
 
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
@@ -467,7 +476,8 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     public void updateBoti() {
         if (this.level.players().size() == 0) return;
         if (!this.isValid() || !(this.level instanceof ServerLevel serverLevel)) return;
-        if (!(this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) || !materializationSystem.isMaterialized()) return;
+        if (!(this.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) || !materializationSystem.isMaterialized())
+            return;
 
         ServerLevel exteriorLevel = this.level.getServer().getLevel(this.getCurrentExteriorDimension());
         if (exteriorLevel == null) return;
@@ -542,7 +552,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         // Flight
         if (this.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
             boolean handbrake = (boolean) controlsStorage.get(TardisConsoleControlRoles.HANDBRAKE);
-            flightSystem.setFlight(handbrake ? false : (boolean) controlsStorage.get(TardisConsoleControlRoles.STARTER));
+            flightSystem.setFlight(!handbrake && (boolean) controlsStorage.get(TardisConsoleControlRoles.STARTER));
             isInFlight = flightSystem.inProgress();
         }
 
@@ -566,29 +576,37 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
             // X Set
             int xSet = (int) controlsStorage.get(TardisConsoleControlRoles.XSET);
-            if (xSet != 0) this.destExteriorPosition = xSet > 0 ? this.destExteriorPosition.east(this.xyzStep) : this.destExteriorPosition.west(this.xyzStep);
+            if (xSet != 0)
+                this.destExteriorPosition = xSet > 0 ? this.destExteriorPosition.east(this.xyzStep) : this.destExteriorPosition.west(this.xyzStep);
 
             // Y Set
             int ySet = (int) controlsStorage.get(TardisConsoleControlRoles.YSET);
-            if (ySet != 0) this.destExteriorPosition = ySet > 0 ? this.destExteriorPosition.above(this.xyzStep) : this.destExteriorPosition.below(this.xyzStep);
+            if (ySet != 0)
+                this.destExteriorPosition = ySet > 0 ? this.destExteriorPosition.above(this.xyzStep) : this.destExteriorPosition.below(this.xyzStep);
 
             // Z Set
             int zSet = (int) controlsStorage.get(TardisConsoleControlRoles.ZSET);
-            if (zSet != 0) this.destExteriorPosition = zSet > 0 ? this.destExteriorPosition.south(this.xyzStep) : this.destExteriorPosition.north(this.xyzStep);
+            if (zSet != 0)
+                this.destExteriorPosition = zSet > 0 ? this.destExteriorPosition.south(this.xyzStep) : this.destExteriorPosition.north(this.xyzStep);
 
             // XYZ Step
             int xyzStep = (int) controlsStorage.get(TardisConsoleControlRoles.XYZSTEP);
-            if (xyzStep != 0) this.xyzStep = Math.max(1, Math.min(10000, (int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1))));
+            if (xyzStep != 0)
+                this.xyzStep = Math.max(1, Math.min(10000, (int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1))));
 
             // Randomizer
             if ((int) controlsStorage.get(TardisConsoleControlRoles.RANDOMIZER) != 0) {
                 boolean facingRandom = Math.random() * 10 > 5;
 
-                if (facingRandom) this.destExteriorPosition = this.destExteriorPosition.east((int) Math.round(Math.random() * 10 * this.xyzStep));
-                else this.destExteriorPosition = this.destExteriorPosition.west((int) Math.round(Math.random() * 10 * this.xyzStep));
+                if (facingRandom)
+                    this.destExteriorPosition = this.destExteriorPosition.east((int) Math.round(Math.random() * 10 * this.xyzStep));
+                else
+                    this.destExteriorPosition = this.destExteriorPosition.west((int) Math.round(Math.random() * 10 * this.xyzStep));
 
-                if (facingRandom) this.destExteriorPosition = this.destExteriorPosition.south((int) Math.round(Math.random() * 10 * this.xyzStep));
-                else this.destExteriorPosition = this.destExteriorPosition.north((int) Math.round(Math.random() * 10 * this.xyzStep));
+                if (facingRandom)
+                    this.destExteriorPosition = this.destExteriorPosition.south((int) Math.round(Math.random() * 10 * this.xyzStep));
+                else
+                    this.destExteriorPosition = this.destExteriorPosition.north((int) Math.round(Math.random() * 10 * this.xyzStep));
             }
 
             // Dimension

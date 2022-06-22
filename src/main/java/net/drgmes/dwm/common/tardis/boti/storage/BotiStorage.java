@@ -1,8 +1,5 @@
 package net.drgmes.dwm.common.tardis.boti.storage;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
 import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockEntityWrapper;
 import net.drgmes.dwm.common.tardis.boti.storage.wrappers.BotiBlockWrapper;
 import net.drgmes.dwm.utils.DWMUtils;
@@ -14,6 +11,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class BotiStorage {
     public final HashMap<BlockPos, BotiBlockWrapper> blocks = new HashMap<>();
@@ -141,7 +141,8 @@ public class BotiStorage {
                             this.blocks.put(rotatedBlockPos, BotiBlockWrapper.create(level, realBlockPos, blockState));
 
                             BlockEntity blockEntity = level.getBlockEntity(realBlockPos);
-                            if (blockEntity != null) this.blockEntities.put(rotatedBlockPos, new BotiBlockEntityWrapper(realBlockPos, blockState, blockEntity));
+                            if (blockEntity != null)
+                                this.blockEntities.put(rotatedBlockPos, new BotiBlockEntityWrapper(realBlockPos, blockState, blockEntity));
                         }
                     }
                 }

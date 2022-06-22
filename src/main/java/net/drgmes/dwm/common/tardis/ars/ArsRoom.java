@@ -1,7 +1,5 @@
 package net.drgmes.dwm.common.tardis.ars;
 
-import java.util.List;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.TardisRoomCreatorBlock;
 import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlock;
@@ -25,6 +23,8 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.StructureBlockInfo;
+
+import java.util.List;
 
 public class ArsRoom {
     private final String name;

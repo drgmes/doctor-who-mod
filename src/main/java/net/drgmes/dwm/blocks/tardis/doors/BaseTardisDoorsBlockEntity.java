@@ -23,10 +23,10 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
         super(type, blockPos, blockState);
     }
 
-	@Override
-	public AABB getRenderBoundingBox() {
-		return new AABB(this.worldPosition).inflate(3, 4, 3);
-	}
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -54,13 +54,13 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
     }
 
     @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
     }
 
     @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
     }
 
     @Override
@@ -79,8 +79,7 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
                     tardis.getInteriorDoorTiles().add(this);
                     tardis.updateDoorsTiles();
                 });
-            }
-            else {
+            } else {
                 ModPackets.INSTANCE.sendToServer(new ServerboundTardisInteriorDoorsInitPacket(this.worldPosition));
             }
         }

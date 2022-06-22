@@ -1,8 +1,5 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -22,6 +19,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ScrewdriverScanMode extends BaseScrewdriverMode {
     public static ScrewdriverScanMode INSTANCE = new ScrewdriverScanMode();
 
@@ -40,7 +40,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         if (blockEntity instanceof Container container) {
             int size = container.getContainerSize();
             int countItems = 0;
-            for(int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
                 if (!container.getItem(i).isEmpty()) {
                     countItems++;
                 }

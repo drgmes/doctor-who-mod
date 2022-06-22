@@ -1,9 +1,9 @@
 package net.drgmes.dwm.common.tardis.ars;
 
+import net.drgmes.dwm.DWM;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import net.drgmes.dwm.DWM;
 
 public class ArsRooms {
     public static final Map<ArsCategory, Map<String, ArsRoom>> ROOMS = new HashMap<>();

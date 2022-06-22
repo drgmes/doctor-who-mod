@@ -13,13 +13,12 @@ import net.minecraft.world.phys.Vec3;
 
 public class TardisSystemFlight implements ITardisSystem {
     private final ITardisLevelData tardis;
-    private boolean isInFlight = false;
-    private boolean isFlightLaunched = false;
-    private boolean isSoundFlyPlayed = false;
-
     public float tickInProgress = 0;
     public float tickInProgressGoal = 0;
     public float destinationDistanceRate = 0;
+    private boolean isInFlight = false;
+    private boolean isFlightLaunched = false;
+    private boolean isSoundFlyPlayed = false;
 
     public TardisSystemFlight(ITardisLevelData tardis) {
         this.tardis = tardis;
@@ -51,7 +50,8 @@ public class TardisSystemFlight implements ITardisSystem {
             this.playFlySound();
             if ((int) this.tickInProgress <= 1) this.land();
             if ((int) (this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardis.updateConsoleTiles();
-            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
+            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0)
+                this.isSoundFlyPlayed = false;
         }
     }
 
@@ -117,13 +117,13 @@ public class TardisSystemFlight implements ITardisSystem {
 
             materializationSystem.onFail(() -> {
                 this.isInFlight = false;
-                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false)); 
+                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
                 this.tardis.updateConsoleTiles();
             });
 
             return materializationSystem.remat(() -> {
                 this.isInFlight = false;
-                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false)); 
+                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
                 this.tardis.updateConsoleTiles();
                 this.tardis.updateBoti();
             });

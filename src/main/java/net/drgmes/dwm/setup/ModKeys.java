@@ -1,7 +1,6 @@
 package net.drgmes.dwm.setup;
 
 import com.mojang.blaze3d.platform.InputConstants;
-
 import net.drgmes.dwm.DWM;
 import net.minecraft.client.KeyMapping;
 

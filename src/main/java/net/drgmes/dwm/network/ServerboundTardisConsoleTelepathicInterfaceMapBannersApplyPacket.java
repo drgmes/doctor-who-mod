@@ -1,8 +1,5 @@
 package net.drgmes.dwm.network;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +9,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket {
     public final MapItemSavedData mapData;

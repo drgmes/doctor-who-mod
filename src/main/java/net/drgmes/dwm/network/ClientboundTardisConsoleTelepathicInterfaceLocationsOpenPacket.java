@@ -1,17 +1,6 @@
 package net.drgmes.dwm.network;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import com.google.common.collect.Lists;
-
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen.DataType;
@@ -25,6 +14,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket {
     private final BlockPos blockPos;
@@ -41,6 +35,43 @@ public class ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket {
 
     public ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), createLocationsListFromBuffer(buffer));
+    }
+
+    private static List<Entry<ResourceLocation, DataType>> createLocationsListFromBuffer(FriendlyByteBuf buffer) {
+        return buffer.readCollection(Lists::newArrayListWithCapacity, (bf) -> {
+            return Map.entry(bf.readResourceLocation(), DataType.valueOf(bf.readUtf()));
+        });
+    }
+
+    private static List<Entry<ResourceLocation, DataType>> createLocationsListFromRegistry() {
+        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>();
+        getLocationsForRegistry(Registry.BIOME_REGISTRY, DataType.BIOME).forEach(list::add);
+        getLocationsForRegistry(Registry.STRUCTURE_REGISTRY, DataType.STRUCTURE).forEach(list::add);
+
+        return list;
+    }
+
+    private static <T> List<Entry<ResourceLocation, DataType>> getLocationsForRegistry(ResourceKey<Registry<T>> registryKey, DataType type) {
+        Minecraft mc = Minecraft.getInstance();
+        Optional<? extends Registry<T>> registry = mc.level.registryAccess().registry(registryKey);
+        if (registry.isEmpty()) return new ArrayList<>();
+
+        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>(
+            registry.get().keySet().stream()
+                .filter((res) -> !res.equals(ModDimensionTypes.TARDIS.location()))
+                .map((res) -> Map.entry(res, type)).toList()
+        );
+
+        if (list.size() > 0) {
+            Collections.sort(list, new Comparator<Entry<ResourceLocation, DataType>>() {
+                @Override
+                public int compare(Entry<ResourceLocation, DataType> a, Entry<ResourceLocation, DataType> b) {
+                    return a.getKey().getPath().compareTo(b.getKey().getPath());
+                }
+            });
+        }
+
+        return list;
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -68,42 +99,5 @@ public class ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket {
 
         ctx.get().setPacketHandled(true);
         return success.get();
-    }
-
-    private static List<Entry<ResourceLocation, DataType>> createLocationsListFromBuffer(FriendlyByteBuf buffer) {
-        return buffer.readCollection(Lists::newArrayListWithCapacity, (bf) -> {
-            return Map.entry(bf.readResourceLocation(), DataType.valueOf(bf.readUtf()));
-        });
-    }
-
-    private static List<Entry<ResourceLocation, DataType>> createLocationsListFromRegistry() {
-        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>();
-        getLocationsForRegistry(Registry.BIOME_REGISTRY, DataType.BIOME).forEach(list::add);
-        getLocationsForRegistry(Registry.STRUCTURE_REGISTRY, DataType.STRUCTURE).forEach(list::add);
-
-        return list;
-    }
-
-    private static <T> List<Entry<ResourceLocation, DataType>> getLocationsForRegistry(ResourceKey<Registry<T>> registryKey, DataType type) {
-        Minecraft mc = Minecraft.getInstance();
-        Optional<? extends Registry<T>> registry = mc.level.registryAccess().registry(registryKey);
-        if (registry.isEmpty()) return new ArrayList<>();
-
-        List<Entry<ResourceLocation, DataType>> list = new ArrayList<>(
-            registry.get().keySet().stream()
-            .filter((res) -> !res.equals(ModDimensionTypes.TARDIS.location()))
-            .map((res) -> Map.entry(res, type)).toList()
-        );
-
-        if (list.size() > 0) {
-            Collections.sort(list, new Comparator<Entry<ResourceLocation, DataType>>() {
-                @Override
-                public int compare(Entry<ResourceLocation, DataType> a, Entry<ResourceLocation, DataType> b) {
-                    return a.getKey().getPath().compareTo(b.getKey().getPath());
-                }
-            });
-        }
-
-        return list;
     }
 }

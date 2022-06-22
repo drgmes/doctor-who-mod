@@ -1,11 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket;
@@ -20,20 +14,19 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 
-public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
-    public static enum DataType {
-        BIOME,
-        STRUCTURE
-    }
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
     private LocationsListWidget locationsListWidget;
     private LocationsListWidget.LocationEntry selected = null;
     private List<Entry<ResourceLocation, DataType>> locations = new ArrayList<>();
     private List<Entry<ResourceLocation, DataType>> filteredLocations = new ArrayList<>();
-
     private EditBox search;
     private String lastSearch;
-
     public TardisConsoleTelepathicInterfaceLocationsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, List<Entry<ResourceLocation, DataType>> locations) {
         super(tardisConsoleBlockEntity);
 
@@ -127,6 +120,11 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         }
 
         this.filteredLocations = this.locations;
+    }
+
+    public enum DataType {
+        BIOME,
+        STRUCTURE
     }
 
     private class LocationsListWidget extends BaseListWidget {

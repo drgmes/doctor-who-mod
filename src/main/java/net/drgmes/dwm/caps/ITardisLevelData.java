@@ -1,9 +1,5 @@
 package net.drgmes.dwm.caps;
 
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.common.tardis.boti.IBoti;
@@ -23,73 +19,114 @@ import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
     void addSystem(ITardisSystem system);
+
     Map<Class<? extends ITardisSystem>, ITardisSystem> getSystems();
+
     ITardisSystem getSystem(Class<? extends ITardisSystem> system);
 
     boolean isValid();
+
     boolean isDoorsLocked();
+
     boolean isDoorsOpened();
+
     boolean isLightEnabled();
+
     boolean isShieldsEnabled();
+
     boolean isEnergyArtronHarvesting();
+
     boolean isEnergyForgeHarvesting();
 
     ServerLevel getLevel();
+
     UUID getOwnerUUID();
 
     ResourceKey<Level> getPreviousExteriorDimension();
+
     ResourceKey<Level> getCurrentExteriorDimension();
+
     ResourceKey<Level> getDestinationExteriorDimension();
 
     Direction getEntraceFacing();
+
     Direction getPreviousExteriorFacing();
+
     Direction getCurrentExteriorFacing();
+
     Direction getDestinationExteriorFacing();
 
     BlockPos getCorePosition();
+
     BlockPos getEntracePosition();
+
     BlockPos getPreviousExteriorPosition();
+
     BlockPos getCurrentExteriorPosition();
+
     BlockPos getCurrentExteriorRelativePosition();
+
     BlockPos getDestinationExteriorPosition();
 
     int getXYZStep();
+
     int getEnergyArtron();
+
     int getEnergyForge();
+
     List<BaseTardisDoorsBlockEntity> getInteriorDoorTiles();
+
     BaseTardisDoorsBlockEntity getMainInteriorDoorTile();
+
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
+
     BaseTardisConsoleBlockEntity getMainConsoleTile();
 
     boolean setOwnerUUID(UUID uuid);
 
     boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
+
     boolean setDestinationDimension(ResourceKey<Level> dimension);
 
     boolean setFacing(Direction direction, boolean shouldUpdatePrev);
+
     boolean setDestinationFacing(Direction direction);
 
     boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev);
+
     boolean setDestinationPosition(BlockPos blockPos);
 
     boolean setDoorsLockState(boolean flag, Player player);
+
     boolean setDoorsOpenState(boolean flag);
+
     boolean setLightState(boolean flag);
+
     boolean setShieldsState(boolean flag);
+
     boolean setEnergyArtronHarvesting(boolean flag);
+
     boolean setEnergyForgeHarvesting(boolean flag);
 
     void updateDoorsTiles();
+
     void updateConsoleTiles();
+
     void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage);
+
     void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage);
+
     void tick();
 
-    public static class TardisLevelDataProvider implements ICapabilitySerializable<CompoundTag> {
+    class TardisLevelDataProvider implements ICapabilitySerializable<CompoundTag> {
         public final LazyOptional<ITardisLevelData> holder;
-        private ITardisLevelData data;
+        private final ITardisLevelData data;
 
         public TardisLevelDataProvider(Level level) {
             this.data = new TardisLevelDataCapability(level);

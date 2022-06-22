@@ -1,7 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
-import java.util.Collection;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
@@ -13,6 +11,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import net.minecraft.world.phys.Vec2;
+
+import java.util.Collection;
 
 public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
     private final MapItemSavedData mapData;

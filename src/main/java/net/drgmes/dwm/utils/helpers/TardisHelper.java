@@ -1,8 +1,5 @@
 package net.drgmes.dwm.utils.helpers;
 
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
@@ -26,11 +23,15 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraftforge.common.util.ITeleporter;
 
+import java.util.function.Consumer;
+import java.util.function.Function;
+
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).immutable();
 
     public static void teleportToTardis(Entity entity, ServerLevel destination) {
-        if (destination == null || entity.level.dimension() == destination.dimension() || !DimensionHelper.isTardisDimension(destination)) return;
+        if (destination == null || entity.level.dimension() == destination.dimension() || !DimensionHelper.isTardisDimension(destination))
+            return;
 
         destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             entity.setYRot(tardis.getEntraceFacing().toYRot());
@@ -103,7 +104,8 @@ public class TardisHelper {
             if (room == null) return;
 
             StructureTemplate template = level.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + room));
-            if (template != null) template.placeInWorld(level, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), level.random, 3);
+            if (template != null)
+                template.placeInWorld(level, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), level.random, 3);
         };
     }
 

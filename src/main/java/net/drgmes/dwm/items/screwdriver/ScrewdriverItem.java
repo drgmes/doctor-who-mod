@@ -1,7 +1,5 @@
 package net.drgmes.dwm.items.screwdriver;
 
-import java.util.List;
-
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
 import net.drgmes.dwm.setup.ModKeys;
@@ -21,6 +19,8 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+
+import java.util.List;
 
 public class ScrewdriverItem extends Item {
     public ScrewdriverItem(Item.Properties props) {
@@ -65,10 +65,9 @@ public class ScrewdriverItem extends Item {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, true));
                 return;
             }
-    
+
             if (player.getItemInHand(InteractionHand.OFF_HAND).equals(itemStack, false)) {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, false));
-                return;
             }
         }
     }

@@ -1,13 +1,7 @@
 package net.drgmes.dwm.world.generator;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-
 import net.drgmes.dwm.setup.ModBiomes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -32,11 +26,16 @@ import net.minecraft.world.level.levelgen.blending.Blender;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
 public class TardisChunkGenerator extends ChunkGenerator {
     public static final Codec<TardisChunkGenerator> CODEC = RecordCodecBuilder.create((builder) -> {
-       return commonCodec(builder)
-        .and(RegistryOps.retrieveRegistry(Registry.BIOME_REGISTRY).forGetter(TardisChunkGenerator::getBiomeRegistry))
-        .apply(builder, builder.stable(TardisChunkGenerator::new));
+        return commonCodec(builder)
+            .and(RegistryOps.retrieveRegistry(Registry.BIOME_REGISTRY).forGetter(TardisChunkGenerator::getBiomeRegistry))
+            .apply(builder, builder.stable(TardisChunkGenerator::new));
     });
 
     private final Registry<Biome> biomeRegistry;

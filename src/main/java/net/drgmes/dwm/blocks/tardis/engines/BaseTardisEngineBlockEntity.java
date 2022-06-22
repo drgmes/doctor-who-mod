@@ -13,10 +13,10 @@ public abstract class BaseTardisEngineBlockEntity extends BlockEntity {
         super(type, blockPos, blockState);
     }
 
-	@Override
-	public AABB getRenderBoundingBox() {
-		return new AABB(this.worldPosition).inflate(3, 4, 3);
-	}
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

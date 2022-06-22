@@ -1,7 +1,5 @@
 package net.drgmes.dwm.utils.builders.world;
 
-import java.util.List;
-
 import net.drgmes.dwm.setup.ModWorldGen;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -12,12 +10,13 @@ import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguratio
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
-public class OreFeatureBuilder {
-    private Holder<PlacedFeature> placedFeature;
+import java.util.List;
 
+public class OreFeatureBuilder {
     public final String name;
     public final int veinSize;
     public final PlacementModifier[] placementModifiers;
+    private Holder<PlacedFeature> placedFeature;
 
     public OreFeatureBuilder(String parentOreKey, int veinSize, PlacementModifier[] placementModifiers) {
         this.name = parentOreKey;

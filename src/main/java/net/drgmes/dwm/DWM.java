@@ -1,17 +1,15 @@
 package net.drgmes.dwm;
 
-import java.util.function.Function;
-
 import com.mojang.logging.LogUtils;
-
-import org.slf4j.Logger;
-
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.setup.Registration;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.fml.common.Mod;
+import org.slf4j.Logger;
+
+import java.util.function.Function;
 
 @Mod(DWM.MODID)
 public class DWM {
@@ -19,6 +17,10 @@ public class DWM {
 
     public static final String MODID = "dwm";
     public static final int CHUNKS_UPDATE_RADIUS = 2;
+
+    public DWM() {
+        Registration.init();
+    }
 
     public static class TIMINGS {
         public static final float DEMAT = 240;
@@ -59,13 +61,13 @@ public class DWM {
     public static class TEXTURES {
         public static class GUI {
             public static class TARDIS {
+                public static final ResourceLocation ARS_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/ars/interface.png");
+                public static final Vec2 ARS_INTERFACE_SIZE = new Vec2(403, 303);
+
                 public static class CONSOLE {
                     public static final ResourceLocation TELEPATHIC_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/console/telepathic_interface.png");
                     public static final Vec2 TELEPATHIC_INTERFACE_SIZE = new Vec2(403, 303);
                 }
-
-                public static final ResourceLocation ARS_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/ars/interface.png");
-                public static final Vec2 ARS_INTERFACE_SIZE = new Vec2(403, 303);
             }
 
             public static class SCREWDRIVER {
@@ -73,9 +75,5 @@ public class DWM {
                 public static final Vec2 INTERFACE_MAIN_SIZE = new Vec2(403, 303);
             }
         }
-    }
-
-    public DWM() {
-        Registration.init();
     }
 }

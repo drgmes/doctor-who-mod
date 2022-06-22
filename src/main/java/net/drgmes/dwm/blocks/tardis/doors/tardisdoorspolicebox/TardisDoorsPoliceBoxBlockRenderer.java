@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
-
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntraceData;
 import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
@@ -21,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<TardisDoorsPoliceBoxBlockEntity> {
-    private BlockEntityRendererProvider.Context ctx;
+    private final BlockEntityRendererProvider.Context ctx;
 
     public TardisDoorsPoliceBoxBlockRenderer(BlockEntityRendererProvider.Context context) {
         this.ctx = context;

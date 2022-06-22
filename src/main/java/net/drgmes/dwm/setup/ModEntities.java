@@ -1,9 +1,9 @@
 package net.drgmes.dwm.setup;
 
-import java.util.ArrayList;
-
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
 import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
+
+import java.util.ArrayList;
 
 public class ModEntities {
     public static final ArrayList<EntityBuilder<?>> ENTITY_BUILDERS = new ArrayList<>();

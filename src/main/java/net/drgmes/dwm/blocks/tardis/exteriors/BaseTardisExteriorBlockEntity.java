@@ -1,8 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
-import java.util.List;
-import java.util.UUID;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.boti.IBoti;
 import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
@@ -24,6 +21,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+import java.util.UUID;
+
 public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implements IBoti {
     public String tardisConsoleRoom = "toyota_natured";
     public String tardisLevelUUID;
@@ -40,10 +40,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         super(type, blockPos, blockState);
     }
 
-	@Override
-	public AABB getRenderBoundingBox() {
-		return new AABB(this.worldPosition).inflate(3, 4, 3);
-	}
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -82,13 +82,13 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
     }
 
     @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
     }
 
     @Override
@@ -118,8 +118,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
 
             if (this.tickInProgress < goal) {
                 this.tickInProgress++;
-            }
-            else {
+            } else {
                 this.isMaterialized = this.inRematProgress;
                 this.inRematProgress = false;
                 this.inDematProgress = false;
@@ -188,7 +187,8 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     public int getMaterializedPercent() {
-        if (this.inDematProgress) return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
+        if (this.inDematProgress)
+            return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
         if (this.inRematProgress) return (int) Math.ceil(this.tickInProgress / DWM.TIMINGS.REMAT * 100);
         return this.isMaterialized ? 100 : 0;
     }

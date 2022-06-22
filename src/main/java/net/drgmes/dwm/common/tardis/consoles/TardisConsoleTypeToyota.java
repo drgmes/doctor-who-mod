@@ -1,8 +1,8 @@
 package net.drgmes.dwm.common.tardis.consoles;
 
+import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.setup.ModEntities;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
 import net.minecraft.world.phys.Vec3;
 
 public class TardisConsoleTypeToyota extends TardisConsoleType {

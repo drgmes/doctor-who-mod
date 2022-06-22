@@ -1,7 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.data.client.ModBlockStateProvider;
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.data.common.ModLootTableProvider;
@@ -13,6 +11,8 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.client.model.generators.ItemModelBuilder;
 import net.minecraftforge.client.model.generators.ModelFile;
+
+import java.util.function.Supplier;
 
 public abstract class BaseTardisDoorsBlockBuilder extends BlockBuilder {
     public BaseTardisDoorsBlockBuilder(String name, Supplier<? extends BaseTardisDoorsBlock> factory) {

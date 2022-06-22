@@ -10,9 +10,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class BotiBlockEntityWrapper {
-    private CompoundTag blockEntityTag;
-    private BlockState blockState;
-    private BlockPos blockPos;
+    private final CompoundTag blockEntityTag;
+    private final BlockState blockState;
+    private final BlockPos blockPos;
 
     public BotiBlockEntityWrapper(BlockPos blockPos, BlockState blockState, CompoundTag blockEntityTag) {
         this.blockEntityTag = blockEntityTag;

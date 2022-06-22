@@ -95,13 +95,13 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
 
     @Override
     public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-       if (player.isCreative()) return;
-       super.playerWillDestroy(level, blockPos, blockState, player);
+        if (player.isCreative()) return;
+        super.playerWillDestroy(level, blockPos, blockState, player);
     }
 
     @Override
     public PushReaction getPistonPushReaction(BlockState blockState) {
-       return PushReaction.IGNORE;
+        return PushReaction.IGNORE;
     }
 
     @Override
@@ -154,7 +154,8 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     @Override
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
-        if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D) return;
+        if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D)
+            return;
 
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (tardis.isValid() && tardis.isDoorsOpened()) {

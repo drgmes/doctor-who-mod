@@ -1,8 +1,5 @@
 package net.drgmes.dwm.network;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
@@ -10,6 +7,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ServerboundTardisConsoleInitPacket {
     private final BlockPos blockPos;

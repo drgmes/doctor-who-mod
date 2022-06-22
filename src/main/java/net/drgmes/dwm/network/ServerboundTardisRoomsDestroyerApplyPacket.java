@@ -1,8 +1,5 @@
 package net.drgmes.dwm.network;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Supplier;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsRoom;
@@ -12,6 +9,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.network.NetworkEvent;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
 
 public class ServerboundTardisRoomsDestroyerApplyPacket {
     public final ArsRoom room;

@@ -36,8 +36,7 @@ public abstract class BaseContainerMenu extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(is, this.container.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            }
-            else if (!this.moveItemStackTo(is, 0, this.container.getContainerSize(), false)) {
+            } else if (!this.moveItemStackTo(is, 0, this.container.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 

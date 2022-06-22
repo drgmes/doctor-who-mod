@@ -1,27 +1,16 @@
 package net.drgmes.dwm.blocks.tardis.consoles;
 
-import java.util.ArrayList;
-
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.caps.ITardisLevelData;
 import net.drgmes.dwm.caps.TardisLevelDataCapability;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntryTypes;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.common.tardis.consoles.controls.*;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
-import net.drgmes.dwm.network.ClientboundTardisConsoleControlsUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleMonitorUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleScrewdriverSlotUpdatePacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceLocationsOpenPacket;
-import net.drgmes.dwm.network.ClientboundTardisConsoleTelepathicInterfaceMapBannersOpenPacket;
-import net.drgmes.dwm.network.ServerboundTardisConsoleInitPacket;
+import net.drgmes.dwm.network.*;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.setup.ModPackets;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -48,20 +37,19 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
+import java.util.ArrayList;
+
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
+    private final LazyOptional<ITardisLevelData> tardisDataHolder;
+    private final ITardisLevelData tardisData;
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public TardisConsoleType consoleType;
-
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
     public float tickInProgress = 0;
     public int monitorPage = 0;
-
-    private final LazyOptional<ITardisLevelData> tardisDataHolder;
-    private final ITardisLevelData tardisData;
-
-    private ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
+    private final ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
     private int timeToInit = 0;
-    private int monitorPageLength = 2;
+    private final int monitorPageLength = 2;
 
     public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
@@ -71,10 +59,10 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.tardisDataHolder = LazyOptional.of(() -> this.tardisData);
     }
 
-	@Override
-	public AABB getRenderBoundingBox() {
-		return new AABB(this.worldPosition).inflate(3, 4, 3);
-	}
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    }
 
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
@@ -148,8 +136,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                     tardis.getConsoleTiles().add(this);
                     tardis.updateConsoleTiles();
                 });
-            }
-            else {
+            } else {
                 ModPackets.INSTANCE.sendToServer(new ServerboundTardisConsoleInitPacket(this.worldPosition));
             }
         }
@@ -264,13 +251,11 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                     if (mapData.getBanners().size() > 1) {
                         this.sendTelepathicInterfaceMapBannersOpenPacket(player, mapData);
                         return;
-                    }
-                    else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBanner banner) {
+                    } else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBanner banner) {
                         String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
                         player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
                         blockPos = banner.getPos();
-                    }
-                    else {
+                    } else {
                         player.displayClientMessage(Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
                     }
 
@@ -300,19 +285,16 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                     this.screwdriverItemStack = mainHandItem;
                     player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                     isChanged = true;
-                }
-                else if (offHandItem.getItem() instanceof ScrewdriverItem) {
+                } else if (offHandItem.getItem() instanceof ScrewdriverItem) {
                     this.screwdriverItemStack = offHandItem;
                     player.setItemInHand(InteractionHand.OFF_HAND, ItemStack.EMPTY);
                     isChanged = true;
                 }
-            }
-            else if (player.getMainHandItem().isEmpty()) {
+            } else if (player.getMainHandItem().isEmpty()) {
                 player.setItemInHand(InteractionHand.MAIN_HAND, this.screwdriverItemStack);
                 this.screwdriverItemStack = ItemStack.EMPTY;
                 isChanged = true;
-            }
-            else if (player.getInventory().add(this.screwdriverItemStack)) {
+            } else if (player.getInventory().add(this.screwdriverItemStack)) {
                 this.screwdriverItemStack = ItemStack.EMPTY;
                 isChanged = true;
             }
@@ -333,7 +315,8 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
             // Prev Screen Page
             int monitorPagePrev = (int) controlsStorage.get(TardisConsoleControlRoles.MONITOR_PAGE_PREV);
-            if (monitorPagePrev != 0) this.monitorPage = this.monitorPage < 1 ? this.monitorPageLength - 1 : this.monitorPage - 1;
+            if (monitorPagePrev != 0)
+                this.monitorPage = this.monitorPage < 1 ? this.monitorPageLength - 1 : this.monitorPage - 1;
 
             if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket();
             this.setChanged();
@@ -406,35 +389,32 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
 
         Component component = switch (role) {
-            case DOORS, SHIELDS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING
-            -> !isMaterialized ? null : Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
+            case DOORS, SHIELDS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING ->
+                !isMaterialized ? null : Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
 
-            case HANDBRAKE
-            -> Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
+            case HANDBRAKE -> Component.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
 
-            case SAFE_DIRECTION
-            -> Component.translatable(role.message, Component.translatable(role.message + "." + value));
+            case SAFE_DIRECTION ->
+                Component.translatable(role.message, Component.translatable(role.message + "." + value));
 
-            case FACING
-            -> isInFlight ? null : Component.translatable(role.message, Component.translatable(role.message + "." + (provider.getDestinationExteriorFacing().ordinal() - 2)));
+            case FACING ->
+                isInFlight ? null : Component.translatable(role.message, Component.translatable(role.message + "." + (provider.getDestinationExteriorFacing().ordinal() - 2)));
 
-            case XYZSTEP
-            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getXYZStep());
+            case XYZSTEP -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getXYZStep());
 
-            case XSET
-            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getX());
+            case XSET ->
+                isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getX());
 
-            case YSET
-            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getY());
+            case YSET ->
+                isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getY());
 
-            case ZSET
-            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getZ());
+            case ZSET ->
+                isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorPosition().getZ());
 
-            case DIM_PREV, DIM_NEXT
-            -> isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorDimension().location().getPath().replace("_", " ").toUpperCase());
+            case DIM_PREV, DIM_NEXT ->
+                isInFlight ? null : Component.translatable(role.message, "\u00A7e" + provider.getDestinationExteriorDimension().location().getPath().replace("_", " ").toUpperCase());
 
-            default
-            -> isInFlight || role.message == null ? null : Component.translatable(role.message, value);
+            default -> isInFlight || role.message == null ? null : Component.translatable(role.message, value);
         };
 
         if (component != null) {

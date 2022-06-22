@@ -24,7 +24,7 @@ public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEnt
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return createTickerHelper(blockEntityType, this.blockEntityTypeObject.get(), (l, bp, bs, blockEntity) -> {
-            ((BaseTardisConsoleBlockEntity) blockEntity).tick();
+            blockEntity.tick();
         });
     }
 

@@ -1,9 +1,6 @@
 package net.drgmes.dwm.common.tardis.boti.storage.wrappers;
 
-import java.util.Optional;
-
 import com.mojang.datafixers.util.Pair;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -16,12 +13,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.Optional;
+
 public class BotiBlockWrapper {
-    private int light;
-    private int skyLight;
-    private BlockPos blockPos;
-    private BlockState blockState;
-    private FluidState fluidState;
+    private final int light;
+    private final int skyLight;
+    private final BlockPos blockPos;
+    private final BlockState blockState;
+    private final FluidState fluidState;
 
     public BotiBlockWrapper(int light, int skyLight, BlockPos blockPos, BlockState blockState, FluidState fluidState) {
         this.light = light;
@@ -86,7 +85,7 @@ public class BotiBlockWrapper {
         tag.putInt("skyLight", this.skyLight);
         tag.putLong("blockPos", this.blockPos.asLong());
         tag.put("blockState", NbtUtils.writeBlockState(blockState));
-        tag.put("fluidState", (CompoundTag) FluidState.CODEC.encodeStart(NbtOps.INSTANCE, this.fluidState).result().orElse(new CompoundTag()));
+        tag.put("fluidState", FluidState.CODEC.encodeStart(NbtOps.INSTANCE, this.fluidState).result().orElse(new CompoundTag()));
         return tag;
     }
 }

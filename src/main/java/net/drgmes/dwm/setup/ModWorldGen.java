@@ -1,15 +1,14 @@
 package net.drgmes.dwm.setup;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.google.common.collect.Maps;
-
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 import net.drgmes.dwm.utils.builders.world.OreFeatureBuilder;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class ModWorldGen {
     public static final Map<String, List<OreConfiguration.TargetBlockState>> ORES_TARGET_LIST = Maps.newHashMap();
