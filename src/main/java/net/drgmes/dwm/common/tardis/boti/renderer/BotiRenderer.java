@@ -188,7 +188,8 @@ public class BotiRenderer {
                             mc.getBlockRenderer().renderSingleBlock(blockState, innerPoseStack, vbo.getBufferSource(type), LightTexture.FULL_BLOCK, OverlayTexture.NO_OVERLAY, modelData);
                             // isRendered = true;
                         }
-                    } else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
+                    }
+                    else if (ItemBlockRenderTypes.canRenderInLayer(fluidState, type)) {
                         // TODO
                         // if (!vbo.getBufferBuilder(type).building()) vbo.getBufferBuilder(type).begin(VertexFormat.Mode.QUADS, vbo.format);
                         // mc.getBlockRenderer().renderLiquid(blockPos, mc.level, vbo.getBufferBuilder(type), blockState, fluidState);

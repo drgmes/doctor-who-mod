@@ -29,14 +29,14 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
     public static final int BATTERY_COMPONENTS_CONTAINER_SIZE = 0;
     public static final int UPGRADE_COMPONENTS_CONTAINER_SIZE = 0;
 
-    public <T extends ITardisSystem> T getSystem(Class<T> system);
-    boolean isSystemEnabled(Class<? extends ITardisSystem> system);
-
-    void setSystemComponents(NonNullList<ItemStack> systemComponents);
-    NonNullList<ItemStack> getSystemComponents();
-
     ServerLevel getLevel();
     UUID getOwnerUUID();
+
+    <T extends ITardisSystem> T getSystem(Class<T> system);
+    boolean isSystemEnabled(Class<? extends ITardisSystem> system);
+
+    NonNullList<ItemStack> getSystemComponents();
+    void setSystemComponents(NonNullList<ItemStack> systemComponents);
 
     boolean isValid();
     boolean isDoorsLocked();

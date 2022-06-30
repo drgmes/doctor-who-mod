@@ -40,11 +40,6 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    public Component getTitle() {
-        return this.title;
-    }
-
-    @Override
     public Component getTitleComponent() {
         return this.getTitle();
     }
@@ -60,19 +55,13 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
         GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
-        if (this.onButtonCloseClick(mouseX, mouseY)) this.onClose();
-        return super.mouseClicked(mouseX, mouseY, frame);
+    public Component getTitle() {
+        return this.title;
     }
 
     @Override
@@ -90,5 +79,16 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
 
     @Override
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
+        if (this.onButtonCloseClick(mouseX, mouseY)) this.onClose();
+        return super.mouseClicked(mouseX, mouseY, frame);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 }

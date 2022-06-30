@@ -84,7 +84,8 @@ public class DimensionHelper {
 
         if (levelStemRegistry instanceof WritableRegistry<LevelStem> writableRegistry) {
             writableRegistry.register(levelStemKey, levelStem, Lifecycle.stable());
-        } else {
+        }
+        else {
             throw new IllegalStateException("Unable to register dimension '" + levelStemKey.location() + "'! Registry not writable!");
         }
 

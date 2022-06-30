@@ -73,11 +73,6 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public Component getTitle() {
-        return this.title;
-    }
-
-    @Override
     public Component getTitleComponent() {
         return this.getTitle();
     }
@@ -93,11 +88,6 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
         GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
@@ -105,6 +95,32 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     @Override
     public Vec2 getTitleRenderPos() {
         return this.getRenderPos(23, 8);
+    }
+
+    @Override
+    public Component getTitle() {
+        return this.title;
+    }
+
+    @Override
+    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
+        super.renderBackground(poseStack);
+        this.renderBackground(poseStack, mouseX, mouseY);
+
+        Vec2 pos = new Vec2(19, 5);
+        Vec2 pos1 = this.getRenderPos(pos.x, pos.y);
+        Vec2 pos2 = this.getRenderPos(pos.x + this.font.width(this.getTitle().getString()) + 9, pos.y + this.font.lineHeight + 1);
+        int color = 0xFF4F5664;
+
+        GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
+        this.renderTitle(poseStack);
+
+        super.render(poseStack, mouseX, mouseY, partialTicks);
+    }
+
+    @Override
+    public void onClose() {
+        this.onDone();
     }
 
     @Override
@@ -155,31 +171,14 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
-        if (this.onButtonCloseClick(mouseX, mouseY)) this.onDone();
-        return super.mouseClicked(mouseX, mouseY, frame);
-    }
-
-    @Override
     public void removed() {
         assert this.minecraft != null;
         this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(poseStack);
-        this.renderBackground(poseStack, mouseX, mouseY);
-
-        Vec2 pos = new Vec2(19, 5);
-        Vec2 pos1 = this.getRenderPos(pos.x, pos.y);
-        Vec2 pos2 = this.getRenderPos(pos.x + this.font.width(this.getTitle().getString()) + 9, pos.y + this.font.lineHeight + 1);
-        int color = 0xFF4F5664;
-
-        GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
-        this.renderTitle(poseStack);
-
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public boolean isPauseScreen() {
+        return false;
     }
 
     @Override
@@ -197,8 +196,9 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void onClose() {
-        this.onDone();
+    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
+        if (this.onButtonCloseClick(mouseX, mouseY)) this.onDone();
+        return super.mouseClicked(mouseX, mouseY, frame);
     }
 
     protected void onDone() {
@@ -222,9 +222,11 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
     protected void setSelectedCategory(ListWidget.ListEntry entry) {
         if (entry.category != null) {
             this.selectedCategory = entry.category;
-        } else if (this.selectedCategory != null && this.selectedCategory.getParent() != null) {
+        }
+        else if (this.selectedCategory != null && this.selectedCategory.getParent() != null) {
             this.selectedCategory = this.selectedCategory.getParent();
-        } else {
+        }
+        else {
             this.selectedCategory = null;
         }
 
@@ -331,7 +333,8 @@ public class TardisRoomCreatorScreen extends Screen implements IBaseScreen {
                     if (this.category != null) {
                         narration = this.category.getTitle().copy();
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.GOLD));
-                    } else {
+                    }
+                    else {
                         narration = Component.translatable("title." + DWM.MODID + ".ars.categories.back");
                         narration.setStyle(narration.getStyle().withColor(ChatFormatting.YELLOW));
 

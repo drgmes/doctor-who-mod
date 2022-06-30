@@ -19,13 +19,13 @@ public class TardisRoomDestroyerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+        if (tag.getString("roomId") != "") {
+            ArsCategory category = ArsCategories.CATEGORIES.get(tag.getString("roomCategoryId"));
+            this.room = ArsRooms.ROOMS.get(category).get(tag.getString("roomId"));
+        }
     }
 
     @Override
@@ -39,12 +39,12 @@ public class TardisRoomDestroyerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
-        if (tag.getString("roomId") != "") {
-            ArsCategory category = ArsCategories.CATEGORIES.get(tag.getString("roomCategoryId"));
-            this.room = ArsRooms.ROOMS.get(category).get(tag.getString("roomId"));
-        }
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 }

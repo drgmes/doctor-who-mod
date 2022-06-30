@@ -27,11 +27,6 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
     }
 
     @Override
-    public int getViewDistance() {
-        return 256;
-    }
-
-    @Override
     public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
         BlockState blockState = tile.getBlockState();
         if (blockState == null) return;
@@ -83,9 +78,15 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
             BotiRenderer.addEntranceData(entranceData);
-        } else {
+        }
+        else {
             entranceData.renderDoors(poseStack, buffer);
         }
+    }
+
+    @Override
+    public int getViewDistance() {
+        return 256;
     }
 
     public void setupModelView(PoseStack poseStack, Direction face) {

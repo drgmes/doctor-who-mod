@@ -46,21 +46,6 @@ public class ModLootTableProvider extends LootTableProvider {
     }
 
     public static class ModBlockLootTable extends BlockLoot {
-        @Override
-        protected Iterable<Block> getKnownBlocks() {
-            return ModBlocks.BLOCK_BUILDERS.stream()
-                .filter((bb) -> !bb.isDropDisabled)
-                .map((bb) -> bb.get())
-                .collect(Collectors.toList());
-        }
-
-        @Override
-        protected void addTables() {
-            for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {
-                blockBuilder.registerLootTable(this);
-            }
-        }
-
         public void addOreDrop(Block block, Item item) {
             this.add(block, (b) -> createOreDrop(b, item));
         }
@@ -77,6 +62,21 @@ public class ModLootTableProvider extends LootTableProvider {
 
         public void addDoorDrop(Block block) {
             this.add(block, (b) -> createDoorTable(b));
+        }
+
+        @Override
+        protected void addTables() {
+            for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {
+                blockBuilder.registerLootTable(this);
+            }
+        }
+
+        @Override
+        protected Iterable<Block> getKnownBlocks() {
+            return ModBlocks.BLOCK_BUILDERS.stream()
+                .filter((bb) -> !bb.isDropDisabled)
+                .map((bb) -> bb.get())
+                .collect(Collectors.toList());
         }
     }
 }

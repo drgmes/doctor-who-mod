@@ -28,24 +28,6 @@ public class ScrewdriverItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.empty());
-
-        MutableComponent mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
-        MutableComponent modeText = Component.translatable("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
-        list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
-
-        String tardisLevelUUID = Screwdriver.getTardisUUID(itemStack);
-        if (tardisLevelUUID != "") {
-            MutableComponent tardis = Component.literal(tardisLevelUUID.substring(0, 8));
-            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
-            list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
-        }
-
-        super.appendHoverText(itemStack, level, list, tooltipFlag);
-    }
-
-    @Override
     public boolean canAttackBlock(BlockState blockState, Level level, BlockPos blockPos, Player player) {
         return false;
     }
@@ -53,6 +35,11 @@ public class ScrewdriverItem extends Item {
     @Override
     public float getDestroySpeed(ItemStack itemStack, BlockState blockState) {
         return 0;
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        return this.useScrewdriver(level, player, hand, false);
     }
 
     @Override
@@ -73,8 +60,21 @@ public class ScrewdriverItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        return this.useScrewdriver(level, player, hand, false);
+    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        list.add(Component.empty());
+
+        MutableComponent mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
+        MutableComponent modeText = Component.translatable("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+        list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+
+        String tardisLevelUUID = Screwdriver.getTardisUUID(itemStack);
+        if (!tardisLevelUUID.equals("")) {
+            MutableComponent tardis = Component.literal(tardisLevelUUID.substring(0, 8));
+            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
+            list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+        }
+
+        super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 
     public InteractionResultHolder<ItemStack> useScrewdriver(Level level, Player player, InteractionHand hand, boolean isAlternativeAction) {

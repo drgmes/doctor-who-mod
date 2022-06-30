@@ -41,16 +41,17 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.ArrayList;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
-    private final LazyOptional<ITardisLevelData> tardisDataHolder;
-    private final ITardisLevelData tardisData;
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public TardisConsoleType consoleType;
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
     public float tickInProgress = 0;
     public int monitorPage = 0;
+
+    private final LazyOptional<ITardisLevelData> tardisDataHolder;
+    private final ITardisLevelData tardisData;
     private final ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
-    private int timeToInit = 0;
     private final int monitorPageLength = 2;
+    private int timeToInit = 0;
 
     public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
@@ -58,30 +59,6 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         this.consoleType = consoleType;
         this.tardisData = new TardisLevelDataCapability(this.level);
         this.tardisDataHolder = LazyOptional.of(() -> this.tardisData);
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).inflate(3, 4, 3);
-    }
-
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
-    }
-
-    @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        this.controlsStorage.save(tag);
-
-        tag.putInt("monitorPage", this.monitorPage);
-        ContainerHelper.saveAllItems(tag, NonNullList.withSize(1, this.screwdriverItemStack), true);
     }
 
     @Override
@@ -99,9 +76,22 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        this.timeToInit = 10;
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        this.controlsStorage.save(tag);
+
+        tag.putInt("monitorPage", this.monitorPage);
+        ContainerHelper.saveAllItems(tag, NonNullList.withSize(1, this.screwdriverItemStack), true);
+    }
+
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -115,14 +105,25 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        return cap == ModCapabilities.TARDIS_DATA ? this.tardisDataHolder.cast() : super.getCapability(cap, side);
+    public void onLoad() {
+        super.onLoad();
+        this.timeToInit = 10;
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
     }
 
     @Override
     public void invalidateCaps() {
         super.invalidateCaps();
         this.tardisDataHolder.invalidate();
+    }
+
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+        return cap == ModCapabilities.TARDIS_DATA ? this.tardisDataHolder.cast() : super.getCapability(cap, side);
     }
 
     public void init() {

@@ -36,6 +36,9 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import java.util.*;
 
 public class TardisLevelDataCapability implements ITardisLevelData {
+    private static BlockPos BASE_ENTRANCE_POSITION = TardisHelper.TARDIS_POS.above(7).south(1).east(18).immutable();
+    private static Direction BASE_ENTRANCE_FACING = Direction.SOUTH;
+
     private final Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
     private final List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
     private final List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
@@ -48,8 +51,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
     private UUID owner;
     private BotiStorage botiStorage = new BotiStorage();
-    private final Direction entranceFacing = Direction.SOUTH;
-    private BlockPos entrancePosition = TardisHelper.TARDIS_POS.above(7).south(1).east(18).immutable();
 
     private int energyArtron = 0;
     private int energyForge = 0;
@@ -95,12 +96,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (this.prevExteriorFacing != null) tdTag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
         if (this.currExteriorFacing != null) tdTag.putString("currExteriorFacing", this.currExteriorFacing.getName());
         if (this.destExteriorFacing != null) tdTag.putString("destExteriorFacing", this.destExteriorFacing.getName());
-
-        if (this.entrancePosition != null) {
-            tdTag.putInt("entrancePositionX", this.entrancePosition.getX());
-            tdTag.putInt("entrancePositionY", this.entrancePosition.getY());
-            tdTag.putInt("entrancePositionZ", this.entrancePosition.getZ());
-        }
 
         if (this.prevExteriorPosition != null) {
             tdTag.putInt("prevExteriorPositionX", this.prevExteriorPosition.getX());
@@ -164,7 +159,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         if (tdTag.contains("currExteriorFacing")) this.currExteriorFacing = this.getDirectionByKey(tdTag, "currExteriorFacing");
         if (tdTag.contains("destExteriorFacing")) this.destExteriorFacing = this.getDirectionByKey(tdTag, "destExteriorFacing");
 
-        if (tdTag.contains("entrancePositionX")) this.entrancePosition = this.getBlockPosByKey(tdTag, "entrancePosition");
         if (tdTag.contains("prevExteriorPositionX")) this.prevExteriorPosition = this.getBlockPosByKey(tdTag, "prevExteriorPosition");
         if (tdTag.contains("currExteriorPositionX")) this.currExteriorPosition = this.getBlockPosByKey(tdTag, "currExteriorPosition");
         if (tdTag.contains("destExteriorPositionX")) this.destExteriorPosition = this.getBlockPosByKey(tdTag, "destExteriorPosition");
@@ -196,6 +190,16 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public ServerLevel getLevel() {
+        return this.level instanceof ServerLevel serverLevel ? serverLevel : null;
+    }
+
+    @Override
+    public UUID getOwnerUUID() {
+        return this.owner;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends ITardisSystem> T getSystem(Class<T> system) {
         return (T) this.systems.getOrDefault(system, null);
@@ -213,13 +217,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public void setSystemComponents(NonNullList<ItemStack> systemComponents) {
-        this.systemComponents = systemComponents;
+    public NonNullList<ItemStack> getSystemComponents() {
+        return this.systemComponents;
     }
 
     @Override
-    public NonNullList<ItemStack> getSystemComponents() {
-        return this.systemComponents;
+    public void setSystemComponents(NonNullList<ItemStack> systemComponents) {
+        this.systemComponents = systemComponents;
     }
 
     @Override
@@ -258,26 +262,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public ServerLevel getLevel() {
-        return this.level instanceof ServerLevel serverLevel ? serverLevel : null;
-    }
-
-    @Override
-    public UUID getOwnerUUID() {
-        return this.owner;
-    }
-
-    @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
-    }
-
-    @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
-    }
-
-    @Override
     public ResourceKey<Level> getPreviousExteriorDimension() {
         return this.prevExteriorDimension != null ? this.prevExteriorDimension : this.getCurrentExteriorDimension();
     }
@@ -310,13 +294,13 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     @Override
     public Direction getEntranceFacing() {
         BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
-        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockState().getValue(BaseTardisDoorsBlock.FACING) : this.entranceFacing;
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockState().getValue(BaseTardisDoorsBlock.FACING) : BASE_ENTRANCE_FACING;
     }
 
     @Override
     public BlockPos getEntrancePosition() {
         BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
-        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockPos() : this.entrancePosition;
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getBlockPos() : BASE_ENTRANCE_POSITION;
     }
 
     @Override
@@ -402,6 +386,19 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev) {
+        if (shouldUpdatePrev) this.prevExteriorPosition = this.currExteriorPosition;
+        this.currExteriorPosition = blockPos.immutable();
+        return true;
+    }
+
+    @Override
+    public boolean setDestinationPosition(BlockPos blockPos) {
+        this.destExteriorPosition = blockPos.immutable();
+        return true;
+    }
+
+    @Override
     public boolean setFacing(Direction direction, boolean shouldUpdatePrev) {
         if (shouldUpdatePrev) this.prevExteriorFacing = this.currExteriorFacing;
         this.currExteriorFacing = direction;
@@ -415,15 +412,18 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
-    public boolean setPosition(BlockPos blockPos, boolean shouldUpdatePrev) {
-        if (shouldUpdatePrev) this.prevExteriorPosition = this.currExteriorPosition;
-        this.currExteriorPosition = blockPos.immutable();
-        return true;
-    }
+    public boolean setDoorsOpenState(boolean flag) {
+        if (flag && this.isDoorsLocked()) return false;
+        if (flag && !this.getSystem(TardisSystemMaterialization.class).isMaterialized()) return false;
 
-    @Override
-    public boolean setDestinationPosition(BlockPos blockPos) {
-        this.destExteriorPosition = blockPos.immutable();
+        if (this.doorsOpened == flag) return false;
+        this.doorsOpened = flag;
+
+        if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntrancePosition());
+        else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntrancePosition());
+
+        this.updateDoorsTiles();
+        this.updateExterior();
         return true;
     }
 
@@ -441,22 +441,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         else ModSounds.playTardisDoorsUnlockSound(exteriorLevel, this.getCurrentExteriorPosition());
 
         if (flag) this.setDoorsOpenState(false);
-        return true;
-    }
-
-    @Override
-    public boolean setDoorsOpenState(boolean flag) {
-        if (flag && this.isDoorsLocked()) return false;
-        if (flag && !this.getSystem(TardisSystemMaterialization.class).isMaterialized()) return false;
-
-        if (this.doorsOpened == flag) return false;
-        this.doorsOpened = flag;
-
-        if (flag) ModSounds.playTardisDoorsOpenSound(this.level, this.getEntrancePosition());
-        else ModSounds.playTardisDoorsCloseSound(this.level, this.getEntrancePosition());
-
-        this.updateDoorsTiles();
-        this.updateExterior();
         return true;
     }
 
@@ -494,22 +478,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     public boolean setEnergyForgeHarvesting(boolean flag) {
         this.energyForgeHarvesting = flag;
         return true;
-    }
-
-    @Override
-    public void updateBoti() {
-        if (this.level.players().size() == 0) return;
-        if (!this.isValid() || !(this.level instanceof ServerLevel serverLevel)) return;
-        if (!this.getSystem(TardisSystemMaterialization.class).isMaterialized()) return;
-
-        ServerLevel exteriorLevel = serverLevel.getServer().getLevel(this.getCurrentExteriorDimension());
-        if (exteriorLevel == null) return;
-
-        this.botiStorage.setDirection(this.getCurrentExteriorFacing());
-        this.botiStorage.setRadius(ModConfig.CLIENT.botiExteriorRadius.get());
-        this.botiStorage.setDistance(ModConfig.CLIENT.botiExteriorDistance.get());
-        this.botiStorage.updateBoti(exteriorLevel, this.getCurrentExteriorPosition());
-        this.updateDoorsTiles();
     }
 
     @Override
@@ -686,6 +654,32 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         this.systems.values().forEach(ITardisSystem::tick);
         if (this.level.getGameTime() % 100 == 0) this.updateBoti();
+    }
+
+    @Override
+    public BotiStorage getBotiStorage() {
+        return this.botiStorage;
+    }
+
+    @Override
+    public void setBotiStorage(BotiStorage botiStorage) {
+        this.botiStorage = botiStorage;
+    }
+
+    @Override
+    public void updateBoti() {
+        if (this.level.players().size() == 0) return;
+        if (!this.isValid() || !(this.level instanceof ServerLevel serverLevel)) return;
+        if (!this.getSystem(TardisSystemMaterialization.class).isMaterialized()) return;
+
+        ServerLevel exteriorLevel = serverLevel.getServer().getLevel(this.getCurrentExteriorDimension());
+        if (exteriorLevel == null) return;
+
+        this.botiStorage.setDirection(this.getCurrentExteriorFacing());
+        this.botiStorage.setRadius(ModConfig.CLIENT.botiExteriorRadius.get());
+        this.botiStorage.setDistance(ModConfig.CLIENT.botiExteriorDistance.get());
+        this.botiStorage.updateBoti(exteriorLevel, this.getCurrentExteriorPosition());
+        this.updateDoorsTiles();
     }
 
     private Direction getDirectionByKey(CompoundTag tag, String key) {

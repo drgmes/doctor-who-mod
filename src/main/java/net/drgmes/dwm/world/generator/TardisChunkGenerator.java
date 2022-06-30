@@ -59,13 +59,42 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
-        return CompletableFuture.completedFuture(chunk);
+    public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, Carving carvingType) {
+    }
+
+    @Override
+    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunkAccess, StructureManager structureManager) {
+    }
+
+    @Override
+    public void buildSurface(WorldGenRegion region, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
+    }
+
+    @Override
+    public void spawnOriginalMobs(WorldGenRegion region) {
+    }
+
+    @Override
+    public int getSpawnHeight(LevelHeightAccessor level) {
+        return 1;
     }
 
     @Override
     public int getGenDepth() {
         return 319;
+    }
+
+    @Override
+    public void createStructures(RegistryAccess registries, RandomState randomState, StructureManager structureManager, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, long seed) {
+    }
+
+    @Override
+    public void createReferences(WorldGenLevel world, StructureManager structureManager, ChunkAccess chunk) {
+    }
+
+    @Override
+    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
+        return CompletableFuture.completedFuture(chunk);
     }
 
     @Override
@@ -76,11 +105,6 @@ public class TardisChunkGenerator extends ChunkGenerator {
     @Override
     public int getMinY() {
         return -64;
-    }
-
-    @Override
-    public int getSpawnHeight(LevelHeightAccessor level) {
-        return 1;
     }
 
     @Override
@@ -95,29 +119,5 @@ public class TardisChunkGenerator extends ChunkGenerator {
 
     @Override
     public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
-    }
-
-    @Override
-    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunkAccess, StructureManager structureManager) {
-    }
-
-    @Override
-    public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, Carving carvingType) {
-    }
-
-    @Override
-    public void buildSurface(WorldGenRegion region, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
-    }
-
-    @Override
-    public void createReferences(WorldGenLevel world, StructureManager structureManager, ChunkAccess chunk) {
-    }
-
-    @Override
-    public void createStructures(RegistryAccess registries, RandomState randomState, StructureManager structureManager, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, long seed) {
-    }
-
-    @Override
-    public void spawnOriginalMobs(WorldGenRegion region) {
     }
 }

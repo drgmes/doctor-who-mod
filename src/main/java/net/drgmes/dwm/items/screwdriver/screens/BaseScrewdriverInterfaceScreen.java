@@ -50,11 +50,6 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     @Override
-    public Component getTitle() {
-        return this.title;
-    }
-
-    @Override
     public Component getTitleComponent() {
         return this.getTitle();
     }
@@ -70,11 +65,6 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
         GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
     }
@@ -85,20 +75,8 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     @Override
-    protected void init() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
-        if (this.onButtonCloseClick(mouseX, mouseY)) this.onDone();
-        return super.mouseClicked(mouseX, mouseY, frame);
-    }
-
-    @Override
-    public void removed() {
-        assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    public Component getTitle() {
+        return this.title;
     }
 
     @Override
@@ -118,13 +96,35 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     @Override
+    public void onClose() {
+        this.onDone();
+    }
+
+    @Override
+    protected void init() {
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+    }
+
+    @Override
+    public void removed() {
+        assert this.minecraft != null;
+        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
     public void resize(Minecraft mc, int width, int height) {
         this.init(mc, width, height);
     }
 
     @Override
-    public void onClose() {
-        this.onDone();
+    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
+        if (this.onButtonCloseClick(mouseX, mouseY)) this.onDone();
+        return super.mouseClicked(mouseX, mouseY, frame);
     }
 
     protected void onDone() {

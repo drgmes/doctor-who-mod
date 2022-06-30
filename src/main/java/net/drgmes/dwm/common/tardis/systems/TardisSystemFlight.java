@@ -17,7 +17,6 @@ public class TardisSystemFlight implements ITardisSystem {
     public float destinationDistanceRate = 0;
 
     private final ITardisLevelData tardis;
-
     private boolean isInFlight = false;
     private boolean isFlightLaunched = false;
     private boolean isSoundFlyPlayed = false;

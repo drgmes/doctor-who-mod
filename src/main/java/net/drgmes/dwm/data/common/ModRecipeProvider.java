@@ -19,17 +19,6 @@ public class ModRecipeProvider extends RecipeProvider {
         super(generator);
     }
 
-    @Override
-    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-        for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {
-            blockBuilder.registerRecipe(this, consumer);
-        }
-
-        for (ItemBuilder itemBuilder : ModItems.ITEM_BUILDERS) {
-            itemBuilder.registerRecipe(this, consumer);
-        }
-    }
-
     public InventoryChangeTrigger.TriggerInstance hasItem(ItemLike item) {
         return RecipeProvider.has(item);
     }
@@ -48,5 +37,16 @@ public class ModRecipeProvider extends RecipeProvider {
 
     public ResourceLocation getBlastingRecipeName(String name) {
         return this.getRecipeName(name, "_from_blasting");
+    }
+
+    @Override
+    protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
+        for (BlockBuilder blockBuilder : ModBlocks.BLOCK_BUILDERS) {
+            blockBuilder.registerRecipe(this, consumer);
+        }
+
+        for (ItemBuilder itemBuilder : ModItems.ITEM_BUILDERS) {
+            itemBuilder.registerRecipe(this, consumer);
+        }
     }
 }

@@ -58,6 +58,18 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        Level level = context.getLevel();
+        BlockPos blockPos = context.getClickedPos();
+
+        if (blockPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockPos.above()).canBeReplaced(context)) {
+            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER);
+        }
+
+        return null;
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(OPEN);
@@ -75,25 +87,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
-        double size = 15.9;
-        return Block.box(16 - size, 0.0D, 16 - size, size, 16.0D, size);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-
-        if (blockPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockPos.above()).canBeReplaced(context)) {
-            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER);
-        }
-
-        return null;
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState newBlockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos newBlockPos) {
         DoubleBlockHalf doubleBlockHalf = blockState.getValue(HALF);
 
@@ -104,22 +97,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         }
 
         return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !blockState.canSurvive(levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, newBlockState, levelAccessor, blockPos, newBlockPos);
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
-
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            tardisExteriorBlockEntity.remat();
-
-            ServerLevel tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
-            if (tardisLevel == null) return;
-
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-                if (tardis.isValid()) tardis.setOwnerUUID(entity.getUUID());
-            });
-        }
     }
 
     @Override
@@ -138,12 +115,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         }
 
         super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
     }
 
     @Override
@@ -208,6 +179,19 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     @SuppressWarnings("deprecation")
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
+        double size = 15.9;
+        return Block.box(16 - size, 0.0D, 16 - size, size, 16.0D, size);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (!blockState.getValue(OPEN)) return;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
@@ -222,6 +206,22 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
+
+        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.remat();
+
+            ServerLevel tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
+            if (tardisLevel == null) return;
+
+            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+                if (tardis.isValid()) tardis.setOwnerUUID(entity.getUUID());
+            });
         }
     }
 }

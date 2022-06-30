@@ -24,13 +24,13 @@ public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.
     }
 
     @Override
-    protected int getScrollbarPosition() {
-        return this.getRight() - 5;
+    public int getRowWidth() {
+        return this.width;
     }
 
     @Override
-    public int getRowWidth() {
-        return this.width;
+    protected int getScrollbarPosition() {
+        return this.getRight() - 5;
     }
 
     @Override

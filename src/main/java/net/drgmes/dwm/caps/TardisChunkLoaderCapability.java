@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 
 public class TardisChunkLoaderCapability implements ITardisChunkLoader {
     private final Map<SectionPos, List<BlockPos>> chunks = new HashMap<>();
-
     private final ServerLevel level;
 
     public TardisChunkLoaderCapability(ServerLevel level) {
@@ -77,7 +76,8 @@ public class TardisChunkLoaderCapability implements ITardisChunkLoader {
         if (this.chunks.get(sectionPos).size() == 1) {
             this.level.setChunkForced(sectionPos.getX(), sectionPos.getZ(), false);
             this.chunks.remove(sectionPos);
-        } else {
+        }
+        else {
             this.chunks.get(sectionPos).remove(blockPos);
         }
     }

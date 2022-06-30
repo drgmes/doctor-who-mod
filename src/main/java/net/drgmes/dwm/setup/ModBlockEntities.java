@@ -10,13 +10,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlockEntities {
-
     //////////////////////
     // Tardis Exteriors //
     //////////////////////
 
-    public static void init() {
-    }    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR_POLICE_BOX = Registration.registerBlockEntity(
+    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR_POLICE_BOX = Registration.registerBlockEntity(
         "tardis_exterior_police_box",
         TardisExteriorPoliceBoxBlockEntity::new,
         ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.blockObject
@@ -72,5 +70,6 @@ public class ModBlockEntities {
         ModBlocks.TARDIS_ROOM_DESTROYER.blockObject
     );
 
-
+    public static void init() {
+    }
 }

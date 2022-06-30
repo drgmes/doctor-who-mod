@@ -46,13 +46,16 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
+    public void load(CompoundTag tag) {
+        super.load(tag);
 
-    @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+        this.tardisLevelUUID = tag.getString("tardisLevelUUID");
+        this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
+
+        this.tickInProgress = tag.getInt("tickInProgress");
+        this.isMaterialized = tag.getBoolean("isMaterialized");
+        this.inRematProgress = tag.getBoolean("inRematProgress");
+        this.inDematProgress = tag.getBoolean("inDematProgress");
     }
 
     @Override
@@ -69,16 +72,13 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
 
-        this.tardisLevelUUID = tag.getString("tardisLevelUUID");
-        this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
-
-        this.tickInProgress = tag.getInt("tickInProgress");
-        this.isMaterialized = tag.getBoolean("isMaterialized");
-        this.inRematProgress = tag.getBoolean("inRematProgress");
-        this.inDematProgress = tag.getBoolean("inDematProgress");
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
@@ -118,7 +118,8 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
 
             if (this.tickInProgress < goal) {
                 this.tickInProgress++;
-            } else {
+            }
+            else {
                 this.isMaterialized = this.inRematProgress;
                 this.inRematProgress = false;
                 this.inDematProgress = false;

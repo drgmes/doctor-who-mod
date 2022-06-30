@@ -47,11 +47,6 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
     }
 
     @Override
-    public void tick() {
-        this.bannersListWidget.setSelected(this.selected);
-    }
-
-    @Override
     public void resize(Minecraft mc, int width, int height) {
         BannersListWidget.BannerEntry selected = this.selected;
         super.resize(mc, width, height);
@@ -67,13 +62,18 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
         this.onDone();
     }
 
-    private void update() {
-        this.acceptButton.active = this.selected != null;
+    @Override
+    public void tick() {
+        this.bannersListWidget.setSelected(this.selected);
     }
 
     public void setSelected(BannersListWidget.BannerEntry entry) {
         this.selected = entry == this.selected ? null : entry;
         this.update();
+    }
+
+    private void update() {
+        this.acceptButton.active = this.selected != null;
     }
 
     private class BannersListWidget extends BaseListWidget {

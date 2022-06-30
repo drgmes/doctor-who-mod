@@ -40,20 +40,6 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(OPEN);
-        builder.add(HALF);
-    }
-
-    @Override
-    protected BlockState getDefaultState() {
-        return super.getDefaultState()
-            .setValue(OPEN, false)
-            .setValue(HALF, DoubleBlockHalf.LOWER);
-    }
-
-    @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Level level = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
@@ -68,6 +54,20 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     }
 
     @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(OPEN);
+        builder.add(HALF);
+    }
+
+    @Override
+    protected BlockState getDefaultState() {
+        return super.getDefaultState()
+            .setValue(OPEN, false)
+            .setValue(HALF, DoubleBlockHalf.LOWER);
+    }
+
+    @Override
     @SuppressWarnings("deprecation")
     public BlockState updateShape(BlockState blockState, Direction direction, BlockState newBlockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos newBlockPos) {
         DoubleBlockHalf doubleBlockHalf = blockState.getValue(HALF);
@@ -79,31 +79,6 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
         }
 
         return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !blockState.canSurvive(levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, newBlockState, levelAccessor, blockPos, newBlockPos);
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        BlockPos blockPosBelow = blockPos.below();
-        BlockState blockStateBelow = levelReader.getBlockState(blockPosBelow);
-        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER ? blockStateBelow.isFaceSturdy(levelReader, blockPosBelow, Direction.UP) : blockStateBelow.is(this);
-    }
-
-    @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (player.isCreative()) return;
-        super.playerWillDestroy(level, blockPos, blockState, player);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public PushReaction getPistonPushReaction(BlockState blockState) {
-        return PushReaction.IGNORE;
     }
 
     @Override
@@ -156,6 +131,20 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
 
     @Override
     @SuppressWarnings("deprecation")
+    public PushReaction getPistonPushReaction(BlockState blockState) {
+        return PushReaction.IGNORE;
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        BlockPos blockPosBelow = blockPos.below();
+        BlockState blockStateBelow = levelReader.getBlockState(blockPosBelow);
+        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER ? blockStateBelow.isFaceSturdy(levelReader, blockPosBelow, Direction.UP) : blockStateBelow.is(this);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D)
@@ -166,5 +155,16 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
                 TardisHelper.teleportFromTardis(entity, level.getServer());
             }
         });
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
+        if (player.isCreative()) return;
+        super.playerWillDestroy(level, blockPos, blockState, player);
     }
 }

@@ -57,10 +57,12 @@ public class DWMUtils {
             if (Character.isWhitespace(ch)) {
                 buffer.append(ch);
                 space = true;
-            } else if (space) {
+            }
+            else if (space) {
                 buffer.append(Character.toTitleCase(ch));
                 space = false;
-            } else {
+            }
+            else {
                 buffer.append(ch);
             }
         }

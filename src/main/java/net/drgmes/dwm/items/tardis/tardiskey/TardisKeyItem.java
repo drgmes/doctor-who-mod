@@ -27,19 +27,6 @@ public class TardisKeyItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        CompoundTag tag = itemStack.getOrCreateTag();
-
-        if (tag.contains("tardisLevelUUID")) {
-            MutableComponent tardis = Component.literal(tag.getString("tardisLevelUUID").substring(0, 8));
-            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(tardis.getStyle().withColor(ChatFormatting.GOLD)));
-            list.add(tardisText.setStyle(tardis.getStyle().withColor(ChatFormatting.GRAY)));
-        }
-
-        super.appendHoverText(itemStack, level, list, tooltipFlag);
-    }
-
-    @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
         CompoundTag tag = itemStack.getOrCreateTag();
@@ -78,5 +65,18 @@ public class TardisKeyItem extends Item {
         }
 
         return InteractionResultHolder.success(itemStack);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
+        CompoundTag tag = itemStack.getOrCreateTag();
+
+        if (tag.contains("tardisLevelUUID")) {
+            MutableComponent tardis = Component.literal(tag.getString("tardisLevelUUID").substring(0, 8));
+            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(tardis.getStyle().withColor(ChatFormatting.GOLD)));
+            list.add(tardisText.setStyle(tardis.getStyle().withColor(ChatFormatting.GRAY)));
+        }
+
+        super.appendHoverText(itemStack, level, list, tooltipFlag);
     }
 }

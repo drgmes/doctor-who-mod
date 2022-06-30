@@ -21,12 +21,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
+    public enum DataType {
+        BIOME,
+        STRUCTURE
+    }
+
     private LocationsListWidget locationsListWidget;
     private LocationsListWidget.LocationEntry selected = null;
     private List<Entry<ResourceLocation, DataType>> locations = new ArrayList<>();
     private List<Entry<ResourceLocation, DataType>> filteredLocations = new ArrayList<>();
     private EditBox search;
     private String lastSearch;
+
     public TardisConsoleTelepathicInterfaceLocationsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, List<Entry<ResourceLocation, DataType>> locations) {
         super(tardisConsoleBlockEntity);
 
@@ -62,19 +68,6 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
     }
 
     @Override
-    public void tick() {
-        this.search.tick();
-        this.locationsListWidget.setSelected(this.selected);
-
-        if (!search.getValue().equals(lastSearch)) {
-            this.selected = null;
-            this.reloadLocationsList();
-            this.locationsListWidget.refreshList();
-            this.update();
-        }
-    }
-
-    @Override
     public void resize(Minecraft mc, int width, int height) {
         String search = this.search.getValue();
         LocationsListWidget.LocationEntry selected = this.selected;
@@ -97,9 +90,17 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         super.apply();
     }
 
-    private void update() {
-        this.lastSearch = this.search.getValue();
-        this.acceptButton.active = this.selected != null;
+    @Override
+    public void tick() {
+        this.search.tick();
+        this.locationsListWidget.setSelected(this.selected);
+
+        if (!search.getValue().equals(lastSearch)) {
+            this.selected = null;
+            this.reloadLocationsList();
+            this.locationsListWidget.refreshList();
+            this.update();
+        }
     }
 
     public void setSelected(LocationsListWidget.LocationEntry entry) {
@@ -122,9 +123,9 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         this.filteredLocations = this.locations;
     }
 
-    public enum DataType {
-        BIOME,
-        STRUCTURE
+    private void update() {
+        this.lastSearch = this.search.getValue();
+        this.acceptButton.active = this.selected != null;
     }
 
     private class LocationsListWidget extends BaseListWidget {

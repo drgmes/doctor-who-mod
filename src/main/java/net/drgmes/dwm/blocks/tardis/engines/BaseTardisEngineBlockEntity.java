@@ -25,16 +25,6 @@ public class BaseTardisEngineBlockEntity extends RandomizableContainerBlockEntit
     }
 
     @Override
-    protected Component getDefaultName() {
-        return this.getBlockState().getBlock().getName();
-    }
-
-    @Override
-    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
-        return new TardisEngineSystemsContainer(containerId, inventory, this);
-    }
-
-    @Override
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition).inflate(3, 4, 3);
     }
@@ -55,15 +45,25 @@ public class BaseTardisEngineBlockEntity extends RandomizableContainerBlockEntit
     }
 
     @Override
-    protected void setItems(NonNullList<ItemStack> itemStacks) {
-        Objects.requireNonNull(this.getLevel()).getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            tardis.setSystemComponents(itemStacks);
-        });
+    protected Component getDefaultName() {
+        return this.getBlockState().getBlock().getName();
+    }
+
+    @Override
+    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
+        return new TardisEngineSystemsContainer(containerId, inventory, this);
     }
 
     @Override
     protected NonNullList<ItemStack> getItems() {
         Optional<ITardisLevelData> tardis = Objects.requireNonNull(this.getLevel()).getCapability(ModCapabilities.TARDIS_DATA).resolve();
         return tardis.map(ITardisLevelData::getSystemComponents).orElse(NonNullList.create());
+    }
+
+    @Override
+    protected void setItems(NonNullList<ItemStack> itemStacks) {
+        Objects.requireNonNull(this.getLevel()).getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            tardis.setSystemComponents(itemStacks);
+        });
     }
 }

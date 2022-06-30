@@ -43,6 +43,17 @@ public class ScrewdriverScanModeOverlay {
         ScrewdriverScanModeOverlay.lines = null;
     }
 
+    @SubscribeEvent
+    public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
+        if (player == null) return;
+
+        Item mainHandItem = player.getMainHandItem().getItem();
+        Item offHandItem = player.getOffhandItem().getItem();
+        if (!(mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) return;
+
+        render(event.getPoseStack());
+    }
+
     private static void render(PoseStack poseStack) {
         if (liveTime <= 0) return;
         if (title == null) return;
@@ -85,16 +96,5 @@ public class ScrewdriverScanModeOverlay {
             y += lineHeight;
         }
         poseStack.popPose();
-    }
-
-    @SubscribeEvent
-    public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
-        if (player == null) return;
-
-        Item mainHandItem = player.getMainHandItem().getItem();
-        Item offHandItem = player.getOffhandItem().getItem();
-        if (!(mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) return;
-
-        render(event.getPoseStack());
     }
 }

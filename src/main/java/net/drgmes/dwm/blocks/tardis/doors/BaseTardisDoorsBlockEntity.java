@@ -24,11 +24,6 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
     }
 
     @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).inflate(3, 4, 3);
-    }
-
-    @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
@@ -39,18 +34,23 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
     }
 
     @Override
-    public void onLoad() {
-        super.onLoad();
-        this.init();
-    }
-
-    @Override
     public void setRemoved() {
         this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (tardis.isValid()) tardis.getInteriorDoorTiles().remove(this);
         });
 
         super.setRemoved();
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        this.init();
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+        return new AABB(this.worldPosition).inflate(3, 4, 3);
     }
 
     @Override
@@ -79,7 +79,8 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements 
                     tardis.getInteriorDoorTiles().add(this);
                     tardis.updateDoorsTiles();
                 });
-            } else {
+            }
+            else {
                 ModPackets.INSTANCE.sendToServer(new ServerboundTardisInteriorDoorsInitPacket(this.worldPosition));
             }
         }

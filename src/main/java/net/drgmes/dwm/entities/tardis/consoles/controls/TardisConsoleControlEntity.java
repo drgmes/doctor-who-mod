@@ -21,8 +21,26 @@ public class TardisConsoleControlEntity extends Entity {
         super(type, level);
     }
 
+    public void setTardisConsole(BaseTardisConsoleBlockEntity tile) {
+        this.consoleBlockEntity = tile;
+    }
+
+    public void setTardisControlEntry(TardisConsoleControlEntry controlEntry) {
+        this.controlEntry = controlEntry;
+    }
+
     @Override
     protected void defineSynchedData() {
+    }
+
+    public void tick() {
+        if (!this.level.isClientSide && this.consoleBlockEntity == null) this.discard();
+        else super.tick();
+    }
+
+    @Override
+    public boolean isPickable() {
+        return true;
     }
 
     @Override
@@ -34,13 +52,11 @@ public class TardisConsoleControlEntity extends Entity {
     }
 
     @Override
-    public boolean isPickable() {
-        return true;
-    }
+    public boolean skipAttackInteraction(Entity entity) {
+        if (this.consoleBlockEntity == null) return false;
 
-    @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND, entity);
+        return true;
     }
 
     @Override
@@ -53,23 +69,7 @@ public class TardisConsoleControlEntity extends Entity {
     }
 
     @Override
-    public boolean skipAttackInteraction(Entity entity) {
-        if (this.consoleBlockEntity == null) return false;
-
-        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND, entity);
-        return true;
-    }
-
-    public void tick() {
-        if (!this.level.isClientSide && this.consoleBlockEntity == null) this.discard();
-        else super.tick();
-    }
-
-    public void setTardisConsole(BaseTardisConsoleBlockEntity tile) {
-        this.consoleBlockEntity = tile;
-    }
-
-    public void setTardisControlEntry(TardisConsoleControlEntry controlEntry) {
-        this.controlEntry = controlEntry;
+    public Packet<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }
