@@ -100,10 +100,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         if (tardisLevel == null) return;
 
         tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            this.botiStorage.setDirection(tardis.getEntraceFacing());
+            this.botiStorage.setDirection(tardis.getEntranceFacing());
             this.botiStorage.setRadius(ModConfig.CLIENT.botiInteriorRadius.get());
             this.botiStorage.setDistance(ModConfig.CLIENT.botiInteriorDistance.get());
-            this.botiStorage.updateBoti(tardisLevel, tardis.getEntracePosition());
+            this.botiStorage.updateBoti(tardisLevel, tardis.getEntrancePosition());
 
             ModPackets.send(this.level.getChunkAt(this.worldPosition), this.getBotiUpdatePacket(this.worldPosition));
         });
@@ -187,8 +187,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     public int getMaterializedPercent() {
-        if (this.inDematProgress)
-            return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
+        if (this.inDematProgress) return (int) Math.ceil((DWM.TIMINGS.DEMAT - this.tickInProgress) / DWM.TIMINGS.DEMAT * 100);
         if (this.inRematProgress) return (int) Math.ceil(this.tickInProgress / DWM.TIMINGS.REMAT * 100);
         return this.isMaterialized ? 100 : 0;
     }

@@ -28,6 +28,7 @@ public class TardisDoorsPoliceBoxBlock extends BaseTardisDoorsBlock {
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
         switch (blockState.getValue(FACING)) {
             case NORTH:

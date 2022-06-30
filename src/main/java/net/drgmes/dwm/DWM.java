@@ -26,7 +26,6 @@ public class DWM {
         public static final float DEMAT = 240;
         public static final float REMAT = 180;
         public static final float FLIGHT_LOOP = 32;
-        public static final float ERROR_SOUND = 120;
     }
 
     public static class TEXTS {
@@ -67,6 +66,11 @@ public class DWM {
                 public static class CONSOLE {
                     public static final ResourceLocation TELEPATHIC_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/console/telepathic_interface.png");
                     public static final Vec2 TELEPATHIC_INTERFACE_SIZE = new Vec2(403, 303);
+                }
+
+                public static class ENGINE {
+                    public static final ResourceLocation SYSTEMS_INTERFACE = new ResourceLocation(DWM.MODID, "textures/gui/tardis/engine/systems_interface.png");
+                    public static final Vec2 SYSTEMS_INTERFACE_SIZE = new Vec2(176, 166);
                 }
             }
 

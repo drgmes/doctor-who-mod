@@ -9,7 +9,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class BotiEntraceData {
+public class BotiEntranceData {
     private final Vec3 position;
     private final String tardisLevelUUID;
 
@@ -18,12 +18,12 @@ public class BotiEntraceData {
     private BiConsumer<PoseStack, MultiBufferSource> doorsRenderer;
     private BiConsumer<PoseStack, MultiBufferSource> botiRenderer;
 
-    public BotiEntraceData(Vec3 position, String tardisLevelUUID) {
+    public BotiEntranceData(Vec3 position, String tardisLevelUUID) {
         this.position = position;
         this.tardisLevelUUID = tardisLevelUUID;
     }
 
-    public BotiEntraceData(BlockPos blockPos, String tardisLevelUUID) {
+    public BotiEntranceData(BlockPos blockPos, String tardisLevelUUID) {
         this(Vec3.atLowerCornerOf(blockPos), tardisLevelUUID);
     }
 

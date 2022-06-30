@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
+import net.drgmes.dwm.items.tardis.tardiskey.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -87,6 +87,7 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         BlockPos blockPosBelow = blockPos.below();
         BlockState blockStateBelow = levelReader.getBlockState(blockPosBelow);
@@ -100,11 +101,13 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.IGNORE;
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
@@ -152,6 +155,7 @@ public abstract class BaseTardisDoorsBlock extends BaseRotatableWaterloggedEntit
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
         if (blockPos.relative(blockState.getValue(FACING).getOpposite()).distToCenterSqr(entity.position()) > 1.35D)

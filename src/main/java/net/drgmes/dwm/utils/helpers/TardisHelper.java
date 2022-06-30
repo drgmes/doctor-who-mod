@@ -34,8 +34,8 @@ public class TardisHelper {
             return;
 
         destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            entity.setYRot(tardis.getEntraceFacing().toYRot());
-            entity.changeDimension(destination, new TardisTeleporter(tardis.getEntracePosition().relative(tardis.getEntraceFacing())));
+            entity.setYRot(tardis.getEntranceFacing().toYRot());
+            entity.changeDimension(destination, new TardisTeleporter(tardis.getEntrancePosition().relative(tardis.getEntranceFacing())));
         });
     }
 

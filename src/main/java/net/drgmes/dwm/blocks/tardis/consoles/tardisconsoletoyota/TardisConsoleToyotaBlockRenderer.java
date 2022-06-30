@@ -91,12 +91,12 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
 
     @Override
     protected void activateSlider(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.z += 4F;
+        if (value) model.z -= 4F;
     }
 
     @Override
     protected void activateSlider(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        model.z += value * (4F / (controlRole.maxIntValue > 0 ? controlRole.maxIntValue : 1));
+        model.z -= value * (4F / (controlRole.maxIntValue > 0 ? controlRole.maxIntValue : 1));
     }
 
     @Override
@@ -141,16 +141,16 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
     }
 
     private void renderScreenPage1(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, ITardisLevelData provider) {
+        String NONE = "-";
+
         String flight = "NO";
-        if (provider.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-            if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
-        }
+        TardisSystemFlight flightSystem = provider.getSystem(TardisSystemFlight.class);
+        if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
 
         String materialized = "YES";
-        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            if (materializationSystem.inProgress()) materialized = materializationSystem.getProgressPercent() + "%";
-            else if (!materializationSystem.isMaterialized()) materialized = "NO";
-        }
+        TardisSystemMaterialization materializationSystem = provider.getSystem(TardisSystemMaterialization.class);
+        if (materializationSystem.inProgress()) materialized = materializationSystem.getProgressPercent() + "%";
+        else if (!materializationSystem.isMaterialized()) materialized = "NO";
 
         BlockPos prevExteriorPosition = provider.getPreviousExteriorPosition();
         BlockPos currExteriorPosition = provider.getCurrentExteriorPosition();
@@ -166,20 +166,20 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
 
         this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[]{
-            this.buildScreenParamText("Flight", flight),
-            this.buildScreenParamText("Materialized", materialized),
+            this.buildScreenParamText("Flight", !flightSystem.isEnabled() ? NONE : flight),
+            this.buildScreenParamText("Materialized", !materializationSystem.isEnabled() ? NONE : materialized),
             "",
-            this.buildScreenParamText("Prev Position", posPrevName),
-            this.buildScreenParamText("Curr Position", posCurrName),
-            this.buildScreenParamText("Dest Position", posDestName),
+            this.buildScreenParamText("Prev Position", !flightSystem.isEnabled() ? NONE : posPrevName),
+            this.buildScreenParamText("Curr Position", !flightSystem.isEnabled() ? NONE : posCurrName),
+            this.buildScreenParamText("Dest Position", !flightSystem.isEnabled() ? NONE : posDestName),
             "",
-            this.buildScreenParamText("Prev Facing", facingPrevName),
-            this.buildScreenParamText("Curr Facing", facingCurrName),
-            this.buildScreenParamText("Dest Facing", facingDestName),
+            this.buildScreenParamText("Prev Facing", !flightSystem.isEnabled() ? NONE : facingPrevName),
+            this.buildScreenParamText("Curr Facing", !flightSystem.isEnabled() ? NONE : facingCurrName),
+            this.buildScreenParamText("Dest Facing", !flightSystem.isEnabled() ? NONE : facingDestName),
             "",
-            this.buildScreenParamText("Prev Dimension", dimPrevName.replace("_", " ")),
-            this.buildScreenParamText("Curr Dimension", dimCurrName.replace("_", " ")),
-            this.buildScreenParamText("Dest Dimension", dimDestName.replace("_", " "))
+            this.buildScreenParamText("Prev Dimension", !flightSystem.isEnabled() ? NONE : dimPrevName.replace("_", " ")),
+            this.buildScreenParamText("Curr Dimension", !flightSystem.isEnabled() ? NONE : dimCurrName.replace("_", " ")),
+            this.buildScreenParamText("Dest Dimension", !flightSystem.isEnabled() ? NONE : dimDestName.replace("_", " "))
         });
     }
 

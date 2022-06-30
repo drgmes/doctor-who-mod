@@ -25,26 +25,32 @@ public abstract class BaseContainerMenu extends AbstractContainerMenu {
 
     @Override
     public ItemStack quickMoveStack(Player player, int slotIndex) {
-        ItemStack itemstack = ItemStack.EMPTY;
+        ItemStack movableItemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
 
-        if (slot != null && slot.hasItem()) {
-            ItemStack is = slot.getItem();
-            itemstack = is.copy();
+        if (slot.hasItem()) {
+            ItemStack itemStack = slot.getItem();
+            movableItemStack = itemStack.copy();
 
             if (slotIndex < this.container.getContainerSize()) {
-                if (!this.moveItemStackTo(is, this.container.getContainerSize(), this.slots.size(), true)) {
+                if (!this.moveItemStackTo(itemStack, this.container.getContainerSize(), this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.moveItemStackTo(is, 0, this.container.getContainerSize(), false)) {
+            }
+            else if (!this.moveItemStackTo(itemStack, 0, this.container.getContainerSize(), false)) {
                 return ItemStack.EMPTY;
             }
 
-            if (is.isEmpty()) slot.set(ItemStack.EMPTY);
-            else slot.setChanged();
+            if (itemStack.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+                slot.onTake(player, movableItemStack);
+            }
+            else {
+                slot.setChanged();
+            }
         }
 
-        return itemstack;
+        return movableItemStack;
     }
 
     @Override

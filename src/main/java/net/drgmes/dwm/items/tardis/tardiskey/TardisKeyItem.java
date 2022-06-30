@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardiskey;
+package net.drgmes.dwm.items.tardis.tardiskey;
 
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.setup.ModCapabilities;
@@ -53,11 +53,11 @@ public class TardisKeyItem extends Item {
                 BlockPos blockPos = tardis.getCurrentExteriorPosition();
 
                 if (player.isShiftKeyDown()) {
-                    if (!DimensionHelper.isTardisDimension(level) && player.hasPermissions(2) && tardis.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
+                    if (!DimensionHelper.isTardisDimension(level) && player.hasPermissions(2)) {
                         tardis.setDestinationFacing(Direction.fromYRot(player.getYHeadRot()));
                         tardis.setDestinationDimension(level.dimension());
                         tardis.setDestinationPosition(player.blockPosition());
-                        flightSystem.setFlight(true);
+                        tardis.getSystem(TardisSystemFlight.class).setFlight(true);
                     }
 
                     return;

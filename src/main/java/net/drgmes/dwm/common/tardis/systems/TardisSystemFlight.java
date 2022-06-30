@@ -12,16 +12,28 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class TardisSystemFlight implements ITardisSystem {
-    private final ITardisLevelData tardis;
     public float tickInProgress = 0;
     public float tickInProgressGoal = 0;
     public float destinationDistanceRate = 0;
+
+    private final ITardisLevelData tardis;
+
     private boolean isInFlight = false;
     private boolean isFlightLaunched = false;
     private boolean isSoundFlyPlayed = false;
 
     public TardisSystemFlight(ITardisLevelData tardis) {
         this.tardis = tardis;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.tardis.isSystemEnabled(this.getClass());
+    }
+
+    @Override
+    public boolean inProgress() {
+        return this.isInFlight || this.isFlightLaunched || this.tickInProgress > 0;
     }
 
     @Override
@@ -50,17 +62,12 @@ public class TardisSystemFlight implements ITardisSystem {
             this.playFlySound();
             if ((int) this.tickInProgress <= 1) this.land();
             if ((int) (this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardis.updateConsoleTiles();
-            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0)
-                this.isSoundFlyPlayed = false;
+            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
         }
     }
 
     public int getProgressPercent() {
         return (int) Math.ceil((this.tickInProgressGoal - this.tickInProgress) / this.tickInProgressGoal * 100);
-    }
-
-    public boolean inProgress() {
-        return this.isInFlight || this.isFlightLaunched || this.tickInProgress > 0;
     }
 
     public void setFlight(boolean flag) {
@@ -70,32 +77,40 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public boolean takeoff() {
+        if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
+            ModSounds.playTardisFailSound(this.tardis.getLevel(), this.tardis.getCorePosition());
+            return false;
+        }
+
+        if (!this.isEnabled()) return false;
         if (this.inProgress()) return false;
         this.isFlightLaunched = true;
 
-        if (this.tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            return materializationSystem.demat(() -> {
-                if (!this.isFlightLaunched) return;
+        return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
+            if (!this.isFlightLaunched) return;
 
-                BlockPos currExteriorPosition = this.tardis.getCurrentExteriorPosition();
-                BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
-                ResourceKey<Level> currExteriorDimension = this.tardis.getCurrentExteriorDimension();
-                ResourceKey<Level> destExteriorDimension = this.tardis.getDestinationExteriorDimension();
-                float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 200);
-                float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
+            BlockPos currExteriorPosition = this.tardis.getCurrentExteriorPosition();
+            BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
+            ResourceKey<Level> currExteriorDimension = this.tardis.getCurrentExteriorDimension();
+            ResourceKey<Level> destExteriorDimension = this.tardis.getDestinationExteriorDimension();
+            float distance = Math.max(1, currExteriorPosition.distManhattan(destExteriorPosition) / 200);
+            float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
 
-                this.isSoundFlyPlayed = false;
-                this.isInFlight = true;
-                this.tickInProgress = timeToFly;
-                this.tickInProgressGoal = timeToFly;
-                this.destinationDistanceRate = timeToFly / Math.min(ModConfig.COMMON.tardisMaxFlightTime.get(), timeToFly);
-            });
-        }
-
-        return false;
+            this.isSoundFlyPlayed = false;
+            this.isInFlight = true;
+            this.tickInProgress = timeToFly;
+            this.tickInProgressGoal = timeToFly;
+            this.destinationDistanceRate = timeToFly / Math.min(ModConfig.COMMON.tardisMaxFlightTime.get(), timeToFly);
+        });
     }
 
     public boolean land() {
+        if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
+            ModSounds.playTardisFailSound(this.tardis.getLevel(), this.tardis.getCorePosition());
+            return false;
+        }
+
+        if (!this.isEnabled()) return false;
         if (!this.inProgress()) return false;
         this.isFlightLaunched = false;
 
@@ -106,30 +121,26 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tardis.setDestinationPosition(currExteriorPosition.offset(resultPosition.x, resultPosition.y, resultPosition.z));
         }
 
-        if (this.tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            this.isSoundFlyPlayed = false;
-            this.tickInProgress = 0;
-            this.destinationDistanceRate = 0;
-            this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
-            this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
-            this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
+        this.isSoundFlyPlayed = false;
+        this.tickInProgress = 0;
+        this.destinationDistanceRate = 0;
+        this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
+        this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
+        this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
+        this.tardis.updateConsoleTiles();
+
+        this.tardis.getSystem(TardisSystemMaterialization.class).onFail(() -> {
+            this.isInFlight = false;
+            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
             this.tardis.updateConsoleTiles();
+        });
 
-            materializationSystem.onFail(() -> {
-                this.isInFlight = false;
-                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
-                this.tardis.updateConsoleTiles();
-            });
-
-            return materializationSystem.remat(() -> {
-                this.isInFlight = false;
-                this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
-                this.tardis.updateConsoleTiles();
-                this.tardis.updateBoti();
-            });
-        }
-
-        return false;
+        return this.tardis.getSystem(TardisSystemMaterialization.class).remat(() -> {
+            this.isInFlight = false;
+            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(TardisConsoleControlRoles.STARTER, false));
+            this.tardis.updateConsoleTiles();
+            this.tardis.updateBoti();
+        });
     }
 
     private void playFlySound() {

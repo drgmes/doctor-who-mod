@@ -44,7 +44,7 @@ import java.util.function.BiConsumer;
 
 @Mod.EventBusSubscriber(modid = DWM.MODID)
 public class BotiRenderer {
-    private static final List<BotiEntraceData> entracesData = new ArrayList<>();
+    private static final List<BotiEntranceData> entrancesData = new ArrayList<>();
     private static final Minecraft mc = Minecraft.getInstance();
     private static final BotiVBO vbo = new BotiVBO();
 
@@ -56,8 +56,8 @@ public class BotiRenderer {
         if (event.getTarget() instanceof BlockHitResult blockHitResult) {
             Block hitBlock = mc.level.getBlockState(blockHitResult.getBlockPos()).getBlock();
 
-            for (BotiEntraceData entraceData : entracesData) {
-                Block block = mc.level.getBlockState(new BlockPos(entraceData.getPosition())).getBlock();
+            for (BotiEntranceData entranceData : entrancesData) {
+                Block block = mc.level.getBlockState(new BlockPos(entranceData.getPosition())).getBlock();
                 if (block == hitBlock) event.setCanceled(true);
             }
         }
@@ -72,13 +72,13 @@ public class BotiRenderer {
             inRenderProcess = true;
             poseStack.pushPose();
 
-            for (BotiEntraceData entraceData : entracesData) {
-                if (entraceData.getBotiStorage() == null) continue;
+            for (BotiEntranceData entranceData : entrancesData) {
+                if (entranceData.getBotiStorage() == null) continue;
 
                 poseStack.pushPose();
                 poseStack.translate(-proj.x, -proj.y, -proj.z);
-                poseStack.translate(entraceData.getPosition().x(), entraceData.getPosition().y(), entraceData.getPosition().z());
-                start(entraceData, poseStack, event.getProjectionMatrix(), event.getPartialTick());
+                poseStack.translate(entranceData.getPosition().x(), entranceData.getPosition().y(), entranceData.getPosition().z());
+                start(entranceData, poseStack, event.getProjectionMatrix(), event.getPartialTick());
                 poseStack.popPose();
             }
 
@@ -86,33 +86,33 @@ public class BotiRenderer {
             inRenderProcess = false;
         }
 
-        entracesData.clear();
+        entrancesData.clear();
     }
 
-    public static void addEntraceData(BotiEntraceData entraceData) {
+    public static void addEntranceData(BotiEntranceData entranceData) {
         if (!inRenderProcess) {
-            entracesData.add(entraceData);
+            entrancesData.add(entranceData);
         }
     }
 
-    public static void start(BotiEntraceData entraceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
+    public static void start(BotiEntranceData entranceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
         vbo.init();
         setupFBO();
         setFBOColor();
 
         poseStack.pushPose();
-        draw(entraceData, poseStack, matrix4f, partialTicks);
+        draw(entranceData, poseStack, matrix4f, partialTicks);
         poseStack.popPose();
 
         BufferBuilder underlyingBuffer = Tesselator.getInstance().getBuilder();
         BufferSource imBuffer = MultiBufferSource.immediate(underlyingBuffer);
 
-        entraceData.renderDoors(poseStack, imBuffer);
+        entranceData.renderDoors(poseStack, imBuffer);
         imBuffer.endBatch();
 
         mc.getMainRenderTarget().bindWrite(false);
 
-        setupStencil(poseStack, imBuffer, entraceData::renderBoti);
+        setupStencil(poseStack, imBuffer, entranceData::renderBoti);
         fbo.blitToScreen(fbo.viewWidth, fbo.viewHeight, true);
         endStencil();
 
@@ -121,14 +121,14 @@ public class BotiRenderer {
     }
 
     @SuppressWarnings("deprecation")
-    private static void draw(BotiEntraceData entraceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
-        entraceData.transformBoti(poseStack);
+    private static void draw(BotiEntranceData entranceData, PoseStack poseStack, Matrix4f matrix4f, float partialTicks) {
+        entranceData.transformBoti(poseStack);
         GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 
         poseStack.pushPose();
         mc.textureManager.bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 
-        BotiStorage botiStorage = entraceData.getBotiStorage();
+        BotiStorage botiStorage = entranceData.getBotiStorage();
         if (true) {
             botiStorage.isUpdated = false;
 

@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardiskey;
+package net.drgmes.dwm.items.tardis.tardiskey;
 
 import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;

@@ -29,6 +29,7 @@ public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEnt
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldBlockState, boolean isMoving) {
         if (level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             tardisConsoleBlockEntity.loadAll();

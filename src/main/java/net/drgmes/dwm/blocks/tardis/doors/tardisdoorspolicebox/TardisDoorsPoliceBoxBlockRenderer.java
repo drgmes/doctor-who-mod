@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
-import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntraceData;
+import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntranceData;
 import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -46,26 +46,26 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
         model.renderDoorsToBuffer(poseStack, buffer, packedLight, combinedOverlay, 1, 1, 1, 1);
         poseStack.popPose();
 
-        BotiEntraceData entraceData = new BotiEntraceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
-        entraceData.setBotiStorage(tile.getBotiStorage());
+        BotiEntranceData entranceData = new BotiEntranceData(tile.getBlockPos(), tile.tardisLevelUUID + "-exterior");
+        entranceData.setBotiStorage(tile.getBotiStorage());
 
-        entraceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
+        entranceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
             innerPoseStack.pushPose();
             this.setupModelView(innerPoseStack, face);
             model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityCutout(modelResource)), packedLight, combinedOverlay, 1, 1, 1, 1);
             innerPoseStack.popPose();
         });
 
-        entraceData.setBotiTransformer((innerPoseStack) -> {
+        entranceData.setBotiTransformer((innerPoseStack) -> {
             innerPoseStack.translate(0.5, 0, 0.5);
             innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
             innerPoseStack.mulPose(Vector3f.YN.rotationDegrees(face.toYRot()));
-            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(entraceData.getBotiStorage().getDirection().toYRot()));
+            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(entranceData.getBotiStorage().getDirection().toYRot()));
             innerPoseStack.translate(-0.5, 0, -0.5);
         });
 
         if (blockState.getValue(BlockStateProperties.OPEN)) {
-            BotiRenderer.addEntraceData(entraceData);
+            BotiRenderer.addEntranceData(entranceData);
         }
     }
 

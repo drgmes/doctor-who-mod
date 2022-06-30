@@ -25,6 +25,7 @@ public class TardisRoomDestroyerBlock extends BaseRotatableWaterloggedEntityBloc
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (!DimensionHelper.isTardisDimension(level)) return InteractionResult.PASS;
         if (player.isSpectator()) return InteractionResult.PASS;

@@ -14,6 +14,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import java.util.Objects;
+
 public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
     public boolean inProgress = false;
     public float tickInProgress = 0;
@@ -38,22 +40,20 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        if (!this.level.isClientSide && DimensionHelper.isTardisDimension(this.level)) {
+        if (!Objects.requireNonNull(this.level).isClientSide && DimensionHelper.isTardisDimension(this.level)) {
             this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                 boolean prevInProgress = this.inProgress;
 
-                if (tardis.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-                    if (!this.inProgress && materializationSystem.inProgress()) {
-                        this.inProgress = true;
-                    } else if (this.inProgress && !materializationSystem.inProgress()) {
-                        this.inProgress = false;
-                    }
+                if (!this.inProgress && tardis.getSystem(TardisSystemMaterialization.class).inProgress()) {
+                    this.inProgress = true;
                 }
 
-                if (tardis.getSystem(TardisSystemFlight.class) instanceof TardisSystemFlight flightSystem) {
-                    if (!this.inProgress && flightSystem.inProgress()) {
-                        this.inProgress = true;
-                    }
+                if (this.inProgress && !tardis.getSystem(TardisSystemMaterialization.class).inProgress()) {
+                    this.inProgress = false;
+                }
+
+                if (!this.inProgress && tardis.getSystem(TardisSystemFlight.class).inProgress()) {
+                    this.inProgress = true;
                 }
 
                 if (prevInProgress != this.inProgress) {

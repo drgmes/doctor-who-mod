@@ -178,39 +178,6 @@ public class TardisEngineToyotaModel extends EntityModel<Entity> {
     }
 
     public void setupAnim(TardisEngineToyotaBlockEntity tile) {
-        float coverAngle = -0.5F;
-
-        if (tile.isOpenedCover1) {
-            this.covers.getChild("cover_1").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover2) {
-            this.covers.getChild("cover_2").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover3) {
-            this.covers.getChild("cover_3").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover4) {
-            this.covers.getChild("cover_4").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover5) {
-            this.covers.getChild("cover_5").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover6) {
-            this.covers.getChild("cover_6").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover7) {
-            this.covers.getChild("cover_7").xRot = coverAngle;
-        }
-
-        if (tile.isOpenedCover8) {
-            this.covers.getChild("cover_8").xRot = coverAngle;
-        }
     }
 
     @Override

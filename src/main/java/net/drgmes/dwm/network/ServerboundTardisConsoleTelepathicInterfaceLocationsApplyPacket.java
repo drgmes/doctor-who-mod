@@ -24,6 +24,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
@@ -48,17 +49,18 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         final var success = new AtomicBoolean(false);
 
         ctx.get().enqueueWork(() -> {
-            if (!(ctx.get().getSender().level instanceof ServerLevel level)) return;
+            if (!(Objects.requireNonNull(ctx.get().getSender()).level instanceof ServerLevel serverLevel)) return;
 
-            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            serverLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
                 Component message = null;
 
                 if (this.entry.getValue() == DataType.BIOME) {
-                    String msg = this.findBiome(level, tardis) ? "found" : "not_found";
+                    String msg = this.findBiome(serverLevel, tardis) ? "found" : "not_found";
                     message = Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg);
-                } else if (this.entry.getValue() == DataType.STRUCTURE) {
-                    String msg = this.findStructure(level, tardis) ? "found" : "not_found";
+                }
+                else if (this.entry.getValue() == DataType.STRUCTURE) {
+                    String msg = this.findStructure(serverLevel, tardis) ? "found" : "not_found";
                     message = Component.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg);
                 }
 
@@ -72,7 +74,7 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         return success.get();
     }
 
-    private boolean findBiome(Level level, ITardisLevelData provider) {
+    private boolean findBiome(ServerLevel level, ITardisLevelData provider) {
         BlockPos exteriorPos = provider.getDestinationExteriorPosition();
         ServerLevel exteriorLevel = level.getServer().getLevel(provider.getDestinationExteriorDimension());
         if (exteriorLevel == null) return false;
@@ -94,20 +96,14 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         if (exteriorLevel.dimension() == Level.NETHER) isUnderground = true;
         else if (pair.getSecond().is(Tags.Biomes.IS_UNDERGROUND)) isUnderground = true;
 
-        if (isUnderground) {
-            blockPos = blockPos.atY(exteriorLevel.getMinBuildHeight());
-        }
-
-        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            materializationSystem.setSafeDirection(isUnderground ? TardisSystemMaterializationSafeDirection.BOTTOM : TardisSystemMaterializationSafeDirection.TOP);
-        }
-
+        if (isUnderground) blockPos = blockPos.atY(exteriorLevel.getMinBuildHeight());
+        provider.getSystem(TardisSystemMaterialization.class).setSafeDirection(isUnderground ? TardisSystemMaterializationSafeDirection.BOTTOM : TardisSystemMaterializationSafeDirection.TOP);
         provider.setDestinationPosition(blockPos);
         provider.updateConsoleTiles();
         return true;
     }
 
-    private boolean findStructure(Level level, ITardisLevelData provider) {
+    private boolean findStructure(ServerLevel level, ITardisLevelData provider) {
         BlockPos exteriorPos = provider.getDestinationExteriorPosition();
         ServerLevel exteriorLevel = level.getServer().getLevel(provider.getDestinationExteriorDimension());
         if (exteriorLevel == null) return false;
@@ -118,7 +114,7 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         if (structure == null) return false;
 
         Optional<Holder<Structure>> holder = registry.getHolder(registry.getId(structure));
-        if (!holder.isPresent()) return false;
+        if (holder.isEmpty()) return false;
 
         Pair<BlockPos, Holder<Structure>> pair = exteriorLevel.getChunkSource().getGenerator().findNearestMapStructure(exteriorLevel, HolderSet.direct(holder.get()), exteriorPos, 512, false);
         if (pair == null) return false;
@@ -131,14 +127,8 @@ public class ServerboundTardisConsoleTelepathicInterfaceLocationsApplyPacket {
         else if (structure.step() == Decoration.UNDERGROUND_DECORATION) isUnderground = true;
         else if (structure.step() == Decoration.UNDERGROUND_STRUCTURES) isUnderground = true;
 
-        if (isUnderground) {
-            blockPos = blockPos.atY(exteriorLevel.getMinBuildHeight());
-        }
-
-        if (provider.getSystem(TardisSystemMaterialization.class) instanceof TardisSystemMaterialization materializationSystem) {
-            materializationSystem.setSafeDirection(isUnderground ? TardisSystemMaterializationSafeDirection.BOTTOM : TardisSystemMaterializationSafeDirection.TOP);
-        }
-
+        if (isUnderground) blockPos = blockPos.atY(exteriorLevel.getMinBuildHeight());
+        provider.getSystem(TardisSystemMaterialization.class).setSafeDirection(isUnderground ? TardisSystemMaterializationSafeDirection.BOTTOM : TardisSystemMaterializationSafeDirection.TOP);
         provider.setDestinationPosition(blockPos);
         provider.updateConsoleTiles();
         return true;

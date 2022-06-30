@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
+import net.drgmes.dwm.items.tardis.tardiskey.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCapabilities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -74,6 +74,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
         double size = 15.9;
         return Block.box(16 - size, 0.0D, 16 - size, size, 16.0D, size);
@@ -122,6 +123,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldBlockState, boolean isMoving) {
         if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.loadAll();
@@ -139,15 +141,16 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
             blockPos = blockPos.below();
-            blockState = level.getBlockState(blockPos);
         }
 
         if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
@@ -204,6 +207,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (!blockState.getValue(OPEN)) return;
         if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;

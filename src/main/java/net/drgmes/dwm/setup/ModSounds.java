@@ -19,7 +19,7 @@ public class ModSounds {
     }
 
     public static void playSound(Level level, BlockPos blockPos, SoundEvent sound, float pitch, float distance) {
-        level.playSound(null, blockPos, sound, SoundSource.BLOCKS, pitch, distance);
+        if (level != null) level.playSound(null, blockPos, sound, SoundSource.BLOCKS, pitch, distance);
     }
 
     public static void playTardisDoorsUnlockSound(Level level, BlockPos blockPos) {
@@ -51,6 +51,14 @@ public class ModSounds {
     }
 
     public static void playTardisShieldsOffSound(Level level, BlockPos blockPos) {
+        ModSounds.playSound(level, blockPos, SoundEvents.BEACON_DEACTIVATE, 1.0F, 1.0F);
+    }
+
+    public static void playTardisComponentAddedSound(Level level, BlockPos blockPos) {
+        ModSounds.playSound(level, blockPos, SoundEvents.BEACON_ACTIVATE, 1.0F, 1.0F);
+    }
+
+    public static void playTardisComponentRemovedSound(Level level, BlockPos blockPos) {
         ModSounds.playSound(level, blockPos, SoundEvents.BEACON_DEACTIVATE, 1.0F, 1.0F);
     }
 
