@@ -2,6 +2,7 @@ package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItemBuilder;
 import net.drgmes.dwm.items.tardis.tardiskey.TardisKeyItemBuilder;
 import net.drgmes.dwm.items.tardis.tardissystem.TardisSystemItemBuilder;
@@ -23,6 +24,7 @@ public class ModItems {
     // Tardis Systems
     public static final ItemBuilder DEMATERIALIZATION_CIRCUIT_SYSTEM = new TardisSystemItemBuilder("dematerialization_circuit_system", TardisSystemMaterialization.class);
     public static final ItemBuilder DIRECTIONAL_UNIT_SYSTEM = new TardisSystemItemBuilder("directional_unit", TardisSystemFlight.class);
+    public static final ItemBuilder SHIELDS_GENERATOR = new TardisSystemItemBuilder("shields_generator", TardisSystemShields.class);
 
     public static void init() {
     }

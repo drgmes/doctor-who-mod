@@ -27,7 +27,6 @@ import java.util.UUID;
 public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implements IBoti {
     public String tardisConsoleRoom = "toyota_natured";
     public String tardisLevelUUID;
-    public boolean shieldsEnabled;
 
     private BotiStorage botiStorage = new BotiStorage();
 
@@ -128,20 +127,6 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         }
 
         if (this.level.getGameTime() % 40 == 0) this.updateBoti();
-
-        if (!this.level.isClientSide) {
-            if (this.shieldsEnabled) {
-                double radius = 6.0D;
-                Vec3 blockPosVec = Vec3.atBottomCenterOf(this.getBlockPos());
-                List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, AABB.ofSize(blockPosVec, radius, radius, radius));
-
-                for (Entity entity : entities) {
-                    double distance = blockPosVec.distanceTo(entity.position());
-                    Vec3 deltaMovement = entity.position().subtract(blockPosVec).scale(radius / distance / 10);
-                    entity.setDeltaMovement(deltaMovement);
-                }
-            }
-        }
     }
 
     public void unloadAll() {

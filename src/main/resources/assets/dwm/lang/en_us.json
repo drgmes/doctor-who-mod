@@ -26,6 +26,8 @@
 	"item.dwm.dematerialization_circuit_system.desc": "Materialization System",
 	"item.dwm.directional_unit": "Directional Unit",
 	"item.dwm.directional_unit.desc": "Navigation and Flight System",
+	"item.dwm.shields_generator": "Shields Generator",
+	"item.dwm.shields_generator.desc": "Shields System",
 
 	"title.dwm.tardis_uuid": "Tardis: %s",
 

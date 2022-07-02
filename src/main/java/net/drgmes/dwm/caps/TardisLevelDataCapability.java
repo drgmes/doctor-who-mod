@@ -4,13 +4,13 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.tardis.tardissystem.TardisSystemItem;
 import net.drgmes.dwm.network.ClientboundTardisConsoleLevelDataUpdatePacket;
 import net.drgmes.dwm.network.ClientboundTardisExteriorUpdatePacket;
@@ -80,6 +80,7 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
+        this.addSystem(new TardisSystemShields(this));
     }
 
     @Override
@@ -511,9 +512,9 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         controlsStorage.values.put(TardisConsoleControlRoles.STARTER, this.getSystem(TardisSystemFlight.class).inProgress());
         controlsStorage.values.put(TardisConsoleControlRoles.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
         controlsStorage.values.put(TardisConsoleControlRoles.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
+        controlsStorage.values.put(TardisConsoleControlRoles.SHIELDS, this.getSystem(TardisSystemShields.class).inProgress());
         controlsStorage.values.put(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING, this.isEnergyArtronHarvesting());
         controlsStorage.values.put(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING, this.isEnergyForgeHarvesting());
-        controlsStorage.values.put(TardisConsoleControlRoles.SHIELDS, this.isShieldsEnabled());
         controlsStorage.values.put(TardisConsoleControlRoles.LIGHT, this.isLightEnabled());
         controlsStorage.values.put(TardisConsoleControlRoles.DOORS, this.isDoorsOpened());
         controlsStorage.values.put(TardisConsoleControlRoles.FACING, switch (this.getDestinationExteriorFacing()) {
@@ -637,9 +638,19 @@ public class TardisLevelDataCapability implements ITardisLevelData {
 
         // Only if Tardis materialized
         if (isMaterialized) {
+
+            // Shields
+            boolean shields = (boolean) controlsStorage.get(TardisConsoleControlRoles.SHIELDS);
+            if (this.getSystem(TardisSystemShields.class).isEnabled()) {
+                this.getSystem(TardisSystemShields.class).setState(shields);
+            }
+            else {
+                controlsStorage.values.put(TardisConsoleControlRoles.SHIELDS, false);
+                if (shields) ModSounds.playTardisFailSound(this.getLevel(), this.getCorePosition());
+            }
+
             this.setDoorsOpenState((boolean) controlsStorage.get(TardisConsoleControlRoles.DOORS));
             this.setLightState((boolean) controlsStorage.get(TardisConsoleControlRoles.LIGHT));
-            this.setShieldsState((boolean) controlsStorage.get(TardisConsoleControlRoles.SHIELDS));
             this.setEnergyArtronHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_ARTRON_HARVESTING));
             this.setEnergyForgeHarvesting((boolean) controlsStorage.get(TardisConsoleControlRoles.ENERGY_FORGE_HARVESTING));
         }
@@ -704,14 +715,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
         BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
 
         if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock) {
-            if (exteriorLevel.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                if (tardisExteriorBlockEntity.shieldsEnabled != this.isShieldsEnabled()) {
-                    tardisExteriorBlockEntity.shieldsEnabled = this.isShieldsEnabled();
-                    if (this.isShieldsEnabled()) ModSounds.playTardisShieldsOnSound(exteriorLevel, exteriorBlockPos);
-                    else ModSounds.playTardisShieldsOffSound(exteriorLevel, exteriorBlockPos);
-                }
-            }
-
             if (exteriorBlockState.getValue(BaseTardisExteriorBlock.OPEN) != this.isDoorsOpened()) {
                 if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(exteriorLevel, exteriorBlockPos);
                 else ModSounds.playTardisDoorsCloseSound(exteriorLevel, exteriorBlockPos);
@@ -732,6 +735,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
             }
         }
 
-        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isShieldsEnabled(), false));
+        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), false));
     }
 }

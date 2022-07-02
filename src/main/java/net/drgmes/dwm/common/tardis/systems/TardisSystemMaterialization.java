@@ -232,17 +232,15 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
                 BlockState exteriorBlockState = exteriorLevel.getBlockState(exteriorBlockPos);
                 BlockState exteriorUpBlockState = exteriorLevel.getBlockState(exteriorBlockPos.above());
-                BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().defaultBlockState();
-                BlockState tardisExteriorDownBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().defaultBlockState();
 
+                BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.get().defaultBlockState();
                 tardisExteriorBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
                 tardisExteriorBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().is(FluidTags.WATER));
-
-                tardisExteriorDownBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
-                tardisExteriorDownBlockState = tardisExteriorDownBlockState.setValue(BaseTardisExteriorBlock.WATERLOGGED, exteriorUpBlockState.getFluidState().is(FluidTags.WATER));
-
                 exteriorLevel.setBlock(exteriorBlockPos, tardisExteriorBlockState, 3);
-                exteriorLevel.setBlock(exteriorBlockPos.above(), tardisExteriorDownBlockState, 3);
+
+                BlockState tardisExteriorUpBlockState = tardisExteriorBlockState.setValue(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
+                tardisExteriorUpBlockState = tardisExteriorUpBlockState.setValue(BaseTardisExteriorBlock.WATERLOGGED, exteriorUpBlockState.getFluidState().is(FluidTags.WATER));
+                exteriorLevel.setBlock(exteriorBlockPos.above(), tardisExteriorUpBlockState, 3);
 
                 if (exteriorLevel.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
                     tardisExteriorBlockEntity.tardisLevelUUID = level.dimension().location().getPath();
@@ -323,7 +321,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             ServerLevel foreignTardisLevel = tardisExteriorBlockEntity.getTardisLevel(exteriorLevel);
             if (foreignTardisLevel != null) {
                 foreignTardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-                    if (tardis.isValid() && !tardis.isShieldsEnabled()) {
+                    if (tardis.isValid() && !tardis.getSystem(TardisSystemShields.class).inProgress()) {
                         this.tardis.setDimension(tardis.getLevel().dimension(), false);
                         this.tardis.setFacing(tardis.getEntranceFacing(), false);
                         this.tardis.setPosition(tardis.getEntrancePosition().relative(tardis.getEntranceFacing()), false);
@@ -460,6 +458,6 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         if (!demat) return;
-        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), this.tardis.isShieldsEnabled(), true));
+        ModPackets.send(exteriorLevel, new ClientboundTardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), true));
     }
 }
