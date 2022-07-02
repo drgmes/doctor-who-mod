@@ -201,6 +201,12 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     }
 
     @Override
+    public boolean setOwnerUUID(UUID uuid) {
+        this.owner = uuid;
+        return true;
+    }
+
+    @Override
     @SuppressWarnings("unchecked")
     public <T extends ITardisSystem> T getSystem(Class<T> system) {
         return (T) this.systems.getOrDefault(system, null);
@@ -365,12 +371,6 @@ public class TardisLevelDataCapability implements ITardisLevelData {
     public BaseTardisConsoleBlockEntity getMainConsoleTile() {
         int size = this.consoleTiles.size();
         return size > 0 ? this.consoleTiles.get(size - 1) : null;
-    }
-
-    @Override
-    public boolean setOwnerUUID(UUID uuid) {
-        this.owner = uuid;
-        return true;
     }
 
     @Override

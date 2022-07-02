@@ -140,7 +140,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisLevelUUID")) {
-                        if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
+                        if (tardis.getOwnerUUID() == null) tardis.setOwnerUUID(player.getUUID());
+                        else if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
                         heldItemTag.putString("tardisLevelUUID", tardisLevelUUID);
                     }
 

@@ -30,7 +30,9 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
     public static final int UPGRADE_COMPONENTS_CONTAINER_SIZE = 0;
 
     ServerLevel getLevel();
+
     UUID getOwnerUUID();
+    boolean setOwnerUUID(UUID uuid);
 
     <T extends ITardisSystem> T getSystem(Class<T> system);
     boolean isSystemEnabled(Class<? extends ITardisSystem> system);
@@ -72,8 +74,6 @@ public interface ITardisLevelData extends INBTSerializable<CompoundTag>, IBoti {
 
     List<BaseTardisConsoleBlockEntity> getConsoleTiles();
     BaseTardisConsoleBlockEntity getMainConsoleTile();
-
-    boolean setOwnerUUID(UUID uuid);
 
     boolean setDimension(ResourceKey<Level> dimension, boolean shouldUpdatePrev);
     boolean setDestinationDimension(ResourceKey<Level> dimension);
