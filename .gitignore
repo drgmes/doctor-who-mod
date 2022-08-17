@@ -4,6 +4,9 @@ gradle/
 build/
 out/
 classes/
+gradlew
+gradlew.bat
+gradle.properties
 
 # IDE
 .idea/
@@ -29,5 +32,3 @@ run/
 libs/
 remappedSrc/
 src/main/generated/
-gradlew
-gradlew.bat

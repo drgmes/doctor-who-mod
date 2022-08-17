@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_17
@@ -101,5 +102,28 @@ publishing {
 
     // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
+    }
+}
+
+curseforge {
+    apiKey = project.mod_project_api_key
+
+    project {
+        id = project.mod_project_id
+        releaseType = project.mod_release_type
+        addGameVersion project.mod_game_version
+        addGameVersion "Fabric"
+
+        mainArtifact(remapJar) {
+            displayName = "[$project.version] $project.archives_name"
+        }
+
+        afterEvaluate {
+            uploadTask.dependsOn("remapJar")
+        }
+    }
+
+    options {
+        forgeGradleIntegration = false
     }
 }
