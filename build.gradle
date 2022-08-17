@@ -65,8 +65,6 @@ loom {
     }
 }
 
-processResources.dependsOn runDatagenClient
-
 processResources {
     inputs.property "version", project.version
 
