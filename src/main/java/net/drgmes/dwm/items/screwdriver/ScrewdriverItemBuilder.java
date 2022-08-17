@@ -1,22 +1,21 @@
 package net.drgmes.dwm.items.screwdriver;
 
-import net.drgmes.dwm.data.client.ModItemModelProvider;
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ModelFile;
+import net.drgmes.dwm.utils.helpers.ModelHelper;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.item.Item;
 
 public class ScrewdriverItemBuilder extends ItemBuilder {
     public ScrewdriverItemBuilder(String name) {
-        super(name, () -> new ScrewdriverItem(getItemProperties()));
+        super(name, new ScrewdriverItem(getItemSettings()));
     }
 
-    public static Item.Properties getItemProperties() {
-        return ItemBuilder.getItemProperties().stacksTo(1);
+    public static Item.Settings getItemSettings() {
+        return ItemBuilder.getItemSettings().maxCount(1);
     }
 
     @Override
-    public void registerItemModel(ModItemModelProvider provider) {
-        ModelFile itemGenerated = provider.getExistingFile(provider.modLoc("item/screwdrivers/" + this.name));
-        provider.getBuilder(this.name).parent(itemGenerated);
+    public void registerItemModel(ItemModelGenerator itemModelGenerator) {
+        ModelHelper.createItemModel(itemModelGenerator, this.getItem(), "item/screwdrivers/" + this.getName());
     }
 }

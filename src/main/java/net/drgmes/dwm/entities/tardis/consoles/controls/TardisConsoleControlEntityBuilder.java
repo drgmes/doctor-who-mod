@@ -1,12 +1,12 @@
 package net.drgmes.dwm.entities.tardis.consoles.controls;
 
 import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.entity.SpawnGroup;
 
 public class TardisConsoleControlEntityBuilder extends EntityBuilder<TardisConsoleControlEntity> {
     public TardisConsoleControlEntityBuilder(String name, float width, float height) {
-        super(name, TardisConsoleControlEntity::new, MobCategory.MISC, width, height);
+        super(name, TardisConsoleControlEntity::new, SpawnGroup.MISC, width, height);
     }
 
     public TardisConsoleControlEntityBuilder(String name, float size) {
@@ -17,8 +17,7 @@ public class TardisConsoleControlEntityBuilder extends EntityBuilder<TardisConso
         this(name, 0.1F);
     }
 
-    @Override
-    public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(this.get(), TardisConsoleControlEntityRenderer::new);
+    public void registerCustomRender() {
+        EntityRendererRegistry.register(this.getEntityType(), TardisConsoleControlEntityRenderer::new);
     }
 }

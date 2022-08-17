@@ -1,123 +1,107 @@
 plugins {
-    id 'eclipse'
+    id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
-    id 'net.minecraftforge.gradle' version '5.+'
 }
 
-version = '1.0'
-group = 'net.drgmes.dwm'
-archivesBaseName = 'DoctorWhoMod'
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
-minecraft {
-    mappings channel: 'official', version: '1.19'
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-
-    runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'dwm'
-
-            mods {
-                dwm {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'dwm'
-
-            mods {
-                dwm {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        gameTestServer {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-            property 'forge.enabledGameTestNamespaces', 'dwm'
-
-            mods {
-                dwm {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'dwm', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                dwm {
-                    source sourceSets.main
-                }
-            }
-        }
-    }
-}
-
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
 
 repositories {
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://cursemaven.com' }
+    maven { url 'https://ladysnake.jfrog.io/artifactory/mods' }
+
     flatDir {
         dir 'libs'
     }
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.63'
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+
+    implementation "com.electronwill.night-config:core:3.6.5"
+    implementation "com.electronwill.night-config:toml:3.6.5"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    modImplementation("curse.maven:forgeconfigapiport-547434:${project.forge_config_api_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modImplementation("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modImplementation("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    include("curse.maven:forgeconfigapiport-547434:${project.forge_config_api_version}")
+    include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}")
+    include("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}")
 }
 
-jar {
-    manifest {
-        attributes([
-                "Specification-Title"     : "DoctorWhoMod",
-                "Specification-Vendor"    : "DrGmes",
-                "Specification-Version"   : "1",
-                "Implementation-Title"    : project.name,
-                "Implementation-Version"  : project.jar.archiveVersion,
-                "Implementation-Vendor"   : "DrGmes",
-                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-        ])
+loom {
+    runs {
+        datagenClient {
+            inherit client
+            name "Data Generation"
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.strict-validation"
+
+            ideConfigGenerated = true
+            runDir "run"
+        }
     }
 }
 
-jar.finalizedBy('reobfJar')
+processResources.dependsOn runDatagenClient
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/main/generated'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+    it.options.release = 17
+}
+
+java {
+    withSourcesJar()
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            from components.java
         }
     }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/mcmodsrepo"
-        }
-    }
-}
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = 'UTF-8'
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+    }
 }

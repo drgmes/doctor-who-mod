@@ -1,0 +1,16 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "net.drgmes.dwm.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"MixinMinecraftClient",
+		"MixinPortal"
+	],
+	"client": [
+		"MixinInGameHud"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

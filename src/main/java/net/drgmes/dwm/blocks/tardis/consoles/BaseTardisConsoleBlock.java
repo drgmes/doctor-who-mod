@@ -1,59 +1,42 @@
 package net.drgmes.dwm.blocks.tardis.consoles;
 
-import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.Containers;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.RegistryObject;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEntity> extends BaseRotatableWaterloggedEntityBlock {
-    private final RegistryObject<BlockEntityType<C>> blockEntityTypeObject;
+import java.util.function.Supplier;
 
-    public BaseTardisConsoleBlock(BlockBehaviour.Properties properties, RegistryObject<BlockEntityType<C>> blockEntityTypeObject) {
-        super(properties);
-        this.blockEntityTypeObject = blockEntityTypeObject;
+public abstract class BaseTardisConsoleBlock<C extends BaseTardisConsoleBlockEntity> extends BaseRotatableWaterloggedBlockWithEntity {
+    private final Supplier<BlockEntityType<C>> blockEntityType;
+
+    public BaseTardisConsoleBlock(AbstractBlock.Settings settings, Supplier<BlockEntityType<C>> blockEntityType) {
+        super(settings);
+        this.blockEntityType = blockEntityType;
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, this.blockEntityTypeObject.get(), (l, bp, bs, blockEntity) -> {
-            blockEntity.tick();
-        });
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldBlockState, boolean isMoving) {
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-            tardisConsoleBlockEntity.loadAll();
-        }
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return blockEntityType != this.blockEntityType.get() ? null : (l, bp, bs, blockEntity) -> {
+            ((BaseTardisConsoleBlockEntity) blockEntity).tick();
+        };
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newBlockState, boolean isMoving) {
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-            tardisConsoleBlockEntity.unloadAll();
+    public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
+        if (!blockState.isOf(newBlockState.getBlock())) {
+            if (world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+                ItemScatterer.spawn(world, blockPos, DefaultedList.ofSize(1, tardisConsoleBlockEntity.screwdriverItemStack));
+            }
         }
 
-        super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
-    }
-
-    @Override
-    public void playerWillDestroy(Level level, BlockPos blockPos, BlockState blockState, Player player) {
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-            Vec3 pos = Vec3.atBottomCenterOf(blockPos);
-            Containers.dropItemStack(level, pos.x, pos.y, pos.z, tardisConsoleBlockEntity.screwdriverItemStack);
-            level.updateNeighbourForOutputSignal(blockPos, this);
-        }
-
-        super.playerWillDestroy(level, blockPos, blockState, player);
+        super.onStateReplaced(blockState, world, blockPos, newBlockState, moved);
     }
 }

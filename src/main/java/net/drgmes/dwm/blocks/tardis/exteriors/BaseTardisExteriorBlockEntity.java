@@ -1,34 +1,25 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.boti.IBoti;
-import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModConfig;
-import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.network.TardisExteriorRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implements IBoti {
-    public String tardisConsoleRoom = "toyota_natured";
-    public String tardisLevelUUID;
-
-    private BotiStorage botiStorage = new BotiStorage();
+public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
+    public String tardisId;
 
     private int tickInProgress = 0;
     private boolean isMaterialized = false;
@@ -40,17 +31,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).inflate(3, 4, 3);
-    }
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
 
-    @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-
-        this.tardisLevelUUID = tag.getString("tardisLevelUUID");
-        this.tardisConsoleRoom = tag.getString("tardisConsoleRoom");
-
+        this.tardisId = tag.getString("tardisId");
         this.tickInProgress = tag.getInt("tickInProgress");
         this.isMaterialized = tag.getBoolean("isMaterialized");
         this.inRematProgress = tag.getBoolean("inRematProgress");
@@ -58,12 +42,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    public void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
 
-        tag.putString("tardisLevelUUID", this.getTardisLevelUUID());
-        tag.putString("tardisConsoleRoom", this.tardisConsoleRoom);
-
+        tag.putString("tardisId", this.getTardisId());
         tag.putInt("tickInProgress", this.tickInProgress);
         tag.putBoolean("isMaterialized", this.isMaterialized);
         tag.putBoolean("inRematProgress", this.inRematProgress);
@@ -71,41 +53,13 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
-    }
-
-    @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
-    }
-
-    @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
-    }
-
-    @Override
-    public void updateBoti() {
-        if (this.level.isClientSide) return;
-        if (!this.isMaterialized) return;
-
-        ServerLevel tardisLevel = this.getTardisLevel(this.level);
-        if (tardisLevel == null) return;
-
-        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            this.botiStorage.setDirection(tardis.getEntranceFacing());
-            this.botiStorage.setRadius(ModConfig.CLIENT.botiInteriorRadius.get());
-            this.botiStorage.setDistance(ModConfig.CLIENT.botiInteriorDistance.get());
-            this.botiStorage.updateBoti(tardisLevel, tardis.getEntrancePosition());
-
-            ModPackets.send(this.level.getChunkAt(this.worldPosition), this.getBotiUpdatePacket(this.worldPosition));
-        });
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
 
     public void tick() {
@@ -114,55 +68,47 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         if (goal > 0) {
             if (this.inRematProgress) this.inDematProgress = false;
             if (this.inDematProgress) this.inRematProgress = false;
-
-            if (this.tickInProgress < goal) {
-                this.tickInProgress++;
-            }
-            else {
-                this.isMaterialized = this.inRematProgress;
-                this.inRematProgress = false;
-                this.inDematProgress = false;
-                this.tickInProgress = 0;
-            }
+            if (this.tickInProgress < goal) this.tickInProgress++;
+            else this.resetMaterializationState(this.inRematProgress);
         }
 
-        if (this.level.getGameTime() % 40 == 0) this.updateBoti();
-    }
+        if (this.world instanceof ServerWorld) {
+            ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId());
+            if (tardisWorld == null) return;
 
-    public void unloadAll() {
-        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            SectionPos pos = SectionPos.of(this.worldPosition);
-            int radius = DWM.CHUNKS_UPDATE_RADIUS;
+            Optional<TardisStateManager> tardisStateManager = TardisStateManager.get(tardisWorld);
+            if (tardisStateManager.isEmpty()) return;
 
-            for (int x = -radius; x <= radius; x++) {
-                for (int z = -radius; z <= radius; z++) {
-                    levelProvider.remove(pos.offset(x, 0, z), this.worldPosition);
+            if (!tardisStateManager.get().isValid()
+                || !tardisStateManager.get().getCurrentExteriorDimension().equals(this.world.getRegistryKey())
+                || !tardisStateManager.get().getCurrentExteriorPosition().equals(this.getPos())
+            ) {
+                if (this.getMaterializedPercent() >= 100) {
+                    this.demat();
+
+                    PacketHelper.sendToClient(
+                        TardisExteriorRemoteCallablePackets.class,
+                        "updateTardisExteriorData",
+                        world.getWorldChunk(this.getPos()),
+                        this.getPos(), false, true
+                    );
+                }
+                else if (!this.inDematProgress) {
+                    this.world.removeBlock(this.getPos().up(), false);
+                    this.world.removeBlock(this.getPos(), false);
                 }
             }
-        });
-    }
-
-    public void loadAll() {
-        this.level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent((levelProvider) -> {
-            SectionPos pos = SectionPos.of(this.worldPosition);
-            int radius = DWM.CHUNKS_UPDATE_RADIUS;
-
-            for (int x = -radius; x <= radius; x++) {
-                for (int z = -radius; z <= radius; z++) {
-                    levelProvider.add(pos.offset(x, 0, z), this.worldPosition);
-                }
-            }
-        });
+        }
     }
 
     public void remat() {
         this.inRematProgress = true;
-        ModSounds.playTardisLandingSound(this.level, this.worldPosition);
+        ModSounds.playTardisLandingSound(this.world, this.getPos());
     }
 
     public void demat() {
         this.inDematProgress = true;
-        ModSounds.playTardisTakeoffSound(this.level, this.worldPosition);
+        ModSounds.playTardisTakeoffSound(this.world, this.getPos());
     }
 
     public void resetMaterializationState(boolean flag) {
@@ -178,12 +124,12 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity implemen
         return this.isMaterialized ? 100 : 0;
     }
 
-    public String getTardisLevelUUID() {
-        if (this.tardisLevelUUID == null) this.tardisLevelUUID = UUID.randomUUID().toString();
-        return this.tardisLevelUUID;
+    public String getTardisId() {
+        if (this.tardisId == null) this.tardisId = UUID.randomUUID().toString();
+        return this.tardisId;
     }
 
-    public ServerLevel getTardisLevel(Level level) {
-        return TardisHelper.getOrCreateTardisLevel(level, this);
+    public ServerWorld getTardisWorld() {
+        return TardisHelper.getOrCreateTardisWorld(this);
     }
 }

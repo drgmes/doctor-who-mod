@@ -3,129 +3,67 @@ package net.drgmes.dwm.utils.helpers;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModDimensions;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
-import net.drgmes.dwm.setup.ModEvents;
 import net.drgmes.dwm.world.generator.TardisChunkGenerator;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import net.minecraftforge.common.util.ITeleporter;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionOptions;
+import qouteall.q_misc_util.MiscHelper;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class TardisHelper {
-    public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).immutable();
+    public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
 
-    public static void teleportToTardis(Entity entity, ServerLevel destination) {
-        if (destination == null || entity.level.dimension() == destination.dimension() || !DimensionHelper.isTardisDimension(destination))
-            return;
-
-        destination.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            entity.setYRot(tardis.getEntranceFacing().toYRot());
-            entity.changeDimension(destination, new TardisTeleporter(tardis.getEntrancePosition().relative(tardis.getEntranceFacing())));
-        });
+    public static boolean isTardisDimension(World world) {
+        return world != null && world.getDimensionKey().equals(ModDimensionTypes.TARDIS);
     }
 
-    public static void teleportFromTardis(Entity entity, MinecraftServer server) {
-        if (server == null || !DimensionHelper.isTardisDimension(entity.level)) return;
-
-        entity.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            if (!tardis.isValid()) return;
-
-            ServerLevel level = server.getLevel(tardis.getCurrentExteriorDimension());
-            if (level != null) {
-                entity.setYRot(tardis.getCurrentExteriorFacing().toYRot());
-                entity.changeDimension(level, new TardisTeleporter(tardis.getCurrentExteriorRelativePosition()));
-            }
-        });
-    }
-
-    public static ServerLevel getOrCreateTardisLevel(Level level, String id, ResourceKey<Level> dimension, BlockPos blockPos, Direction direction, String room) {
-        MinecraftServer server = level.getServer();
-        if (server == null) return null;
-
-        ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
-        ServerLevel tardisLevel = DimensionHelper.getOrCreateLevel(server, id, TardisHelper.getTardisConsoleRoomBuilder(room), TardisHelper::tardisDimensionBuilder);
-
-        tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+    public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, String consoleRoom) {
+        ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, TardisHelper.getTardisSetupConsumer(consoleRoom), TardisHelper::tardisDimensionBuilder);
+        TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
             tardis.setDimension(dimension, false);
             tardis.setFacing(direction, false);
             tardis.setPosition(blockPos, false);
         });
 
-        if (server.getLevel(levelKey) != null) return tardisLevel;
-
-        ModDimensions.TARDISES.add(id);
-        if (ModEvents.DATA != null) ModEvents.DATA.setDirty();
-
-        return tardisLevel;
+        return tardisWorld;
     }
 
-    public static ServerLevel getOrCreateTardisLevel(Level level, BaseTardisExteriorBlockEntity tile) {
-        return TardisHelper.getOrCreateTardisLevel(
-            level,
-            tile.getTardisLevelUUID(),
-            level.dimension(),
-            tile.getBlockPos(),
-            tile.getBlockState().getValue(BaseTardisExteriorBlock.FACING),
-            tile.tardisConsoleRoom
+    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile) {
+        return tile.getWorld() == null || tile.getWorld().isClient ? null : TardisHelper.getOrCreateTardisWorld(
+            tile.getTardisId(),
+            tile.getWorld().getRegistryKey(),
+            tile.getPos(),
+            tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
+            "toyota_natured"
         );
     }
 
-    public static void registerOldTardises(MinecraftServer server) {
-        for (String id : ModDimensions.TARDISES) {
-            if (server.getLevel(DimensionHelper.getModLevelKey(id)) != null) continue;
-            DimensionHelper.getOrCreateLevelStatic(server, id, TardisHelper::tardisDimensionBuilder);
-        }
-    }
+    private static DimensionOptions tardisDimensionBuilder() {
+        MinecraftServer server = MiscHelper.getServer();
+        if (server == null || !server.isOnThread()) return null;
 
-    private static LevelStem tardisDimensionBuilder(MinecraftServer server, ResourceKey<LevelStem> dimensionKey) {
-        return new LevelStem(
-            server.registryAccess().registryOrThrow(Registry.DIMENSION_TYPE_REGISTRY).getHolderOrThrow(ModDimensionTypes.TARDIS),
+        return new DimensionOptions(
+            server.getRegistryManager().getManaged(Registry.DIMENSION_TYPE_KEY).getOrCreateEntry(ModDimensionTypes.TARDIS),
             new TardisChunkGenerator(server)
         );
     }
 
-    private static Consumer<ServerLevel> getTardisConsoleRoomBuilder(String room) {
-        return (level) -> {
-            if (room == null) return;
-
-            StructureTemplate template = level.getStructureManager().getOrCreate(new ResourceLocation(DWM.MODID, "rooms/consoles/" + room));
-            if (template != null)
-                template.placeInWorld(level, TardisHelper.TARDIS_POS, BlockPos.ZERO, new StructurePlaceSettings().setIgnoreEntities(false), level.random, 3);
+    private static Consumer<ServerWorld> getTardisSetupConsumer(String consoleRoom) {
+        return (tardis) -> {
+            if (consoleRoom != null) {
+                StructureTemplate template = tardis.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("console_rooms/" + consoleRoom));
+                if (template != null) template.place(tardis, TardisHelper.TARDIS_POS, new BlockPos(BlockPos.ZERO), new StructurePlacementData().setIgnoreEntities(false), tardis.random, 3);
+            }
         };
-    }
-
-    public static class TardisTeleporter implements ITeleporter {
-        private BlockPos pos = BlockPos.ZERO;
-
-        public TardisTeleporter(BlockPos pos) {
-            this.pos = pos;
-        }
-
-        @Override
-        public Entity placeEntity(Entity entity, ServerLevel level, ServerLevel destination, float yaw, Function<Boolean, Entity> repositionEntity) {
-            entity = repositionEntity.apply(false);
-            entity.teleportTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-            return entity;
-        }
-
-        @Override
-        public boolean playTeleportSound(ServerPlayer player, ServerLevel level, ServerLevel destination) {
-            return false;
-        }
     }
 }

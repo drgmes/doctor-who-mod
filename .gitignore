@@ -1,32 +1,33 @@
-# eclipse
-bin
+# gradle
+.gradle/
+gradle/
+build/
+out/
+classes/
+
+# IDE
+.idea/
+.settings/
+.vscode/
+bin/
+*.iml
+*.ipr
+*.iws
 *.launch
-.settings
-.metadata
 .classpath
 .project
 
-# idea
-out
-*.ipr
-*.iws
-*.iml
-.idea
-.vscode
+# macos
+*.DS_Store
 
-# gradle
-build
-.gradle
+# fabric
+run/
+!run/config/fabric_loader_dependencies.json
 
-# other
-eclipse
-run
-/src/generated/resources/
-/gradle/wrapper/
-/libs
-/gradlew
-/gradlew.bat
-
-
-# Files from Forge MDK
-forge*changelog.txt
+# misc
+.github
+libs/
+remappedSrc/
+src/main/generated/
+gradlew
+gradlew.bat

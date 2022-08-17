@@ -1,167 +1,92 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.items.tardis.tardiskey.TardisKeyItem;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedEntityBlock;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.registries.RegistryObject;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
+import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
-public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockEntity> extends BaseRotatableWaterloggedEntityBlock {
-    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
-    public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final EnumProperty<DoubleBlockHalf> HALF = BlockStateProperties.DOUBLE_BLOCK_HALF;
+import java.util.function.Supplier;
 
-    private final RegistryObject<BlockEntityType<C>> blockEntityTypeObject;
+public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity {
+    public static final BooleanProperty OPEN = Properties.OPEN;
+    public static final BooleanProperty LIT = Properties.LIT;
 
-    public BaseTardisExteriorBlock(BlockBehaviour.Properties properties, RegistryObject<BlockEntityType<C>> blockEntityTypeObject) {
-        super(properties);
-        this.blockEntityTypeObject = blockEntityTypeObject;
+    private final Supplier<BlockEntityType<C>> blockEntityTypeSupplier;
+
+    public BaseTardisExteriorBlock(AbstractBlock.Settings settings, Supplier<BlockEntityType<C>> blockEntityTypeSupplier) {
+        super(settings);
+        this.blockEntityTypeSupplier = blockEntityTypeSupplier;
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return createTickerHelper(blockEntityType, this.blockEntityTypeObject.get(), (l, bp, bs, blockEntity) -> {
-            blockEntity.tick();
-        });
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-
-        if (blockPos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockPos.above()).canBeReplaced(context)) {
-            return super.getStateForPlacement(context).setValue(HALF, DoubleBlockHalf.LOWER);
-        }
-
-        return null;
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(OPEN);
-        builder.add(LIT);
-        builder.add(HALF);
-    }
-
-    @Override
-    protected BlockState getDefaultState() {
-        return super.getDefaultState()
-            .setValue(OPEN, false)
-            .setValue(LIT, false)
-            .setValue(HALF, DoubleBlockHalf.LOWER);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return blockEntityType != this.blockEntityTypeSupplier.get() ? null : (l, bp, bs, blockEntity) -> ((BaseTardisExteriorBlockEntity) blockEntity).tick();
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState newBlockState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos newBlockPos) {
-        DoubleBlockHalf doubleBlockHalf = blockState.getValue(HALF);
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (blockState.get(HALF) != DoubleBlockHalf.LOWER) blockPos = blockPos.down();
+        BlockPos finalBlockPos = blockPos;
 
-        if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
-            return newBlockState.is(this) && newBlockState.getValue(HALF) != doubleBlockHalf
-                ? blockState.setValue(FACING, newBlockState.getValue(FACING))
-                : Blocks.AIR.defaultBlockState();
-        }
+        if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return ActionResult.PASS;
 
-        return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !blockState.canSurvive(levelAccessor, blockPos) ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, newBlockState, levelAccessor, blockPos, newBlockPos);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onPlace(BlockState blockState, Level level, BlockPos blockPos, BlockState oldBlockState, boolean isMoving) {
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            tardisExteriorBlockEntity.loadAll();
-        }
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onRemove(BlockState blockState, Level level, BlockPos blockPos, BlockState newBlockState, boolean isMoving) {
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            tardisExteriorBlockEntity.unloadAll();
-        }
-
-        super.onRemove(blockState, level, blockPos, newBlockState, isMoving);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) {
-            blockPos = blockPos.below();
-        }
-
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return InteractionResult.PASS;
-
-            BlockPos finalBlockPos = blockPos;
-            ServerLevel tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
-            if (tardisLevel == null) return InteractionResult.SUCCESS;
-
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
 
-                String tardisLevelUUID = tardis.getLevel().dimension().location().getPath();
-                ItemStack heldItem = player.getItemInHand(InteractionHand.MAIN_HAND);
-                CompoundTag heldItemTag = heldItem.getOrCreateTag();
+                String tardisId = DimensionHelper.getWorldId(tardis.getWorld());
+                ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
+                NbtCompound heldItemTag = heldItem.getOrCreateNbt();
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
-                    if (!heldItemTag.contains("tardisLevelUUID")) {
-                        if (tardis.getOwnerUUID() == null) tardis.setOwnerUUID(player.getUUID());
-                        else if (!tardis.getOwnerUUID().equals(player.getUUID())) return;
-                        heldItemTag.putString("tardisLevelUUID", tardisLevelUUID);
+                    if (!heldItemTag.contains("tardisId")) {
+                        if (!tardis.getOwner().equals(player.getUuid())) return;
+                        heldItemTag.putString("tardisId", tardisId);
                     }
 
-                    if (!heldItemTag.getString("tardisLevelUUID").equalsIgnoreCase(tardisLevelUUID)) {
+                    if (!heldItemTag.getString("tardisId").equalsIgnoreCase(tardisId)) {
                         return;
                     }
 
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
-                        player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
-                        level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
+                        player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                        world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                         tardis.updateConsoleTiles();
                     }
 
                     return;
                 }
 
-                if (player.isShiftKeyDown()) {
+                if (player.isSneaking()) {
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), player)) {
-                        player.displayClientMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
-                        level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
+                        player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
+                        world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                         tardis.updateConsoleTiles();
                     }
 
@@ -169,60 +94,50 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 }
 
                 if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
-                    level.gameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
+                    world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
                     tardis.updateConsoleTiles();
                 }
             });
         }
 
-        return InteractionResult.sidedSuccess(level.isClientSide);
+        return ActionResult.success(world.isClient);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
-        return blockState.getValue(HALF) == DoubleBlockHalf.LOWER || levelReader.getBlockState(blockPos.below()).is(this);
+    public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
+        return VoxelShapes.cuboid(VoxelShapes.fullCube().getBoundingBox().contract(0.1));
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext ctx) {
-        double size = 15.9;
-        return Block.box(16 - size, 0.0D, 16 - size, size, 16.0D, size);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(OPEN);
+        builder.add(LIT);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-        if (!blockState.getValue(OPEN)) return;
-        if (blockState.getValue(HALF) != DoubleBlockHalf.LOWER) return;
-        if (!blockPos.relative(blockState.getValue(FACING)).closerThan(entity.blockPosition(), 0.1)) return;
-
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            ServerLevel tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
-            if (tardisLevel != null) {
-                tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-                    if (tardis.isValid() && tardis.isDoorsOpened()) {
-                        TardisHelper.teleportToTardis(entity, tardisLevel);
-                    }
-                });
-            }
-        }
+    protected BlockState getDefaultBlockState() {
+        return super.getDefaultState()
+            .with(OPEN, false)
+            .with(LIT, false);
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        level.setBlock(blockPos.above(), blockState.setValue(HALF, DoubleBlockHalf.UPPER), 3);
-
-        if (level.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.remat();
 
-            ServerLevel tardisLevel = tardisExteriorBlockEntity.getTardisLevel(level);
-            if (tardisLevel == null) return;
-
-            tardisLevel.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-                if (tardis.isValid()) tardis.setOwnerUUID(entity.getUUID());
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
+                if (tardis.isValid()) tardis.setOwner(entity.getUuid());
             });
         }
+
+        super.onPlaced(world, blockPos, blockState, entity, itemStack);
+    }
+
+    @Override
+    protected BlockState syncNeighborState(BlockState blockState, BlockState neighborBlockState) {
+        return super.syncNeighborState(blockState, neighborBlockState).with(OPEN, neighborBlockState.get(OPEN));
     }
 }

@@ -1,254 +1,244 @@
 package net.drgmes.dwm.common.screwdriver.modes.setting;
 
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.animal.Fox;
-import net.minecraft.world.entity.animal.MushroomCow;
-import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.horse.TraderLlama;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Slime;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Fireball;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.*;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.block.entity.SculkShriekerBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.JukeboxBlockEntity;
+import net.minecraft.block.entity.SculkShriekerBlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.entity.mob.SlimeEntity;
+import net.minecraft.entity.passive.FoxEntity;
+import net.minecraft.entity.passive.MooshroomEntity;
+import net.minecraft.entity.passive.SheepEntity;
+import net.minecraft.entity.passive.TraderLlamaEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.FireballEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.stat.Stats;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
+import net.minecraft.world.event.GameEvent;
 
 import java.lang.reflect.Method;
-import java.util.List;
 
 public class ScrewdriverSettingMode extends BaseScrewdriverMode {
-    public static ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
+    public static final ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
 
     @Override
-    public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
+    public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
 
         BlockPos blockPos = hitResult.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
 
         // SculkShriekerBlock
         if (blockEntity instanceof SculkShriekerBlockEntity sculkShriekerBlockEntity) {
-            if (!level.isClientSide) sculkShriekerBlockEntity.tryShriek((ServerLevel) level, (ServerPlayer) player);
-            return true;
+            if (!world.isClient) sculkShriekerBlockEntity.shriek((ServerWorld) world, (ServerPlayerEntity) player);
+            return ActionResult.SUCCESS;
         }
 
         // SculkSensorBlock
-        if (block instanceof SculkSensorBlock sculkSensorBlock) {
-            level.gameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
-            return true;
+        if (block instanceof SculkSensorBlock) {
+            world.emitGameEvent(player, GameEvent.BLOCK_ACTIVATE, blockPos);
+            return ActionResult.SUCCESS;
         }
 
         // Bell
         if (block instanceof BellBlock bellBlock) {
-            if (bellBlock.attemptToRing(level, hitResult.getBlockPos(), hitResult.getDirection())) {
-                player.awardStat(Stats.BELL_RING);
-                return true;
+            if (bellBlock.ring(world, hitResult.getBlockPos(), hitResult.getSide())) {
+                player.incrementStat(Stats.BELL_RING);
+                return ActionResult.SUCCESS;
             }
         }
 
         // TNT
-        if (block instanceof TntBlock tntBlock) {
-            tntBlock.onCaughtFire(blockState, level, blockPos, null, player);
-            level.setBlock(blockPos, Blocks.AIR.defaultBlockState(), 11);
-            return true;
+        if (block instanceof TntBlock) {
+            TntBlock.primeTnt(world, blockPos);
+            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 11);
+            return ActionResult.SUCCESS;
         }
 
         // Dispenser
         if (block instanceof DispenserBlock dispenserBlock) {
-            if (!level.isClientSide) dispenserBlock.tick(blockState, (ServerLevel) level, blockPos, level.random);
-            level.setBlock(blockPos, blockState.setValue(DispenserBlock.TRIGGERED, true), 3);
-            level.setBlock(blockPos, blockState.setValue(DispenserBlock.TRIGGERED, false), 3);
-            return true;
+            if (!world.isClient) dispenserBlock.scheduledTick(blockState, (ServerWorld) world, blockPos, world.random);
+            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, true), 3);
+            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, false), 3);
+            return ActionResult.SUCCESS;
         }
 
         // Jukebox
-        if (block instanceof JukeboxBlock jukeboxBlock) {
-            if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
-                ItemStack disk = jukeboxBlockEntity.getRecord();
+        if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
+            ItemStack disk = jukeboxBlockEntity.getRecord();
 
-                if (disk != null) {
-                    level.levelEvent(null, 1010, blockPos, Item.getId(disk.getItem()));
-                    return true;
-                }
+            if (disk != null) {
+                world.syncWorldEvent(null, WorldEvents.MUSIC_DISC_PLAYED, blockPos, Item.getRawId(disk.getItem()));
+                return ActionResult.SUCCESS;
             }
         }
 
         // NoteBlock
         if (block instanceof NoteBlock noteBlock) {
-            noteBlock.triggerEvent(blockState, level, blockPos, 0, 0);
-            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, true), 3);
-            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, false), 3);
-            return true;
+            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
+            return ActionResult.SUCCESS;
         }
 
         // Wooden Blocks
         if (blockState.getMaterial() == Material.WOOD) {
-            return false;
+            return ActionResult.FAIL;
         }
 
-        return interactWithBlockProperty(level, player, blockPos);
+        return interactWithBlockProperty(world, player, blockPos);
     }
 
     @Override
-    public boolean interactWithBlockAlternative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
+    public ActionResult interactWithBlockAlternative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
 
         BlockPos blockPos = hitResult.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
 
         // Torch
         if (block instanceof TorchBlock) {
-            if (player.isShiftKeyDown()) {
-                if (!level.isClientSide) level.destroyBlock(blockPos, true);
-                return true;
+            if (player.isSneaking()) {
+                if (!world.isClient) world.breakBlock(blockPos, true);
+                return ActionResult.SUCCESS;
             }
         }
 
         // Glass Pane
-        if (block instanceof IronBarsBlock && blockState.getMaterial() == Material.GLASS) {
-            if (player.isShiftKeyDown()) {
-                if (!level.isClientSide) level.destroyBlock(blockPos, true);
-                return true;
+        if (block instanceof PaneBlock && blockState.getMaterial() == Material.GLASS) {
+            if (player.isSneaking()) {
+                if (!world.isClient) world.breakBlock(blockPos, true);
+                return ActionResult.SUCCESS;
             }
         }
 
         // Jukebox
         if (block instanceof JukeboxBlock jukeboxBlock) {
-            jukeboxBlock.use(blockState, level, blockPos, player, hand, hitResult);
-            return true;
+            jukeboxBlock.onUse(blockState, world, blockPos, player, hand, hitResult);
+            return ActionResult.SUCCESS;
         }
 
         // NoteBlock
         if (block instanceof NoteBlock noteBlock) {
-            blockState = player.isShiftKeyDown() ? blockState.cycle(NoteBlock.INSTRUMENT) : blockState.cycle(NoteBlock.NOTE);
-            level.setBlock(blockPos, blockState, 3);
+            blockState = player.isSneaking() ? blockState.cycle(NoteBlock.INSTRUMENT) : blockState.cycle(NoteBlock.NOTE);
+            world.setBlockState(blockPos, blockState, 3);
 
-            noteBlock.triggerEvent(blockState, level, blockPos, 0, 0);
-            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, true), 3);
-            level.setBlock(blockPos, blockState.setValue(NoteBlock.POWERED, false), 3);
-            return true;
+            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
+            return ActionResult.SUCCESS;
         }
 
-        return false;
+        return ActionResult.CONSUME;
     }
 
     @Override
-    public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
+    public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
+        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
 
         Entity entity = hitResult.getEntity();
 
         // Trader Llama
-        if (entity instanceof TraderLlama traderLlama) {
+        if (entity instanceof TraderLlamaEntity traderLlama) {
             if (traderLlama.isLeashed()) {
-                traderLlama.dropLeash(true, true);
-                return true;
+                traderLlama.detachLeash(true, true);
+                return ActionResult.SUCCESS;
             }
         }
 
         // Creeper
-        if (entity instanceof Creeper creeper) {
+        if (entity instanceof CreeperEntity creeper) {
             creeper.ignite();
-            return true;
+            return ActionResult.SUCCESS;
         }
 
         // Slime
-        if (entity instanceof Slime slime) {
+        if (entity instanceof SlimeEntity slime) {
             if (slime.getSize() > 1) {
                 slime.kill();
-                return true;
+                return ActionResult.SUCCESS;
             }
         }
 
         // Sheep
-        if (entity instanceof Sheep sheep) {
-            if (sheep.readyForShearing()) {
-                List<ItemStack> drops = sheep.onSheared(null, null, level, entity.blockPosition(), 0);
-
-                for (ItemStack is : drops) {
-                    entity.spawnAtLocation(is, 1.0F);
-                    return true;
-                }
+        if (entity instanceof SheepEntity sheep) {
+            if (sheep.isShearable()) {
+                sheep.sheared(SoundCategory.PLAYERS);
+                sheep.emitGameEvent(GameEvent.SHEAR, player);
             }
         }
 
         // MooshroomEntity
-        if (entity instanceof MushroomCow mushroomCow) {
-            if (mushroomCow.readyForShearing()) {
-                List<ItemStack> drops = mushroomCow.onSheared(null, null, level, entity.blockPosition(), 0);
-
-                for (ItemStack is : drops) {
-                    entity.spawnAtLocation(is, 1.0F);
-                    return true;
-                }
+        if (entity instanceof MooshroomEntity mushroomCow) {
+            if (mushroomCow.isShearable()) {
+                mushroomCow.sheared(SoundCategory.PLAYERS);
+                mushroomCow.emitGameEvent(GameEvent.SHEAR, player);
             }
         }
 
         // Fox
-        if (entity instanceof Fox fox) {
+        if (entity instanceof FoxEntity fox) {
             try {
-                Method method = entity.getClass().getDeclaredMethod("spitOutItem", ItemStack.class);
+                Method method = entity.getClass().getDeclaredMethod("spit", ItemStack.class);
                 method.setAccessible(true);
-                method.invoke(entity, fox.getItemBySlot(EquipmentSlot.MAINHAND));
-                entity.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-                return true;
-            } catch (Exception e) {
+                method.invoke(entity, fox.getEquippedStack(EquipmentSlot.MAINHAND));
+                entity.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                return ActionResult.SUCCESS;
+            } catch (Exception ignored) {
             }
         }
 
         // Fireball
-        if (entity instanceof Fireball fireball) {
-            Vec3 vec3 = player.getLookAngle();
-            fireball.setDeltaMovement(vec3);
-            fireball.xPower = vec3.x * 0.1D;
-            fireball.yPower = vec3.y * 0.1D;
-            fireball.zPower = vec3.z * 0.1D;
+        if (entity instanceof FireballEntity fireball) {
+            Vec3d vec3 = player.getRotationVector();
+            fireball.setVelocity(vec3);
+            fireball.powerX = vec3.x * 0.1D;
+            fireball.powerY = vec3.y * 0.1D;
+            fireball.powerZ = vec3.z * 0.1D;
             fireball.setOwner(player);
-            return true;
+            return ActionResult.SUCCESS;
         }
 
-        return false;
+        return ActionResult.CONSUME;
     }
 
-    private boolean interactWithBlockProperty(Level level, Player player, BlockPos blockPos) {
-        BlockState blockState = level.getBlockState(blockPos);
+    private ActionResult interactWithBlockProperty(World world, PlayerEntity player, BlockPos blockPos) {
+        BlockState blockState = world.getBlockState(blockPos);
         Property<?>[] props = new Property<?>[]{
-            BlockStateProperties.POWER,
-            BlockStateProperties.OPEN,
-            BlockStateProperties.POWERED,
-            BlockStateProperties.ENABLED,
-            BlockStateProperties.LIT
+            Properties.POWER,
+            Properties.OPEN,
+            Properties.POWERED,
+            Properties.ENABLED,
+            Properties.LIT
         };
 
         for (Property<?> prop : props) {
-            if (blockState.hasProperty(prop)) {
-                if (!level.isClientSide) level.setBlock(blockPos, blockState.cycle(prop), 3);
-                return true;
+            if (blockState.contains(prop)) {
+                if (!world.isClient) world.setBlockState(blockPos, blockState.cycle(prop), 3);
+                return ActionResult.SUCCESS;
             }
         }
 
-        return false;
+        return ActionResult.CONSUME;
     }
 }

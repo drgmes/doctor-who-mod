@@ -1,18 +1,17 @@
 package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec2f;
 
 public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen implements IBaseScreen {
     protected static final int LINE_PADDING = 3;
@@ -21,8 +20,8 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
 
     protected final BaseTardisConsoleBlockEntity tardisConsoleBlockEntity;
 
-    protected Button cancelButton;
-    protected Button acceptButton;
+    protected ButtonWidget acceptButton;
+    protected ButtonWidget cancelButton;
 
     public BaseTardisConsoleTelepathicInterfaceScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
         super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME);
@@ -40,91 +39,90 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
     }
 
     @Override
-    public Font getFont() {
-        return this.font;
-    }
-
-    @Override
-    public Component getTitleComponent() {
+    public Text getTitleComponent() {
         return this.getTitle();
     }
 
     @Override
-    public ResourceLocation getBackground() {
+    public TextRenderer getTextRenderer() {
+        return this.textRenderer;
+    }
+
+    @Override
+    public Identifier getBackground() {
         return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE;
     }
 
     @Override
-    public Vec2 getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.scale(0.795F);
+    public Vec2f getBackgroundSize() {
+        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.multiply(0.795F);
     }
 
     @Override
-    public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
+        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
     @Override
-    public Vec2 getTitleRenderPos() {
+    public Vec2f getTitleRenderPos() {
         return this.getRenderPos(23, 8);
     }
 
     @Override
-    public Component getTitle() {
+    public Text getTitle() {
         return this.title;
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(poseStack);
-        this.renderBackground(poseStack, mouseX, mouseY);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrixStack);
+        this.renderBackground(matrixStack, mouseX, mouseY);
 
-        Vec2 pos = new Vec2(19, 5);
-        Vec2 pos1 = this.getRenderPos(pos.x, pos.y);
-        Vec2 pos2 = this.getRenderPos(pos.x + this.font.width(this.getTitle().getString()) + 9, pos.y + this.font.lineHeight + 1);
+        Vec2f pos = new Vec2f(19, 5);
+        Vec2f pos1 = this.getRenderPos(pos.x, pos.y);
+        Vec2f pos2 = this.getRenderPos(pos.x + this.textRenderer.getWidth(this.getTitle().getString()) + 9, pos.y + this.textRenderer.fontHeight + 1);
         int color = 0xFF4F5664;
 
-        GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
-        this.renderTitle(poseStack);
+        this.fillGradient(matrixStack, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
+        this.renderTitle(matrixStack);
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(matrixStack, mouseX, mouseY, delta);
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         this.onDone();
     }
 
     @Override
     protected void init() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        if (this.client != null) this.client.keyboard.setRepeatEvents(true);
 
         int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
         int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT + 1);
 
-        Vec2 cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS - 1, buttonOffset);
-        this.cancelButton = new Button((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.onClose());
+        Vec2f acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 1, buttonOffset);
+        this.acceptButton = new ButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
 
-        Vec2 acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 1, buttonOffset);
-        this.acceptButton = new Button((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
+        Vec2f cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS - 1, buttonOffset);
+        this.cancelButton = new ButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.close());
 
-        this.addRenderableWidget(this.cancelButton);
-        this.addRenderableWidget(this.acceptButton);
+        this.addDrawableChild(this.cancelButton);
+        this.addDrawableChild(this.acceptButton);
     }
 
     @Override
     public void removed() {
-        assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+        if (this.client != null) this.client.keyboard.setRepeatEvents(false);
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 
     @Override
-    public void resize(Minecraft mc, int width, int height) {
+    public void resize(MinecraftClient mc, int width, int height) {
         this.init(mc, width, height);
     }
 
@@ -135,8 +133,8 @@ public abstract class BaseTardisConsoleTelepathicInterfaceScreen extends Screen 
     }
 
     protected void onDone() {
-        this.tardisConsoleBlockEntity.setChanged();
-        this.minecraft.setScreen(null);
+        this.tardisConsoleBlockEntity.markDirty();
+        if (this.client != null) this.client.setScreen(null);
     }
 
     protected void apply() {

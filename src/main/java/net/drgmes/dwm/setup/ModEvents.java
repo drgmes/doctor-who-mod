@@ -1,130 +1,80 @@
 package net.drgmes.dwm.setup;
 
-import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlock;
-import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
-import net.drgmes.dwm.caps.ITardisChunkLoader;
-import net.drgmes.dwm.caps.ITardisLevelData;
+import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
-import net.drgmes.dwm.network.ServerboundScrewdriverUsePacket;
-import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.drgmes.dwm.network.ScrewdriverRemoteCallablePackets;
+import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.drgmes.dwm.world.data.TardisLevelData;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
+import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 
-@Mod.EventBusSubscriber(modid = DWM.MODID)
 public class ModEvents {
-    ///////////////////////////////////////
-    // START Providing Tardis dimensions //
-    ///////////////////////////////////////
+    public static void setup() {
+        // //////////// //
+        // World Events //
+        // //////////// //
 
-    public static TardisLevelData DATA;
+        ServerWorldEvents.LOAD.register((server, world) -> {
+            if (TardisHelper.isTardisDimension(world)) {
+                TardisStateManager.get(world).ifPresent(TardisStateManager::updateEntrancePortals);
+            }
+        });
 
-    @SubscribeEvent
-    public static void onLevelSave(WorldEvent.Save event) {
-        if (!(event.getWorld() instanceof ServerLevel serverLevel)) return;
+        ServerTickEvents.START_WORLD_TICK.register((world) -> {
+            if (TardisHelper.isTardisDimension(world)) {
+                TardisStateManager.get(world).ifPresent(TardisStateManager::tick);
+            }
+        });
 
-        if (serverLevel.dimension() == Level.OVERWORLD) {
-            serverLevel.getDataStorage().set("tardis", DATA);
-        }
+        // ////////////////// //
+        // Screwdriver Events //
+        // ////////////////// //
+
+        UseBlockCallback.EVENT.register((player, world, hand, blockHitResult) -> (
+            applyScrewdriver(player, world, hand, false)
+        ));
+
+        AttackBlockCallback.EVENT.register((player, world, hand, blockPos, direction) -> (
+            applyScrewdriver(player, world, hand, true)
+        ));
+
+        UseEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> (
+            applyScrewdriver(player, world, hand, false)
+        ));
+
+        AttackEntityCallback.EVENT.register((player, world, hand, entity, entityHitResult) -> (
+            applyScrewdriver(player, world, hand, true)
+        ));
     }
 
-    @SubscribeEvent
-    public static void onLevelLoad(WorldEvent.Load event) {
-        if (!(event.getWorld() instanceof ServerLevel serverLevel)) return;
+    private static ActionResult applyScrewdriver(PlayerEntity player, World world, Hand hand, boolean isAlternativeAction) {
+        ItemStack screwdriverItemStack = player.getStackInHand(hand);
 
-        if (serverLevel.dimension() == Level.OVERWORLD) {
-            DATA = serverLevel.getDataStorage().computeIfAbsent(TardisLevelData::load, TardisLevelData::new, "tardis");
-            TardisHelper.registerOldTardises(serverLevel.getServer());
+        if (Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) {
+            if (!world.isClient) return ActionResult.FAIL;
+            ActionResult result = ((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(world, player, hand, isAlternativeAction).getResult();
+
+            if (result.shouldSwingHand()) {
+                PacketHelper.sendToServer(
+                    ScrewdriverRemoteCallablePackets.class,
+                    "useScrewdriver",
+                    screwdriverItemStack, hand == Hand.MAIN_HAND, isAlternativeAction
+                );
+            }
+
+            return result;
         }
-    }
 
-    @SubscribeEvent
-    public static void onLevelUnload(WorldEvent.Unload event) {
-        if (!(event.getWorld() instanceof ServerLevel serverLevel)) return;
-
-        if (serverLevel.dimension() == Level.OVERWORLD) {
-            ModDimensions.TARDISES.clear();
-        }
-    }
-
-    /////////////////////////////////////
-    // END Providing Tardis dimensions //
-    /////////////////////////////////////
-
-    @SubscribeEvent
-    public static void onLevelTick(TickEvent.WorldTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || !(event.world instanceof ServerLevel level)) return;
-
-        level.getCapability(ModCapabilities.TARDIS_CHUNK_LOADER).ifPresent(ITardisChunkLoader::tick);
-
-        if (DimensionHelper.isTardisDimension(level)) {
-            level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent(ITardisLevelData::tick);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onItemUseOnBlock(PlayerInteractEvent.RightClickBlock event) {
-        Item mainHandItem = event.getPlayer().getMainHandItem().getItem();
-        Item offHandItem = event.getPlayer().getOffhandItem().getItem();
-
-        if (event.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
-            BlockState blockState = event.getWorld().getBlockState(event.getHitVec().getBlockPos());
-            if (blockState.getBlock() instanceof BaseTardisConsoleBlock) return;
-            if (blockState.getBlock() instanceof BaseTardisExteriorBlock) return;
-            if (blockState.getBlock() instanceof BaseTardisDoorsBlock) return;
-
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onItemUseOnEntity(PlayerInteractEvent.EntityInteract event) {
-        Item mainHandItem = event.getPlayer().getMainHandItem().getItem();
-        Item offHandItem = event.getPlayer().getOffhandItem().getItem();
-
-        if (event.isCancelable() && (mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) {
-            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return;
-            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return;
-            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return;
-            if (event.getTarget().getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get()) return;
-
-            event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerUseLeftClickWithEmpty(PlayerInteractEvent.LeftClickEmpty event) {
-        if (event.getItemStack().getItem() instanceof ScrewdriverItem screwdriverItem) {
-            ModPackets.INSTANCE.sendToServer(new ServerboundScrewdriverUsePacket(event.getItemStack(), event.getHand(), true));
-            if (event.isCancelable()) event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onPlayerUseLeftClickWithBlock(PlayerInteractEvent.LeftClickBlock event) {
-        if (event.getItemStack().getItem() instanceof ScrewdriverItem screwdriverItem) {
-            screwdriverItem.useScrewdriver(event.getWorld(), event.getPlayer(), event.getHand(), true);
-            if (event.isCancelable()) event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent
-    public static void onAttackEntity(AttackEntityEvent event) {
-        if (event.getPlayer().getMainHandItem().getItem() instanceof ScrewdriverItem screwdriverItem) {
-            screwdriverItem.useScrewdriver(event.getPlayer().level, event.getPlayer(), InteractionHand.MAIN_HAND, true);
-            if (event.isCancelable()) event.setCanceled(true);
-        }
+        return ActionResult.PASS;
     }
 }

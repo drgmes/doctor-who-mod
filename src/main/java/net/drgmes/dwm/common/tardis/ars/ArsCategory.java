@@ -1,6 +1,6 @@
 package net.drgmes.dwm.common.tardis.ars;
 
-import net.minecraft.network.chat.Component;
+import net.minecraft.text.Text;
 
 public class ArsCategory {
     private final String path;
@@ -19,12 +19,12 @@ public class ArsCategory {
         return this.path;
     }
 
-    public Component getTag() {
-        return Component.translatable(this.tag);
+    public Text getTag() {
+        return Text.translatable(this.tag);
     }
 
-    public Component getTitle() {
-        return Component.translatable(this.title);
+    public Text getTitle() {
+        return Text.translatable(this.title);
     }
 
     public ArsCategory getParent() {

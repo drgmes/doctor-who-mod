@@ -4,70 +4,66 @@ import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleTo
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
-import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlockEntity;
-import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.registries.RegistryObject;
+import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
+import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 
 public class ModBlockEntities {
-    //////////////////////
-    // Tardis Exteriors //
-    //////////////////////
 
-    public static final RegistryObject<BlockEntityType<TardisExteriorPoliceBoxBlockEntity>> TARDIS_EXTERIOR_POLICE_BOX = Registration.registerBlockEntity(
+    // //////////////// //
+    // Tardis Exteriors //
+    // //////////////// //
+
+    public static final BlockEntityType<TardisExteriorPoliceBoxBlockEntity> TARDIS_EXTERIOR_POLICE_BOX = Registration.registerBlockEntity(
         "tardis_exterior_police_box",
         TardisExteriorPoliceBoxBlockEntity::new,
-        ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.blockObject
+        ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlock()
     );
 
-    //////////////////
+    // //////////// //
     // Tardis Doors //
-    //////////////////
+    // //////////// //
 
-    public static final RegistryObject<BlockEntityType<TardisDoorsPoliceBoxBlockEntity>> TARDIS_DOORS_POLICE_BOX = Registration.registerBlockEntity(
+    public static final BlockEntityType<TardisDoorsPoliceBoxBlockEntity> TARDIS_DOORS_POLICE_BOX = Registration.registerBlockEntity(
         "tardis_doors_police_box",
         TardisDoorsPoliceBoxBlockEntity::new,
-        ModBlocks.TARDIS_DOORS_POLICE_BOX.blockObject
+        ModBlocks.TARDIS_DOORS_POLICE_BOX.getBlock()
     );
 
-    /////////////////////
+    // /////////////// //
     // Tardis Consoles //
-    /////////////////////
+    // /////////////// //
 
-    public static final RegistryObject<BlockEntityType<TardisConsoleToyotaBlockEntity>> TARDIS_CONSOLE_TOYOTA = Registration.registerBlockEntity(
+    public static final BlockEntityType<TardisConsoleToyotaBlockEntity> TARDIS_CONSOLE_TOYOTA = Registration.registerBlockEntity(
         "tardis_console_toyota",
         TardisConsoleToyotaBlockEntity::new,
-        ModBlocks.TARDIS_CONSOLE_TOYOTA.blockObject
+        ModBlocks.TARDIS_CONSOLE_TOYOTA.getBlock()
     );
 
-    ////////////////////
+    // ////////////// //
     // Tardis Engines //
-    ////////////////////
+    // ////////////// //
 
-    public static final RegistryObject<BlockEntityType<TardisEngineToyotaBlockEntity>> TARDIS_ENGINE_TOYOTA = Registration.registerBlockEntity(
+    public static final BlockEntityType<TardisEngineToyotaBlockEntity> TARDIS_ENGINE_TOYOTA = Registration.registerBlockEntity(
         "tardis_engine_toyota",
         TardisEngineToyotaBlockEntity::new,
-        ModBlocks.TARDIS_ENGINE_TOYOTA.blockObject
+        ModBlocks.TARDIS_ENGINE_TOYOTA.getBlock()
     );
 
-    ////////////////////////
-    // Tardis Decorations //
-    ////////////////////////
+    // //// //
+    // Misc //
+    // //// //
 
-    public static final RegistryObject<BlockEntityType<TardisToyotaSpinnerBlockEntity>> TARDIS_TOYOTA_SPINNER = Registration.registerBlockEntity(
+    public static final BlockEntityType<TardisArsDestroyerBlockEntity> TARDIS_ARS_DESTROYER = Registration.registerBlockEntity(
+        "tardis_ars_destroyer",
+        TardisArsDestroyerBlockEntity::new,
+        ModBlocks.TARDIS_ARS_DESTROYER.getBlock()
+    );
+
+    public static final BlockEntityType<TardisToyotaSpinnerBlockEntity> TARDIS_TOYOTA_SPINNER = Registration.registerBlockEntity(
         "tardis_toyota_spinner",
         TardisToyotaSpinnerBlockEntity::new,
-        ModBlocks.TARDIS_TOYOTA_SPINNER.blockObject
-    );
-
-    ////////////
-    // Others //
-    ////////////
-
-    public static final RegistryObject<BlockEntityType<TardisRoomDestroyerBlockEntity>> TARDIS_ROOM_DESTROYER = Registration.registerBlockEntity(
-        "tardis_room_destroyer",
-        TardisRoomDestroyerBlockEntity::new,
-        ModBlocks.TARDIS_ROOM_DESTROYER.blockObject
+        ModBlocks.TARDIS_TOYOTA_SPINNER.getBlock()
     );
 
     public static void init() {

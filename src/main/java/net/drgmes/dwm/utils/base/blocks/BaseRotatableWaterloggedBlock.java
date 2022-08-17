@@ -1,45 +1,47 @@
 package net.drgmes.dwm.utils.base.blocks;
 
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SimpleWaterloggedBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Waterloggable;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+public abstract class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements Waterloggable {
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
-    public BaseRotatableWaterloggedBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+    public BaseRotatableWaterloggedBlock(AbstractBlock.Settings settings) {
+        super(settings);
+    }
+
+    @NonNull
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        BlockState blockState = super.getPlacementState(context);
+        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
+
+        return blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(WATERLOGGED);
+    }
+
+    @Override
+    protected BlockState getDefaultBlockState() {
+        return super.getDefaultBlockState().with(WATERLOGGED, false);
     }
 
     @Override
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState blockState) {
-        return blockState.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(blockState);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState blockState = super.getStateForPlacement(context);
-        FluidState fluidstate = context.getLevel().getFluidState(context.getClickedPos());
-
-        return blockState.setValue(WATERLOGGED, fluidstate.getType() == Fluids.WATER);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
-
-    @Override
-    protected BlockState getDefaultState() {
-        return super.getDefaultState().setValue(WATERLOGGED, false);
+        return blockState.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState);
     }
 }

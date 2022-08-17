@@ -1,69 +1,54 @@
 package net.drgmes.dwm.blocks.tardis.engines;
 
-import net.drgmes.dwm.blocks.tardis.engines.containers.TardisEngineSystemsContainer;
-import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
+import net.drgmes.dwm.blocks.tardis.engines.screens.handlers.TardisEngineSystemsScreenHandler;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.utils.base.inventory.IInventory;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
-import java.util.Objects;
 import java.util.Optional;
 
-public class BaseTardisEngineBlockEntity extends RandomizableContainerBlockEntity {
+public abstract class BaseTardisEngineBlockEntity extends BlockEntity implements IInventory, NamedScreenHandlerFactory {
     public BaseTardisEngineBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
     }
 
     @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).inflate(3, 4, 3);
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public Text getDisplayName() {
+        return this.getCachedState().getBlock().getName();
     }
 
     @Override
-    public int getContainerSize() {
-        return ITardisLevelData.SYSTEM_COMPONENTS_CONTAINER_SIZE;
+    public DefaultedList<ItemStack> getItems() {
+        if (!(this.getWorld() instanceof ServerWorld serverWorld)) return null;
+        Optional<TardisStateManager> tardis = TardisStateManager.get(serverWorld);
+        return tardis.isEmpty() ? null : tardis.get().getSystemComponents();
     }
 
     @Override
-    protected Component getDefaultName() {
-        return this.getBlockState().getBlock().getName();
-    }
-
-    @Override
-    protected AbstractContainerMenu createMenu(int containerId, Inventory inventory) {
-        return new TardisEngineSystemsContainer(containerId, inventory, this);
-    }
-
-    @Override
-    protected NonNullList<ItemStack> getItems() {
-        Optional<ITardisLevelData> tardis = Objects.requireNonNull(this.getLevel()).getCapability(ModCapabilities.TARDIS_DATA).resolve();
-        return tardis.map(ITardisLevelData::getSystemComponents).orElse(NonNullList.create());
-    }
-
-    @Override
-    protected void setItems(NonNullList<ItemStack> itemStacks) {
-        Objects.requireNonNull(this.getLevel()).getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            tardis.setSystemComponents(itemStacks);
-        });
+    public ScreenHandler createMenu(int inventoryId, PlayerInventory playerInventory, PlayerEntity player) {
+        return new TardisEngineSystemsScreenHandler(inventoryId, playerInventory, this);
     }
 }

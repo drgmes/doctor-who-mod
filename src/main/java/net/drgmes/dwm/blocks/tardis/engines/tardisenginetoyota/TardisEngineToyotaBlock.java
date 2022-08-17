@@ -1,18 +1,18 @@
 package net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota;
 
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlock;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.util.math.BlockPos;
 
 public class TardisEngineToyotaBlock extends BaseTardisEngineBlock {
-    public TardisEngineToyotaBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+    public TardisEngineToyotaBlock(AbstractBlock.Settings settings) {
+        super(settings);
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
         return new TardisEngineToyotaBlockEntity(blockPos, blockState);
     }
 }

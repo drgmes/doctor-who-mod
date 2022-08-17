@@ -1,29 +1,29 @@
 package net.drgmes.dwm.entities.tardis.consoles.controls;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 public class TardisConsoleControlEntityRenderer extends EntityRenderer<Entity> {
-    public TardisConsoleControlEntityRenderer(EntityRendererProvider.Context context) {
+    public TardisConsoleControlEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    protected boolean shouldShowName(Entity entity) {
+    protected boolean hasLabel(Entity entity) {
         return true;
     }
 
     @Override
-    public ResourceLocation getTextureLocation(Entity entity) {
+    public Identifier getTexture(Entity entity) {
         return null;
     }
 
     @Override
-    protected void renderNameTag(Entity entity, Component displayName, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    protected void renderLabelIfPresent(Entity entity, Text text, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
     }
 }

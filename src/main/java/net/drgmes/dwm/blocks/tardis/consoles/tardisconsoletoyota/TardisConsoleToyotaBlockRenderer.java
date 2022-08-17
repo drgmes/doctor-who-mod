@@ -1,171 +1,167 @@
 package net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlock;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.models.TardisConsoleToyotaModel;
-import net.drgmes.dwm.caps.ITardisLevelData;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoleTypes;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlRoles;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
+import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRoleType;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3f;
 
-@OnlyIn(Dist.CLIENT)
-public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRenderer {
-    public TardisConsoleToyotaBlockRenderer(BlockEntityRendererProvider.Context context) {
+@Environment(EnvType.CLIENT)
+public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRenderer<TardisConsoleToyotaBlockEntity> {
+    public TardisConsoleToyotaBlockRenderer(BlockEntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    public void render(BaseTardisConsoleBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
-        float rotateDegrees = tile.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot();
-        ModelPart modelRoot = this.ctx.bakeLayer(TardisConsoleToyotaModel.LAYER_LOCATION);
+    public void render(TardisConsoleToyotaBlockEntity tile, float delta, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay) {
+        float rotateDegrees = tile.getCachedState().get(BaseTardisConsoleBlock.FACING).asRotation();
+        EntityModelLayer modelLayer = TardisConsoleToyotaModel.LAYER_LOCATION;
+        ModelPart modelRoot = this.ctx.getLayerRenderDispatcher().getModelPart(modelLayer);
         TardisConsoleToyotaModel model = new TardisConsoleToyotaModel(modelRoot);
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(TardisConsoleToyotaModel.LAYER_LOCATION.getModel()));
+        VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(modelLayer.getId()));
         model.setupAnim(tile);
 
         float scale = 0.4F;
-        poseStack.pushPose();
-        poseStack.translate(0.5, 0.7, 0.5);
-        poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(rotateDegrees));
-        poseStack.scale(scale, scale, scale);
-        poseStack.translate(0, 0.25F, 0);
-        this.animate(tile, modelRoot, partialTicks);
-        model.renderToBuffer(poseStack, vertexConsumer, packedLight, combinedOverlay, 1.0F, 1.0F, 1.0F, 1.0F);
-        poseStack.popPose();
+        matrixStack.push();
+        matrixStack.translate(0.5, 0.7, 0.5);
+        matrixStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotateDegrees));
+        matrixStack.scale(scale, scale, scale);
+        matrixStack.translate(0, 0.25F, 0);
+        this.animate(tile, modelRoot, delta);
+        model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        matrixStack.pop();
 
-        this.renderScreen(tile, poseStack, buffer, packedLight, combinedOverlay, rotateDegrees);
-        this.renderScrewdriver(tile, poseStack, buffer, packedLight, combinedOverlay, rotateDegrees);
+        this.renderScreen(tile, matrixStack, buffer, light, overlay, rotateDegrees);
+        this.renderScrewdriver(tile, matrixStack, buffer, light, overlay, rotateDegrees);
     }
 
     @Override
-    protected void activateLever(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.xRot -= 1.25F;
+    protected void activateLever(ModelPart model, boolean value, ETardisConsoleControlRole controlRole, float delta) {
+        if (value) model.pitch -= 1.25F;
     }
 
     @Override
-    protected void activateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN || controlRole.type == TardisConsoleControlRoleTypes.BOOLEAN_DIRECT) {
-            this.activateLever(model, value != 0, controlRole, partialTicks);
+    protected void activateLever(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        if (controlRole.type == ETardisConsoleControlRoleType.BOOLEAN || controlRole.type == ETardisConsoleControlRoleType.BOOLEAN_DIRECT) {
+            this.activateLever(model, value != 0, controlRole, delta);
             return;
         }
 
-        model.xRot -= (1F / (controlRole.maxIntValue - 1)) * value;
+        model.pitch -= (1F / (controlRole.maxIntValue - 1)) * value;
     }
 
     @Override
-    protected void animateLever(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        this.activateLever(model, value, controlRole, partialTicks);
+    protected void animateLever(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        this.activateLever(model, value, controlRole, delta);
     }
 
     @Override
-    protected void activateButton(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.y += 0.5F;
+    protected void activateButton(ModelPart model, boolean value, ETardisConsoleControlRole controlRole, float delta) {
+        if (value) model.pivotY += 0.5F;
     }
 
     @Override
-    protected void activateButton(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        this.activateButton(model, value != 0, controlRole, partialTicks);
+    protected void activateButton(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        this.activateButton(model, value != 0, controlRole, delta);
     }
 
     @Override
-    protected void animateButton(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        this.activateButton(model, value, controlRole, partialTicks);
+    protected void animateButton(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        this.activateButton(model, value, controlRole, delta);
     }
 
     @Override
-    protected void activateSlider(ModelPart model, boolean value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value) model.z -= 4F;
+    protected void activateSlider(ModelPart model, boolean value, ETardisConsoleControlRole controlRole, float delta) {
+        if (value) model.pivotZ -= 4F;
     }
 
     @Override
-    protected void activateSlider(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        model.z -= value * (4F / (controlRole.maxIntValue > 0 ? controlRole.maxIntValue : 1));
+    protected void activateSlider(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        model.pivotZ -= value * (4F / (controlRole.maxIntValue > 0 ? controlRole.maxIntValue : 1));
     }
 
     @Override
-    protected void animateSlider(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        this.activateSlider(model, value, controlRole, partialTicks);
+    protected void animateSlider(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        this.activateSlider(model, value, controlRole, delta);
     }
 
     @Override
-    protected void activateRotator(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        model.yRot += 1.57F * value;
+    protected void activateRotator(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        model.yaw += 1.57F * value;
     }
 
     @Override
-    protected void animateRotator(ModelPart model, int value, TardisConsoleControlRoles controlRole, float partialTicks) {
-        if (value != 0) this.activateRotator(model, value / 2, controlRole, partialTicks);
+    protected void animateRotator(ModelPart model, int value, ETardisConsoleControlRole controlRole, float delta) {
+        if (value != 0) this.activateRotator(model, value / 2, controlRole, delta);
     }
 
     @Override
-    protected void activateHandbrake(ModelPart model, TardisConsoleControlRoles controlRole) {
-        model.yRot -= 1.55F;
+    protected void activateHandbrake(ModelPart model, ETardisConsoleControlRole controlRole) {
+        model.yaw -= 1.55F;
     }
 
     @Override
-    protected void activateStarter(ModelPart model, TardisConsoleControlRoles controlRole) {
-        model.xRot += 2F;
+    protected void activateStarter(ModelPart model, ETardisConsoleControlRole controlRole) {
+        model.pitch += 2F;
     }
 
-    private void renderScreen(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, float rotateDegrees) {
-        tile.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((provider) -> {
-            if (!provider.isValid()) return;
+    private void renderScreen(TardisConsoleToyotaBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, float rotateDegrees) {
+        if (!tile.tardisStateManager.isValid()) return;
 
-            poseStack.pushPose();
-            poseStack.translate(0.5, 1F, 0.5);
-            poseStack.mulPose(Vector3f.YN.rotationDegrees(rotateDegrees + 60));
+        matrixStack.push();
+        matrixStack.translate(0.5, 1F, 0.5);
+        matrixStack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(rotateDegrees + 60));
 
-            if (tile.monitorPage == 1)
-                this.renderScreenPage2(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
-            else this.renderScreenPage1(tile, poseStack, buffer, packedLight, combinedOverlay, provider);
+        if (tile.monitorPage == 1) this.renderScreenPage2(tile, matrixStack, buffer, light, overlay, tile.tardisStateManager);
+        else this.renderScreenPage1(tile, matrixStack, buffer, light, overlay, tile.tardisStateManager);
 
-            poseStack.popPose();
-        });
+        matrixStack.pop();
     }
 
-    private void renderScreenPage1(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, ITardisLevelData provider) {
+    private void renderScreenPage1(TardisConsoleToyotaBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, TardisStateManager tardis) {
         String NONE = "-";
 
         String flight = "NO";
-        TardisSystemFlight flightSystem = provider.getSystem(TardisSystemFlight.class);
+        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
         if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
 
         String materialized = "YES";
-        TardisSystemMaterialization materializationSystem = provider.getSystem(TardisSystemMaterialization.class);
+        TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
         if (materializationSystem.inProgress()) materialized = materializationSystem.getProgressPercent() + "%";
         else if (!materializationSystem.isMaterialized()) materialized = "NO";
 
-        BlockPos prevExteriorPosition = provider.getPreviousExteriorPosition();
-        BlockPos currExteriorPosition = provider.getCurrentExteriorPosition();
-        BlockPos destExteriorPosition = provider.getDestinationExteriorPosition();
+        BlockPos prevExteriorPosition = tardis.getPreviousExteriorPosition();
+        BlockPos currExteriorPosition = tardis.getCurrentExteriorPosition();
+        BlockPos destExteriorPosition = tardis.getDestinationExteriorPosition();
         String posPrevName = prevExteriorPosition.getX() + " " + prevExteriorPosition.getY() + " " + prevExteriorPosition.getZ();
         String posCurrName = currExteriorPosition.getX() + " " + currExteriorPosition.getY() + " " + currExteriorPosition.getZ();
         String posDestName = destExteriorPosition.getX() + " " + destExteriorPosition.getY() + " " + destExteriorPosition.getZ();
-        String facingPrevName = provider.getPreviousExteriorFacing().name().toUpperCase();
-        String facingCurrName = provider.getCurrentExteriorFacing().name().toUpperCase();
-        String facingDestName = provider.getDestinationExteriorFacing().name().toUpperCase();
-        String dimPrevName = provider.getPreviousExteriorDimension().location().getPath().toUpperCase();
-        String dimCurrName = provider.getCurrentExteriorDimension().location().getPath().toUpperCase();
-        String dimDestName = provider.getDestinationExteriorDimension().location().getPath().toUpperCase();
+        String facingPrevName = tardis.getPreviousExteriorFacing().name().toUpperCase();
+        String facingCurrName = tardis.getCurrentExteriorFacing().name().toUpperCase();
+        String facingDestName = tardis.getDestinationExteriorFacing().name().toUpperCase();
+        String dimPrevName = tardis.getPreviousExteriorDimension().getValue().getPath().toUpperCase();
+        String dimCurrName = tardis.getCurrentExteriorDimension().getValue().getPath().toUpperCase();
+        String dimDestName = tardis.getDestinationExteriorDimension().getValue().getPath().toUpperCase();
 
-        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[]{
+        this.printStringsToScreen(matrixStack, buffer, light, 0.002F, new String[]{
             this.buildScreenParamText("Flight", !flightSystem.isEnabled() ? NONE : flight),
             this.buildScreenParamText("Materialized", !materializationSystem.isEnabled() ? NONE : materialized),
             "",
@@ -183,38 +179,38 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         });
     }
 
-    private void renderScreenPage2(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, ITardisLevelData provider) {
-        String shieldsState = provider.isShieldsEnabled() ? "ON" : "OFF";
-        String artronEnergyHarvestingState = provider.isEnergyArtronHarvesting() ? "ON" : "OFF";
-        String forgeEnergyHarvestingState = provider.isEnergyForgeHarvesting() ? "ON" : "OFF";
+    private void renderScreenPage2(TardisConsoleToyotaBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, TardisStateManager tardis) {
+        String shieldsState = tardis.isShieldsEnabled() ? "ON" : "OFF";
+        String artronEnergyHarvestingState = tardis.isEnergyArtronHarvesting() ? "ON" : "OFF";
+        String forgeEnergyHarvestingState = tardis.isEnergyForgeHarvesting() ? "ON" : "OFF";
 
-        this.printStringsToScreen(poseStack, buffer, packedLight, 0.002F, new String[]{
+        this.printStringsToScreen(matrixStack, buffer, light, 0.002F, new String[]{
             this.buildScreenParamText("Shields", shieldsState),
             this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
             this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),
             "",
-            this.buildScreenParamText("Artron Energy", provider.getEnergyArtron() + " AE"),
-            this.buildScreenParamText("Forge Energy", provider.getEnergyForge() + " FE"),
+            this.buildScreenParamText("Artron Energy", tardis.getEnergyArtron() + " AE"),
+            this.buildScreenParamText("Forge Energy", tardis.getEnergyForge() + " FE"),
         });
     }
 
-    private void renderScrewdriver(BaseTardisConsoleBlockEntity tile, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay, float rotateDegrees) {
+    private void renderScrewdriver(TardisConsoleToyotaBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, float rotateDegrees) {
         if (tile.screwdriverItemStack != null && !tile.screwdriverItemStack.isEmpty()) {
-            Minecraft mc = Minecraft.getInstance();
+            MinecraftClient mc = MinecraftClient.getInstance();
             float scale = 0.25F;
 
-            poseStack.pushPose();
-            poseStack.translate(0.5, 1.25F, 0.5);
-            poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-            poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
-            poseStack.mulPose(Vector3f.YP.rotationDegrees(rotateDegrees));
-            poseStack.translate(0.5545F, 0.065F, 0.545F);
-            poseStack.mulPose(Vector3f.YN.rotationDegrees(30));
-            poseStack.mulPose(Vector3f.ZN.rotationDegrees(-15));
-            poseStack.mulPose(Vector3f.YN.rotationDegrees(-90));
-            poseStack.scale(scale, scale, scale);
-            mc.getItemRenderer().renderStatic(mc.player, tile.screwdriverItemStack, TransformType.NONE, false, poseStack, buffer, mc.level, packedLight, combinedOverlay, 0);
-            poseStack.popPose();
+            matrixStack.push();
+            matrixStack.translate(0.5, 1.25F, 0.5);
+            matrixStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(180));
+            matrixStack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180));
+            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotateDegrees));
+            matrixStack.translate(0.5545F, 0.065F, 0.545F);
+            matrixStack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(30));
+            matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(15));
+            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(90));
+            matrixStack.scale(scale, scale, scale);
+            mc.getItemRenderer().renderItem(mc.player, tile.screwdriverItemStack, ModelTransformation.Mode.NONE, false, matrixStack, buffer, mc.world, light, overlay, 0);
+            matrixStack.pop();
         }
     }
 
@@ -224,35 +220,35 @@ public class TardisConsoleToyotaBlockRenderer extends BaseTardisConsoleBlockRend
         append += appendInput.length() > append.length() ? "..." : "";
 
         int lineWidth = 239;
-        Font font = this.ctx.getFont();
+        TextRenderer textRenderer = this.ctx.getTextRenderer();
         String str = title + ": " + append;
 
-        return title + ": " + " ".repeat((lineWidth - font.width(str)) / font.width(" ")) + append;
+        return title + ": " + " ".repeat((lineWidth - textRenderer.getWidth(str)) / textRenderer.getWidth(" ")) + append;
     }
 
-    private void printStringsToScreen(PoseStack poseStack, MultiBufferSource buffer, int packedLight, float scaling, String[] lines) {
-        Font font = this.ctx.getFont();
+    private void printStringsToScreen(MatrixStack matrixStack, VertexConsumerProvider buffer, int light, float scaling, String[] lines) {
+        TextRenderer textRenderer = this.ctx.getTextRenderer();
 
-        poseStack.pushPose();
-        poseStack.translate(-0.255D, 0.095F, 0.765D);
-        poseStack.scale(scaling, -scaling, scaling);
-        poseStack.mulPose(Vector3f.XN.rotation(-1.31F));
+        matrixStack.push();
+        matrixStack.translate(-0.255D, 0.095F, 0.765D);
+        matrixStack.scale(scaling, -scaling, scaling);
+        matrixStack.multiply(Vec3f.POSITIVE_X.getRadialQuaternion(1.31F));
 
         for (int i = 0; i < lines.length; i++) {
-            font.drawInBatch(
+            textRenderer.draw(
                 lines[i],
                 0,
-                i * font.lineHeight,
+                i * textRenderer.fontHeight,
                 0xFFFFFF,
                 true,
-                poseStack.last().pose(),
+                matrixStack.peek().getPositionMatrix(),
                 buffer,
                 false,
                 0,
-                packedLight
+                240
             );
         }
 
-        poseStack.popPose();
+        matrixStack.pop();
     }
 }

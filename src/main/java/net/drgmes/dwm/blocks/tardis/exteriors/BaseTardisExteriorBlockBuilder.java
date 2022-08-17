@@ -1,53 +1,42 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
-import net.drgmes.dwm.data.client.ModBlockStateProvider;
-import net.drgmes.dwm.data.client.ModItemModelProvider;
+import net.drgmes.dwm.datagen.common.ModLootTableProvider;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.client.model.generators.ItemModelBuilder;
-import net.minecraftforge.client.model.generators.ModelFile;
-
-import java.util.function.Supplier;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.server.BlockLootTableGenerator;
 
 public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
-    public BaseTardisExteriorBlockBuilder(String name, Supplier<? extends BaseTardisExteriorBlock<?>> factory) {
-        super(name, factory);
-        this.disableNativeDrop();
+    public BaseTardisExteriorBlockBuilder(String name, BaseTardisExteriorBlock<?> block) {
+        super(name, block);
     }
 
-    public static BlockBehaviour.Properties getBlockBehaviour() {
-        return BlockBehaviour.Properties.copy(Blocks.BEDROCK).noOcclusion().lightLevel((blockState) -> {
-            if (blockState.getValue(BaseTardisExteriorBlock.HALF) == DoubleBlockHalf.UPPER) {
-                return blockState.getValue(BaseTardisExteriorBlock.LIT) ? 16 : 0;
-            }
-
-            return 0;
-        });
+    public static AbstractBlock.Settings getBlockSettings() {
+        return AbstractBlock.Settings.copy(Blocks.BEDROCK).luminance((blockState) -> (
+            blockState.get(BaseTardisExteriorBlock.HALF) == DoubleBlockHalf.UPPER && blockState.get(BaseTardisExteriorBlock.LIT) ? 16 : 0
+        ));
     }
 
     @Override
-    public void registerBlockStateAndModel(ModBlockStateProvider provider) {
-        ModelFile entityModel = provider.models().getExistingFile(provider.modLoc("block/invisible"));
-        provider.simpleBlock(this.get(), entityModel);
+    public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
+        ModelHelper.createBlockStateWithModel(blockStateModelGenerator, this.getBlock(), ModelHelper.BLOCK_INVISIBLE);
     }
 
     @Override
-    public void registerItemModel(ModItemModelProvider provider) {
-        ItemModelBuilder builder = provider.getBuilder(this.name);
-        ModelHelper.applyExternalOBJModel(builder, "item/tardis/exteriors/" + this.getResourceName(), true);
-        ModelHelper.rotateToBlockStyle(builder, 0.7F);
-
-        builder.transforms().transform(TransformType.GUI).translation(-5F, -2.25F, 0);
+    public void registerItemModel(ItemModelGenerator itemModelGenerator) {
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/exteriors/" + this.getName());
     }
 
     @Override
-    public void registerCustomRender() {
-        ItemBlockRenderTypes.setRenderLayer(this.get(), (layer) -> layer == RenderType.translucent());
+    public void registerDrop(ModLootTableProvider modLootTableProvider) {
+        modLootTableProvider.addDrop(this.getBlock(), BlockLootTableGenerator.dropsNothing());
+    }
+
+    @Override
+    public void registerTags() {
     }
 }

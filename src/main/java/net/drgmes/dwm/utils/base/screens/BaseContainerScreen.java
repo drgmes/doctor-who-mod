@@ -1,27 +1,25 @@
 package net.drgmes.dwm.utils.base.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec2f;
 
-@OnlyIn(Dist.CLIENT)
-public abstract class BaseContainerScreen<T extends AbstractContainerMenu> extends AbstractContainerScreen<T> implements IBaseScreen {
-    protected int frame = 0;
-
-    public BaseContainerScreen(T menu, Inventory inventory, Component component) {
+@Environment(EnvType.CLIENT)
+public abstract class BaseContainerScreen<T extends ScreenHandler> extends AbstractInventoryScreen<T> implements IBaseScreen {
+    public BaseContainerScreen(T menu, PlayerInventory inventory, Text component) {
         super(menu, inventory, component);
 
-        Vec2 backgroundSize = this.getBackgroundSize();
-        this.imageWidth = (int) backgroundSize.x;
-        this.imageHeight = (int) backgroundSize.y;
+        Vec2f backgroundSize = this.getBackgroundSize();
+        this.backgroundWidth = (int) backgroundSize.x;
+        this.backgroundHeight = (int) backgroundSize.y;
     }
 
     @Override
@@ -35,60 +33,61 @@ public abstract class BaseContainerScreen<T extends AbstractContainerMenu> exten
     }
 
     @Override
-    public Font getFont() {
-        return this.font;
-    }
-
-    @Override
-    public Component getTitleComponent() {
+    public Text getTitleComponent() {
         return this.getTitle();
     }
 
     @Override
-    public ResourceLocation getBackground() {
+    public TextRenderer getTextRenderer() {
+        return this.textRenderer;
+    }
+
+    @Override
+    public Identifier getBackground() {
         return null;
     }
 
     @Override
-    public Vec2 getBackgroundSize() {
-        return new Vec2(0, 0);
+    public Vec2f getBackgroundSize() {
+        return new Vec2f(0, 0);
     }
 
     @Override
-    public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
+        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
     @Override
-    public Component getTitle() {
+    public Text getTitle() {
         return this.title;
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(poseStack);
-        this.renderElements(poseStack, mouseX, mouseY, partialTicks);
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrixStack);
 
-        this.renderTooltip(poseStack, mouseX, mouseY);
+        this.renderElements(matrixStack, mouseX, mouseY, delta);
+        super.render(matrixStack, mouseX, mouseY, delta);
+
+        this.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
+    protected void drawBackground(MatrixStack matrixStack, float delta, int mouseX, int mouseY) {
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int frame) {
-        if (this.onButtonCloseClick(mouseX, mouseY)) this.onClose();
+        if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
         return super.mouseClicked(mouseX, mouseY, frame);
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 }

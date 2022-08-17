@@ -1,45 +1,53 @@
 package net.drgmes.dwm.utils.builders.item;
 
-import net.drgmes.dwm.data.client.ModItemModelProvider;
-import net.drgmes.dwm.data.common.ModRecipeProvider;
+import net.drgmes.dwm.datagen.common.ModRecipeProvider;
+import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.Registration;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.client.model.generators.ModelFile;
-import net.minecraftforge.registries.RegistryObject;
+import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.minecraft.data.client.ItemModelGenerator;
+import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.item.Item;
+import net.minecraft.tag.TagKey;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class ItemBuilder {
     public final String name;
-    public final RegistryObject<? extends Item> itemObject;
+    public final ArrayList<TagKey<Item>> tags = new ArrayList<>();
 
-    public ItemBuilder(String name, Supplier<? extends Item> factory) {
+    private final Item item;
+
+    public ItemBuilder(String name, Item item) {
         this.name = name;
-        this.itemObject = Registration.registerItem(name, factory);
+        this.item = Registration.registerItem(name, item);
 
+        this.registerTags();
         ModItems.ITEM_BUILDERS.add(this);
     }
 
-    public ItemBuilder(String name) {
-        this(name, () -> new Item(getItemProperties()));
+    public static Item.Settings getItemSettings() {
+        return new FabricItemSettings().group(ModCreativeTabs.GENERAL);
     }
 
-    public static Item.Properties getItemProperties() {
-        return new Item.Properties().tab(Registration.CREATIVE_MODE_TAB);
+    public String getName() {
+        return this.name;
     }
 
-    public Item get() {
-        return this.itemObject.get();
+    public Item getItem() {
+        return this.item;
     }
 
-    public void registerItemModel(ModItemModelProvider provider) {
-        ModelFile itemGenerated = provider.getExistingFile(provider.mcLoc("item/generated"));
-        provider.getBuilder("item/" + this.name).parent(itemGenerated).texture("layer0", "item/" + this.name);
+    public void registerCustomRender() {
     }
 
-    public void registerRecipe(ModRecipeProvider provider, Consumer<FinishedRecipe> consumer) {
+    public void registerItemModel(ItemModelGenerator itemModelGenerator) {
+    }
+
+    public void registerRecipe(ModRecipeProvider provider, Consumer<RecipeJsonProvider> exporter) {
+    }
+
+    public void registerTags() {
     }
 }

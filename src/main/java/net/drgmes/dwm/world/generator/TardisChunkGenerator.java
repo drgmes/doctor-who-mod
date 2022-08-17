@@ -3,28 +3,29 @@ package net.drgmes.dwm.world.generator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.drgmes.dwm.setup.ModBiomes;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.RegistryOps;
+import net.minecraft.block.BlockState;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.WorldGenRegion;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.NoiseColumn;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.biome.FixedBiomeSource;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.GenerationStep.Carving;
-import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.blending.Blender;
-import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.structure.StructureSet;
+import net.minecraft.structure.StructureTemplateManager;
+import net.minecraft.util.dynamic.RegistryOps;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.DynamicRegistryManager;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.StructureWorldAccess;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.source.BiomeAccess;
+import net.minecraft.world.biome.source.FixedBiomeSource;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.GenerationStep;
+import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.chunk.Blender;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+import net.minecraft.world.gen.chunk.VerticalBlockSample;
+import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,19 +34,19 @@ import java.util.concurrent.Executor;
 
 public class TardisChunkGenerator extends ChunkGenerator {
     public static final Codec<TardisChunkGenerator> CODEC = RecordCodecBuilder.create((builder) -> {
-        return commonCodec(builder)
-            .and(RegistryOps.retrieveRegistry(Registry.BIOME_REGISTRY).forGetter(TardisChunkGenerator::getBiomeRegistry))
+        return createStructureSetRegistryGetter(builder)
+            .and(RegistryOps.createRegistryCodec(Registry.BIOME_KEY).forGetter(TardisChunkGenerator::getBiomeRegistry))
             .apply(builder, builder.stable(TardisChunkGenerator::new));
     });
 
     private final Registry<Biome> biomeRegistry;
 
     public TardisChunkGenerator(MinecraftServer server) {
-        this(server.registryAccess().registryOrThrow(Registry.STRUCTURE_SET_REGISTRY), server.registryAccess().registryOrThrow(Registry.BIOME_REGISTRY));
+        this(server.getRegistryManager().getManaged(Registry.STRUCTURE_SET_KEY), server.getRegistryManager().getManaged(Registry.BIOME_KEY));
     }
 
     public TardisChunkGenerator(Registry<StructureSet> structureSets, Registry<Biome> biomes) {
-        super(structureSets, Optional.empty(), new FixedBiomeSource(biomes.getHolderOrThrow(ModBiomes.TARDIS_KEY)));
+        super(structureSets, Optional.empty(), new FixedBiomeSource(biomes.getOrCreateEntry(ModBiomes.TARDIS_KEY)));
         this.biomeRegistry = biomes;
     }
 
@@ -54,46 +55,51 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> codec() {
+    protected Codec<? extends ChunkGenerator> getCodec() {
         return CODEC;
     }
 
     @Override
-    public void applyCarvers(WorldGenRegion region, long seed, RandomState randomState, BiomeManager biomeManager, StructureManager structureManager, ChunkAccess chunkAccess, Carving carvingType) {
+    public void carve(ChunkRegion chunkRegion, long seed, NoiseConfig noiseConfig, BiomeAccess world, StructureAccessor structureAccessor, Chunk chunk, GenerationStep.Carver carverStep) {
     }
 
     @Override
-    public void applyBiomeDecoration(WorldGenLevel world, ChunkAccess chunkAccess, StructureManager structureManager) {
+    public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor) {
     }
 
     @Override
-    public void buildSurface(WorldGenRegion region, StructureManager structureManager, RandomState randomState, ChunkAccess chunkAccess) {
+    public boolean shouldStructureGenerateInRange(RegistryEntry<StructureSet> structureSet, NoiseConfig noiseConfig, long seed, int chunkX, int chunkZ, int chunkRange) {
+        return false;
     }
 
     @Override
-    public void spawnOriginalMobs(WorldGenRegion region) {
+    public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk) {
     }
 
     @Override
-    public int getSpawnHeight(LevelHeightAccessor level) {
+    public void populateEntities(ChunkRegion region) {
+    }
+
+    @Override
+    public int getSpawnHeight(HeightLimitView world) {
         return 1;
     }
 
     @Override
-    public int getGenDepth() {
+    public int getWorldHeight() {
         return 319;
     }
 
     @Override
-    public void createStructures(RegistryAccess registries, RandomState randomState, StructureManager structureManager, ChunkAccess chunk, StructureTemplateManager structureTemplateManager, long seed) {
+    public void setStructureStarts(DynamicRegistryManager registryManager, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, long seed) {
     }
 
     @Override
-    public void createReferences(WorldGenLevel world, StructureManager structureManager, ChunkAccess chunk) {
+    public void addStructureReferences(StructureWorldAccess world, StructureAccessor structureAccessor, Chunk chunk) {
     }
 
     @Override
-    public CompletableFuture<ChunkAccess> fillFromNoise(Executor executor, Blender blender, RandomState randomState, StructureManager structureManager, ChunkAccess chunk) {
+    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 
@@ -103,21 +109,21 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getMinY() {
+    public int getMinimumY() {
         return -64;
     }
 
     @Override
-    public int getBaseHeight(int x, int z, Heightmap.Types types, LevelHeightAccessor level, RandomState randomState) {
+    public int getHeight(int x, int z, Heightmap.Type heightmap, HeightLimitView world, NoiseConfig noiseConfig) {
         return 0;
     }
 
     @Override
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState randomState) {
-        return new NoiseColumn(0, new BlockState[0]);
+    public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world, NoiseConfig noiseConfig) {
+        return new VerticalBlockSample(0, new BlockState[0]);
     }
 
     @Override
-    public void addDebugScreenInfo(List<String> list, RandomState randomState, BlockPos blockPos) {
+    public void getDebugHudText(List<String> text, NoiseConfig noiseConfig, BlockPos pos) {
     }
 }

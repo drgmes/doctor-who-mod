@@ -1,7 +1,0 @@
-{
-  "parent": "dwm:block/tardis_room_creator",
-	"textures": {
-		"0": "dwm:block/tardis_room_destroyer",
-		"particle": "dwm:block/tardis_room_destroyer"
-	}
-}

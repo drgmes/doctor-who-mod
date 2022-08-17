@@ -1,19 +1,18 @@
 package net.drgmes.dwm.items.screwdriver.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
-import net.drgmes.dwm.common.screwdriver.Screwdriver.ScrewdriverMode;
+import net.drgmes.dwm.common.screwdriver.Screwdriver.EScrewdriverMode;
 import net.drgmes.dwm.utils.base.screens.IBaseScreen;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiComponent;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec2f;
 
 public abstract class BaseScrewdriverInterfaceScreen extends Screen implements IBaseScreen {
     protected static final int PADDING = 5;
@@ -23,7 +22,7 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     protected final ItemStack screwdriverItemStack;
     protected final boolean isMainHand;
 
-    protected ScrewdriverMode mode;
+    protected EScrewdriverMode mode;
 
     public BaseScrewdriverInterfaceScreen(ItemStack screwdriverItemStack, boolean isMainHand) {
         super(DWM.TEXTS.SCREWDRIVER_INTERFACE_NAME);
@@ -45,79 +44,78 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     @Override
-    public Font getFont() {
-        return this.font;
-    }
-
-    @Override
-    public Component getTitleComponent() {
+    public Text getTitleComponent() {
         return this.getTitle();
     }
 
     @Override
-    public ResourceLocation getBackground() {
+    public TextRenderer getTextRenderer() {
+        return this.textRenderer;
+    }
+
+    @Override
+    public Identifier getBackground() {
         return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN;
     }
 
     @Override
-    public Vec2 getBackgroundSize() {
-        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN_SIZE.scale(0.65F);
+    public Vec2f getBackgroundSize() {
+        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN_SIZE.multiply(0.65F);
     }
 
     @Override
-    public void blit(PoseStack poseStack, int x, int y, int textureX, int textureY, int textureWidth, int textureHeight, int textureClipX, int textureClipY) {
-        GuiComponent.blit(poseStack, x, y, textureX, textureY, textureWidth, textureHeight, textureClipX, textureClipY);
+    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
+        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
     @Override
-    public Vec2 getTitleRenderPos() {
+    public Vec2f getTitleRenderPos() {
         return this.getRenderPos(23, 6);
     }
 
     @Override
-    public Component getTitle() {
+    public Text getTitle() {
         return this.title;
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTicks) {
-        super.renderBackground(poseStack);
-        this.renderBackground(poseStack, mouseX, mouseY);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrixStack);
+        this.renderBackground(matrixStack, mouseX, mouseY);
 
-        Vec2 pos = new Vec2(19, 5);
-        Vec2 pos1 = this.getRenderPos(pos.x, pos.y);
-        Vec2 pos2 = this.getRenderPos(pos.x + this.font.width(this.getTitle().getString()) + 9, pos.y + this.font.lineHeight + 1);
+        Vec2f pos = new Vec2f(19, 5);
+        Vec2f pos1 = this.getRenderPos(pos.x, pos.y);
+        Vec2f pos2 = this.getRenderPos(pos.x + this.textRenderer.getWidth(this.getTitle().getString()) + 9, pos.y + this.textRenderer.fontHeight + 1);
         int color = 0xFF4F5664;
 
-        GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
-        this.renderTitle(poseStack);
+        this.fillGradient(matrixStack, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
+        this.renderTitle(matrixStack);
 
-        super.render(poseStack, mouseX, mouseY, partialTicks);
+        super.render(matrixStack, mouseX, mouseY, delta);
     }
 
     @Override
-    public void onClose() {
+    public void close() {
         this.onDone();
     }
 
     @Override
     protected void init() {
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(true);
+        if (this.client != null) this.client.keyboard.setRepeatEvents(true);
     }
 
     @Override
     public void removed() {
-        assert this.minecraft != null;
-        this.minecraft.keyboardHandler.setSendRepeatsToGui(false);
+        if (this.client != null) this.client.keyboard.setRepeatEvents(false);
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean shouldPause() {
         return false;
     }
 
     @Override
-    public void resize(Minecraft mc, int width, int height) {
+    public void resize(MinecraftClient mc, int width, int height) {
         this.init(mc, width, height);
     }
 
@@ -128,6 +126,6 @@ public abstract class BaseScrewdriverInterfaceScreen extends Screen implements I
     }
 
     protected void onDone() {
-        this.minecraft.setScreen(null);
+        if (this.client != null) this.client.setScreen(null);
     }
 }

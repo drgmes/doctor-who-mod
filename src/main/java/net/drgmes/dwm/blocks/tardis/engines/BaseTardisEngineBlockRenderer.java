@@ -1,15 +1,15 @@
 package net.drgmes.dwm.blocks.tardis.engines;
 
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public abstract class BaseTardisEngineBlockRenderer<C extends BaseTardisEngineBlockEntity> implements BlockEntityRenderer<C> {
-    protected BlockEntityRendererProvider.Context ctx;
+    protected final BlockEntityRendererFactory.Context ctx;
 
-    public BaseTardisEngineBlockRenderer(BlockEntityRendererProvider.Context context) {
+    public BaseTardisEngineBlockRenderer(BlockEntityRendererFactory.Context context) {
         this.ctx = context;
     }
 }

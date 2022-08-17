@@ -4,8 +4,9 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItemBuilder;
-import net.drgmes.dwm.items.tardis.tardiskey.TardisKeyItemBuilder;
-import net.drgmes.dwm.items.tardis.tardissystem.TardisSystemItemBuilder;
+import net.drgmes.dwm.items.tardiskey.TardisKeyItemBuilder;
+import net.drgmes.dwm.items.tardissystem.TardisSystemItemBuilder;
+import net.drgmes.dwm.items.tardissystem.dematerializationcircuit.TardisSystemDematerializationCircuitItemBuilder;
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;
 
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ public class ModItems {
     public static final ItemBuilder SCREWDRIVER_13 = new ScrewdriverItemBuilder("screwdriver_13");
 
     // Tardis Keys
-    public static final ItemBuilder KEY_1 = new TardisKeyItemBuilder("tardis_key_1");
+    public static final ItemBuilder TARDIS_KEY_1 = new TardisKeyItemBuilder("tardis_key_1");
 
     // Tardis Systems
-    public static final ItemBuilder DEMATERIALIZATION_CIRCUIT_SYSTEM = new TardisSystemItemBuilder("dematerialization_circuit_system", TardisSystemMaterialization.class);
-    public static final ItemBuilder DIRECTIONAL_UNIT_SYSTEM = new TardisSystemItemBuilder("directional_unit", TardisSystemFlight.class);
-    public static final ItemBuilder SHIELDS_GENERATOR = new TardisSystemItemBuilder("shields_generator", TardisSystemShields.class);
+    public static final ItemBuilder TARDIS_SYSTEM_DIRECTIONAL_UNIT = new TardisSystemItemBuilder("tardis_system_directional_unit", TardisSystemFlight.class);
+    public static final ItemBuilder TARDIS_SYSTEM_SHIELDS_GENERATOR = new TardisSystemItemBuilder("tardis_system_shields_generator", TardisSystemShields.class);
+    public static final ItemBuilder TARDIS_SYSTEM_DEMATERIALIZATION_CIRCUIT = new TardisSystemDematerializationCircuitItemBuilder("tardis_system_dematerialization_circuit", TardisSystemMaterialization.class);
 
     public static void init() {
     }

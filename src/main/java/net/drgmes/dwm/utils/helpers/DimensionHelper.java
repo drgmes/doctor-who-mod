@@ -1,102 +1,63 @@
 package net.drgmes.dwm.utils.helpers;
 
-import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Lifecycle;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.setup.ModDimensions.ModDimensionTypes;
-import net.minecraft.core.Registry;
-import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.progress.ChunkProgressListener;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.biome.BiomeManager;
-import net.minecraft.world.level.border.BorderChangeListener;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.WorldGenSettings;
-import net.minecraft.world.level.storage.DerivedLevelData;
-import net.minecraft.world.level.storage.LevelStorageSource.LevelStorageAccess;
-import net.minecraft.world.level.storage.WorldData;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionOptions;
+import qouteall.q_misc_util.MiscHelper;
+import qouteall.q_misc_util.api.DimensionAPI;
 
-import java.util.Map;
-import java.util.concurrent.Executor;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class DimensionHelper {
-    public static boolean isTardisDimension(Level level) {
-        return level != null && level.dimensionTypeRegistration().is(ModDimensionTypes.TARDIS);
+    public static String getWorldId(World world) {
+        return world.getRegistryKey().getValue().getPath();
     }
 
-    public static ResourceKey<Level> getLevelKey(String id) {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(id));
+    public static RegistryKey<World> getWorldKey(Identifier id) {
+        return RegistryKey.of(Registry.WORLD_KEY, id);
     }
 
-    public static ResourceKey<Level> getModLevelKey(String id) {
-        return ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(DWM.MODID, id));
+    public static RegistryKey<World> getWorldKey(String id) {
+        return getWorldKey(new Identifier(id));
     }
 
-    @SuppressWarnings("deprecation")
-    public static ServerLevel getLevel(MinecraftServer server, ResourceKey<Level> levelKey) {
-        if (server == null) return null;
-        Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
-        return map.containsKey(levelKey) ? map.get(levelKey) : null;
+    public static ServerWorld getWorld(RegistryKey<World> worldKey) {
+        MinecraftServer server = MiscHelper.getServer();
+        return server != null && server.isOnThread() && server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
     }
 
-    public static ServerLevel getLevel(MinecraftServer server, String id) {
-        return DimensionHelper.getLevel(server, DimensionHelper.getModLevelKey(id));
+    public static ServerWorld getWorld(Identifier id) {
+        return getWorld(getWorldKey(id));
     }
 
-    public static ServerLevel getOrCreateLevel(MinecraftServer server, String id, Consumer<ServerLevel> initialConsumer, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
-        ServerLevel level = DimensionHelper.getLevel(server, id);
-        if (level != null) return level;
-
-        level = createLevel(server, id, dimensionFactory);
-        initialConsumer.accept(level);
-        return level;
+    public static ServerWorld getWorld(String id) {
+        return getWorld(getWorldKey(id));
     }
 
-    public static ServerLevel getOrCreateLevelStatic(MinecraftServer server, String id, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
-        ServerLevel level = DimensionHelper.getLevel(server, id);
-        return level != null ? level : createLevel(server, id, dimensionFactory);
+    public static ServerWorld getModWorld(String id) {
+        return getWorld(DWM.getIdentifier(id));
     }
 
-    @SuppressWarnings("deprecation")
-    private static ServerLevel createLevel(MinecraftServer server, String id, BiFunction<MinecraftServer, ResourceKey<LevelStem>, LevelStem> dimensionFactory) {
-        Map<ResourceKey<Level>, ServerLevel> map = server.forgeGetWorldMap();
+    public static ServerWorld getOrCreateWorld(String id, Consumer<ServerWorld> initialConsumer, Supplier<DimensionOptions> dimensionFactory) {
+        MinecraftServer server = MiscHelper.getServer();
+        if (server == null || !server.isOnThread()) return null;
 
-        ServerLevel overworld = server.getLevel(Level.OVERWORLD);
-        ResourceKey<Level> levelKey = DimensionHelper.getModLevelKey(id);
-        ResourceKey<LevelStem> levelStemKey = ResourceKey.create(Registry.LEVEL_STEM_REGISTRY, levelKey.location());
-        LevelStem levelStem = dimensionFactory.apply(server, levelStemKey);
+        Identifier worldIdentifier = DWM.getIdentifier(id);
+        RegistryKey<World> worldKey = getWorldKey(worldIdentifier);
+        ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
+        if (world != null) return world;
 
-        ChunkProgressListener chunkListener = server.progressListenerFactory.create(11);
-        LevelStorageAccess levelSave = server.storageSource;
-        Executor executor = server.executor;
+        DimensionAPI.addDimensionDynamically(worldIdentifier, dimensionFactory.get());
+        DimensionAPI.saveDimensionConfiguration(worldKey);
 
-        WorldData serverConfig = server.getWorldData();
-        WorldGenSettings worldGenSettings = serverConfig.worldGenSettings();
-        Registry<LevelStem> levelStemRegistry = worldGenSettings.dimensions();
-
-        if (levelStemRegistry instanceof WritableRegistry<LevelStem> writableRegistry) {
-            writableRegistry.register(levelStemKey, levelStem, Lifecycle.stable());
-        }
-        else {
-            throw new IllegalStateException("Unable to register dimension '" + levelStemKey.location() + "'! Registry not writable!");
-        }
-
-        DerivedLevelData derivedLevelInfo = new DerivedLevelData(serverConfig, serverConfig.overworldData());
-        ServerLevel level = new ServerLevel(server, executor, levelSave, derivedLevelInfo, levelKey, levelStem, chunkListener, worldGenSettings.isDebug(), BiomeManager.obfuscateSeed(worldGenSettings.seed()), ImmutableList.of(), false);
-
-        overworld.getWorldBorder().addListener(new BorderChangeListener.DelegateBorderChangeListener(level.getWorldBorder()));
-        map.put(levelKey, level);
-        server.markWorldsDirty();
-
-        MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(level));
-        return level;
+        world = getWorld(worldKey);
+        initialConsumer.accept(world);
+        return world;
     }
 }

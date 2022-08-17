@@ -1,43 +1,33 @@
 package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
-import net.drgmes.dwm.common.tardis.boti.renderer.BotiEntranceData;
-import net.drgmes.dwm.common.tardis.boti.renderer.BotiRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3f;
 
-@OnlyIn(Dist.CLIENT)
+@Environment(EnvType.CLIENT)
 public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer<TardisExteriorPoliceBoxBlockEntity> {
-    private final BlockEntityRendererProvider.Context ctx;
+    protected final BlockEntityRendererFactory.Context ctx;
 
-    public TardisExteriorPoliceBoxBlockRenderer(BlockEntityRendererProvider.Context context) {
+    public TardisExteriorPoliceBoxBlockRenderer(BlockEntityRendererFactory.Context context) {
         this.ctx = context;
     }
 
     @Override
-    public void render(TardisExteriorPoliceBoxBlockEntity tile, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int combinedOverlay) {
-        BlockState blockState = tile.getBlockState();
-        if (blockState == null) return;
-
-        Direction face = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
-        DoubleBlockHalf half = blockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF);
+    public void render(TardisExteriorPoliceBoxBlockEntity tile, float delta, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay) {
+        DoubleBlockHalf half = tile.getCachedState().get(TardisExteriorPoliceBoxBlock.HALF);
         if (half != DoubleBlockHalf.LOWER) return;
 
-        ResourceLocation modelResource = TardisExteriorPoliceBoxModel.LAYER_LOCATION.getModel();
-        TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(ctx.bakeLayer(TardisExteriorPoliceBoxModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityTranslucent(modelResource));
+        EntityModelLayer modelLayer = TardisExteriorPoliceBoxModel.LAYER_LOCATION;
+        TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(this.ctx.getLayerRenderDispatcher().getModelPart(modelLayer));
+        VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(modelLayer.getId()));
         model.setupAnim(tile);
 
         float speed = 0.3F;
@@ -46,56 +36,21 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         float alpha = (float) Math.cos(percent * speed) * intense + (1.0F / 100) * percent;
         float alphaClamped = percent < 10 ? 0 : Math.max(0, Math.min(1.0F, alpha));
 
-        poseStack.pushPose();
-        this.setupModelView(poseStack, face);
-        model.renderToBuffer(poseStack, vertexConsumer, packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
-        poseStack.popPose();
-
-        BotiEntranceData entranceData = new BotiEntranceData(tile.getBlockPos(), tile.tardisLevelUUID);
-        entranceData.setBotiStorage(tile.getBotiStorage());
-
-        entranceData.setDoorsRenderer((innerPoseStack, innerBufferSource) -> {
-            innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face);
-            model.renderDoorsToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
-            innerPoseStack.popPose();
-        });
-
-        entranceData.setBotiRenderer((innerPoseStack, innerBufferSource) -> {
-            innerPoseStack.pushPose();
-            this.setupModelView(innerPoseStack, face);
-            model.renderBotiToBuffer(innerPoseStack, innerBufferSource.getBuffer(RenderType.entityTranslucent(modelResource)), packedLight, combinedOverlay, 1, 1, 1, alphaClamped);
-            innerPoseStack.popPose();
-        });
-
-        entranceData.setBotiTransformer((innerPoseStack) -> {
-            innerPoseStack.translate(0.5, 0, 0.5);
-            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(180));
-            innerPoseStack.mulPose(Vector3f.YN.rotationDegrees(face.toYRot()));
-            innerPoseStack.mulPose(Vector3f.YP.rotationDegrees(entranceData.getBotiStorage().getDirection().toYRot()));
-            innerPoseStack.translate(-0.5, 0, -0.5);
-        });
-
-        if (blockState.getValue(BlockStateProperties.OPEN)) {
-            BotiRenderer.addEntranceData(entranceData);
-        }
-        else {
-            entranceData.renderDoors(poseStack, buffer);
-        }
+        float rotateDegrees = tile.getCachedState().get(TardisExteriorPoliceBoxBlock.FACING).asRotation();
+        float scale = 1.2F;
+        matrixStack.push();
+        matrixStack.translate(0.5, 0.5, 0.5);
+        matrixStack.multiply(Vec3f.NEGATIVE_Z.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.NEGATIVE_Y.getDegreesQuaternion(180));
+        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rotateDegrees));
+        matrixStack.translate(0, -1.265 * scale, 0);
+        matrixStack.scale(scale, scale + 0.15F, scale);
+        model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, alphaClamped);
+        matrixStack.pop();
     }
 
     @Override
-    public int getViewDistance() {
+    public int getRenderDistance() {
         return 256;
-    }
-
-    public void setupModelView(PoseStack poseStack, Direction face) {
-        float scale = 1.25F;
-        poseStack.translate(0.5, 0.5, 0.5);
-        poseStack.mulPose(Vector3f.ZN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YN.rotationDegrees(180));
-        poseStack.mulPose(Vector3f.YP.rotationDegrees(face.toYRot()));
-        poseStack.translate(0, -1.6, 0);
-        poseStack.scale(scale, scale + 0.15F, scale);
     }
 }

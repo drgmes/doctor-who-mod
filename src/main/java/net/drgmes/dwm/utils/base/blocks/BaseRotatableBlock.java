@@ -1,40 +1,37 @@
 package net.drgmes.dwm.utils.base.blocks;
 
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.math.Direction;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
-public class BaseRotatableBlock extends Block {
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+public abstract class BaseRotatableBlock extends HorizontalFacingBlock {
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-    public BaseRotatableBlock(BlockBehaviour.Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.getDefaultState());
+    public BaseRotatableBlock(AbstractBlock.Settings settings) {
+        super(settings);
+        this.setDefaultState(this.getDefaultBlockState());
+    }
+
+    @NonNull
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return this.getDefaultBlockState().with(FACING, context.getPlayerFacing().getOpposite());
     }
 
     @Override
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
-        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
         builder.add(FACING);
     }
 
-    protected BlockState getDefaultState() {
-        return this.stateDefinition.any().setValue(FACING, Direction.NORTH);
+    protected BlockState getDefaultBlockState() {
+        return this.getDefaultState().with(FACING, Direction.NORTH);
     }
 }

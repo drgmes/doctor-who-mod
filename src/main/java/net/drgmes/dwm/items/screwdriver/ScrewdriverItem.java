@@ -4,88 +4,87 @@ import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
 
 public class ScrewdriverItem extends Item {
-    public ScrewdriverItem(Item.Properties props) {
+    public ScrewdriverItem(Item.Settings props) {
         super(props);
     }
 
     @Override
-    public boolean canAttackBlock(BlockState blockState, Level level, BlockPos blockPos, Player player) {
+    public boolean canMine(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player) {
         return false;
     }
 
     @Override
-    public float getDestroySpeed(ItemStack itemStack, BlockState blockState) {
+    public float getMiningSpeedMultiplier(ItemStack itemStack, BlockState blockState) {
         return 0;
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        return this.useScrewdriver(level, player, hand, false);
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
+        return this.useScrewdriver(world, player, hand, false);
     }
 
     @Override
-    public void inventoryTick(ItemStack itemStack, Level level, Entity entity, int slotIdx, boolean flag) {
-        Minecraft mc = Minecraft.getInstance();
-        if (!entity.level.isClientSide || mc.screen != null || !(entity instanceof Player player)) return;
+    public void inventoryTick(ItemStack itemStack, World world, Entity entity, int slotIdx, boolean flag) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        if (!entity.world.isClient || mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
-        if (ModKeys.SCREWDRIVER_SETTINGS.isDown()) {
-            if (player.getItemInHand(InteractionHand.MAIN_HAND).equals(itemStack, false)) {
+        if (ModKeys.SCREWDRIVER_SETTINGS.isPressed()) {
+            if (player.getStackInHand(Hand.MAIN_HAND).equals(itemStack)) {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, true));
-                return;
             }
-
-            if (player.getItemInHand(InteractionHand.OFF_HAND).equals(itemStack, false)) {
+            else if (player.getStackInHand(Hand.OFF_HAND).equals(itemStack)) {
                 mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, false));
             }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.empty());
+    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext context) {
+        tooltip.add(Text.empty());
 
-        MutableComponent mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
-        MutableComponent modeText = Component.translatable("title.dwm.screwdriver.mode", mode.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
-        list.add(modeText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+        MutableText mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
+        MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", mode.formatted(Formatting.GOLD));
+        tooltip.add(modeText.formatted(Formatting.GRAY));
 
-        String tardisLevelUUID = Screwdriver.getTardisUUID(itemStack);
-        if (!tardisLevelUUID.equals("")) {
-            MutableComponent tardis = Component.literal(tardisLevelUUID.substring(0, 8));
-            MutableComponent tardisText = Component.translatable("title.dwm.tardis_uuid", tardis.setStyle(mode.getStyle().withColor(ChatFormatting.GOLD)));
-            list.add(tardisText.setStyle(mode.getStyle().withColor(ChatFormatting.GRAY)));
+        String tardisId = Screwdriver.getTardisId(itemStack);
+        if (!tardisId.isEmpty()) {
+            MutableText tardis = Text.literal(tardisId.substring(0, 8));
+            MutableText tardisText = Text.translatable("title.dwm.tardis_id", tardis.formatted(Formatting.GOLD));
+            tooltip.add(tardisText.formatted(Formatting.GRAY));
         }
 
-        super.appendHoverText(itemStack, level, list, tooltipFlag);
+        super.appendTooltip(itemStack, world, tooltip, context);
     }
 
-    public InteractionResultHolder<ItemStack> useScrewdriver(Level level, Player player, InteractionHand hand, boolean isAlternativeAction) {
-        ItemStack itemStack = player.getItemInHand(hand);
+    public TypedActionResult<ItemStack> useScrewdriver(World world, PlayerEntity player, Hand hand, boolean isAlternativeAction) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        ActionResult result = Screwdriver.interact(world, player, hand, isAlternativeAction);
 
-        if (Screwdriver.interact(level, player, hand, isAlternativeAction)) {
-            level.gameEvent(player, GameEvent.ITEM_INTERACT_FINISH, player.blockPosition());
-            ModSounds.playScrewdriverMainSound(level, player.blockPosition());
-            return InteractionResultHolder.success(itemStack);
+        if (result.shouldSwingHand()) {
+            world.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, player.getBlockPos());
+            if (!world.isClient) ModSounds.playScrewdriverMainSound(world, player.getBlockPos());
         }
 
-        return InteractionResultHolder.pass(itemStack);
+        return new TypedActionResult<>(result, itemStack);
     }
 }

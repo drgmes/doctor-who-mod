@@ -4,9 +4,9 @@ import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleTo
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockBuilder;
-import net.drgmes.dwm.blocks.tardis.others.tardisroomcreator.TardisRoomCreatorBlockBuilder;
-import net.drgmes.dwm.blocks.tardis.others.tardisroomdestroyer.TardisRoomDestroyerBlockBuilder;
-import net.drgmes.dwm.blocks.tardis.others.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
 import net.drgmes.dwm.utils.builders.block.BlockBuilder;
 
 import java.util.ArrayList;
@@ -29,9 +29,9 @@ public class ModBlocks {
     // Tardis Decorations
     public static final BlockBuilder TARDIS_TOYOTA_SPINNER = new TardisToyotaSpinnerBlockBuilder("tardis_toyota_spinner");
 
-    // Others
-    public static final BlockBuilder TARDIS_ROOM_CREATOR = new TardisRoomCreatorBlockBuilder("tardis_room_creator");
-    public static final BlockBuilder TARDIS_ROOM_DESTROYER = new TardisRoomDestroyerBlockBuilder("tardis_room_destroyer");
+    // Misc
+    public static final BlockBuilder TARDIS_ARS_CREATOR = new TardisArsCreatorBlockBuilder("tardis_ars_creator");
+    public static final BlockBuilder TARDIS_ARS_DESTROYER = new TardisArsDestroyerBlockBuilder("tardis_ars_destroyer");
 
     public static void init() {
     }

@@ -2,33 +2,31 @@ package net.drgmes.dwm.blocks.tardis.consoles.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
-import net.drgmes.dwm.network.ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket;
-import net.drgmes.dwm.setup.ModPackets;
-import net.drgmes.dwm.utils.DWMUtils;
+import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.saveddata.maps.MapBanner;
-import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
-import net.minecraft.world.phys.Vec2;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.PacketHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.map.MapBannerMarker;
+import net.minecraft.item.map.MapState;
+import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec2f;
 
 import java.util.Collection;
 
 public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardisConsoleTelepathicInterfaceScreen {
-    private final MapItemSavedData mapData;
-    private final Collection<MapBanner> banners;
+    private final Collection<MapBannerMarker> banners;
 
     private BannersListWidget bannersListWidget;
     private BannersListWidget.BannerEntry selected = null;
 
-    public TardisConsoleTelepathicInterfaceMapBannersScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, MapItemSavedData mapData) {
+    public TardisConsoleTelepathicInterfaceMapBannersScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, MapState mapData) {
         super(tardisConsoleBlockEntity);
-        this.mapData = mapData;
         this.banners = mapData.getBanners();
     }
 
     @Override
-    public Component getTitle() {
+    public Text getTitle() {
         return DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_BANNERS;
     }
 
@@ -38,16 +36,16 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
         int bannersListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
         int bannersListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - BUTTON_HEIGHT - bannersListGhostSpace;
 
-        Vec2 bannersListPos = this.getRenderPos(BACKGROUND_BORDERS, BACKGROUND_BORDERS);
+        Vec2f bannersListPos = this.getRenderPos(BACKGROUND_BORDERS, BACKGROUND_BORDERS);
         this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
-        this.addRenderableWidget(this.bannersListWidget);
+        this.addDrawableChild(this.bannersListWidget);
 
         super.init();
         this.update();
     }
 
     @Override
-    public void resize(Minecraft mc, int width, int height) {
+    public void resize(MinecraftClient mc, int width, int height) {
         BannersListWidget.BannerEntry selected = this.selected;
         super.resize(mc, width, height);
         this.selected = selected;
@@ -56,7 +54,11 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
     @Override
     protected void apply() {
         if (this.selected != null) {
-            ModPackets.INSTANCE.sendToServer(new ServerboundTardisConsoleTelepathicInterfaceMapBannersApplyPacket(this.mapData, this.selected.banner));
+            PacketHelper.sendToServer(
+                TardisConsoleRemoteCallablePackets.class,
+                "applyTardisConsoleTelepathicInterfaceMapBanner",
+                this.selected.banner.getNbt()
+            );
         }
 
         this.onDone();
@@ -76,11 +78,11 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
         this.acceptButton.active = this.selected != null;
     }
 
-    private class BannersListWidget extends BaseListWidget {
+    private static class BannersListWidget extends BaseListWidget {
         private final TardisConsoleTelepathicInterfaceMapBannersScreen parent;
 
-        public BannersListWidget(TardisConsoleTelepathicInterfaceMapBannersScreen parent, int width, int height, Vec2 pos) {
-            super(parent.minecraft, parent.font, width, height, LINE_PADDING, pos);
+        public BannersListWidget(TardisConsoleTelepathicInterfaceMapBannersScreen parent, int width, int height, Vec2f pos) {
+            super(parent.client, parent.textRenderer, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
         }
@@ -90,22 +92,22 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
             this.parent.banners.forEach((banner) -> this.addEntry(new BannerEntry(banner)));
         }
 
-        private class BannerEntry extends BaseListWidget.BaseListEntry {
-            private final MapBanner banner;
+        private class BannerEntry extends BaseListEntry {
+            private final MapBannerMarker banner;
 
-            public BannerEntry(MapBanner banner) {
+            public BannerEntry(MapBannerMarker banner) {
                 this.banner = banner;
             }
 
             @Override
-            public Component getNarration() {
-                return Component.translatable(DWMUtils.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
+            public Text getText() {
+                return Text.translatable(CommonHelper.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
+            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
                 BannersListWidget.this.parent.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, partialTicks);
+                return super.mouseClicked(mouseX, mouseY, delta);
             }
         }
     }

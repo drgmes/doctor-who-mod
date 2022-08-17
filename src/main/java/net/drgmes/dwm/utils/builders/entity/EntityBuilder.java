@@ -2,38 +2,33 @@ package net.drgmes.dwm.utils.builders.entity;
 
 import net.drgmes.dwm.setup.ModEntities;
 import net.drgmes.dwm.setup.Registration;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 
 public class EntityBuilder<T extends Entity> {
     public final String name;
-    public final RegistryObject<EntityType<T>> entityObject;
+    public final EntityType<T> entityType;
 
-    public EntityBuilder(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate) {
+    public EntityBuilder(String name, EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup, float width, float height, int trackingRange, int updateFreq) {
         this.name = name;
-        this.entityObject = Registration.registerEntity(name, factory, category, width, height, trackingRange, updateFreq, sendUpdate);
+        this.entityType = Registration.registerEntity(name, factory, spawnGroup, width, height, trackingRange, updateFreq);
 
         ModEntities.ENTITY_BUILDERS.add(this);
     }
 
-    public EntityBuilder(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height) {
-        this(name, factory, category, width, height, 64, 40, false);
+    public EntityBuilder(String name, EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup, float width, float height) {
+        this(name, factory, spawnGroup, width, height, 10, Integer.MAX_VALUE);
     }
 
-    public EntityType<T> get() {
-        return this.entityObject.get();
-    }
-
-    public String getResourceName() {
+    public String getName() {
         return this.name;
     }
 
-    public void registerCustomEntityRenderer(EntityRenderersEvent.RegisterRenderers event) {
+    public EntityType<T> getEntityType() {
+        return this.entityType;
     }
 
-    public void registerCustomLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    public void registerCustomRender() {
     }
 }

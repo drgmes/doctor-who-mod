@@ -1,94 +1,82 @@
 package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
-import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.client.model.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.util.math.MatrixStack;
 
-public class TardisDoorsPoliceBoxModel extends EntityModel<Entity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(DWM.MODID, "textures/entity/tardis/doors/tardis_doors_police_box.png"), "main");
+public class TardisDoorsPoliceBoxModel extends Model {
+    public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/entity/tardis/doors/tardis_doors_police_box.png"), "main");
     private final ModelPart base;
-    private final ModelPart boti;
     private final ModelPart door_left;
     private final ModelPart door_right;
 
     public TardisDoorsPoliceBoxModel(ModelPart root) {
+        super(RenderLayer::getEntityTranslucent);
+
         this.base = root.getChild("base");
-        this.boti = root.getChild("boti");
         this.door_left = root.getChild("door_left");
         this.door_right = root.getChild("door_right");
     }
 
     @SuppressWarnings("unused")
-    public static LayerDefinition createBodyLayer() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
-        PartDefinition base = partdefinition.addOrReplaceChild("base", CubeListBuilder.create().texOffs(22, 20).addBox(-8.0F, -1.5F, -7.95F, 16.0F, 1.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.5F, 6.0F));
-        PartDefinition platform_beams = base.addOrReplaceChild("platform_beams", CubeListBuilder.create().texOffs(12, 24).addBox(-8.0F, -27.525F, -8.0F, 2.0F, 27.0F, 4.0F, new CubeDeformation(0.0F)).texOffs(0, 24).addBox(6.0F, -27.525F, -8.0F, 2.0F, 27.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.5F, 0.0F));
-        PartDefinition door_corners = base.addOrReplaceChild("door_corners", CubeListBuilder.create().texOffs(55, 54).addBox(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(47, 55).addBox(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(24, 25).addBox(-7.5F, -27.0F, -7.3F, 15.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)).texOffs(24, 25).addBox(-7.5F, -27.025F, -8.3F, 15.0F, 3.0F, 3.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition door_left = partdefinition.addOrReplaceChild("door_left", CubeListBuilder.create().texOffs(26, 0).addBox(0.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(28, 31).addBox(4.85F, -2.125F, -0.8F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(8, 24).addBox(1.05F, -3.125F, -0.2F, 3.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(26, 15).addBox(1.05F, -3.125F, 0.8F, 3.0F, 3.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.55F, 12.125F, -0.4F));
-        PartDefinition door_left_separators = door_left.addOrReplaceChild("door_left_separators", CubeListBuilder.create().texOffs(56, 39).addBox(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(53, 16).addBox(-5.0F, -2.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 37).addBox(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(53, 14).addBox(-5.0F, -7.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 35).addBox(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(34, 15).addBox(-5.0F, -12.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(34, 56).addBox(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(45, 18).addBox(-5.0F, -17.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 33).addBox(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(36, 17).addBox(-5.0F, -24.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(5.55F, 12.375F, 6.4F));
-        PartDefinition door_left_corners = door_left.addOrReplaceChild("door_left_corners", CubeListBuilder.create().texOffs(12, 55).addBox(-6.025F, -24.0F, -6.975F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(4, 55).addBox(-6.025F, -24.0F, -5.975F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(8, 55).addBox(-1.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 55).addBox(-1.0F, -24.0F, -6.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(5.55F, 12.375F, 6.4F));
-        PartDefinition door_left_window = door_left.addOrReplaceChild("door_left_window", CubeListBuilder.create().texOffs(46, 0).addBox(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(5.55F, 12.375F, 6.4F));
-        PartDefinition door_left_window_borders_a = door_left_window.addOrReplaceChild("door_left_window_borders_a", CubeListBuilder.create().texOffs(59, 54).addBox(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(36, 58).addBox(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 31).addBox(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(24, 56).addBox(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition door_left_window_border_a_middle = door_left_window_borders_a.addOrReplaceChild("door_left_window_border_a_middle", CubeListBuilder.create().texOffs(57, 20).addBox(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 27).addBox(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -18.9F, 0.0F));
-        PartDefinition door_left_window_border_a_y_a = door_left_window_borders_a.addOrReplaceChild("door_left_window_border_a_y_a", CubeListBuilder.create().texOffs(65, 13).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(38, 64).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.1F, -18.9F, 0.0F));
-        PartDefinition door_left_window_border_a_y_b = door_left_window_borders_a.addOrReplaceChild("door_left_window_border_a_y_b", CubeListBuilder.create().texOffs(36, 64).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(34, 64).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(1.4F, -18.9F, 0.0F));
-        PartDefinition door_left_window_borders_b = door_left_window.addOrReplaceChild("door_left_window_borders_b", CubeListBuilder.create().texOffs(32, 58).addBox(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(28, 58).addBox(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 12).addBox(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 10).addBox(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.25F));
-        PartDefinition door_left_window_border_b_middle = door_left_window_borders_b.addOrReplaceChild("door_left_window_border_b_middle", CubeListBuilder.create().texOffs(55, 53).addBox(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(45, 14).addBox(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -18.9F, 0.0F));
-        PartDefinition door_left_window_border_b_y_a = door_left_window_borders_b.addOrReplaceChild("door_left_window_border_b_y_a", CubeListBuilder.create().texOffs(32, 64).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(30, 64).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.1F, -18.9F, 0.0F));
-        PartDefinition door_left_window_border_b_y_b = door_left_window_borders_b.addOrReplaceChild("door_left_window_border_b_y_b", CubeListBuilder.create().texOffs(28, 64).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(26, 64).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(1.4F, -18.9F, 0.0F));
-        PartDefinition door_left_beams = door_left.addOrReplaceChild("door_left_beams", CubeListBuilder.create().texOffs(36, 31).addBox(5.05F, -11.625F, -1.1F, 1.0F, 23.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(30, 31).addBox(5.025F, -11.625F, -0.1F, 1.0F, 23.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition door_right = partdefinition.addOrReplaceChild("door_right", CubeListBuilder.create().texOffs(36, 0).addBox(-4.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(20, 25).addBox(-3.55F, -2.625F, -0.11F, 2.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(0, 24).addBox(-5.85F, -2.625F, -0.8F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(5.55F, 12.125F, -0.4F));
-        PartDefinition door_right_separators = door_right.addOrReplaceChild("door_right_separators", CubeListBuilder.create().texOffs(57, 25).addBox(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(55, 6).addBox(-5.0F, -2.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 51).addBox(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(55, 18).addBox(-5.0F, -7.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 49).addBox(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 0).addBox(-5.0F, -12.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 47).addBox(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 2).addBox(-5.0F, -17.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 45).addBox(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(44, 15).addBox(-5.0F, -24.0F, -6.0F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.45F, 12.375F, 6.4F));
-        PartDefinition door_right_corners = door_right.addOrReplaceChild("door_right_corners", CubeListBuilder.create().texOffs(20, 55).addBox(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(52, 31).addBox(-6.0F, -24.0F, -6.0F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(16, 55).addBox(-0.975F, -24.0F, -6.975F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(48, 31).addBox(-0.975F, -24.0F, -5.975F, 1.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.45F, 12.375F, 6.4F));
-        PartDefinition door_right_window = door_right.addOrReplaceChild("door_right_window", CubeListBuilder.create().texOffs(46, 7).addBox(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.45F, 12.375F, 6.4F));
-        PartDefinition door_right_window_borders_a = door_right_window.addOrReplaceChild("door_right_window_borders_a", CubeListBuilder.create().texOffs(40, 63).addBox(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(59, 61).addBox(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 43).addBox(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 41).addBox(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-        PartDefinition door_right_window_border_a_middle = door_right_window_borders_a.addOrReplaceChild("door_right_window_border_a_middle", CubeListBuilder.create().texOffs(57, 22).addBox(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(57, 21).addBox(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -18.9F, 0.0F));
-        PartDefinition door_right_window_border_a_y_a = door_right_window_borders_a.addOrReplaceChild("door_right_window_border_a_y_a", CubeListBuilder.create().texOffs(65, 64).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(63, 65).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.1F, -18.9F, 0.0F));
-        PartDefinition door_right_window_border_a_y_b = door_right_window_borders_a.addOrReplaceChild("door_right_window_border_a_y_b", CubeListBuilder.create().texOffs(65, 58).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(65, 52).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(1.4F, -18.9F, 0.0F));
-        PartDefinition door_right_window_borders_b = door_right_window.addOrReplaceChild("door_right_window_borders_b", CubeListBuilder.create().texOffs(24, 58).addBox(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(43, 57).addBox(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 8).addBox(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(56, 4).addBox(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.25F));
-        PartDefinition door_right_window_border_b_middle = door_right_window_borders_b.addOrReplaceChild("door_right_window_border_b_middle", CubeListBuilder.create().texOffs(44, 17).addBox(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(35, 19).addBox(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -18.9F, 0.0F));
-        PartDefinition door_right_window_border_b_y_a = door_right_window_borders_b.addOrReplaceChild("door_right_window_border_b_y_a", CubeListBuilder.create().texOffs(24, 64).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(63, 59).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.1F, -18.9F, 0.0F));
-        PartDefinition door_right_window_border_b_y_b = door_right_window_borders_b.addOrReplaceChild("door_right_window_border_b_y_b", CubeListBuilder.create().texOffs(63, 53).addBox(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)).texOffs(44, 63).addBox(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(1.4F, -18.9F, 0.0F));
-        PartDefinition door_right_beams = door_right.addOrReplaceChild("door_right_beams", CubeListBuilder.create().texOffs(42, 31).addBox(-6.5F, -24.0F, -7.525F, 1.0F, 23.0F, 2.0F, new CubeDeformation(0.0F)).texOffs(24, 31).addBox(-6.475F, -24.0F, -6.475F, 1.0F, 23.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.45F, 12.375F, 6.4F));
-        PartDefinition boti = partdefinition.addOrReplaceChild("boti", CubeListBuilder.create().texOffs(0, 0).addBox(-6.0F, -24.0F, -3.0F, 12.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+    public static TexturedModelData getTexturedModelData() {
+        ModelData modelData = new ModelData();
+        ModelPartData modelPartData = modelData.getRoot();
 
-        return LayerDefinition.create(meshdefinition, 128, 128);
+        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(22, 20).cuboid(-8.0F, -1.5F, -7.95F, 16.0F, 1.0F, 4.0F), ModelTransform.pivot(0.0F, 24.5F, 6.0F));
+        ModelPartData platform_beams = base.addChild("platform_beams", ModelPartBuilder.create().uv(12, 24).cuboid(-8.0F, -27.525F, -8.0F, 2.0F, 27.0F, 4.0F).uv(0, 24).cuboid(6.0F, -27.525F, -8.0F, 2.0F, 27.0F, 4.0F), ModelTransform.pivot(0.0F, 0.5F, 0.0F));
+        ModelPartData door_corners = base.addChild("door_corners", ModelPartBuilder.create().uv(55, 54).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(47, 55).cuboid(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(24, 25).cuboid(-7.5F, -27.0F, -7.3F, 15.0F, 3.0F, 3.0F).uv(24, 25).cuboid(-7.5F, -27.025F, -8.3F, 15.0F, 3.0F, 3.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData door_left = modelPartData.addChild("door_left", ModelPartBuilder.create().uv(26, 0).cuboid(0.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F).uv(28, 31).cuboid(4.85F, -2.125F, -0.8F, 1.0F, 1.0F, 1.0F).uv(8, 24).cuboid(1.05F, -3.125F, -0.2F, 3.0F, 3.0F, 1.0F).uv(26, 15).cuboid(1.05F, -3.125F, 0.8F, 3.0F, 3.0F, 2.0F), ModelTransform.pivot(-5.55F, 12.125F, -0.4F));
+        ModelPartData door_left_separators = door_left.addChild("door_left_separators", ModelPartBuilder.create().uv(56, 39).cuboid(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(53, 16).cuboid(-5.0F, -2.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 37).cuboid(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(53, 14).cuboid(-5.0F, -7.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 35).cuboid(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(34, 15).cuboid(-5.0F, -12.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(34, 56).cuboid(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(45, 18).cuboid(-5.0F, -17.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 33).cuboid(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(36, 17).cuboid(-5.0F, -24.0F, -6.0F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
+        ModelPartData door_left_corners = door_left.addChild("door_left_corners", ModelPartBuilder.create().uv(12, 55).cuboid(-6.025F, -24.0F, -6.975F, 1.0F, 23.0F, 1.0F).uv(4, 55).cuboid(-6.025F, -24.0F, -5.975F, 1.0F, 23.0F, 1.0F).uv(8, 55).cuboid(-1.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(0, 55).cuboid(-1.0F, -24.0F, -6.0F, 1.0F, 23.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
+        ModelPartData door_left_window = door_left.addChild("door_left_window", ModelPartBuilder.create().uv(46, 0).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
+        ModelPartData door_left_window_borders_a = door_left_window.addChild("door_left_window_borders_a", ModelPartBuilder.create().uv(59, 54).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(36, 58).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(56, 31).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(24, 56).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData door_left_window_border_a_middle = door_left_window_borders_a.addChild("door_left_window_border_a_middle", ModelPartBuilder.create().uv(57, 20).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(56, 27).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
+        ModelPartData door_left_window_border_a_y_a = door_left_window_borders_a.addChild("door_left_window_border_a_y_a", ModelPartBuilder.create().uv(65, 13).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(38, 64).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
+        ModelPartData door_left_window_border_a_y_b = door_left_window_borders_a.addChild("door_left_window_border_a_y_b", ModelPartBuilder.create().uv(36, 64).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(34, 64).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
+        ModelPartData door_left_window_borders_b = door_left_window.addChild("door_left_window_borders_b", ModelPartBuilder.create().uv(32, 58).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(28, 58).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(56, 12).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(56, 10).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.25F));
+        ModelPartData door_left_window_border_b_middle = door_left_window_borders_b.addChild("door_left_window_border_b_middle", ModelPartBuilder.create().uv(55, 53).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(45, 14).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
+        ModelPartData door_left_window_border_b_y_a = door_left_window_borders_b.addChild("door_left_window_border_b_y_a", ModelPartBuilder.create().uv(32, 64).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(30, 64).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
+        ModelPartData door_left_window_border_b_y_b = door_left_window_borders_b.addChild("door_left_window_border_b_y_b", ModelPartBuilder.create().uv(28, 64).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(26, 64).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
+        ModelPartData door_left_beams = door_left.addChild("door_left_beams", ModelPartBuilder.create().uv(36, 31).cuboid(5.05F, -11.625F, -1.1F, 1.0F, 23.0F, 2.0F).uv(30, 31).cuboid(5.025F, -11.625F, -0.1F, 1.0F, 23.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData door_right = modelPartData.addChild("door_right", ModelPartBuilder.create().uv(36, 0).cuboid(-4.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F).uv(20, 25).cuboid(-3.55F, -2.625F, -0.11F, 2.0F, 2.0F, 1.0F).uv(0, 24).cuboid(-5.85F, -2.625F, -0.8F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(5.55F, 12.125F, -0.4F));
+        ModelPartData door_right_separators = door_right.addChild("door_right_separators", ModelPartBuilder.create().uv(57, 25).cuboid(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(55, 6).cuboid(-5.0F, -2.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 51).cuboid(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(55, 18).cuboid(-5.0F, -7.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 49).cuboid(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(56, 0).cuboid(-5.0F, -12.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 47).cuboid(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(56, 2).cuboid(-5.0F, -17.0F, -6.0F, 4.0F, 1.0F, 1.0F).uv(56, 45).cuboid(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(44, 15).cuboid(-5.0F, -24.0F, -6.0F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
+        ModelPartData door_right_corners = door_right.addChild("door_right_corners", ModelPartBuilder.create().uv(20, 55).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(52, 31).cuboid(-6.0F, -24.0F, -6.0F, 1.0F, 23.0F, 1.0F).uv(16, 55).cuboid(-0.975F, -24.0F, -6.975F, 1.0F, 23.0F, 1.0F).uv(48, 31).cuboid(-0.975F, -24.0F, -5.975F, 1.0F, 23.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
+        ModelPartData door_right_window = door_right.addChild("door_right_window", ModelPartBuilder.create().uv(46, 7).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
+        ModelPartData door_right_window_borders_a = door_right_window.addChild("door_right_window_borders_a", ModelPartBuilder.create().uv(40, 63).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(59, 61).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(56, 43).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(56, 41).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData door_right_window_border_a_middle = door_right_window_borders_a.addChild("door_right_window_border_a_middle", ModelPartBuilder.create().uv(57, 22).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(57, 21).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
+        ModelPartData door_right_window_border_a_y_a = door_right_window_borders_a.addChild("door_right_window_border_a_y_a", ModelPartBuilder.create().uv(65, 64).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(63, 65).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
+        ModelPartData door_right_window_border_a_y_b = door_right_window_borders_a.addChild("door_right_window_border_a_y_b", ModelPartBuilder.create().uv(65, 58).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(65, 52).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
+        ModelPartData door_right_window_borders_b = door_right_window.addChild("door_right_window_borders_b", ModelPartBuilder.create().uv(24, 58).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(43, 57).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(56, 8).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(56, 4).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.25F));
+        ModelPartData door_right_window_border_b_middle = door_right_window_borders_b.addChild("door_right_window_border_b_middle", ModelPartBuilder.create().uv(44, 17).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(35, 19).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
+        ModelPartData door_right_window_border_b_y_a = door_right_window_borders_b.addChild("door_right_window_border_b_y_a", ModelPartBuilder.create().uv(24, 64).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(63, 59).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
+        ModelPartData door_right_window_border_b_y_b = door_right_window_borders_b.addChild("door_right_window_border_b_y_b", ModelPartBuilder.create().uv(63, 53).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(44, 63).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
+        ModelPartData door_right_beams = door_right.addChild("door_right_beams", ModelPartBuilder.create().uv(42, 31).cuboid(-6.5F, -24.0F, -7.525F, 1.0F, 23.0F, 2.0F).uv(24, 31).cuboid(-6.475F, -24.0F, -6.475F, 1.0F, 23.0F, 2.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
+
+        return TexturedModelData.of(modelData, 128, 128);
     }
 
     public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
         float doorAngle = 1.75F;
 
-        if (tile.getBlockState().getValue(BlockStateProperties.OPEN)) {
-            this.door_left.yRot = -doorAngle;
-            this.door_right.yRot = doorAngle;
+        if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
+            this.door_left.yaw = -doorAngle;
+            this.door_right.yaw = doorAngle;
         }
     }
 
     @Override
-    public void setupAnim(Entity entity, float f1, float f2, float f3, float f4, float f5) {
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        base.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    public void renderDoorsToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        door_left.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-        door_right.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    public void renderBotiToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        boti.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+        door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 }

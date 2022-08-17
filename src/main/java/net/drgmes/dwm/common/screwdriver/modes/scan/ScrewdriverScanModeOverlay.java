@@ -1,100 +1,83 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
-import net.minecraft.client.Minecraft;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.phys.Vec2;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.GuiUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Language;
+import net.minecraft.util.math.Vec2f;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = DWM.MODID)
+@Environment(EnvType.CLIENT)
 public class ScrewdriverScanModeOverlay {
+    public static final ScrewdriverScanModeOverlay INSTANCE = new ScrewdriverScanModeOverlay();
+
     private static final int PADDING = 10;
     private static final int LINE_MARGIN = 1;
     private static final float LINE_SCALE = 0.5F;
 
-    private static Player player;
-    private static int liveTime;
-    private static Component title;
-    private static List<Component> lines;
+    public void render(MatrixStack matrixStack, float delta) {
+        MinecraftClient mc = MinecraftClient.getInstance();
+        ClientPlayerEntity player = mc.player;
+        if (player == null || mc.world == null) return;
 
-    public static void setup(Player player, Component title, List<Component> lines) {
-        ScrewdriverScanModeOverlay.liveTime = 5000;
-        ScrewdriverScanModeOverlay.player = player;
-        ScrewdriverScanModeOverlay.title = title;
-        ScrewdriverScanModeOverlay.lines = lines;
-    }
+        ItemStack screwdriverItemStack = null;
+        ItemStack mainItemStack = player.getMainHandStack();
+        ItemStack offItemStack = player.getOffHandStack();
 
-    public static void clear() {
-        ScrewdriverScanModeOverlay.liveTime = 0;
-        ScrewdriverScanModeOverlay.player = null;
-        ScrewdriverScanModeOverlay.title = null;
-        ScrewdriverScanModeOverlay.lines = null;
-    }
+        if (Screwdriver.checkItemStackIsScrewdriver(mainItemStack)) screwdriverItemStack = mainItemStack;
+        if (Screwdriver.checkItemStackIsScrewdriver(offItemStack)) screwdriverItemStack = offItemStack;
+        if (screwdriverItemStack == null) return;
 
-    @SubscribeEvent
-    public static void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
-        if (player == null) return;
+        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
+        if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
-        Item mainHandItem = player.getMainHandItem().getItem();
-        Item offHandItem = player.getOffhandItem().getItem();
-        if (!(mainHandItem instanceof ScrewdriverItem || offHandItem instanceof ScrewdriverItem)) return;
+        int screenWidth = mc.getWindow().getScaledWidth();
+        int screenHeight = mc.getWindow().getScaledHeight();
+        int maxTextLength = Math.round((screenWidth - 192) / 2F - PADDING * 1.5F);
 
-        render(event.getPoseStack());
-    }
+        Text title = Text.Serializer.fromJson(tag.getString("title"));
+        List<Text> lines = new ArrayList<>();
+        List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
+        List<OrderedText> titleLines = Language.getInstance().reorder(mc.textRenderer.getTextHandler().wrapLines(title, maxTextLength, Style.EMPTY));
 
-    private static void render(PoseStack poseStack) {
-        if (liveTime <= 0) return;
-        if (title == null) return;
-        if (lines == null) return;
+        keys.sort(Comparator.comparing((key) -> key));
+        keys.forEach((key) -> lines.add(Text.Serializer.fromJson(tag.getCompound("linesTag").getString(key))));
 
-        if (--liveTime <= 0) {
-            ScrewdriverScanModeOverlay.clear();
-            return;
-        }
-
-        final Minecraft mc = Minecraft.getInstance();
-        final int screenWidth = mc.getWindow().getGuiScaledWidth();
-        final int screenHeight = mc.getWindow().getGuiScaledHeight();
-        final int maxTextLength = Math.round((screenWidth - 192) / 2 - PADDING * 1.5F);
-
-        List<FormattedCharSequence> titleLines = Language.getInstance().getVisualOrder(mc.font.getSplitter().splitLines(title, maxTextLength, Style.EMPTY));
-
-        float titleLineHeight = mc.font.lineHeight + LINE_MARGIN;
-        float lineHeight = mc.font.lineHeight * LINE_SCALE + LINE_MARGIN;
+        float titleLineHeight = mc.textRenderer.fontHeight + LINE_MARGIN;
+        float lineHeight = mc.textRenderer.fontHeight * LINE_SCALE + LINE_MARGIN;
         float height = titleLineHeight * titleLines.size() + lineHeight * lines.size() - LINE_MARGIN * 2;
 
-        Vec2 pos = new Vec2(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2 - 1);
+        Vec2f pos = new Vec2f(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2F - 1);
         float y = pos.y;
 
-        int color = 0x05000000;
-        int bgPadding = PADDING / 2;
-        Vec2 bgPos1 = new Vec2(pos.x - bgPadding, pos.y - bgPadding);
-        Vec2 bgPos2 = new Vec2(pos.x + maxTextLength + bgPadding, pos.y + height + bgPadding);
-        GuiUtils.drawGradientRect(poseStack.last().pose(), 0, (int) bgPos1.x, (int) bgPos1.y, (int) bgPos2.x, (int) bgPos2.y, color, color);
+//        int color = 0x05000000;
+//        int bgPadding = PADDING / 2;
+//        Vec2f bgPos1 = new Vec2f(pos.x - bgPadding, pos.y - bgPadding);
+//        Vec2f bgPos2 = new Vec2f(pos.x + maxTextLength + bgPadding, pos.y + height + bgPadding);
+//        this.fillGradient(matrixStack, (int) bgPos1.x, (int) bgPos1.y, (int) bgPos2.x, (int) bgPos2.y, color, color);
 
-        for (FormattedCharSequence titleLine : titleLines) {
-            mc.font.drawShadow(poseStack, titleLine, pos.x, y, 0xFFFFFF);
+        for (OrderedText titleLine : titleLines) {
+            mc.textRenderer.drawWithShadow(matrixStack, titleLine, pos.x, y, 0xFFFFFF);
             y += titleLineHeight;
         }
 
-        poseStack.pushPose();
-        poseStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
-        for (Component line : lines) {
-            mc.font.drawShadow(poseStack, line, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF);
+        matrixStack.push();
+        matrixStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
+        for (Text line : lines) {
+            mc.textRenderer.drawWithShadow(matrixStack, line, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF);
             y += lineHeight;
         }
-        poseStack.popPose();
+        matrixStack.pop();
     }
 }

@@ -2,180 +2,104 @@ package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
-import net.drgmes.dwm.common.tardis.ars.ArsRooms;
-import net.drgmes.dwm.data.DataGenerators;
-import net.minecraft.Util;
-import net.minecraft.client.KeyMapping;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.datafix.fixes.References;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.ClientRegistry;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLDedicatedServerSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryObject;
+import net.drgmes.dwm.common.tardis.ars.ArsStructures;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
+import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.option.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.item.Item;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.api.ModLoadingContext;
+import qouteall.q_misc_util.LifecycleHack;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class Registration {
-    public static final ModCreativeTab CREATIVE_MODE_TAB = new ModCreativeTab(DWM.MODID);
-
-    public static final DeferredRegister<Item> ITEMS = createRegistry(ForgeRegistries.ITEMS);
-    public static final DeferredRegister<Block> BLOCKS = createRegistry(ForgeRegistries.BLOCKS);
-    public static final DeferredRegister<EntityType<?>> ENTITIES = createRegistry(ForgeRegistries.ENTITIES);
-    public static final DeferredRegister<MenuType<?>> CONTAINERS = createRegistry(ForgeRegistries.CONTAINERS);
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = createRegistry(ForgeRegistries.BLOCK_ENTITIES);
-    public static final DeferredRegister<Feature<?>> FEATURES = createRegistry(ForgeRegistries.FEATURES);
-    public static final DeferredRegister<Biome> BIOMES = createRegistry(ForgeRegistries.BIOMES);
-    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = createRegistry(ForgeRegistries.SOUND_EVENTS);
-
-    public static void init() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(Registration::setupCommon);
-        modEventBus.addListener(DataGenerators::setup);
-        modEventBus.addListener(ModRenderers::setup);
-        modEventBus.addListener(ModRenderers::setupLayerDefinitions);
-
-        ITEMS.register(modEventBus);
-        BLOCKS.register(modEventBus);
-        ENTITIES.register(modEventBus);
-        CONTAINERS.register(modEventBus);
-        BLOCK_ENTITIES.register(modEventBus);
-        FEATURES.register(modEventBus);
-        BIOMES.register(modEventBus);
-        SOUND_EVENTS.register(modEventBus);
+    public static void setupCommon() {
+        LifecycleHack.markNamespaceStable(DWM.MODID);
 
         ModItems.init();
         ModBlocks.init();
-        ModEntities.init();
-        ModContainers.init();
         ModBlockEntities.init();
+        ModCreativeTabs.init();
+        ModEntities.init();
         ModBiomes.init();
         ModDimensions.init();
-        ModStructures.init();
-        ModCapabilities.init();
-        ModWorldGen.init();
+        ModInventories.init();
         ModSounds.init();
 
         ArsCategories.init();
-        ArsRooms.init();
+        ArsStructures.init();
 
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
-        ModLoadingContext.get().registerConfig(net.minecraftforge.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_SPEC);
+        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
+        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
+        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_SPEC);
 
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> new DistExecutor.SafeRunnable() {
-            @Override
-            public void run() {
-                modEventBus.addListener(Registration::setupClient);
-            }
-        });
-
-        DistExecutor.safeRunWhenOn(Dist.DEDICATED_SERVER, () -> new DistExecutor.SafeRunnable() {
-            @Override
-            public void run() {
-                modEventBus.addListener(Registration::setupServer);
-            }
-        });
+        ModEvents.setup();
+        ModDimensions.setup();
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void setupClient(FMLClientSetupEvent event) {
+    @Environment(EnvType.CLIENT)
+    public static void setupClient() {
         ModKeys.setup();
-        ModRender.setup();
-        ModContainerScreens.setup();
-
-        Minecraft mc = Minecraft.getInstance();
-        if (!mc.getMainRenderTarget().isStencilEnabled()) {
-            event.enqueueWork(() -> mc.getMainRenderTarget().enableStencil());
-        }
+        ModRenderers.setup();
+        ModInventories.setup();
     }
 
-    @OnlyIn(Dist.DEDICATED_SERVER)
-    public static void setupServer(FMLDedicatedServerSetupEvent event) {
+    @Environment(EnvType.SERVER)
+    public static void setupServer() {
     }
 
-    public static void setupCommon(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModDimensions.setup();
-            ModWorldGen.setup();
-            ModPackets.setup();
-        });
+    public static <T extends Item> T registerItem(String name, T item) {
+        Registry.register(Registry.ITEM, DWM.getIdentifier(name), item);
+        return item;
     }
 
-    public static <T> DeferredRegister<T> createRegistry(IForgeRegistry<T> registry) {
-        return DeferredRegister.create(registry, DWM.MODID);
+    public static <T extends Block> T registerBlock(String name, T block) {
+        Registry.register(Registry.BLOCK, DWM.getIdentifier(name), block);
+        return block;
     }
 
-    public static <T extends Item> RegistryObject<T> registerItem(String name, Supplier<T> factory) {
-        return ITEMS.register(name, factory);
+    public static <T extends Entity> EntityType<T> registerEntity(String name, EntityType.EntityFactory<T> factory, SpawnGroup spawnGroup, float width, float height, int trackingRange, int updateFreq) {
+        FabricEntityTypeBuilder<T> builder = FabricEntityTypeBuilder.create(spawnGroup, factory);
+        builder.dimensions(EntityDimensions.fixed(width, height));
+        builder.trackRangeBlocks(trackingRange);
+        builder.trackedUpdateRate(updateFreq);
+
+        return Registry.register(Registry.ENTITY_TYPE, DWM.getIdentifier(name), builder.build());
     }
 
-    public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> factory, Function<Block, Item> item) {
-        RegistryObject<T> blockObject = BLOCKS.register(name, factory);
-        Registration.registerItem(name, () -> item.apply(blockObject.get()));
-        return blockObject;
+    public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String name, FabricBlockEntityTypeBuilder.Factory<T> factory, Block block) {
+        return Registry.register(Registry.BLOCK_ENTITY_TYPE, DWM.getIdentifier(name), FabricBlockEntityTypeBuilder.create(factory, block).build(null));
     }
 
-    public static <T extends Entity> RegistryObject<EntityType<T>> registerEntity(String name, EntityType.EntityFactory<T> factory, MobCategory category, float width, float height, int trackingRange, int updateFreq, boolean sendUpdate) {
-        return Registration.ENTITIES.register(name, () -> {
-            EntityType.Builder<T> builder = EntityType.Builder.of(factory, category);
-            builder.setShouldReceiveVelocityUpdates(sendUpdate);
-            builder.setTrackingRange(trackingRange);
-            builder.setUpdateInterval(updateFreq);
-            builder.sized(width, height);
-            builder.fireImmune();
-            return builder.build(new ResourceLocation(DWM.MODID, name).toString());
-        });
+    public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandler(String name, ScreenHandlerType.Factory<T> screenHandlerFactory) {
+        return Registry.register(Registry.SCREEN_HANDLER, DWM.getIdentifier(name), new ScreenHandlerType<>(screenHandlerFactory));
     }
 
-    public static <T extends BlockEntity> RegistryObject<BlockEntityType<T>> registerBlockEntity(String name, BlockEntityType.BlockEntitySupplier<T> factory, RegistryObject<? extends Block> block) {
-        return Registration.BLOCK_ENTITIES.register(name, () -> (
-            BlockEntityType.Builder.of(factory, block.get()).build(Util.fetchChoiceType(References.BLOCK_ENTITY, name))
-        ));
+    public static <T extends Biome> T registerBiome(String name, Supplier<T> biomeSupplier) {
+        return Registry.register(BuiltinRegistries.BIOME, DWM.getIdentifier(name), biomeSupplier.get());
     }
 
-    public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerContainer(String name, MenuType.MenuSupplier<T> menuSupplier) {
-        return Registration.CONTAINERS.register(name, () -> new MenuType<>(menuSupplier));
+    public static SoundEvent registerSoundEvent(String name) {
+        return Registry.register(Registry.SOUND_EVENT, DWM.getIdentifier(name), new SoundEvent(DWM.getIdentifier(name)));
     }
 
-    public static <T extends Feature<?>> RegistryObject<T> registerFeature(String name, Supplier<T> structureSupplier) {
-        return Registration.FEATURES.register(name, structureSupplier);
-    }
-
-    public static RegistryObject<Biome> registerBiome(String name, Supplier<Biome> biomeSupplier) {
-        return Registration.BIOMES.register(name, biomeSupplier);
-    }
-
-    public static RegistryObject<SoundEvent> registerSoundEvent(String name) {
-        return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(DWM.MODID, name)));
-    }
-
-    public static KeyMapping registerKeyBinding(String name, String category, int keycode) {
-        KeyMapping key = new KeyMapping("key." + DWM.MODID + "." + name, keycode, category);
-        ClientRegistry.registerKeyBinding(key);
-        return key;
+    public static KeyBinding registerKeyBinding(String name, String category, int keycode) {
+        return KeyBindingHelper.registerKeyBinding(new KeyBinding("key." + DWM.MODID + "." + name, keycode, category));
     }
 }

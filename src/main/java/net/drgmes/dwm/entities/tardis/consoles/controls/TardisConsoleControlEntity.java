@@ -2,23 +2,22 @@ package net.drgmes.dwm.entities.tardis.consoles.controls;
 
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.world.World;
 
 public class TardisConsoleControlEntity extends Entity {
     private BaseTardisConsoleBlockEntity consoleBlockEntity;
     private TardisConsoleControlEntry controlEntry;
 
-    public TardisConsoleControlEntity(EntityType<?> type, Level level) {
-        super(type, level);
+    public TardisConsoleControlEntity(EntityType<?> type, World world) {
+        super(type, world);
     }
 
     public void setTardisConsole(BaseTardisConsoleBlockEntity tile) {
@@ -30,46 +29,47 @@ public class TardisConsoleControlEntity extends Entity {
     }
 
     @Override
-    protected void defineSynchedData() {
+    protected void initDataTracker() {
     }
 
+    @Override
     public void tick() {
-        if (!this.level.isClientSide && this.consoleBlockEntity == null) this.discard();
+        if (!this.world.isClient && this.consoleBlockEntity == null) this.discard();
         else super.tick();
     }
 
     @Override
-    public boolean isPickable() {
+    public boolean canHit() {
         return true;
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag tag) {
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag tag) {
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
     }
 
     @Override
-    public boolean skipAttackInteraction(Entity entity) {
-        if (this.consoleBlockEntity == null) return false;
-
-        this.consoleBlockEntity.useControl(this.controlEntry, InteractionHand.MAIN_HAND, entity);
-        return true;
-    }
-
-    @Override
-    public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-        if (hand != InteractionHand.OFF_HAND) return InteractionResult.PASS;
-        if (this.consoleBlockEntity == null) return InteractionResult.PASS;
+    public ActionResult interact(PlayerEntity player, Hand hand) {
+        if (hand != Hand.OFF_HAND) return ActionResult.PASS;
+        if (this.consoleBlockEntity == null) return ActionResult.PASS;
 
         this.consoleBlockEntity.useControl(this.controlEntry, hand, player);
-        return InteractionResult.SUCCESS;
+        return ActionResult.SUCCESS;
     }
 
     @Override
-    public Packet<?> getAddEntityPacket() {
-        return NetworkHooks.getEntitySpawningPacket(this);
+    public boolean handleAttack(Entity entity) {
+        if (this.consoleBlockEntity == null) return false;
+
+        this.consoleBlockEntity.useControl(this.controlEntry, Hand.MAIN_HAND, entity);
+        return true;
+    }
+
+    @Override
+    public Packet<?> createSpawnPacket() {
+        return new EntitySpawnS2CPacket(this);
     }
 }

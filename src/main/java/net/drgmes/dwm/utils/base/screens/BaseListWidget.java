@@ -1,24 +1,33 @@
 package net.drgmes.dwm.utils.base.screens;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.components.ObjectSelectionList;
-import net.minecraft.client.gui.narration.NarratableEntry;
-import net.minecraft.locale.Language;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.world.phys.Vec2;
+import com.google.common.collect.ImmutableList;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Language;
+import net.minecraft.util.math.Vec2f;
 
-public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.BaseListEntry> {
-    private final Font font;
-    private final Vec2 pos;
+import java.util.Collections;
+import java.util.List;
+
+public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
+    private final TextRenderer textRenderer;
+    private final Vec2f pos;
     private final int padding;
 
-    public BaseListWidget(Minecraft mc, Font font, int width, int height, int padding, Vec2 pos) {
-        super(mc, width, height, (int) pos.y, (int) pos.y + height, font.lineHeight + padding * 2);
+    public BaseListWidget(MinecraftClient mc, TextRenderer textRenderer, int width, int height, int padding, Vec2f pos) {
+        super(mc, width, height, (int) pos.y, (int) pos.y + height, textRenderer.fontHeight + padding * 2);
 
-        this.font = font;
+        this.textRenderer = textRenderer;
         this.pos = pos;
         this.padding = padding;
     }
@@ -29,20 +38,15 @@ public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.
     }
 
     @Override
-    protected int getScrollbarPosition() {
-        return this.getRight() - 5;
-    }
-
-    @Override
-    public NarratableEntry.NarrationPriority narrationPriority() {
-        return NarratableEntry.NarrationPriority.NONE;
+    protected int getScrollbarPositionX() {
+        return this.getRowRight() - 8;
     }
 
     public void init() {
         this.refreshList();
         this.setLeftPos((int) this.pos.x);
+        this.setRenderHorizontalShadows(false);
         this.setRenderBackground(false);
-        this.setRenderTopAndBottom(false);
     }
 
     public void refreshList() {
@@ -50,21 +54,44 @@ public abstract class BaseListWidget extends ObjectSelectionList<BaseListWidget.
         this.clearEntries();
     }
 
-    public abstract class BaseListEntry extends ObjectSelectionList.Entry<BaseListEntry> {
+    public abstract class BaseListEntry extends ElementListWidget.Entry<BaseListEntry> {
+        public abstract Text getText();
+
         @Override
-        public Component getNarration() {
-            return null;
+        public void render(MatrixStack matrixStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
+            MutableText text = this.getText().copy();
+            if (BaseListWidget.this.getSelectedOrNull() == this) text = Text.empty().append(Text.literal("> ").formatted(Formatting.WHITE, Formatting.BOLD)).append(text.formatted(Formatting.RESET));
+            textRenderer.drawWithShadow(matrixStack, Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, width, Style.EMPTY)).get(0), left + padding, top + 2, 0xFFFFFF);
         }
 
         @Override
-        public void render(PoseStack poseStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
-            Component name = this.getNarration();
-            font.drawShadow(poseStack, Language.getInstance().getVisualOrder(FormattedText.composite(font.substrByWidth(name, width))), left + padding, top + 2, 0xFFFFFF);
+        public List<? extends Selectable> selectableChildren() {
+            return ImmutableList.of(new Selectable() {
+                @Override
+                public Selectable.SelectionType getType() {
+                    return SelectionType.NONE;
+                }
+
+                @Override
+                public void appendNarrations(NarrationMessageBuilder builder) {
+                    builder.put(NarrationPart.TITLE, BaseListEntry.this.getText());
+                }
+            });
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int partialTicks) {
+        public List<? extends Element> children() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int delta) {
             BaseListWidget.this.setSelected(this);
+            return false;
+        }
+
+        @Override
+        public boolean changeFocus(boolean lookForwards) {
             return false;
         }
     }

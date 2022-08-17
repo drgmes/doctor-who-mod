@@ -1,87 +1,78 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
-import net.drgmes.dwm.common.tardis.boti.IBoti;
-import net.drgmes.dwm.common.tardis.boti.storage.BotiStorage;
-import net.drgmes.dwm.network.ServerboundTardisInteriorDoorsInitPacket;
-import net.drgmes.dwm.setup.ModCapabilities;
-import net.drgmes.dwm.setup.ModPackets;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.network.TardisMiscRemoteCallablePackets;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
+import net.drgmes.dwm.utils.helpers.PacketHelper;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 
-public abstract class BaseTardisDoorsBlockEntity extends BlockEntity implements IBoti {
-    public String tardisLevelUUID;
-
-    private BotiStorage botiStorage = new BotiStorage();
+public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
+    public String tardisId;
+    private boolean isInited;
 
     public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
     }
 
     @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
-        return this.saveWithoutMetadata();
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
 
     @Override
-    public void setRemoved() {
-        this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
-            if (tardis.isValid()) tardis.getInteriorDoorTiles().remove(this);
-        });
+    public void markRemoved() {
+        if (this.world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(this.world)) {
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
+                if (!tardis.isValid()) return;
 
-        super.setRemoved();
+                tardis.getInteriorDoorTiles().remove(this);
+                tardis.updateEntrancePortals();
+                tardis.updateConsoleTiles();
+            });
+        }
+
+        super.markRemoved();
     }
 
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        this.init();
-    }
-
-    @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.worldPosition).inflate(3, 4, 3);
-    }
-
-    @Override
-    public BotiStorage getBotiStorage() {
-        return this.botiStorage;
-    }
-
-    @Override
-    public void setBotiStorage(BotiStorage botiStorage) {
-        this.botiStorage = botiStorage;
-    }
-
-    @Override
-    public void updateBoti() {
+    public void tick() {
+        if (!this.isInited) {
+            this.isInited = true;
+            this.init();
+        }
     }
 
     public void init() {
-        if (DimensionHelper.isTardisDimension(this.level)) {
-            this.tardisLevelUUID = this.level.dimension().location().getPath();
+        if (TardisHelper.isTardisDimension(this.world)) {
+            this.tardisId = DimensionHelper.getWorldId(this.world);
 
-            if (!this.level.isClientSide) {
-                this.level.getCapability(ModCapabilities.TARDIS_DATA).ifPresent((tardis) -> {
+            if (this.world instanceof ServerWorld serverWorld) {
+                TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                     if (!tardis.isValid()) return;
                     if (tardis.getInteriorDoorTiles().contains(this)) return;
 
                     tardis.getInteriorDoorTiles().add(this);
+                    tardis.updateEntrancePortals();
                     tardis.updateDoorsTiles();
                 });
             }
             else {
-                ModPackets.INSTANCE.sendToServer(new ServerboundTardisInteriorDoorsInitPacket(this.worldPosition));
+                PacketHelper.sendToServer(
+                    TardisMiscRemoteCallablePackets.class,
+                    "initTardisInteriorDoors",
+                    this.getPos()
+                );
             }
         }
     }

@@ -8,27 +8,29 @@ import net.drgmes.dwm.common.screwdriver.modes.tardis.ScrewdriverTardisMode;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public class Screwdriver {
-    public enum ScrewdriverMode {
+    public enum EScrewdriverMode {
         SCAN(ScrewdriverScanMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SCAN),
         SETTING(ScrewdriverSettingMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SETTING),
         TARDIS_RELOCATION(ScrewdriverTardisMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_TARDIS_RELOCATION);
 
         private final BaseScrewdriverMode mode;
-        private final Component title;
+        private final Text title;
 
-        ScrewdriverMode(BaseScrewdriverMode mode, Component title) {
+        EScrewdriverMode(BaseScrewdriverMode mode, Text title) {
             this.mode = mode;
             this.title = title;
         }
@@ -37,81 +39,84 @@ public class Screwdriver {
             return this.mode;
         }
 
-        public Component getTitle() {
+        public Text getTitle() {
             return this.title;
         }
 
-        public ScrewdriverMode next() {
-            ScrewdriverMode[] values = ScrewdriverMode.values();
+        public EScrewdriverMode next() {
+            EScrewdriverMode[] values = EScrewdriverMode.values();
             return values[(this.ordinal() + 1) % values.length];
         }
     }
 
-    public static boolean interact(Level level, Player player, InteractionHand hand, boolean isAlternativeAction) {
-        boolean wasUsed = false;
-        ItemStack itemStack = player.getItemInHand(hand);
-        if (!(itemStack.getItem() instanceof ScrewdriverItem screwdriverItem)) return false;
-        if (player.getCooldowns().isOnCooldown(screwdriverItem)) return false;
+    public static boolean checkItemStackIsScrewdriver(ItemStack itemStack) {
+        return itemStack.getItem() instanceof ScrewdriverItem;
+    }
 
-        BaseScrewdriverMode mode = getInteractionMode(itemStack).getInstance();
-        HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(itemStack));
-        if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) return false;
+    public static ActionResult interact(World world, PlayerEntity player, Hand hand, boolean isAlternativeAction) {
+        ActionResult wasUsed = ActionResult.PASS;
+        ItemStack screwdriverItemStack = player.getStackInHand(hand);
+        if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return ActionResult.FAIL;
+        if (player.getItemCooldownManager().isCoolingDown(screwdriverItemStack.getItem())) return ActionResult.CONSUME;
+
+        BaseScrewdriverMode mode = getInteractionMode(screwdriverItemStack).getInstance();
+        HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(screwdriverItemStack));
+        if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) return ActionResult.PASS;
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
-            if (!(wasUsed = mode.interactWithBlock(level, player, hand, (BlockHitResult) hitResult, isAlternativeAction))) {
-                if (isAlternativeAction)
-                    wasUsed = mode.interactWithBlockAlternative(level, player, hand, (BlockHitResult) hitResult);
-                else wasUsed = mode.interactWithBlockNative(level, player, hand, (BlockHitResult) hitResult);
+            if (!(wasUsed = mode.interactWithBlock(world, player, hand, (BlockHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
+                if (isAlternativeAction) wasUsed = mode.interactWithBlockAlternative(world, player, hand, (BlockHitResult) hitResult);
+                else wasUsed = mode.interactWithBlockNative(world, player, hand, (BlockHitResult) hitResult);
             }
         }
         else if (hitResult.getType() == HitResult.Type.ENTITY) {
-            if (!(wasUsed = mode.interactWithEntity(level, player, hand, (EntityHitResult) hitResult, isAlternativeAction))) {
-                if (isAlternativeAction)
-                    wasUsed = mode.interactWithEntityAlternative(level, player, hand, (EntityHitResult) hitResult);
-                else wasUsed = mode.interactWithEntityNative(level, player, hand, (EntityHitResult) hitResult);
+            if (!(wasUsed = mode.interactWithEntity(world, player, hand, (EntityHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
+                if (isAlternativeAction) wasUsed = mode.interactWithEntityAlternative(world, player, hand, (EntityHitResult) hitResult);
+                else wasUsed = mode.interactWithEntityNative(world, player, hand, (EntityHitResult) hitResult);
             }
         }
 
-        if (wasUsed) {
-            player.getCooldowns().addCooldown(screwdriverItem, getInteractionCooldownTime(itemStack));
-            mode.generateVibration(level, player, new BlockPos(hitResult.getLocation()));
+        if (wasUsed.shouldSwingHand()) {
+            player.getItemCooldownManager().set(screwdriverItemStack.getItem(), DWM.TIMINGS.SCREWDRIVER_TIMEOUT);
+            mode.generateVibration(world, player, new BlockPos(hitResult.getPos()));
         }
 
         return wasUsed;
     }
 
-    public static int getInteractionCooldownTime(ItemStack itemStack) {
-        return 4;
+    public static NbtCompound getData(ItemStack screwdriverItemStack) {
+        return screwdriverItemStack.getOrCreateSubNbt("screwdriverData");
     }
 
-    public static double getInteractionDistance(ItemStack itemStack) {
-        return 100D;
+    public static void setInteractionMode(ItemStack screwdriverItemStack, EScrewdriverMode mode) {
+        if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return;
+        getData(screwdriverItemStack).putString("mode", mode.name());
     }
 
-    public static CompoundTag getData(ItemStack itemStack) {
-        return itemStack.getOrCreateTagElement("screwdriverData");
+    public static EScrewdriverMode getInteractionMode(ItemStack screwdriverItemStack) {
+        if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return EScrewdriverMode.SCAN;
+
+        EScrewdriverMode mode = null;
+        NbtCompound tag = getData(screwdriverItemStack);
+        if (tag.contains("mode")) mode = EScrewdriverMode.valueOf(tag.getString("mode"));
+
+        return mode != null ? mode : EScrewdriverMode.SCAN;
     }
 
-    public static ScrewdriverMode getInteractionMode(ItemStack itemStack) {
-        ScrewdriverMode mode = null;
-        CompoundTag tag = getData(itemStack);
-        if (tag.contains("mode")) mode = ScrewdriverMode.valueOf(tag.getString("mode"));
-
-        return mode != null ? mode : ScrewdriverMode.SCAN;
+    public static void setTardisId(ItemStack screwdriverItemStack, World world) {
+        if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return;
+        if (!TardisHelper.isTardisDimension(world)) return;
+        getData(screwdriverItemStack).putString("tardisId", DimensionHelper.getWorldId(world));
     }
 
-    public static ScrewdriverMode setInteractionMode(ItemStack itemStack, ScrewdriverMode mode) {
-        getData(itemStack).putString("mode", mode.name());
-        return mode;
+    public static String getTardisId(ItemStack screwdriverItemStack) {
+        if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return "";
+        NbtCompound tag = getData(screwdriverItemStack);
+        return !tag.contains("tardisId") ? "" : tag.getString("tardisId");
     }
 
-    public static String getTardisUUID(ItemStack itemStack) {
-        CompoundTag tag = getData(itemStack);
-        return !tag.contains("tardisLevelUUID") ? "" : tag.getString("tardisLevelUUID");
-    }
-
-    public static void assingTardisUUID(ItemStack itemStack, Level level) {
-        if (!DimensionHelper.isTardisDimension(level)) return;
-        Screwdriver.getData(itemStack).putString("tardisLevelUUID", level.dimension().location().getPath());
+    public static double getInteractionDistance(ItemStack screwdriverItemStack) {
+        NbtCompound tag = getData(screwdriverItemStack);
+        return !tag.contains("interactionDistance") ? 100D : tag.getDouble("interactionDistance");
     }
 }

@@ -4,55 +4,60 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.setup.ModEntities;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraft.world.event.GameEvent;
+import qouteall.imm_ptl.core.portal.Portal;
 
-public abstract class BaseScrewdriverMode {
-    public boolean interactWithBlock(Level level, Player player, InteractionHand hand, BlockHitResult hitResult, boolean isAlternativeAction) {
-        return false;
+public class BaseScrewdriverMode {
+    public ActionResult interactWithBlock(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, boolean isAlternativeAction) {
+        return ActionResult.CONSUME;
     }
 
-    public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return false;
+    public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        return ActionResult.CONSUME;
     }
 
-    public boolean interactWithBlockAlternative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        return false;
+    public ActionResult interactWithBlockAlternative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        return ActionResult.CONSUME;
     }
 
-    public boolean interactWithEntity(Level level, Player player, InteractionHand hand, EntityHitResult hitResult, boolean isAlternativeAction) {
-        return false;
+    public ActionResult interactWithEntity(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult, boolean isAlternativeAction) {
+        return ActionResult.CONSUME;
     }
 
-    public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        return false;
+    public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
+        return ActionResult.CONSUME;
     }
 
-    public boolean interactWithEntityAlternative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        return false;
+    public ActionResult interactWithEntityAlternative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
+        return ActionResult.CONSUME;
     }
 
-    public void generateVibration(Level level, Player player, BlockPos blockPos) {
-        level.gameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Context.of(null, level.getBlockState(blockPos)));
+    public void generateVibration(World world, PlayerEntity player, BlockPos blockPos) {
+        world.emitGameEvent(GameEvent.PROJECTILE_LAND, blockPos, GameEvent.Emitter.of(null, world.getBlockState(blockPos)));
     }
 
     protected boolean checkIsValidHitBlock(BlockState blockState) {
         if (blockState.getBlock() instanceof BaseTardisConsoleBlock) return false;
         if (blockState.getBlock() instanceof BaseTardisExteriorBlock) return false;
-        return !(blockState.getBlock() instanceof BaseTardisDoorsBlock);
+        if (blockState.getBlock() instanceof BaseTardisDoorsBlock) return false;
+        return true;
     }
 
     protected boolean checkIsValidHitEntity(Entity entity) {
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL.get()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.get()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.get()) return false;
-        return entity.getType() != ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.get();
+        if (entity.getType() == Portal.entityType) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.getEntityType()) return false;
+        return true;
     }
 }

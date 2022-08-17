@@ -1,74 +1,80 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
+import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.world.Container;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.RecordItem;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.JukeboxBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
+import net.drgmes.dwm.network.ScrewdriverRemoteCallablePackets;
+import net.drgmes.dwm.utils.helpers.PacketHelper;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.JukeboxBlockEntity;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.MusicDiscItem;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Formatting;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ScrewdriverScanMode extends BaseScrewdriverMode {
-    public static ScrewdriverScanMode INSTANCE = new ScrewdriverScanMode();
+    public static final ScrewdriverScanMode INSTANCE = new ScrewdriverScanMode();
 
     @Override
-    public boolean interactWithBlockNative(Level level, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(level.getBlockState(hitResult.getBlockPos()))) return false;
+    public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
+        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
+        if (world.isClient) return ActionResult.SUCCESS;
 
         BlockPos blockPos = hitResult.getBlockPos();
-        BlockState blockState = level.getBlockState(blockPos);
-        BlockEntity blockEntity = level.getBlockEntity(blockPos);
+        BlockState blockState = world.getBlockState(blockPos);
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
 
-        List<Component> lines = new ArrayList<>();
-        MutableComponent title = blockState.getBlock().getName().copy();
-        title.setStyle(title.getStyle().withColor(ChatFormatting.AQUA));
+        List<Text> lines = new ArrayList<>();
+        MutableText title = blockState.getBlock().getName().copy().formatted(Formatting.AQUA);
 
-        if (blockEntity instanceof Container container) {
-            int size = container.getContainerSize();
+        if (blockEntity instanceof Inventory inventory) {
+            int size = inventory.size();
             int countItems = 0;
             for (int i = 0; i < size; i++) {
-                if (!container.getItem(i).isEmpty()) {
+                if (!inventory.getStack(i).isEmpty()) {
                     countItems++;
                 }
             }
 
-            if (size > 0) lines.add(Component.literal("Container: " + countItems + " / " + size));
+            if (size > 0) lines.add(Text.literal("Container: " + countItems + " / " + size));
         }
 
         if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
             ItemStack itemStack = jukeboxBlockEntity.getRecord();
             if (!itemStack.isEmpty()) {
-                RecordItem record = (RecordItem) itemStack.getItem();
-                lines.add(record.getDisplayName());
+                MusicDiscItem record = (MusicDiscItem) itemStack.getItem();
+                lines.add(record.getName());
             }
         }
 
-        ScrewdriverScanModeOverlay.setup(player, title, lines);
-        return true;
+        updateScrewdriverData(player, hand, title, lines);
+        return ActionResult.SUCCESS;
     }
 
     @Override
-    public boolean interactWithEntityNative(Level level, Player player, InteractionHand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return false;
+    public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
+        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
+        if (world.isClient) return ActionResult.SUCCESS;
 
         Entity entity = hitResult.getEntity();
-        List<Component> lines = new ArrayList<>();
-        MutableComponent title = entity.getType().getDescription().copy();
-        title.setStyle(title.getStyle().withColor(ChatFormatting.GOLD));
+        List<Text> lines = new ArrayList<>();
+        MutableText title = entity.getType().getName().copy().formatted(Formatting.GOLD);
 
         if (!entity.getDisplayName().getString().equals(title.getString())) {
             title = entity.getDisplayName().copy().append(" (").append(title).append(")");
@@ -77,13 +83,33 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         if (entity instanceof LivingEntity livingEntity) {
             double health = livingEntity.getHealth();
             double maxHealth = livingEntity.getMaxHealth();
-            lines.add(Component.literal("Health: " + String.format("%.1f", health) + " / " + String.format("%.1f", maxHealth)));
+            lines.add(Text.literal("Health: " + String.format("%.1f", health) + " / " + String.format("%.1f", maxHealth)));
 
-            int armor = livingEntity.getArmorValue();
-            if (armor > 0) lines.add(Component.literal("Armor: " + armor));
+            int armor = livingEntity.getArmor();
+            if (armor > 0) lines.add(Text.literal("Armor: " + armor));
         }
 
-        ScrewdriverScanModeOverlay.setup(player, title, lines);
-        return true;
+        updateScrewdriverData(player, hand, title, lines);
+        return ActionResult.SUCCESS;
+    }
+
+    private void updateScrewdriverData(PlayerEntity player, Hand hand, Text title, List<Text> lines) {
+        ItemStack screwdriverItemStack = player.getStackInHand(hand);
+        if (!Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) return;
+
+        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
+        tag.putString("title", Text.Serializer.toJson(title));
+        tag.putLong("time", player.world.getTime());
+
+        AtomicInteger i = new AtomicInteger();
+        NbtCompound linesTag = new NbtCompound();
+        for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
+        tag.put("linesTag", linesTag);
+
+        PacketHelper.sendToServer(
+            ScrewdriverRemoteCallablePackets.class,
+            "updateScrewdriverData",
+            screwdriverItemStack, hand == Hand.MAIN_HAND
+        );
     }
 }
