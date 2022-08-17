@@ -32,6 +32,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.explosion.Explosion;
 
 import java.lang.reflect.Method;
 
@@ -82,6 +83,14 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
             return ActionResult.SUCCESS;
         }
 
+        // NoteBlock
+        if (block instanceof NoteBlock noteBlock) {
+            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
+            return ActionResult.SUCCESS;
+        }
+
         // Jukebox
         if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
             ItemStack disk = jukeboxBlockEntity.getRecord();
@@ -90,14 +99,6 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
                 world.syncWorldEvent(null, WorldEvents.MUSIC_DISC_PLAYED, blockPos, Item.getRawId(disk.getItem()));
                 return ActionResult.SUCCESS;
             }
-        }
-
-        // NoteBlock
-        if (block instanceof NoteBlock noteBlock) {
-            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
-            return ActionResult.SUCCESS;
         }
 
         // Wooden Blocks
@@ -128,6 +129,15 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         if (block instanceof PaneBlock && blockState.getMaterial() == Material.GLASS) {
             if (player.isSneaking()) {
                 if (!world.isClient) world.breakBlock(blockPos, true);
+                return ActionResult.SUCCESS;
+            }
+        }
+
+        // MobSpawnerBlockEntity
+        if (block instanceof SpawnerBlock) {
+            if (player.isSneaking()) {
+                world.breakBlock(blockPos, false);
+                world.createExplosion(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), 2.5F, Explosion.DestructionType.NONE);
                 return ActionResult.SUCCESS;
             }
         }
