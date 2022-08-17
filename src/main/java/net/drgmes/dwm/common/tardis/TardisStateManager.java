@@ -531,8 +531,8 @@ public class TardisStateManager extends PersistentState {
 
         ((IMixinPortal) this.portalFromTardis).setTardisId(DimensionHelper.getWorldId(this.world));
         ((IMixinPortal) this.portalToTardis).setTardisId(DimensionHelper.getWorldId(this.world));
-        this.portalFromTardis.world.spawnEntity(this.portalFromTardis);
-        this.portalToTardis.world.spawnEntity(this.portalToTardis);
+        if (this.portalFromTardis.world != null) this.portalFromTardis.world.spawnEntity(this.portalFromTardis);
+        if (this.portalToTardis.world != null) this.portalToTardis.world.spawnEntity(this.portalToTardis);
     }
 
     public void validateEntrancePortals() {
@@ -543,8 +543,14 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void clearEntrancePortals() {
-        if (this.portalFromTardis != null) this.portalFromTardis.discard();
-        if (this.portalToTardis != null) this.portalToTardis.discard();
+        try {
+            if (this.portalFromTardis != null) this.portalFromTardis.discard();
+            if (this.portalToTardis != null) this.portalToTardis.discard();
+        } catch (Exception ignored) {
+        } finally {
+            this.portalFromTardis = null;
+            this.portalToTardis = null;
+        }
     }
 
     public boolean checkIsPortalValid(Portal portal) {
