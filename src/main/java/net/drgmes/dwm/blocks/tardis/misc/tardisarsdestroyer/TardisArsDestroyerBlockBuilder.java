@@ -27,8 +27,4 @@ public class TardisArsDestroyerBlockBuilder extends BlockBuilder {
     public void registerDrop(ModLootTableProvider modLootTableProvider) {
         modLootTableProvider.addDrop(this.getBlock(), BlockLootTableGenerator.dropsNothing());
     }
-
-    @Override
-    public void registerTags() {
-    }
 }

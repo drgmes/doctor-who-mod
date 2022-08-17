@@ -9,6 +9,7 @@ import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.data.server.BlockLootTableGenerator;
+import net.minecraft.tag.BlockTags;
 
 public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
     public BaseTardisExteriorBlockBuilder(String name, BaseTardisExteriorBlock<?> block) {
@@ -38,5 +39,6 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerTags() {
+        this.tags.add(BlockTags.DRAGON_IMMUNE);
     }
 }

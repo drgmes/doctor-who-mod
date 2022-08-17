@@ -34,7 +34,6 @@ public abstract class BaseTardisDoorsBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerTags() {
-        super.registerTags();
         this.tags.add(BlockTags.DOORS);
         this.tags.add(BlockTags.IMPERMEABLE);
     }
