@@ -8,9 +8,11 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Language;
 import net.minecraft.util.math.Vec2f;
 
@@ -39,12 +41,23 @@ public class ScrewdriverScanModeOverlay {
         if (Screwdriver.checkItemStackIsScrewdriver(offItemStack)) screwdriverItemStack = offItemStack;
         if (screwdriverItemStack == null) return;
 
-        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
-        if (mc.world.getTime() - tag.getLong("time") > 60) return;
-
         int screenWidth = mc.getWindow().getScaledWidth();
         int screenHeight = mc.getWindow().getScaledHeight();
         int maxTextLength = Math.round((screenWidth - 192) / 2F - PADDING * 1.5F);
+
+        float modeTextScale = 0.5F;
+        float modeTextOffset = player.isCreative() ? 3.175F : 5.175F;
+        Vec2f modePos = new Vec2f((screenWidth - 192 + PADDING) / 2F + 2, screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
+        MutableText modeTitle = Screwdriver.getInteractionMode(screwdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
+        MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", modeTitle);
+
+        matrixStack.push();
+        matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
+        mc.textRenderer.drawWithShadow(matrixStack, modeText, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF);
+        matrixStack.pop();
+
+        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
+        if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
         Text title = Text.Serializer.fromJson(tag.getString("title"));
         List<Text> lines = new ArrayList<>();
