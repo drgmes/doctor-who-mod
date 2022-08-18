@@ -23,7 +23,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.api.ModLoadingContext;
 import qouteall.q_misc_util.LifecycleHack;
 
 import java.util.function.Supplier;
@@ -45,10 +44,7 @@ public class Registration {
         ArsCategories.init();
         ArsStructures.init();
 
-        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.COMMON, ModConfig.COMMON_SPEC);
-        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.CLIENT, ModConfig.CLIENT_SPEC);
-        ModLoadingContext.registerConfig(DWM.MODID, net.minecraftforge.fml.config.ModConfig.Type.SERVER, ModConfig.SERVER_SPEC);
-
+        ModConfig.setup();
         ModEvents.setup();
         ModDimensions.setup();
     }
