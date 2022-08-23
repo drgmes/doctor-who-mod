@@ -3,9 +3,12 @@ package net.drgmes.dwm.network;
 import com.mojang.datafixers.util.Pair;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleMonitorConsoleRoomsScreen;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceMapBannersScreen;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -73,6 +76,12 @@ public class TardisConsoleRemoteCallablePackets {
         updateTardisConsoleScrewdriverSlot(blockPos, ItemStack.EMPTY);
     }
 
+    public static void openTardisConsoleMonitor(BlockPos blockPos, String tardisId, String consoleRoomId) {
+        if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
+            mc.setScreen(new TardisConsoleMonitorConsoleRoomsScreen(tardisConsoleBlockEntity, tardisId, consoleRoomId));
+        }
+    }
+
     public static void openTardisConsoleTelepathicInterfaceLocations(BlockPos blockPos, NbtCompound tag) {
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             List<Map.Entry<Identifier, TardisConsoleTelepathicInterfaceLocationsScreen.EDataType>> locations = new ArrayList<>();
@@ -122,6 +131,33 @@ public class TardisConsoleRemoteCallablePackets {
                 );
             });
         }
+    }
+
+    public static void applyTardisConsoleMonitorConsoleRoom(ServerPlayerEntity player, String tardisId, String consoleRoomId) {
+        Text failMessage = Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms.failed");
+
+        if (!TardisConsoleRooms.CONSOLE_ROOMS.containsKey(consoleRoomId)) {
+            player.sendMessage(failMessage, true);
+            return;
+        }
+
+        ServerWorld tardisWorld = DimensionHelper.getModWorld(tardisId);
+        if (tardisWorld == null) { // TODO || tardisWorld == player.world
+            player.sendMessage(failMessage, true);
+            return;
+        }
+
+        TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
+            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(consoleRoomId);
+            boolean isConsoleRoomGenerated = consoleRoom.place(tardis);
+
+            if (isConsoleRoomGenerated) {
+                tardis.setConsoleRoom(consoleRoom);
+                tardis.updateEntrancePortals();
+            }
+
+            player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms." + (isConsoleRoomGenerated ? "success" : "failed")), true);
+        });
     }
 
     public static void applyTardisConsoleTelepathicInterfaceLocation(ServerPlayerEntity player, Identifier id, String type) {

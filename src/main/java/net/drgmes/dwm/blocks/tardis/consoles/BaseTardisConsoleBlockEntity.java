@@ -4,13 +4,14 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.consoles.TardisConsoleType;
+import net.drgmes.dwm.common.tardis.consoles.TardisConsoleTypeEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.*;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModDimensions;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.BlockState;
@@ -45,7 +46,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     public final TardisStateManager tardisStateManager = new TardisStateManager(null);
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
-    public TardisConsoleType consoleType;
+    public TardisConsoleTypeEntry consoleType;
 
     public float tickInProgress = 0;
     public int monitorPage = 0;
@@ -53,7 +54,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private final ArrayList<TardisConsoleControlEntity> controls = new ArrayList<>();
     private int timeToInit = -1;
 
-    public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleType consoleType, BlockPos blockPos, BlockState blockState) {
+    public BaseTardisConsoleBlockEntity(BlockEntityType<?> type, TardisConsoleTypeEntry consoleType, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
 
         this.consoleType = consoleType;
@@ -187,6 +188,15 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
     }
 
+    public void sendMonitorOpenPacket(ServerWorld world, TardisStateManager tardis) {
+        PacketHelper.sendToClient(
+            TardisConsoleRemoteCallablePackets.class,
+            "openTardisConsoleMonitor",
+            world.getWorldChunk(this.getPos()),
+            this.getPos(), DimensionHelper.getWorldId(tardis.getWorld()), tardis.getConsoleRoom().name
+        );
+    }
+
     public void sendTelepathicInterfaceLocationsOpenPacket(ServerWorld world) {
         PacketHelper.sendToClient(
             TardisConsoleRemoteCallablePackets.class,
@@ -212,7 +222,12 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
 
         // Monitor
         if (control.role == ETardisConsoleControlRole.MONITOR && hand == Hand.OFF_HAND) {
-            System.out.println("Monitor"); // TODO
+            if (!TardisHelper.isTardisDimension(entity.world)) return;
+
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
+                this.sendMonitorOpenPacket(serverWorld, tardis);
+            });
+
             return;
         }
 

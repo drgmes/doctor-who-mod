@@ -21,13 +21,8 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
     private BannersListWidget.BannerEntry selected = null;
 
     public TardisConsoleTelepathicInterfaceMapBannersScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, MapState mapData) {
-        super(tardisConsoleBlockEntity);
+        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_BANNERS, tardisConsoleBlockEntity);
         this.banners = mapData.getBanners();
-    }
-
-    @Override
-    public Text getTitle() {
-        return DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_BANNERS;
     }
 
     @Override
@@ -61,7 +56,7 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
             );
         }
 
-        this.onDone();
+        this.close();
     }
 
     @Override

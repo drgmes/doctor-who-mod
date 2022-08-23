@@ -36,15 +36,10 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
     private String lastSearch;
 
     public TardisConsoleTelepathicInterfaceLocationsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, List<Entry<Identifier, EDataType>> locations) {
-        super(tardisConsoleBlockEntity);
+        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_LOCATIONS, tardisConsoleBlockEntity);
 
         this.locations = Collections.unmodifiableList(locations);
         this.filteredLocations = this.locations;
-    }
-
-    @Override
-    public Text getTitle() {
-        return DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_LOCATIONS;
     }
 
     @Override
@@ -52,7 +47,7 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         int locationsListGhostSpace = 10;
         int locationsListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
         int locationsListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - locationsListGhostSpace;
-        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - locationsListGhostSpace + 1;
+        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - locationsListGhostSpace - 1;
 
         Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
         this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);

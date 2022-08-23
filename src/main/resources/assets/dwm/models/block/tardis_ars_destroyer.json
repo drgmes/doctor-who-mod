@@ -1,7 +1,7 @@
 {
 	"parent": "dwm:block/tardis_ars_creator",
 	"textures": {
-		"0": "dwm:block/tardis_ars_destroyer",
-		"particle": "dwm:block/tardis_ars_destroyer"
+		"0": "dwm:block/tardis/misc/tardis_ars_destroyer",
+		"particle": "dwm:block/tardis/misc/tardis_ars_destroyer"
 	}
 }

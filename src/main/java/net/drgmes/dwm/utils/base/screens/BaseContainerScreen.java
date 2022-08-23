@@ -23,6 +23,16 @@ public abstract class BaseContainerScreen<T extends ScreenHandler> extends Abstr
     }
 
     @Override
+    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
+        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+    }
+
+    @Override
+    public void fillGradient(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, int colorStart, int colorEnd) {
+        DrawableHelper.fillGradient(matrixStack, x, y, textureWidth, textureHeight, colorStart, colorEnd, this.getZOffset());
+    }
+
+    @Override
     public int getWidth() {
         return this.width;
     }
@@ -30,11 +40,6 @@ public abstract class BaseContainerScreen<T extends ScreenHandler> extends Abstr
     @Override
     public int getHeight() {
         return this.height;
-    }
-
-    @Override
-    public Text getTitleComponent() {
-        return this.getTitle();
     }
 
     @Override
@@ -53,8 +58,8 @@ public abstract class BaseContainerScreen<T extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
-        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
+    public Text getTitleComponent() {
+        return this.getTitle();
     }
 
     @Override
@@ -65,10 +70,8 @@ public abstract class BaseContainerScreen<T extends ScreenHandler> extends Abstr
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrixStack);
-
-        this.renderElements(matrixStack, mouseX, mouseY, delta);
+        this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);
         super.render(matrixStack, mouseX, mouseY, delta);
-
         this.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
     }
 

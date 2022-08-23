@@ -5,6 +5,8 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
@@ -46,9 +48,6 @@ public class TardisStateManager extends PersistentState {
     public static final int BATTERY_COMPONENTS_CONTAINER_SIZE = 0;
     public static final int UPGRADE_COMPONENTS_CONTAINER_SIZE = 0;
 
-    private static final Direction BASE_ENTRANCE_FACING = Direction.SOUTH;
-    private static final BlockPos BASE_ENTRANCE_POSITION = TardisHelper.TARDIS_POS.up(7).south(1).east(18).toImmutable();
-
     private final Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
     private final List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
     private final List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
@@ -58,6 +57,8 @@ public class TardisStateManager extends PersistentState {
     private DefaultedList<ItemStack> upgradeComponents = DefaultedList.ofSize(UPGRADE_COMPONENTS_CONTAINER_SIZE, ItemStack.EMPTY);
 
     private ServerWorld world;
+
+    private TardisConsoleRoomEntry consoleRoom;
     private UUID owner;
 
     private Portal portalFromTardis;
@@ -115,6 +116,8 @@ public class TardisStateManager extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
+        tag.putString("consoleRoom", this.getConsoleRoom().name);
+
         if (this.owner != null) tag.putUuid("owner", this.owner);
 
         if (this.prevExteriorDimension != null) tag.putString("prevExteriorDimension", this.prevExteriorDimension.getValue().toString());
@@ -174,6 +177,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void readNbt(NbtCompound tag) {
+        if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"));
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
 
         if (tag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getWorldKey(tag.getString("prevExteriorDimension"));
@@ -229,6 +233,15 @@ public class TardisStateManager extends PersistentState {
 
     public void setWorld(ServerWorld world) {
         this.world = world;
+    }
+
+    public TardisConsoleRoomEntry getConsoleRoom() {
+        return this.consoleRoom != null ? this.consoleRoom : TardisConsoleRooms.DEFAULT;
+    }
+
+    public void setConsoleRoom(TardisConsoleRoomEntry consoleRoom) {
+        this.consoleRoom = consoleRoom;
+        this.markDirty();
     }
 
     public UUID getOwner() {
@@ -491,12 +504,12 @@ public class TardisStateManager extends PersistentState {
 
     public BlockPos getEntrancePosition() {
         BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
-        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getPos() : BASE_ENTRANCE_POSITION;
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getPos() : this.getConsoleRoom().getEntrancePosition();
     }
 
     public Direction getEntranceFacing() {
         BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
-        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getCachedState().get(BaseTardisDoorsBlock.FACING) : BASE_ENTRANCE_FACING;
+        return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getCachedState().get(BaseTardisDoorsBlock.FACING) : Direction.SOUTH;
     }
 
     public void updateDoorsTiles() {
@@ -510,6 +523,7 @@ public class TardisStateManager extends PersistentState {
         if (!this.isDoorsOpened()) return;
 
         double offset = -0.5;
+        String worldId = DimensionHelper.getWorldId(this.world);
         Direction originFacing = this.getEntranceFacing();
         Direction destinationFacing = this.getCurrentExteriorFacing();
         Vec3d originPos = Vec3d.ofBottomCenter(this.getEntrancePosition().up()).withBias(originFacing, offset + 0.0275);
@@ -529,17 +543,21 @@ public class TardisStateManager extends PersistentState {
 
         this.portalToTardis = PortalAPI.createReversePortal(this.portalFromTardis);
 
-        ((IMixinPortal) this.portalFromTardis).setTardisId(DimensionHelper.getWorldId(this.world));
-        ((IMixinPortal) this.portalToTardis).setTardisId(DimensionHelper.getWorldId(this.world));
+        ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
+        ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
         if (this.portalFromTardis.world != null) this.portalFromTardis.world.spawnEntity(this.portalFromTardis);
         if (this.portalToTardis.world != null) this.portalToTardis.world.spawnEntity(this.portalToTardis);
     }
 
     public void validateEntrancePortals() {
-        if (!this.isDoorsOpened()) this.clearEntrancePortals();
+        if (!this.isDoorsOpened()) {
+            this.clearEntrancePortals();
+        }
         else if (this.portalFromTardis == null || this.portalFromTardis.isRemoved() || this.portalToTardis == null || this.portalToTardis.isRemoved()) {
             this.updateEntrancePortals();
         }
+
+        this.getConsoleRoom().validateRoomsEntrancesPortals(this);
     }
 
     public void clearEntrancePortals() {

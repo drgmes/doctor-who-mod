@@ -17,6 +17,8 @@ import java.util.Objects;
 @Mixin(Portal.class)
 public class MixinPortal implements IMixinPortal {
     public String tardisId;
+    public boolean isTardisEntrance;
+    public boolean isTardisRoomsEntrance;
 
     @Override
     public String getTardisId() {
@@ -28,23 +30,50 @@ public class MixinPortal implements IMixinPortal {
         this.tardisId = tardisId;
     }
 
+    @Override
+    public IMixinPortal markAsTardisEntrance() {
+        this.isTardisEntrance = true;
+        return this;
+    }
+
+    @Override
+    public IMixinPortal markAsTardisRoomsEntrance() {
+        this.isTardisRoomsEntrance = true;
+        return this;
+    }
+
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         Portal $this = (Portal) (Object) this;
         if ($this.world.isClient || $this.isRemoved()) return;
 
-        if (this.getTardisId() == null || Objects.equals(this.getTardisId(), "")) {
-            $this.discard();
-            return;
-        }
+        boolean isTardisIdEmpty = this.getTardisId() == null || Objects.equals(this.getTardisId(), "");
 
-        ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId());
-        if (TardisHelper.isTardisDimension(tardisWorld)) {
-            TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                if (!tardis.checkIsPortalValid($this)) $this.discard();
-            });
+        if (this.isTardisEntrance || this.isTardisRoomsEntrance) {
+            if (isTardisIdEmpty) {
+                $this.discard();
+                return;
+            }
+
+            ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId());
+            if (!TardisHelper.isTardisDimension(tardisWorld)) {
+                $this.discard();
+                return;
+            }
+
+            if (this.isTardisEntrance) {
+                TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
+                    if (!tardis.checkIsPortalValid($this)) $this.discard();
+                });
+            }
+
+            if (this.isTardisRoomsEntrance) {
+                TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
+                    if (!tardis.getConsoleRoom().checkIsPortalValid($this)) $this.discard();
+                });
+            }
         }
-        else {
+        else if (!isTardisIdEmpty) {
             $this.discard();
         }
     }
@@ -52,10 +81,14 @@ public class MixinPortal implements IMixinPortal {
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
     private void readCustomDataFromNbt(NbtCompound tag, CallbackInfo ci) {
         this.setTardisId(tag.getString("tardisId"));
+        this.isTardisEntrance = tag.getBoolean("isTardisEntrance");
+        this.isTardisRoomsEntrance = tag.getBoolean("isTardisRoomsEntrance");
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
     private void writeCustomDataToNbt(NbtCompound tag, CallbackInfo ci) {
         tag.putString("tardisId", this.getTardisId());
+        tag.putBoolean("isTardisEntrance", this.isTardisEntrance);
+        tag.putBoolean("isTardisRoomsEntrance", this.isTardisRoomsEntrance);
     }
 }

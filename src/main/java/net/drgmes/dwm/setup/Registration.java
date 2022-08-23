@@ -47,6 +47,7 @@ public class Registration {
         ModConfig.setup();
         ModEvents.setup();
         ModDimensions.setup();
+        ModResourcePacks.setup();
     }
 
     @Environment(EnvType.CLIENT)

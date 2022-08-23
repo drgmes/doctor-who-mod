@@ -5,8 +5,10 @@ import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
 import net.drgmes.dwm.setup.ModEntities;
 import net.minecraft.util.math.Vec3d;
 
-public class TardisConsoleTypeToyota extends TardisConsoleType {
-    public TardisConsoleTypeToyota() {
+public class TardisConsoleTypeEntryToyota extends TardisConsoleTypeEntry {
+    public TardisConsoleTypeEntryToyota(String name) {
+        super(name);
+
         this.addControlEntry(ETardisConsoleControlRole.MONITOR, ETardisConsoleControlEntry.OTHER, new Vec3d(-0.4F, 0.5F, -0.7F), "controls/control_monitor", ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM);
         this.addControlEntry(ETardisConsoleControlRole.TELEPATHIC_INTERFACE, ETardisConsoleControlEntry.OTHER, new Vec3d(0.45F, 0.4F, -0.75F), "controls/control_telepathic_interface", ModEntities.TARDIS_CONSOLE_CONTROL_LARGE);
         this.addControlEntry(ETardisConsoleControlRole.SCREWDRIVER_SLOT, ETardisConsoleControlEntry.OTHER, new Vec3d(0.535F, 0.55F, 0.5425F), "screwdriver_slot");

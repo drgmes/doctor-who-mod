@@ -7,15 +7,11 @@ import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.network.ArsRemoteCallablePackets;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
-import net.drgmes.dwm.utils.base.screens.IBaseScreen;
+import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -28,10 +24,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
+public class TardisArsCreatorScreen extends BaseScreen {
     private static final int LINE_PADDING = 3;
-    private static final int BUTTON_HEIGHT = 20;
-    private static final int BACKGROUND_BORDERS = 24;
 
     private final BlockPos blockPos;
     private ArsCategory selectedArsCategory = null;
@@ -57,26 +51,6 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public int getWidth() {
-        return this.width;
-    }
-
-    @Override
-    public int getHeight() {
-        return this.height;
-    }
-
-    @Override
-    public Text getTitleComponent() {
-        return this.getTitle();
-    }
-
-    @Override
-    public TextRenderer getTextRenderer() {
-        return this.textRenderer;
-    }
-
-    @Override
     public Identifier getBackground() {
         return DWM.TEXTURES.GUI.TARDIS.ARS_INTERFACE;
     }
@@ -87,71 +61,8 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
-        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
-    }
-
-    @Override
     public Vec2f getTitleRenderPos() {
         return this.getRenderPos(23, 8);
-    }
-
-    @Override
-    public Text getTitle() {
-        return this.title;
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrixStack);
-        this.renderBackground(matrixStack, mouseX, mouseY);
-
-        Vec2f pos = new Vec2f(19, 5);
-        Vec2f pos1 = this.getRenderPos(pos.x, pos.y);
-        Vec2f pos2 = this.getRenderPos(pos.x + this.textRenderer.getWidth(this.getTitle().getString()) + 9, pos.y + this.textRenderer.fontHeight + 1);
-        int color = 0xFF4F5664;
-
-        this.fillGradient(matrixStack, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
-        this.renderTitle(matrixStack);
-
-        super.render(matrixStack, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public void close() {
-        this.onDone();
-    }
-
-    @Override
-    protected void init() {
-        if (this.client != null) this.client.keyboard.setRepeatEvents(true);
-
-        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
-        int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT + 1);
-
-        Vec2f acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 1, buttonOffset);
-        this.acceptButton = new ButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
-
-        Vec2f cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS - 1, buttonOffset);
-        this.cancelButton = new ButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
-
-        int listGhostSpace = 10;
-        int listWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int listHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - listGhostSpace;
-        int listOffset = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - listHeight - listGhostSpace + 1;
-
-        Vec2f categoriesListPos = this.getRenderPos(BACKGROUND_BORDERS, listOffset);
-        this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
-
-        Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
-        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, listWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
-
-        this.addDrawableChild(this.listWidget);
-        this.addDrawableChild(this.search);
-        this.addDrawableChild(this.cancelButton);
-        this.addDrawableChild(this.acceptButton);
-
-        this.update();
     }
 
     @Override
@@ -168,13 +79,35 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void removed() {
-        if (this.client != null) this.client.keyboard.setRepeatEvents(false);
-    }
+    protected void init() {
+        super.init();
 
-    @Override
-    public boolean shouldPause() {
-        return false;
+        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2 - 1;
+        int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - 1);
+
+        Vec2f cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS + 1, buttonOffset);
+        this.cancelButton = new ButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
+
+        Vec2f acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 2, buttonOffset);
+        this.acceptButton = new ButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
+
+        int listGhostSpace = 10;
+        int listWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
+        int listHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - listGhostSpace;
+        int listOffset = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - listHeight - listGhostSpace - 1;
+
+        Vec2f categoriesListPos = this.getRenderPos(BACKGROUND_BORDERS, listOffset);
+        this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
+
+        Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
+        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, listWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
+
+        this.addDrawableChild(this.listWidget);
+        this.addDrawableChild(this.search);
+        this.addDrawableChild(this.cancelButton);
+        this.addDrawableChild(this.acceptButton);
+
+        this.update();
     }
 
     @Override
@@ -191,16 +124,6 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
         }
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
-        if (this.onButtonCloseClick(mouseX, mouseY)) this.onDone();
-        return super.mouseClicked(mouseX, mouseY, frame);
-    }
-
-    protected void onDone() {
-        if (this.client != null) this.client.setScreen(null);
-    }
-
     protected void apply() {
         if (this.selectedArsStructureEntry != null) {
             PacketHelper.sendToServer(
@@ -210,7 +133,7 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
             );
         }
 
-        this.onDone();
+        this.close();
     }
 
     protected void update() {
@@ -220,15 +143,9 @@ public class TardisArsCreatorScreen extends Screen implements IBaseScreen {
     }
 
     protected void setSelectedArsCategory(ListWidget.ListEntry entry) {
-        if (entry.arsCategory != null) {
-            this.selectedArsCategory = entry.arsCategory;
-        }
-        else if (this.selectedArsCategory != null && this.selectedArsCategory.getParent() != null) {
-            this.selectedArsCategory = this.selectedArsCategory.getParent();
-        }
-        else {
-            this.selectedArsCategory = null;
-        }
+        if (entry.arsCategory != null) this.selectedArsCategory = entry.arsCategory;
+        else if (this.selectedArsCategory != null && this.selectedArsCategory.getParent() != null) this.selectedArsCategory = this.selectedArsCategory.getParent();
+        else this.selectedArsCategory = null;
 
         this.selectedArsStructureEntry = null;
 

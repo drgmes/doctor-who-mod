@@ -1,8 +1,8 @@
 {
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "dwm:block/tardis_ars_creator",
-		"particle": "dwm:block/tardis_ars_creator"
+		"0": "dwm:block/tardis/misc/tardis_ars_creator",
+		"particle": "dwm:block/tardis/misc/tardis_ars_creator"
 	},
 	"elements": [
 		{

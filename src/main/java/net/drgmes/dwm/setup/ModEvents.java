@@ -26,7 +26,10 @@ public class ModEvents {
 
         ServerWorldEvents.LOAD.register((server, world) -> {
             if (TardisHelper.isTardisDimension(world)) {
-                TardisStateManager.get(world).ifPresent(TardisStateManager::updateEntrancePortals);
+                TardisStateManager.get(world).ifPresent((tardis) -> {
+                    tardis.updateEntrancePortals();
+                    tardis.getConsoleRoom().updateRoomsEntrancesPortals(tardis);
+                });
             }
         });
 

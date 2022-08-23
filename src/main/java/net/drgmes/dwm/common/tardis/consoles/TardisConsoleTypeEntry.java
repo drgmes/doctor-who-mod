@@ -10,10 +10,15 @@ import net.minecraft.util.math.Vec3d;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TardisConsoleType {
-    public static final TardisConsoleType TOYOTA = new TardisConsoleTypeToyota();
-
+public class TardisConsoleTypeEntry {
     public final Map<ETardisConsoleControlRole, TardisConsoleControlEntry> controlEntries = new HashMap<>();
+    public final String name;
+
+    public TardisConsoleTypeEntry(String name) {
+        this.name = name;
+
+        TardisConsoleTypes.CONSOLE_TYPES.put(name, this);
+    }
 
     public TardisConsoleControlEntry addControlEntry(ETardisConsoleControlRole controlRole, ETardisConsoleControlEntry controlType, Vec3d position, String modelPath, TardisConsoleControlEntityBuilder builder) {
         return this.controlEntries.put(controlRole, new TardisConsoleControlEntry(controlRole, controlType, position, modelPath, builder));

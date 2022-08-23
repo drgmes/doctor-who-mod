@@ -37,7 +37,12 @@ public class DWM {
         public static final Text ARS_INTERFACE_BTN_GENERATE = Text.translatable("screen." + DWM.MODID + ".ars_interface.button.generate");
         public static final Text ARS_INTERFACE_BTN_DESTROY = Text.translatable("screen." + DWM.MODID + ".ars_interface.button.destroy");
 
-        public static final Text TELEPATHIC_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.title");
+        public static final Text MONITOR_NAME_CONSOLE_ROOMS = Text.translatable("screen." + DWM.MODID + ".monitor.title.console_rooms");
+        public static final Text MONITOR_BTN_CONSOLE_ROOMS_CANCEL = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.cancel");
+        public static final Text MONITOR_BTN_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.accept");
+        public static final Text MONITOR_BTN_CONSOLE_ROOMS_PREV = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.prev");
+        public static final Text MONITOR_BTN_CONSOLE_ROOMS_NEXT = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.next");
+
         public static final Text TELEPATHIC_INTERFACE_NAME_LOCATIONS = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_NAME_BANNERS = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.title.banners");
         public static final Text TELEPATHIC_INTERFACE_FLD_SEARCH = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.field.search");
@@ -63,6 +68,9 @@ public class DWM {
                 public static final Vec2f ARS_INTERFACE_SIZE = new Vec2f(403, 303);
 
                 public static class CONSOLE {
+                    public static final Identifier MONITOR = DWM.getIdentifier("textures/gui/tardis/console/monitor.png");
+                    public static final Vec2f MONITOR_SIZE = new Vec2f(403, 303);
+
                     public static final Identifier TELEPATHIC_INTERFACE = DWM.getIdentifier("textures/gui/tardis/console/telepathic_interface.png");
                     public static final Vec2f TELEPATHIC_INTERFACE_SIZE = new Vec2f(403, 303);
                 }
