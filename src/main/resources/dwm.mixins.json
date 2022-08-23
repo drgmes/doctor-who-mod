@@ -4,6 +4,7 @@
 	"package": "net.drgmes.dwm.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
+		"MixinLivingEntity",
 		"MixinMinecraftClient",
 		"MixinPortal"
 	],
