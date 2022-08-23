@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockBuilder;
 import net.minecraft.data.client.BlockStateModelGenerator;
+import net.minecraft.data.client.ItemModelGenerator;
 
 public class TardisEngineImperialBlockBuilder extends BaseTardisEngineBlockBuilder {
     public TardisEngineImperialBlockBuilder(String name) {
@@ -13,5 +14,9 @@ public class TardisEngineImperialBlockBuilder extends BaseTardisEngineBlockBuild
     public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleState(this.getBlock());
         blockStateModelGenerator.registerParentedItemModel(this.getBlockItem(), DWM.getIdentifier("block/" + this.getName()));
+    }
+
+    @Override
+    public void registerItemModel(ItemModelGenerator itemModelGenerator) {
     }
 }
