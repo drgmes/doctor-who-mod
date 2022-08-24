@@ -145,5 +145,7 @@
 
 	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
-	"config.dwm.tardis.tardisMaxFlightTime": "Max flight time for Tardis"
+	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the Tardis Dimensions List",
+	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the Tardis Dimensions List until the Dragon is defeated",
+	"config.dwm.tardis.tardisMaxFlightTime": "Max flight time for TARDIS"
 }

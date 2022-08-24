@@ -16,6 +16,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.tardissystem.TardisSystemItem;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.network.TardisExteriorRemoteCallablePackets;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.types.IMixinPortal;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -23,6 +24,7 @@ import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -716,15 +718,29 @@ public class TardisStateManager extends PersistentState {
                 worlds.forEach((world) -> {
                     if (TardisHelper.isTardisDimension(world)) return;
                     if (world.getRegistryKey() == this.world.getRegistryKey()) return;
+                    if (ModConfig.COMMON.dimensionsBlacklist.get().contains(world.getRegistryKey().getValue().toString())) return;
+
+                    if (world.getRegistryKey() == World.NETHER) {
+                        if (!world.getServer().isNetherAllowed()) return;
+                    }
+
+                    if (world.getRegistryKey() == World.END) {
+                        EnderDragonFight enderDragonFight = world.getEnderDragonFight();
+                        boolean enderDragonWasKilled = enderDragonFight != null && enderDragonFight.hasPreviouslyKilled() && !enderDragonFight.toNbt().getBoolean("NeedsStateScanning");
+                        if (!enderDragonWasKilled && ModConfig.COMMON.hideTheEndConditionally.get()) return;
+                    }
+
                     worldKeys.add(world.getRegistryKey());
                 });
 
-                int index = worldKeys.contains(this.destExteriorDimension) ? worldKeys.indexOf(this.destExteriorDimension) : 0;
-                index = index + (dimPrev != 0 ? -1 : 1);
-                index %= worldKeys.size();
-                index = index < 0 ? worldKeys.size() - 1 : index;
+                if (worldKeys.size() > 0) {
+                    int index = worldKeys.contains(this.destExteriorDimension) ? worldKeys.indexOf(this.destExteriorDimension) : 0;
+                    index = index + (dimPrev != 0 ? -1 : 1);
+                    index %= worldKeys.size();
+                    index = index < 0 ? worldKeys.size() - 1 : index;
 
-                this.destExteriorDimension = worldKeys.get(index);
+                    this.destExteriorDimension = worldKeys.get(index);
+                }
             }
 
             // Reset to Prev
