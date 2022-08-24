@@ -8,6 +8,7 @@ import net.drgmes.dwm.common.tardis.consoles.TardisConsoleTypeEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.*;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModDimensions;
@@ -257,7 +258,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                         return;
                     }
                     else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBannerMarker banner) {
-                        String color = "\u00A7e" + banner.getColor().getName().toUpperCase().replace("_", " ");
+                        String color = "§e" + banner.getColor().getName().toUpperCase().replace("_", " ");
                         player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
                         blockPos = banner.getPos();
                     }
@@ -420,27 +421,30 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
     private void displayNotification(TardisStateManager tardis, TardisConsoleControlsStorage controlsStorage, ETardisConsoleControlRole role, PlayerEntity player) {
         Object value = controlsStorage.get(role);
 
-        boolean isInFlight = tardis.getSystem(TardisSystemFlight.class).inProgress();
-        boolean isMaterialized = tardis.getSystem(TardisSystemMaterialization.class).isMaterialized();
+        TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+        TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
+
+        boolean isMaterializationSystemEnabled = materializationSystem.isEnabled();
+        boolean isFlightSystemEnabled = flightSystem.isEnabled();
+        boolean isShieldsSystemEnabled = shieldsSystem.isEnabled();
+
+        boolean isMaterialized = materializationSystem.isMaterialized();
+        boolean isInFlight = flightSystem.inProgress();
 
         Text component = switch (role) {
-            case DOORS, SHIELDS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING -> !isMaterialized ? null : Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
-
+            case DOORS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING -> !isMaterialized ? null : Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
             case HANDBRAKE -> Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
-
             case SAFE_DIRECTION -> Text.translatable(role.message, Text.translatable(role.message + "." + value));
-
             case FACING -> isInFlight ? null : Text.translatable(role.message, Text.translatable(role.message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2)));
-
-            case XYZSTEP -> isInFlight ? null : Text.translatable(role.message, "\u00A7e" + tardis.getXYZStep());
-
-            case XSET -> isInFlight ? null : Text.translatable(role.message, "\u00A7e" + tardis.getDestinationExteriorPosition().getX());
-
-            case YSET -> isInFlight ? null : Text.translatable(role.message, "\u00A7e" + tardis.getDestinationExteriorPosition().getY());
-
-            case ZSET -> isInFlight ? null : Text.translatable(role.message, "\u00A7e" + tardis.getDestinationExteriorPosition().getZ());
-
-            case DIM_PREV, DIM_NEXT -> isInFlight ? null : Text.translatable(role.message, "\u00A7e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
+            case XYZSTEP -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getXYZStep());
+            case XSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getX());
+            case YSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getY());
+            case ZSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getZ());
+            case DIM_PREV, DIM_NEXT -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
+            case SHIELDS -> !isMaterialized ? null : (isShieldsSystemEnabled ? Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED);
+            case STARTER -> isMaterializationSystemEnabled ? (isFlightSystemEnabled ? null : DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED) : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
+            case MATERIALIZATION -> isMaterializationSystemEnabled ? null : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
 
             default -> isInFlight || role.message == null ? null : Text.translatable(role.message, value);
         };

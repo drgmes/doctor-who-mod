@@ -91,6 +91,10 @@
 	"screen.dwm.telepathic_interface.button.cancel": "Cancel",
 	"screen.dwm.telepathic_interface.button.accept": "Find",
 
+	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eDematerialization Circuit §cNot Installed",
+	"message.dwm.tardis.system.directional_unit.not_installed": "§eDirectional Unit §cNot Installed",
+	"message.dwm.tardis.system.shields_generator.not_installed": "§eShields Generator §cNot Installed",
+
 	"message.dwm.tardis.ars_interface.generated.success": "ARS Structure §aGenerated",
 	"message.dwm.tardis.ars_interface.generated.failed": "ARS Structure §cNot Generated",
 	"message.dwm.tardis.ars_interface.generated.failed.details": "ERROR! Area is not clear. Problem point at: %s",

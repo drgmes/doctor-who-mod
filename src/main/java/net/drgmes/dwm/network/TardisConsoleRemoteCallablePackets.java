@@ -187,7 +187,7 @@ public class TardisConsoleRemoteCallablePackets {
             MapState mapState = MapState.fromNbt(tag.getCompound("mapState"));
             MapBannerMarker mapBannerMarker = MapBannerMarker.fromNbt(tag.getCompound("mapBannerMarker"));
 
-            String color = "\u00A7e" + mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");
+            String color = "§e" + mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");
             player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
 
             tardis.setDestinationDimension(mapState.dimension);
