@@ -31,18 +31,18 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         ServerWorld tardisWorld = DimensionHelper.getModWorld(tardisId);
         if (tardisWorld == null || tardisWorld == world) return ActionResult.FAIL;
 
-        Optional<TardisStateManager> tardis = TardisStateManager.get(tardisWorld);
-        if (tardis.isEmpty()) return ActionResult.FAIL;
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisWorld);
+        if (tardisHolder.isEmpty()) return ActionResult.FAIL;
 
         MutableText x = Text.literal("" + blockPos.getX()).formatted(Formatting.YELLOW);
         MutableText y = Text.literal("" + blockPos.getY()).formatted(Formatting.YELLOW);
         MutableText z = Text.literal("" + blockPos.getZ()).formatted(Formatting.YELLOW);
 
         player.sendMessage(Text.translatable("message." + DWM.MODID + ".screwdriver.tardis_relocated", x, y, z), true);
-        tardis.get().setDestinationFacing(Direction.fromRotation(player.getHeadYaw()).getOpposite());
-        tardis.get().setDestinationDimension(world.getRegistryKey());
-        tardis.get().setDestinationPosition(blockPos);
-        tardis.get().updateConsoleTiles();
+        tardisHolder.get().setDestinationFacing(Direction.fromRotation(player.getHeadYaw()).getOpposite());
+        tardisHolder.get().setDestinationDimension(world.getRegistryKey());
+        tardisHolder.get().setDestinationPosition(blockPos);
+        tardisHolder.get().updateConsoleTiles();
         return ActionResult.SUCCESS;
     }
 }

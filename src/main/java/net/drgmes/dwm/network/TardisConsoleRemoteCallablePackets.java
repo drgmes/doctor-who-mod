@@ -142,7 +142,7 @@ public class TardisConsoleRemoteCallablePackets {
         }
 
         ServerWorld tardisWorld = DimensionHelper.getModWorld(tardisId);
-        if (tardisWorld == null) { // TODO || tardisWorld == player.world
+        if (tardisWorld == null) {
             player.sendMessage(failMessage, true);
             return;
         }

@@ -128,17 +128,14 @@ public class TardisSystemFlight implements ITardisSystem {
         this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
         this.tardis.updateConsoleTiles();
 
-        this.tardis.getSystem(TardisSystemMaterialization.class).onFail(() -> {
+        Runnable defferedConsumer = () -> {
             this.isInFlight = false;
             this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(ETardisConsoleControlRole.STARTER, false));
             this.tardis.updateConsoleTiles();
-        });
+        };
 
-        return this.tardis.getSystem(TardisSystemMaterialization.class).remat(() -> {
-            this.isInFlight = false;
-            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(ETardisConsoleControlRole.STARTER, false));
-            this.tardis.updateConsoleTiles();
-        });
+        this.tardis.getSystem(TardisSystemMaterialization.class).onFail(defferedConsumer);
+        return this.tardis.getSystem(TardisSystemMaterialization.class).remat(defferedConsumer);
     }
 
     private void playFlySound() {

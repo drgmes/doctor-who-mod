@@ -52,8 +52,8 @@ public class TardisEngineSystemSlot extends Slot {
         ItemStack itemStack = this.getStack();
         if (!itemStack.isEmpty() && itemStack.getItem() instanceof TardisSystemItem tardisSystemItem) {
             if (this.inventory instanceof BaseTardisEngineBlockEntity tardisEngineBlockEntity && tardisEngineBlockEntity.getWorld() instanceof ServerWorld serverWorld) {
-                Optional<TardisStateManager> tardis = TardisStateManager.get(serverWorld);
-                if (tardis.isPresent()) return !tardis.get().getSystem(tardisSystemItem.getSystemType()).inProgress();
+                Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
+                if (tardisHolder.isPresent()) return !tardisHolder.get().getSystem(tardisSystemItem.getSystemType()).inProgress();
             }
         }
 

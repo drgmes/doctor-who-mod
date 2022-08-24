@@ -76,12 +76,12 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
             ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId());
             if (tardisWorld == null) return;
 
-            Optional<TardisStateManager> tardisStateManager = TardisStateManager.get(tardisWorld);
-            if (tardisStateManager.isEmpty()) return;
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisWorld);
+            if (tardisHolder.isEmpty()) return;
 
-            if (!tardisStateManager.get().isValid()
-                || !tardisStateManager.get().getCurrentExteriorDimension().equals(this.world.getRegistryKey())
-                || !tardisStateManager.get().getCurrentExteriorPosition().equals(this.getPos())
+            if (!tardisHolder.get().isValid()
+                || !tardisHolder.get().getCurrentExteriorDimension().equals(this.world.getRegistryKey())
+                || !tardisHolder.get().getCurrentExteriorPosition().equals(this.getPos())
             ) {
                 if (this.getMaterializedPercent() >= 100) {
                     this.demat();

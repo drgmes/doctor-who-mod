@@ -43,8 +43,8 @@ public abstract class BaseTardisEngineBlockEntity extends BlockEntity implements
     @Override
     public DefaultedList<ItemStack> getItems() {
         if (!(this.getWorld() instanceof ServerWorld serverWorld)) return null;
-        Optional<TardisStateManager> tardis = TardisStateManager.get(serverWorld);
-        return tardis.isEmpty() ? null : tardis.get().getSystemComponents();
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
+        return tardisHolder.isEmpty() ? null : tardisHolder.get().getSystemComponents();
     }
 
     @Override

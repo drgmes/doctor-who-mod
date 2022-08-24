@@ -26,6 +26,7 @@ import qouteall.imm_ptl.core.api.PortalAPI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class TardisSystemMaterialization implements ITardisSystem {
     public enum ESafeDirection {
@@ -46,7 +47,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private final List<Runnable> failConsumers = new ArrayList<>();
 
     private boolean isMaterialized = true;
-    private boolean needsRerunRemat = false;
+    private boolean runDematConsumers = false;
+    private boolean runRematConsumers = false;
+    private boolean runFailConsumers = false;
+    private boolean tryPlaceTardisExterior = false;
 
     public TardisSystemMaterialization(TardisStateManager tardis) {
         this.tardis = tardis;
@@ -65,36 +69,44 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void load(NbtCompound tag) {
-        this.isMaterialized = tag.getBoolean("isMaterialized");
-        this.needsRerunRemat = tag.getBoolean("needsRerunRemat");
         this.dematTickInProgress = tag.getFloat("dematTickInProgress");
         this.rematTickInProgress = tag.getFloat("rematTickInProgress");
         this.dematTickInProgressGoal = tag.getFloat("dematTickInProgressGoal");
         this.rematTickInProgressGoal = tag.getFloat("rematTickInProgressGoal");
         this.safeDirection = ESafeDirection.valueOf(tag.getString("safeDirection"));
+
+        this.isMaterialized = tag.getBoolean("isMaterialized");
+        this.runDematConsumers = tag.getBoolean("runDematConsumers");
+        this.runRematConsumers = tag.getBoolean("runRematConsumers");
+        this.runFailConsumers = tag.getBoolean("runFailConsumers");
+        this.tryPlaceTardisExterior = tag.getBoolean("tryPlaceTardisExterior");
     }
 
     @Override
     public NbtCompound save() {
         NbtCompound tag = new NbtCompound();
 
-        tag.putBoolean("isMaterialized", this.isMaterialized);
-        tag.putBoolean("needsRerunRemat", this.needsRerunRemat);
         tag.putFloat("dematTickInProgress", this.dematTickInProgress);
         tag.putFloat("rematTickInProgress", this.rematTickInProgress);
         tag.putFloat("dematTickInProgressGoal", this.dematTickInProgressGoal);
         tag.putFloat("rematTickInProgressGoal", this.rematTickInProgressGoal);
         tag.putString("safeDirection", this.safeDirection.name());
 
+        tag.putBoolean("isMaterialized", this.isMaterialized);
+        tag.putBoolean("runDematConsumers", this.runDematConsumers);
+        tag.putBoolean("runRematConsumers", this.runRematConsumers);
+        tag.putBoolean("runFailConsumers", this.runFailConsumers);
+        tag.putBoolean("tryPlaceTardisExterior", this.tryPlaceTardisExterior);
+
         return tag;
     }
 
     @Override
     public void tick() {
-        if (this.needsRerunRemat) {
-            this.remat();
-            this.needsRerunRemat = false;
-        }
+        if (this.runDematConsumers) this.runDematConsumers();
+        if (this.runRematConsumers) this.runRematConsumers();
+        if (this.runFailConsumers) this.runFailConsumers();
+        if (this.tryPlaceTardisExterior) this.tryPlaceTardisExterior();
 
         if (this.inProgress()) {
             if (this.inDematProgress()) {
@@ -153,6 +165,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
             return true;
         }
 
+        ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension());
+        if (exteriorWorld == null) return false;
+
         if (this.dematTickInProgressGoal == 0) {
             this.dematTickInProgressGoal = DWM.TIMINGS.DEMAT;
             this.dematTickInProgress = this.dematTickInProgressGoal;
@@ -164,19 +179,16 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setEnergyForgeHarvesting(false);
             this.tardis.updateConsoleTiles();
 
-            this.updateExterior(true, false);
+            this.updateExterior(exteriorWorld, true, false);
             ModSounds.playTardisTakeoffSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
             return false;
         }
-
-        ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension());
-        if (exteriorWorld == null) return false;
 
         this.isMaterialized = false;
         this.dematTickInProgressGoal = 0;
         this.tardis.updateConsoleTiles();
 
-        CommonHelper.runInThread("materialization", () -> {
+        CommonHelper.runInThread("dematerialization", () -> {
             BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
             BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorBlockPos);
             if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
@@ -184,10 +196,13 @@ public class TardisSystemMaterialization implements ITardisSystem {
             if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock) {
                 exteriorWorld.removeBlock(exteriorBlockPos.up(), true);
                 exteriorWorld.removeBlock(exteriorBlockPos, true);
+                this.runDematConsumers = true;
+            }
+            else {
+                this.setupDefferedFail();
             }
         });
 
-        this.runDematConsumers();
         return true;
     }
 
@@ -199,12 +214,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public boolean remat() {
         if (!this.isEnabled()) return false;
         if (this.inProgress()) return false;
-
-        if (!this.tardis.isValid()) {
-            this.runFailConsumers();
-            ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-            return false;
-        }
+        if (!this.tardis.isValid()) return this.setupFail();
 
         if (this.isMaterialized) {
             this.runRematConsumers();
@@ -215,66 +225,29 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (exteriorWorld == null) return false;
 
         BlockPos initialExteriorBlockPos = this.tardis.getCurrentExteriorPosition();
-        if (!this.needsRerunRemat) {
-            this.addChunkToLoader(exteriorWorld, initialExteriorBlockPos);
-            this.needsRerunRemat = true;
-            return false;
+        if (!exteriorWorld.isInBuildLimit(initialExteriorBlockPos)) {
+            if (this.safeDirection == ESafeDirection.TOP) initialExteriorBlockPos = initialExteriorBlockPos.withY(exteriorWorld.getTopY() - 2);
+            else if (this.safeDirection == ESafeDirection.BOTTOM) initialExteriorBlockPos = initialExteriorBlockPos.withY(exteriorWorld.getBottomY());
+
+            this.tardis.setPosition(initialExteriorBlockPos, false);
+            this.tardis.setDestinationPosition(initialExteriorBlockPos);
         }
 
-        if (this.findSafePosition()) {
-            BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
-            BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorBlockPos);
-            BlockState exteriorUpBlockState = exteriorWorld.getBlockState(exteriorBlockPos.up());
+        if (this.safeDirection == ESafeDirection.NONE && this.tryLandToForeignTardis(exteriorWorld)) {
+            return true;
+        }
 
-            BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlock().getDefaultState();
-            tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.LOWER);
-            tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
-            tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().isIn(FluidTags.WATER));
-            exteriorWorld.setBlockState(exteriorBlockPos, tardisExteriorBlockState, 3);
-
-            BlockState tardisExteriorUpBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
-            tardisExteriorUpBlockState = tardisExteriorUpBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorUpBlockState.getFluidState().isIn(FluidTags.WATER));
-            exteriorWorld.setBlockState(exteriorBlockPos.up(), tardisExteriorUpBlockState, 3);
-
-            if (exteriorWorld.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                tardisExteriorBlockEntity.tardisId = DimensionHelper.getWorldId(this.tardis.getWorld());
-
-                this.isMaterialized = true;
-                this.needsRerunRemat = false;
-                this.rematTickInProgressGoal = DWM.TIMINGS.REMAT;
-                this.rematTickInProgress = this.rematTickInProgressGoal;
-                this.removeChunkFromLoader(exteriorWorld, initialExteriorBlockPos);
-                this.updateExterior(false, true);
-                ModSounds.playTardisLandingSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-
-                this.rematConsumers.add(() -> {
-                    Box box = Box.of(Vec3d.ofBottomCenter(exteriorBlockPos), 0.5D, 1, 0.5D);
-                    BlockPos entrancePosition = this.tardis.getEntrancePosition().offset(this.tardis.getEntranceFacing());
-                    List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, box, EntityPredicates.VALID_ENTITY);
-
-                    for (Entity entity : entities) {
-                        PortalAPI.teleportEntity(entity, this.tardis.getWorld(), Vec3d.ofBottomCenter(entrancePosition));
-                    }
-
-                    this.tardis.updateConsoleTiles();
-                    this.updateExterior(false, false);
-                });
-
-                return true;
+        CommonHelper.runInThread("materialization", () -> {
+            if (this.findSafePosition(exteriorWorld)) {
+                if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
+                this.tryPlaceTardisExterior = true;
             }
             else {
-                this.demat();
-                this.runFailConsumers();
-                ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+                this.setupDefferedFail();
             }
-        }
-        else if (!this.tryLandToForeignTardis()) {
-            this.runFailConsumers();
-            ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-        }
+        });
 
-        this.removeChunkFromLoader(exteriorWorld, initialExteriorBlockPos);
-        return false;
+        return true;
     }
 
     public boolean remat(Runnable consumer) {
@@ -287,43 +260,85 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private void runDematConsumers() {
+        this.runDematConsumers = false;
         this.dematConsumers.forEach(Runnable::run);
         this.dematConsumers.clear();
     }
 
     private void runRematConsumers() {
+        this.runRematConsumers = false;
         this.rematConsumers.forEach(Runnable::run);
         this.rematConsumers.clear();
     }
 
     private void runFailConsumers() {
+        this.runFailConsumers = false;
         this.failConsumers.forEach(Runnable::run);
         this.failConsumers.clear();
     }
 
-    private boolean tryLandToForeignTardis() {
-        if (this.safeDirection != ESafeDirection.NONE) return false;
+    private void tryPlaceTardisExterior() {
+        this.tryPlaceTardisExterior = false;
 
         ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension());
-        if (exteriorWorld == null) return false;
+        if (exteriorWorld == null) return;
 
+        BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
+        BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorBlockPos);
+        BlockState exteriorUpBlockState = exteriorWorld.getBlockState(exteriorBlockPos.up());
+
+        BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlock().getDefaultState();
+        tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.LOWER);
+        tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
+        tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().isIn(FluidTags.WATER));
+        exteriorWorld.setBlockState(exteriorBlockPos, tardisExteriorBlockState, 3);
+
+        BlockState tardisExteriorUpBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
+        tardisExteriorUpBlockState = tardisExteriorUpBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorUpBlockState.getFluidState().isIn(FluidTags.WATER));
+        exteriorWorld.setBlockState(exteriorBlockPos.up(), tardisExteriorUpBlockState, 3);
+
+        if (exteriorWorld.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.tardisId = DimensionHelper.getWorldId(this.tardis.getWorld());
+
+            this.isMaterialized = true;
+            this.rematTickInProgressGoal = DWM.TIMINGS.REMAT;
+            this.rematTickInProgress = this.rematTickInProgressGoal;
+            this.updateExterior(exteriorWorld, false, true);
+            ModSounds.playTardisLandingSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+
+            this.rematConsumers.add(() -> {
+                Box box = Box.of(Vec3d.ofBottomCenter(exteriorBlockPos), 0.5D, 1, 0.5D);
+                BlockPos entrancePosition = this.tardis.getEntrancePosition().offset(this.tardis.getEntranceFacing());
+                List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, box, EntityPredicates.VALID_ENTITY);
+
+                for (Entity entity : entities) {
+                    PortalAPI.teleportEntity(entity, this.tardis.getWorld(), Vec3d.ofBottomCenter(entrancePosition));
+                }
+
+                this.tardis.updateConsoleTiles();
+                this.updateExterior(exteriorWorld, false, false);
+            });
+        }
+        else {
+            exteriorWorld.removeBlock(exteriorBlockPos.up(), true);
+            exteriorWorld.removeBlock(exteriorBlockPos, true);
+            this.setupFail();
+        }
+    }
+
+    private boolean tryLandToForeignTardis(ServerWorld exteriorWorld) {
         if (exteriorWorld.getBlockEntity(this.tardis.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             ServerWorld foreignTardisWorld = tardisExteriorBlockEntity.getTardisWorld();
 
             if (foreignTardisWorld != null) {
-                TardisStateManager.get(foreignTardisWorld).ifPresent((tardis) -> {
-                    if (tardis.isValid() && !tardis.getSystem(TardisSystemShields.class).inProgress()) {
-                        this.tardis.setDimension(tardis.getWorld().getRegistryKey(), false);
-                        this.tardis.setFacing(tardis.getEntranceFacing(), false);
-                        this.tardis.setPosition(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()), false);
-                        this.remat();
-                    }
-                    else {
-                        this.runFailConsumers();
-                        ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-                    }
-                });
+                Optional<TardisStateManager> tardisHolder = TardisStateManager.get(foreignTardisWorld);
+                if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return false;
+                if (tardisHolder.get().getSystem(TardisSystemShields.class).inProgress()) return false;
 
+                this.tardis.setDimension(tardisHolder.get().getWorld().getRegistryKey(), false);
+                this.tardis.setFacing(tardisHolder.get().getEntranceFacing(), false);
+                this.tardis.setPosition(tardisHolder.get().getEntrancePosition().offset(tardisHolder.get().getEntranceFacing()), false);
+                this.remat();
                 return true;
             }
         }
@@ -331,16 +346,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return false;
     }
 
-    private void addChunkToLoader(ServerWorld world, BlockPos blockPos) {
-        // TODO chunk loader
-    }
-
-    private void removeChunkFromLoader(ServerWorld world, BlockPos blockPos) {
-        // TODO chunk loader
-    }
-
-    private boolean findSafePosition() {
-        ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension());
+    private boolean findSafePosition(ServerWorld exteriorWorld) {
         if (exteriorWorld == null) return false;
 
         Direction exteriorFacing = this.tardis.getCurrentExteriorFacing();
@@ -386,10 +392,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
         return isBottomSolid && isEmpty && isUpEmpty;
     }
 
-    private void updateExterior(boolean demat, boolean remat) {
+    private void updateExterior(ServerWorld exteriorWorld, boolean demat, boolean remat) {
         BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
-        ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension());
-        if (exteriorWorld == null) return;
 
         if (exteriorWorld.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (demat) tardisExteriorBlockEntity.demat();
@@ -405,5 +409,17 @@ public class TardisSystemMaterialization implements ITardisSystem {
             exteriorWorld.getWorldChunk(exteriorBlockPos),
             exteriorBlockPos, this.tardis.isDoorsOpened(), true
         );
+    }
+
+    private boolean setupFail() {
+        this.runFailConsumers();
+        ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+        return false;
+    }
+
+    private boolean setupDefferedFail() {
+        this.runFailConsumers = true;
+        ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+        return false;
     }
 }

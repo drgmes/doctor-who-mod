@@ -24,6 +24,8 @@ public class MixinLivingEntity {
                     BlockPos entrancePosition = tardis.getEntrancePosition();
                     $this.teleport(entrancePosition.getX() + 0.5, entrancePosition.getY(), entrancePosition.getZ() + 0.5);
                 });
+
+                cir.setReturnValue(false);
             }
 
             if (source.isFromFalling()) {
