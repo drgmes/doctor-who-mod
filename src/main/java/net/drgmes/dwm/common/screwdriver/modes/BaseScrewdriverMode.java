@@ -22,11 +22,11 @@ public class BaseScrewdriverMode {
     }
 
     public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        return ActionResult.CONSUME;
+        return this.interactWithBlock(world, player, hand, hitResult, false);
     }
 
     public ActionResult interactWithBlockAlternative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        return ActionResult.CONSUME;
+        return this.interactWithBlock(world, player, hand, hitResult, true);
     }
 
     public ActionResult interactWithEntity(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult, boolean isAlternativeAction) {
@@ -34,11 +34,11 @@ public class BaseScrewdriverMode {
     }
 
     public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
-        return ActionResult.CONSUME;
+        return this.interactWithEntity(world, player, hand, hitResult, false);
     }
 
     public ActionResult interactWithEntityAlternative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
-        return ActionResult.CONSUME;
+        return this.interactWithEntity(world, player, hand, hitResult, true);
     }
 
     public void generateVibration(World world, PlayerEntity player, BlockPos blockPos) {

@@ -23,9 +23,9 @@ public class ModItems {
     public static final ItemBuilder TARDIS_KEY_1 = new TardisKeyItemBuilder("tardis_key_1");
 
     // Tardis Systems
+    public static final ItemBuilder TARDIS_SYSTEM_DEMATERIALIZATION_CIRCUIT = new TardisSystemDematerializationCircuitItemBuilder("tardis_system_dematerialization_circuit", TardisSystemMaterialization.class);
     public static final ItemBuilder TARDIS_SYSTEM_DIRECTIONAL_UNIT = new TardisSystemItemBuilder("tardis_system_directional_unit", TardisSystemFlight.class);
     public static final ItemBuilder TARDIS_SYSTEM_SHIELDS_GENERATOR = new TardisSystemItemBuilder("tardis_system_shields_generator", TardisSystemShields.class);
-    public static final ItemBuilder TARDIS_SYSTEM_DEMATERIALIZATION_CIRCUIT = new TardisSystemDematerializationCircuitItemBuilder("tardis_system_dematerialization_circuit", TardisSystemMaterialization.class);
 
     public static void init() {
     }
