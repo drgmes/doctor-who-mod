@@ -57,6 +57,7 @@ public class ModResourcePacks {
                 JsonArray centerArray = data.has("center") ? data.get("center").getAsJsonArray() : null;
                 JsonArray entranceArray = data.has("entrance") ? data.get("entrance").getAsJsonArray() : null;
                 String decoratorBlock = data.has("decorator_block") ? data.get("decorator_block").getAsString() : Registry.BLOCK.getId(Blocks.GRAY_TERRACOTTA).toString();
+                String imageUrl = data.has("image") ? data.get("image").getAsString() : "";
                 boolean isHidden = data.has("hidden") && data.get("hidden").getAsBoolean();
 
                 BlockPos center = centerArray != null && centerArray.size() == 3
@@ -67,7 +68,7 @@ public class ModResourcePacks {
                     ? new BlockPos(entranceArray.get(0).getAsInt(), entranceArray.get(1).getAsInt(), entranceArray.get(2).getAsInt())
                     : (BlockPos) BlockPos.ZERO;
 
-                TardisConsoleRoomEntry.create(consoleRoomsName, title, center, entrance, decoratorBlock, isHidden);
+                TardisConsoleRoomEntry.create(consoleRoomsName, title, center, entrance, decoratorBlock, imageUrl, isHidden);
             } catch (Exception e) {
                 DWM.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
             }

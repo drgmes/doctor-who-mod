@@ -2,5 +2,6 @@
 	"title": "Toyota Classic",
 	"center": [14, 6, 18],
 	"entrance": [14, 7, 6],
-	"decorator_block": "minecraft:gray_terracotta"
+	"decorator_block": "minecraft:gray_terracotta",
+	"image": "https://i.imgur.com/Rw5hJQK.png"
 }

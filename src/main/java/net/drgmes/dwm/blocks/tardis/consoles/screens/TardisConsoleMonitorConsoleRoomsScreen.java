@@ -5,15 +5,21 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 
+import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMonitorScreen {
+    private static final Map<String, Identifier> LOADED_CONSOLE_IMAGES = new HashMap<>();
+
     private final String tardisId;
     private final String currentConsoleRoomId;
 
@@ -37,16 +43,7 @@ public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMon
     @Override
     public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         super.renderAdditional(matrixStack, mouseX, mouseY, delta);
-
-        float padding = BACKGROUND_BORDERS * 1.25F;
-        TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
-
-        Vec2f titlePos = this.getRenderPos(padding, padding);
-        this.getTextRenderer().drawWithShadow(matrixStack, selectedConsoleRoom.title, titlePos.x, titlePos.y, 0xE0E0E0);
-
-        Vec2f imagePos = this.getRenderPos(padding, padding + this.getTextRenderer().fontHeight * 1.5F);
-        Identifier consoleRoomImage = DWM.getIdentifier("images/console_rooms/" + selectedConsoleRoom.name + ".png");
-        this.drawImage(matrixStack, imagePos, new Vec2f(this.getBackgroundSize().x - padding * 2, 120), consoleRoomImage);
+        this.renderImage(matrixStack);
     }
 
     @Override
@@ -103,5 +100,37 @@ public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMon
 
     private void updateAcceptButton() {
         this.acceptButton.active = !this.getSelectedConsoleRoom().name.equals(this.currentConsoleRoomId);
+    }
+
+    private void renderImage(MatrixStack matrixStack) {
+        float padding = BACKGROUND_BORDERS * 1.25F;
+        TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
+
+        Vec2f titlePos = this.getRenderPos(padding, padding);
+        this.getTextRenderer().drawWithShadow(matrixStack, selectedConsoleRoom.title, titlePos.x, titlePos.y, 0xE0E0E0);
+
+        Vec2f imagePos = this.getRenderPos(padding, padding + this.getTextRenderer().fontHeight * 1.5F);
+        Identifier consoleRoomImage = DWM.getIdentifier("images/console_rooms/" + selectedConsoleRoom.name + ".png");
+
+        if (!selectedConsoleRoom.imageUrl.isEmpty()) {
+            if (!LOADED_CONSOLE_IMAGES.containsKey(selectedConsoleRoom.name)) {
+                LOADED_CONSOLE_IMAGES.put(selectedConsoleRoom.name, null);
+
+                CommonHelper.runInThread("loadRemoteImage", () -> {
+                    try {
+                        LOADED_CONSOLE_IMAGES.put(selectedConsoleRoom.name, CommonHelper.loadRemoteImage(selectedConsoleRoom.name, new URL(selectedConsoleRoom.imageUrl)));
+                    } catch (Exception ignored) {
+                    }
+                });
+
+                return;
+            }
+
+            Identifier consoleImage = LOADED_CONSOLE_IMAGES.get(selectedConsoleRoom.name);
+            if (consoleImage != null) this.drawImage(matrixStack, imagePos, new Vec2f(this.getBackgroundSize().x - padding * 2, 120), consoleImage);
+            return;
+        }
+
+        this.drawImage(matrixStack, imagePos, new Vec2f(this.getBackgroundSize().x - padding * 2, 120), consoleRoomImage);
     }
 }

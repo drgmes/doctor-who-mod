@@ -16,6 +16,7 @@ public class TardisConsoleRooms {
         new BlockPos(7, 1, 7),
         new BlockPos(7, 1, 1),
         Registry.BLOCK.getId(Blocks.CHISELED_QUARTZ_BLOCK).toString(),
+        "https://i.imgur.com/nhFyIZn.png",
         true
     );
 

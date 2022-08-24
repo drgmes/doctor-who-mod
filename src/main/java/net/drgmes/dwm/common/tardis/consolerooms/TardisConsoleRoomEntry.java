@@ -37,21 +37,23 @@ public class TardisConsoleRoomEntry {
     public final BlockPos center;
     public final BlockPos entrance;
     public final String decoratorBlock;
+    public final String imageUrl;
     public final boolean isHidden;
 
     private List<Map.Entry<Portal, Portal>> portalsToRooms = new ArrayList<>();
 
-    protected TardisConsoleRoomEntry(String name, String title, BlockPos center, BlockPos entrance, String decoratorBlock, boolean isHidden) {
+    protected TardisConsoleRoomEntry(String name, String title, BlockPos center, BlockPos entrance, String decoratorBlock, String imageUrl, boolean isHidden) {
         this.title = Text.translatable(title);
         this.name = name;
         this.center = center.toImmutable();
         this.entrance = entrance.toImmutable();
         this.decoratorBlock = decoratorBlock;
+        this.imageUrl = imageUrl;
         this.isHidden = isHidden;
     }
 
-    public static TardisConsoleRoomEntry create(String name, String title, BlockPos center, BlockPos entrance, String decoratorBlock, boolean isHidden) {
-        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, center, entrance, decoratorBlock, isHidden);
+    public static TardisConsoleRoomEntry create(String name, String title, BlockPos center, BlockPos entrance, String decoratorBlock, String imageUrl, boolean isHidden) {
+        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, center, entrance, decoratorBlock, imageUrl, isHidden);
         TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
         return consoleRoom;
     }
