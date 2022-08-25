@@ -1,8 +1,8 @@
-package net.drgmes.dwm.items.tardissystem.dematerializationcircuit;
+package net.drgmes.dwm.items.tardis.systems.dematerializationcircuit;
 
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
-import net.drgmes.dwm.items.tardissystem.TardisSystemItemBuilder;
-import net.drgmes.dwm.items.tardissystem.dematerializationcircuit.models.TardisSystemDematerializationCircuitModel;
+import net.drgmes.dwm.items.tardis.systems.TardisSystemItemBuilder;
+import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.models.TardisSystemDematerializationCircuitModel;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 

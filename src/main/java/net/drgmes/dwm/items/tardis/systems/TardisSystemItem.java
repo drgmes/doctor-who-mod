@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardissystem;
+package net.drgmes.dwm.items.tardis.systems;
 
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.minecraft.client.item.TooltipContext;

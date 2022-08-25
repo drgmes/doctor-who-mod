@@ -2,14 +2,11 @@ package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
+import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -29,6 +26,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
 import java.util.function.Supplier;
@@ -55,6 +53,23 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return blockEntityType != this.blockEntityTypeSupplier.get() ? null : (l, bp, bs, blockEntity) -> ((BaseTardisDoorsBlockEntity) blockEntity).tick();
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+        if (!world.isClient && player.isCreative()) {
+            BlockPos tmpBlockPos;
+            BlockState tmpBlockState;
+            DoubleBlockHalf doubleBlockHalf = blockState.get(HALF);
+
+            if (doubleBlockHalf == DoubleBlockHalf.UPPER && (tmpBlockState = world.getBlockState(tmpBlockPos = blockPos.down())).isOf(blockState.getBlock()) && tmpBlockState.get(HALF) == DoubleBlockHalf.LOWER) {
+                BlockState tmpBlockState2 = tmpBlockState.contains(Properties.WATERLOGGED) && tmpBlockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+                world.setBlockState(tmpBlockPos, tmpBlockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+                world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, tmpBlockPos, Block.getRawIdFromState(tmpBlockState));
+            }
+        }
+
+        super.onBreak(world, blockPos, blockState, player);
     }
 
     @Override
@@ -128,12 +143,6 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
             case EAST -> EAST_SHAPE;
             default -> WEST_SHAPE;
         };
-    }
-
-    @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
-        if (player.isCreative()) return;
-        super.onBreak(world, blockPos, blockState, player);
     }
 
     @Override

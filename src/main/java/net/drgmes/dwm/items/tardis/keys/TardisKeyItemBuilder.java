@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardiskey;
+package net.drgmes.dwm.items.tardis.keys;
 
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
@@ -16,6 +16,6 @@ public class TardisKeyItemBuilder extends ItemBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getItem(), "item/tardis_keys/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getItem(), "item/tardis/keys/" + this.getName());
     }
 }

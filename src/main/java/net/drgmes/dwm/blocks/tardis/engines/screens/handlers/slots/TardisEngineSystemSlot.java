@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.engines.screens.handlers.slots;
 
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockEntity;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.tardissystem.TardisSystemItem;
+import net.drgmes.dwm.items.tardis.systems.TardisSystemItem;
 import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;

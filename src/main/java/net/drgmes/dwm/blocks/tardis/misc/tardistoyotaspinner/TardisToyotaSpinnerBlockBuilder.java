@@ -34,6 +34,6 @@ public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/misc/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/block/tardis/misc/" + this.getName());
     }
 }

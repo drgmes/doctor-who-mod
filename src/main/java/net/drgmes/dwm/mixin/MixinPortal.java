@@ -63,13 +63,13 @@ public class MixinPortal implements IMixinPortal {
 
             if (this.isTardisEntrance) {
                 TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                    if (!tardis.checkIsPortalValid($this)) $this.discard();
+                    if (!tardis.checkIsEntrancePortalValid($this)) $this.discard();
                 });
             }
 
             if (this.isTardisRoomsEntrance) {
                 TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                    if (!tardis.getConsoleRoom().checkIsPortalValid($this)) $this.discard();
+                    if (!tardis.checkIsRoomEntrancePortalValid($this)) $this.discard();
                 });
             }
         }

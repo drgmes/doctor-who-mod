@@ -25,7 +25,7 @@ public abstract class BaseTardisDoorsBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/doors/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/block/tardis/doors/" + this.getName());
     }
 
     public void registerDrop(ModLootTableProvider modLootTableProvider) {

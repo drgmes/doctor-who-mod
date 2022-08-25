@@ -1,7 +1,8 @@
 {
-	"title": "Imperial Classic",
+	"title": "Imperial Abandoned",
 	"center": [8, 2, 8],
 	"entrance": [8, 2, 2],
 	"decorator_block": "minecraft:chiseled_quartz_block",
-	"image": "https://i.imgur.com/nhFyIZn.png"
+	"repair_to": "imperial_classic",
+	"hidden": true
 }

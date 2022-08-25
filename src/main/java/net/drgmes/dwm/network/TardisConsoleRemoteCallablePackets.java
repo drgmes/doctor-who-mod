@@ -153,7 +153,9 @@ public class TardisConsoleRemoteCallablePackets {
 
             if (isConsoleRoomGenerated) {
                 tardis.setConsoleRoom(consoleRoom);
+                tardis.updateConsoleTiles();
                 tardis.updateEntrancePortals();
+                tardis.updateRoomsEntrancesPortals();
             }
 
             player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms." + (isConsoleRoomGenerated ? "success" : "failed")), true);

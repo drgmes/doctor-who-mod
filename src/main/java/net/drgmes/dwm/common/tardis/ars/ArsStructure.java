@@ -7,8 +7,8 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBl
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -65,7 +65,7 @@ public class ArsStructure {
         if (template != null) {
             StructurePlacementData placeSettings = new StructurePlacementData();
             Direction direction = blockState.get(TardisArsCreatorBlock.FACING).getOpposite();
-            BlockRotation rotation = CommonHelper.getBlockRotation(direction);
+            BlockRotation rotation = WorldHelper.getBlockRotation(direction);
 
             BlockPos blockPos = tacBlockPos.toImmutable();
             List<StructureTemplate.StructureBlockInfo> tadBlocksInfo = template.getInfosForBlock(blockPos, placeSettings, ModBlocks.TARDIS_ARS_DESTROYER.getBlock());
@@ -115,7 +115,7 @@ public class ArsStructure {
         if (template != null) {
             StructurePlacementData placeSettings = new StructurePlacementData();
             Direction direction = blockState.get(TardisArsDestroyerBlock.FACING);
-            BlockRotation rotation = CommonHelper.getBlockRotation(direction.getOpposite());
+            BlockRotation rotation = WorldHelper.getBlockRotation(direction.getOpposite());
 
             BlockPos destroyerBlockPos = tadBlockPos.toImmutable();
             List<StructureTemplate.StructureBlockInfo> tadBlocksInfo = template.getInfosForBlock(destroyerBlockPos, placeSettings, ModBlocks.TARDIS_ARS_DESTROYER.getBlock());
@@ -125,13 +125,7 @@ public class ArsStructure {
             BlockBox aabb = template.calculateBoundingBox(placeSettings, destroyerBlockPos);
             BlockPos tacBlockPos = tadBlockPos.toImmutable().offset(direction).withY(tadBlockPos.getY() + 2);
 
-            for (double x = aabb.getMinX(); x <= aabb.getMaxX(); x++) {
-                for (double y = aabb.getMinY(); y <= aabb.getMaxY(); y++) {
-                    for (double z = aabb.getMinZ(); z <= aabb.getMaxZ(); z++) {
-                        world.setBlockState(new BlockPos(x, y, z), Blocks.AIR.getDefaultState(), 3);
-                    }
-                }
-            }
+            WorldHelper.clearArea(world, aabb);
 
             if (TardisHelper.isTardisDimension(world)) {
                 TardisStateManager.get(world).ifPresent((tardis) -> {

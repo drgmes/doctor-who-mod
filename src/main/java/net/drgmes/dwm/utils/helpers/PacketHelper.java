@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.helpers;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.ChunkPos;
@@ -11,6 +12,12 @@ import qouteall.q_misc_util.api.McRemoteProcedureCall;
 import java.util.List;
 
 public class PacketHelper {
+    public static void sendToClient(Class<?> packetClass, String packetMethod, MinecraftServer server, Object... args) {
+        for (ServerPlayerEntity player : server.getPlayerManager().getPlayerList()) {
+            sendToClient(packetClass, packetMethod, player, args);
+        }
+    }
+
     public static void sendToClient(Class<?> packetClass, String packetMethod, ServerWorld world, Object... args) {
         for (ServerPlayerEntity player : world.getPlayers()) {
             sendToClient(packetClass, packetMethod, player, args);

@@ -5,6 +5,7 @@ import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlock;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
@@ -13,9 +14,10 @@ import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
-import net.drgmes.dwm.items.tardissystem.TardisSystemItem;
+import net.drgmes.dwm.items.tardis.systems.TardisSystemItem;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.network.TardisExteriorRemoteCallablePackets;
+import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.types.IMixinPortal;
@@ -30,18 +32,16 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.structure.StructurePlacementData;
+import net.minecraft.structure.StructureTemplate;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
-import qouteall.imm_ptl.core.api.PortalAPI;
 import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.imm_ptl.core.portal.PortalManipulation;
 import qouteall.q_misc_util.MiscHelper;
-import qouteall.q_misc_util.my_util.DQuaternion;
 
 import java.util.*;
 
@@ -63,6 +63,7 @@ public class TardisStateManager extends PersistentState {
     private TardisConsoleRoomEntry consoleRoom;
     private UUID owner;
 
+    private List<Map.Entry<Portal, Portal>> portalsToRooms = new ArrayList<>();
     private Portal portalFromTardis;
     private Portal portalToTardis;
 
@@ -78,7 +79,8 @@ public class TardisStateManager extends PersistentState {
     private Direction currExteriorFacing;
     private Direction destExteriorFacing;
 
-    private boolean doorsLocked = false;
+    private boolean broken = true;
+    private boolean doorsLocked = true;
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
@@ -152,6 +154,7 @@ public class TardisStateManager extends PersistentState {
         tag.putInt("energyForge", this.energyForge);
         tag.putInt("xyzStep", this.xyzStep);
 
+        tag.putBoolean("broken", this.broken);
         tag.putBoolean("doorsLocked", this.doorsLocked);
         tag.putBoolean("doorsOpened", this.doorsOpened);
         tag.putBoolean("lightEnabled", this.lightEnabled);
@@ -198,6 +201,7 @@ public class TardisStateManager extends PersistentState {
         this.energyForge = tag.getInt("energyForge");
         this.xyzStep = tag.getInt("xyzStep");
 
+        this.broken = tag.getBoolean("broken");
         this.doorsLocked = tag.getBoolean("doorsLocked");
         this.doorsOpened = tag.getBoolean("doorsOpened");
         this.lightEnabled = tag.getBoolean("lightEnabled");
@@ -343,6 +347,19 @@ public class TardisStateManager extends PersistentState {
     // ///////////////////////// //
     // Tardis State Data methods //
     // ///////////////////////// //
+
+    public boolean isBroken() {
+        return this.broken;
+    }
+
+    public boolean setBrokenState(boolean flag) {
+        if (this.broken == flag) return false;
+        this.broken = flag;
+
+        if (flag) ModSounds.playTardisRepairSound(this.world, this.getEntrancePosition());
+        this.markDirty();
+        return true;
+    }
 
     public boolean isDoorsLocked() {
         return this.doorsLocked;
@@ -524,31 +541,59 @@ public class TardisStateManager extends PersistentState {
         this.clearEntrancePortals();
         if (!this.isDoorsOpened()) return;
 
-        double offset = -0.5;
-        String worldId = DimensionHelper.getWorldId(this.world);
-        Direction originFacing = this.getEntranceFacing();
-        Direction destinationFacing = this.getCurrentExteriorFacing();
-        Vec3d originPos = Vec3d.ofBottomCenter(this.getEntrancePosition().up()).withBias(originFacing, offset + 0.0275);
-        Vec3d destinationPos = Vec3d.ofBottomCenter(this.getCurrentExteriorRelativePosition().up()).withBias(destinationFacing, offset);
+        String worldId = DimensionHelper.getWorldId(world);
+        Map.Entry<Portal, Portal> portals = TardisHelper.createTardisPortals(
+            this.getWorld(),
+            this.getEntranceFacing(),
+            this.getCurrentExteriorFacing(),
+            this.getEntrancePosition().up(),
+            this.getCurrentExteriorRelativePosition().up(),
+            this.getCurrentExteriorDimension(),
+            -0.5 + 0.0275, -0.5, 0,
+            1, 2
+        );
 
-        DQuaternion dQuaternion = DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), destinationFacing == Direction.NORTH || destinationFacing == Direction.SOUTH ? 180 : 0);
-        dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), originFacing.asRotation()));
-        dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), destinationFacing.asRotation()));
-
-        this.portalFromTardis = Portal.entityType.create(this.world);
-        this.portalFromTardis.setOriginPos(originPos);
-        this.portalFromTardis.setDestination(destinationPos);
-        this.portalFromTardis.setDestinationDimension(this.getCurrentExteriorDimension());
-        this.portalFromTardis.setRotationTransformation(dQuaternion.toMcQuaternion());
-        this.portalFromTardis.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), 1, 2);
-        PortalManipulation.rotatePortalBody(this.portalFromTardis, DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), originFacing.asRotation()).toMcQuaternion());
-
-        this.portalToTardis = PortalAPI.createReversePortal(this.portalFromTardis);
+        this.portalFromTardis = portals.getKey();
+        this.portalToTardis = portals.getValue();
 
         ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
         ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
         if (this.portalFromTardis.world != null) this.portalFromTardis.world.spawnEntity(this.portalFromTardis);
         if (this.portalToTardis.world != null) this.portalToTardis.world.spawnEntity(this.portalToTardis);
+    }
+
+    public void updateRoomsEntrancesPortals() {
+        if (this.isBroken()) return;
+
+        int index = 0;
+        String worldId = DimensionHelper.getWorldId(this.getWorld());
+        StructurePlacementData placeSettings = new StructurePlacementData();
+        List<StructureTemplate.StructureBlockInfo> tacBlockInfos = this.getConsoleRoom().getTemplate(this.getWorld()).getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
+
+        this.clearRoomsEntrancesPortals();
+
+        for (StructureTemplate.StructureBlockInfo tacBlockInfo : tacBlockInfos) {
+            Direction direction = tacBlockInfo.state.get(TardisArsDestroyerBlock.FACING);
+            BlockPos tacBlockPos = this.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos).offset(direction).toImmutable();
+            BlockPos farTacBlockPos = TardisHelper.TARDIS_POS.add(1024, 0, 1024).multiply(++index).withY(TardisHelper.TARDIS_POS.getY()).toImmutable();
+
+            Map.Entry<Portal, Portal> portals = TardisHelper.createTardisPortals(
+                this.getWorld(),
+                direction,
+                Direction.SOUTH,
+                tacBlockPos.up(),
+                farTacBlockPos.up(),
+                this.getWorld().getRegistryKey(),
+                -0.5, -0.5, -0.5,
+                3, 3
+            );
+
+            ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
+            ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
+            this.getWorld().spawnEntity(portals.getKey());
+            this.getWorld().spawnEntity(portals.getValue());
+            this.portalsToRooms.add(portals);
+        }
     }
 
     public void validateEntrancePortals() {
@@ -559,7 +604,26 @@ public class TardisStateManager extends PersistentState {
             this.updateEntrancePortals();
         }
 
-        this.getConsoleRoom().validateRoomsEntrancesPortals(this);
+        this.validateRoomsEntrancesPortals();
+    }
+
+    public void validateRoomsEntrancesPortals() {
+        if (this.portalsToRooms.size() == 0) {
+            this.updateRoomsEntrancesPortals();
+            return;
+        }
+
+        for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
+            if (portalsToRoom.getKey() == null || portalsToRoom.getValue() == null) {
+                this.updateRoomsEntrancesPortals();
+                return;
+            }
+
+            if (portalsToRoom.getKey().isRemoved() || portalsToRoom.getValue().isRemoved()) {
+                this.updateRoomsEntrancesPortals();
+                return;
+            }
+        }
     }
 
     public void clearEntrancePortals() {
@@ -573,8 +637,28 @@ public class TardisStateManager extends PersistentState {
         }
     }
 
-    public boolean checkIsPortalValid(Portal portal) {
+    public void clearRoomsEntrancesPortals() {
+        for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
+            try {
+                portalsToRoom.getKey().discard();
+                portalsToRoom.getValue().discard();
+            } catch (Exception ignored) {
+            }
+        }
+
+        this.portalsToRooms.clear();
+    }
+
+    public boolean checkIsEntrancePortalValid(Portal portal) {
         return (this.portalFromTardis != null && this.portalFromTardis.equals(portal)) || (this.portalToTardis != null && this.portalToTardis.equals(portal));
+    }
+
+    public boolean checkIsRoomEntrancePortalValid(Portal portal) {
+        for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
+            if ((portalsToRoom.getKey().equals(portal)) || (portalsToRoom.getValue().equals(portal))) return true;
+        }
+
+        return false;
     }
 
     // //////////////////////////// //
@@ -597,8 +681,10 @@ public class TardisStateManager extends PersistentState {
 
     public void updateConsoleTiles() {
         this.consoleTiles.forEach((tile) -> {
-            this.applyDataToControlsStorage(tile.controlsStorage);
-            tile.sendControlsUpdatePacket(this.world);
+            if (!this.isBroken()) {
+                this.applyDataToControlsStorage(tile.controlsStorage);
+                tile.sendControlsUpdatePacket(this.world);
+            }
 
             NbtCompound tag = new NbtCompound();
             this.writeNbt(tag);

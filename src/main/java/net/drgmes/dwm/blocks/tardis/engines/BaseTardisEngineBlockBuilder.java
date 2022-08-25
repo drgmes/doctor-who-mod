@@ -22,6 +22,6 @@ public abstract class BaseTardisEngineBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/engines/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/block/tardis/engines/" + this.getName());
     }
 }

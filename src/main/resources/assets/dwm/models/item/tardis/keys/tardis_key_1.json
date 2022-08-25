@@ -1,8 +1,8 @@
 {
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "dwm:item/tardis_keys/tardis_key_1",
-		"particle": "dwm:item/tardis_keys/tardis_key_1"
+		"0": "dwm:item/tardis/keys/tardis_key_1",
+		"particle": "dwm:item/tardis/keys/tardis_key_1"
 	},
 	"elements": [
 		{

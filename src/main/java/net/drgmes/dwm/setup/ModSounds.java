@@ -21,6 +21,10 @@ public class ModSounds {
         world.playSound(null, blockPos, sound, SoundCategory.BLOCKS, pitch, distance);
     }
 
+    public static void playTardisRepairSound(World world, BlockPos blockPos) {
+        ModSounds.playSound(world, blockPos, SoundEvents.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
+    }
+
     public static void playTardisDoorsUnlockSound(World world, BlockPos blockPos) {
         ModSounds.playSound(world, blockPos, SoundEvents.BLOCK_IRON_DOOR_OPEN, 1.0F, 1.0F);
     }

@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardiskey;
+package net.drgmes.dwm.items.tardis.keys;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;

@@ -10,6 +10,7 @@ import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
@@ -194,8 +195,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
             if (!Thread.currentThread().isAlive() || Thread.currentThread().isInterrupted()) return;
 
             if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock) {
-                exteriorWorld.removeBlock(exteriorBlockPos.up(), true);
-                exteriorWorld.removeBlock(exteriorBlockPos, true);
+                exteriorWorld.removeBlock(exteriorBlockPos.up(), false);
+                exteriorWorld.removeBlock(exteriorBlockPos, false);
                 this.runDematConsumers = true;
             }
             else {
@@ -320,8 +321,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
             });
         }
         else {
-            exteriorWorld.removeBlock(exteriorBlockPos.up(), true);
-            exteriorWorld.removeBlock(exteriorBlockPos, true);
+            exteriorWorld.removeBlock(exteriorBlockPos.up(), false);
+            exteriorWorld.removeBlock(exteriorBlockPos, false);
             this.setupFail();
         }
     }
@@ -386,9 +387,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
     }
 
     private boolean checkBlockIsSafe(World world, BlockPos blockPos, Direction direction) {
-        boolean isEmpty = CommonHelper.checkBlockIsEmpty(world.getBlockState(blockPos), true);
-        boolean isUpEmpty = CommonHelper.checkBlockIsEmpty(world.getBlockState(blockPos.up()), true);
-        boolean isBottomSolid = CommonHelper.checkBlockIsSolid(world.getBlockState(blockPos.down()));
+        boolean isEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos), true);
+        boolean isUpEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos.up()), true);
+        boolean isBottomSolid = WorldHelper.checkBlockIsSolid(world.getBlockState(blockPos.down()));
         return isBottomSolid && isEmpty && isUpEmpty;
     }
 

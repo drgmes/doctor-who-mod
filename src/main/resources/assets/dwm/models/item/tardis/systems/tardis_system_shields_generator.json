@@ -1,8 +1,8 @@
 {
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "dwm:item/tardis_systems/tardis_system_shields_generator",
-		"particle": "dwm:item/tardis_systems/tardis_system_shields_generator"
+		"0": "dwm:item/tardis/systems/tardis_system_shields_generator",
+		"particle": "dwm:item/tardis/systems/tardis_system_shields_generator"
 	},
 	"elements": [
 		{

@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.tardiskey.TardisKeyItem;
+import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.block.AbstractBlock;

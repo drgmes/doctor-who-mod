@@ -4,7 +4,7 @@
 
 &nbsp;
 ***
-![tardis-interior](https://i.imgur.com/hZ6cm3L.png "Tardis Exterior")
+![tardis-interior](https://i.imgur.com/hZ6cm3L.png "TARDIS Exterior")
 ***
 &nbsp;
 
@@ -13,8 +13,7 @@ Doctor Who Mod - is a global mod for Fabric Minecraft inspired by the British se
 In it, you can get your own **TARDIS** (machine for traveling through time and space) and explore the worlds in search
 of adventure and danger.
 
-Currently, the mod is in the active phase of development and has not yet been adapted for playing in Survival mode.
-Currently available (via Creative Mode):
+Currently available:
 
 * **TARDIS** machine
 * **TARDIS** upgrades

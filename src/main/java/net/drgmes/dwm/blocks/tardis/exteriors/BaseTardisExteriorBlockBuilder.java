@@ -29,7 +29,7 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/exteriors/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/block/tardis/exteriors/" + this.getName());
     }
 
     @Override

@@ -28,7 +28,7 @@ public class ModEvents {
             if (TardisHelper.isTardisDimension(world)) {
                 TardisStateManager.get(world).ifPresent((tardis) -> {
                     tardis.updateEntrancePortals();
-                    tardis.getConsoleRoom().updateRoomsEntrancesPortals(tardis);
+                    tardis.updateRoomsEntrancesPortals();
                 });
             }
         });

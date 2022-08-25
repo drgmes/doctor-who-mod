@@ -6,7 +6,8 @@
 	"mixins": [
 		"MixinLivingEntity",
 		"MixinMinecraftClient",
-		"MixinPortal"
+		"MixinPortal",
+		"MixinServerTeleportationManager"
 	],
 	"client": [
 		"MixinInGameHud"

@@ -32,6 +32,8 @@ public class DWM {
         public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
         public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
 
+        public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
+        public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");
         public static final Text TARDIS_DOORS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.locked");
         public static final Text TARDIS_DOORS_UNLOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
 

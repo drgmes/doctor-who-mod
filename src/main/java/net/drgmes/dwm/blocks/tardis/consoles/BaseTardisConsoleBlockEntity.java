@@ -37,10 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
@@ -155,8 +152,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             TardisConsoleRemoteCallablePackets.class,
             "updateTardisConsoleMonitorPage",
             world.getWorldChunk(this.getPos()),
-            this.getPos(),
-            this.monitorPage
+            this.getPos(), this.monitorPage
         );
     }
 
@@ -165,8 +161,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             TardisConsoleRemoteCallablePackets.class,
             "updateTardisConsoleControlsStates",
             world.getWorldChunk(this.getPos()),
-            this.getPos(),
-            this.controlsStorage.save(new NbtCompound())
+            this.getPos(), this.controlsStorage.save(new NbtCompound())
         );
     }
 
@@ -203,8 +198,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             TardisConsoleRemoteCallablePackets.class,
             "openTardisConsoleTelepathicInterfaceLocations",
             world.getWorldChunk(this.getPos()),
-            this.getPos(),
-            createLocationsListFromRegistry(world)
+            this.getPos(), createLocationsListFromRegistry(world)
         );
     }
 
@@ -213,28 +207,38 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             TardisConsoleRemoteCallablePackets.class,
             "openTardisConsoleTelepathicInterfaceMapBanners",
             world.getWorldChunk(this.getPos()),
-            this.getPos(),
-            mapData.writeNbt(new NbtCompound())
+            this.getPos(), mapData.writeNbt(new NbtCompound())
         );
     }
 
     public void useControl(TardisConsoleControlEntry control, Hand hand, Entity entity) {
         if (!(this.world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) return;
 
+        Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.world)
+            ? TardisStateManager.get(serverWorld)
+            : Optional.empty();
+
         // Monitor
         if (control.role == ETardisConsoleControlRole.MONITOR && hand == Hand.OFF_HAND) {
-            if (!TardisHelper.isTardisDimension(entity.world)) return;
+            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return;
 
-            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                this.sendMonitorOpenPacket(serverWorld, tardis);
-            });
+            if (tardisHolder.get().isBroken()) {
+                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+                return;
+            }
 
+            this.sendMonitorOpenPacket(serverWorld, tardisHolder.get());
             return;
         }
 
         // Telepathic Interface
         if (control.role == ETardisConsoleControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
-            if (!TardisHelper.isTardisDimension(entity.world)) return;
+            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return;
+
+            if (tardisHolder.get().isBroken()) {
+                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+                return;
+            }
 
             ItemStack mainHandItemStack = player.getMainHandStack();
             ItemStack offHandItemStack = player.getOffHandStack();
@@ -244,33 +248,29 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 MapState mapData = FilledMapItem.getOrCreateMapState(itemStack, serverWorld);
                 if (mapData == null) return;
 
-                TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                    if (!tardis.isValid()) return;
-                    if (mapData.dimension == tardis.getWorld().getRegistryKey()) return;
-                    if (tardis.getSystem(TardisSystemFlight.class).inProgress()) return;
-                    if (tardis.getSystem(TardisSystemMaterialization.class).inProgress()) return;
+                if (mapData.dimension == tardisHolder.get().getWorld().getRegistryKey()) return;
+                if (tardisHolder.get().getSystem(TardisSystemFlight.class).inProgress()) return;
+                if (tardisHolder.get().getSystem(TardisSystemMaterialization.class).inProgress()) return;
 
-                    BlockPos destExteriorPosition = tardis.getDestinationExteriorPosition();
-                    BlockPos blockPos = new BlockPos(mapData.centerX, destExteriorPosition.getY(), mapData.centerZ);
+                BlockPos destExteriorPosition = tardisHolder.get().getDestinationExteriorPosition();
+                BlockPos blockPos = new BlockPos(mapData.centerX, destExteriorPosition.getY(), mapData.centerZ);
 
-                    if (mapData.getBanners().size() > 1) {
-                        this.sendTelepathicInterfaceMapBannersOpenPacket(serverWorld, mapData);
-                        return;
-                    }
-                    else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBannerMarker banner) {
-                        String color = "§e" + banner.getColor().getName().toUpperCase().replace("_", " ");
-                        player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
-                        blockPos = banner.getPos();
-                    }
-                    else {
-                        player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
-                    }
+                if (mapData.getBanners().size() > 1) {
+                    this.sendTelepathicInterfaceMapBannersOpenPacket(serverWorld, mapData);
+                    return;
+                }
+                else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBannerMarker banner) {
+                    String color = "§e" + banner.getColor().getName().toUpperCase().replace("_", " ");
+                    player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
+                    blockPos = banner.getPos();
+                }
+                else {
+                    player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded"), true);
+                }
 
-                    tardis.setDestinationDimension(mapData.dimension);
-                    tardis.setDestinationPosition(blockPos);
-                    tardis.updateConsoleTiles();
-                });
-
+                tardisHolder.get().setDestinationDimension(mapData.dimension);
+                tardisHolder.get().setDestinationPosition(blockPos);
+                tardisHolder.get().updateConsoleTiles();
                 return;
             }
 
@@ -333,19 +333,19 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket(serverWorld);
             this.markDirty();
 
-            if (!TardisHelper.isTardisDimension(serverWorld)) {
+            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) {
                 this.sendControlsUpdatePacket(serverWorld);
                 return;
             }
 
-            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (tardis.isValid()) tardis.applyControlsStorageToData(this.controlsStorage);
+            if (tardisHolder.get().isBroken()) {
+                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+                this.sendControlsUpdatePacket(serverWorld);
+                return;
+            }
 
-                try {
-                    this.displayNotification(tardis, this.controlsStorage, control.role, player);
-                } catch (Exception ignored) {
-                }
-            });
+            tardisHolder.get().applyControlsStorageToData(this.controlsStorage);
+            this.displayNotification(tardisHolder.get(), this.controlsStorage, control.role, player);
         }
     }
 

@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardissystem.dematerializationcircuit.models;
+package net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.models;
 
 import net.drgmes.dwm.DWM;
 import net.minecraft.client.model.*;
@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class TardisSystemDematerializationCircuitModel extends Model {
-    public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/item/tardis_systems/tardis_system_dematerialization_circuit.png"), "main");
+    public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/item/tardis/systems/tardis_system_dematerialization_circuit.png"), "main");
     private final ModelPart caps;
     private final ModelPart rods;
     private final ModelPart connection_0;

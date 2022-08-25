@@ -38,12 +38,12 @@ public class ModConfig {
                 builder.push("TARDIS");
                 {
                     dimensionsBlacklist = builder
-                        .comment("List of Dimensions that will not be displayed in the Tardis Dimensions List", "Example: minecraft:the_end")
+                        .comment("List of Dimensions that will not be displayed in the TARDIS Dimensions List", "Example: minecraft:the_end")
                         .translation("config.dwm.tardis.dimensionsBlacklist")
                         .defineList("dimensionsBlacklist", Lists.newArrayList(), String.class::isInstance);
 
                     hideTheEndConditionally = builder
-                        .comment("Hide The End from the Tardis Dimensions List until the Dragon is defeated")
+                        .comment("Hide The End from the TARDIS Dimensions List until the Dragon is defeated")
                         .translation("config.dwm.tardis.hideTheEndConditionally")
                         .define("hideTheEndConditionally", true);
 

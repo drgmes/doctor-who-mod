@@ -43,37 +43,6 @@ public class CommonHelper {
         return null;
     }
 
-    public static BlockRotation getBlockRotation(Direction direction) {
-        return switch (direction) {
-            case WEST -> BlockRotation.CLOCKWISE_90;
-            case EAST -> BlockRotation.COUNTERCLOCKWISE_90;
-            case NORTH -> BlockRotation.CLOCKWISE_180;
-            default -> BlockRotation.NONE;
-        };
-    }
-
-    public static boolean checkBlockIsEmpty(BlockState blockState, boolean ignoreFluids) {
-        return (blockState.isAir()
-            || blockState.getFluidState().isIn(FluidTags.WATER)
-            || (blockState.getMaterial().isReplaceable() && (ignoreFluids || blockState.getFluidState().isEmpty()))
-        );
-    }
-
-    public static boolean checkBlockIsSolid(BlockState blockState) {
-        return (!checkBlockIsEmpty(blockState, false)
-            && blockState.getFluidState().isEmpty()
-            && blockState.getMaterial().isSolid()
-        );
-    }
-
-    public static boolean checkBlockIsTransparent(BlockState blockState) {
-        return (!checkBlockIsSolid(blockState)
-            || blockState.contains(Properties.WATERLOGGED)
-            || !blockState.getMaterial().blocksLight()
-            || !blockState.isOpaque()
-        );
-    }
-
     public static String capitaliseAllWords(String str) {
         if (str == null) return null;
 

@@ -124,7 +124,7 @@ public class TardisConsoleImperialBlockRenderer extends BaseTardisConsoleBlockRe
     }
 
     private void renderScreen(TardisConsoleImperialBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, float rotateDegrees) {
-        if (!tile.tardisStateManager.isValid()) return;
+        if (!tile.tardisStateManager.isValid() || tile.tardisStateManager.isBroken()) return;
 
         matrixStack.push();
         matrixStack.translate(0.5, 1F, 0.5);

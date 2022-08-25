@@ -4,25 +4,25 @@
 	"key.dwm.categories.main": "Doctor Who",
 	"key.dwm.screwdriver_settings_key": "Screwdriver Settings",
 
-	"block.dwm.tardis_exterior_police_box": "Tardis Police Box",
+	"block.dwm.tardis_exterior_police_box": "TARDIS Police Box",
 
-	"block.dwm.tardis_doors_police_box": "Tardis Police Box Doors",
+	"block.dwm.tardis_doors_police_box": "TARDIS Police Box Doors",
 
-	"block.dwm.tardis_console_imperial": "Tardis Imperial Console",
-	"block.dwm.tardis_console_toyota": "Tardis Toyota Console",
+	"block.dwm.tardis_console_imperial": "TARDIS Imperial Console",
+	"block.dwm.tardis_console_toyota": "TARDIS Toyota Console",
 
-	"block.dwm.tardis_engine_imperial": "Tardis Imperial Engine",
-	"block.dwm.tardis_engine_toyota": "Tardis Toyota Engine",
+	"block.dwm.tardis_engine_imperial": "TARDIS Imperial Engine",
+	"block.dwm.tardis_engine_toyota": "TARDIS Toyota Engine",
 
-	"block.dwm.tardis_toyota_spinner": "Tardis Toyota Spinner",
-	"block.dwm.tardis_ars_creator": "Tardis ARS Creator",
-	"block.dwm.tardis_ars_destroyer": "Tardis ARS Destroyer",
+	"block.dwm.tardis_toyota_spinner": "TARDIS Toyota Spinner",
+	"block.dwm.tardis_ars_creator": "TARDIS ARS Creator",
+	"block.dwm.tardis_ars_destroyer": "TARDIS ARS Destroyer",
 
 	"item.dwm.screwdriver_11": "11th Doctor's Sonic Screwdriver",
 	"item.dwm.screwdriver_12": "12th Doctor's Sonic Screwdriver",
 	"item.dwm.screwdriver_13": "13th Doctor's Sonic Screwdriver",
 
-	"item.dwm.tardis_key_1": "Tardis Key",
+	"item.dwm.tardis_key_1": "TARDIS Key",
 
 	"item.dwm.tardis_system_dematerialization_circuit": "Dematerialization Circuit",
 	"item.dwm.tardis_system_dematerialization_circuit.desc": "Materialization System",
@@ -31,7 +31,9 @@
 	"item.dwm.tardis_system_shields_generator": "Shields Generator",
 	"item.dwm.tardis_system_shields_generator.desc": "Shields System",
 
-	"title.dwm.tardis_id": "Tardis: %s",
+	"item.dwm.tardis_repair_kit": "TARDIS Repair Kit",
+
+	"title.dwm.tardis_id": "TARDIS: %s",
 
 	"title.dwm.screwdriver.mode": "Mode: %s",
 	"title.dwm.screwdriver.mode.scan": "Scan",
@@ -91,6 +93,8 @@
 	"screen.dwm.telepathic_interface.button.cancel": "Cancel",
 	"screen.dwm.telepathic_interface.button.accept": "Find",
 
+	"message.dwm.tardis.broken": "§eTARDIS§r is §cBroken§r. Use §cRepair Kit§r on the engine block",
+	"message.dwm.tardis.repaired": "§eTARDIS§r has been §aRepaired",
 	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eDematerialization Circuit §cNot Installed",
 	"message.dwm.tardis.system.directional_unit.not_installed": "§eDirectional Unit §cNot Installed",
 	"message.dwm.tardis.system.shields_generator.not_installed": "§eShields Generator §cNot Installed",
@@ -102,10 +106,10 @@
 	"message.dwm.tardis.ars_interface.destroy.success": "ARS Structure §aDestroyed",
 	"message.dwm.tardis.ars_interface.destroy.failed": "ARS Structure §cNot Destroyed",
 
-	"message.dwm.tardis.monitor.console_rooms.prepare": "Leave Tardis to Start Rebuild",
-	"message.dwm.tardis.monitor.console_rooms.started": "Tardis Rebuild Started",
-	"message.dwm.tardis.monitor.console_rooms.success": "Tardis Rebuild §aSuccessful",
-	"message.dwm.tardis.monitor.console_rooms.failed": "Tardis Rebuild §cFailed",
+	"message.dwm.tardis.monitor.console_rooms.prepare": "Leave TARDIS to Start Rebuild",
+	"message.dwm.tardis.monitor.console_rooms.started": "TARDIS Rebuild Started",
+	"message.dwm.tardis.monitor.console_rooms.success": "TARDIS Rebuild §aSuccessful",
+	"message.dwm.tardis.monitor.console_rooms.failed": "TARDIS Rebuild §cFailed",
 
 	"message.dwm.tardis.telepathic_interface.map.loaded": "Map Coords §aLoaded",
 	"message.dwm.tardis.telepathic_interface.map.loaded.banner": "%s Banner Coords §aLoaded",
@@ -149,7 +153,7 @@
 
 	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
-	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the Tardis Dimensions List",
-	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the Tardis Dimensions List until the Dragon is defeated",
+	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
+	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
 	"config.dwm.tardis.tardisMaxFlightTime": "Max flight time for TARDIS"
 }

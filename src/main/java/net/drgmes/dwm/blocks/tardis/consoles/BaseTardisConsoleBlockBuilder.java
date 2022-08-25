@@ -22,6 +22,6 @@ public abstract class BaseTardisConsoleBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/tardis/consoles/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getBlockItem(), "item/block/tardis/consoles/" + this.getName());
     }
 }

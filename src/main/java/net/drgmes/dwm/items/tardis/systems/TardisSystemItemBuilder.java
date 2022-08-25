@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.tardissystem;
+package net.drgmes.dwm.items.tardis.systems;
 
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.utils.builders.item.ItemBuilder;
@@ -17,6 +17,6 @@ public class TardisSystemItemBuilder extends ItemBuilder {
 
     @Override
     public void registerItemModel(ItemModelGenerator itemModelGenerator) {
-        ModelHelper.createItemModel(itemModelGenerator, this.getItem(), "item/tardis_systems/" + this.getName());
+        ModelHelper.createItemModel(itemModelGenerator, this.getItem(), "item/tardis/systems/" + this.getName());
     }
 }

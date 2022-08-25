@@ -1,8 +1,8 @@
 {
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "dwm:item/tardis_systems/tardis_system_directional_unit",
-		"particle": "dwm:item/tardis_systems/tardis_system_directional_unit"
+		"0": "dwm:item/tardis/systems/tardis_system_directional_unit",
+		"particle": "dwm:item/tardis/systems/tardis_system_directional_unit"
 	},
 	"elements": [
 		{

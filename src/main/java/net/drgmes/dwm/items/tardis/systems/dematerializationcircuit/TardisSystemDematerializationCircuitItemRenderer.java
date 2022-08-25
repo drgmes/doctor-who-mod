@@ -1,6 +1,6 @@
-package net.drgmes.dwm.items.tardissystem.dematerializationcircuit;
+package net.drgmes.dwm.items.tardis.systems.dematerializationcircuit;
 
-import net.drgmes.dwm.items.tardissystem.dematerializationcircuit.models.TardisSystemDematerializationCircuitModel;
+import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.models.TardisSystemDematerializationCircuitModel;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumer;
