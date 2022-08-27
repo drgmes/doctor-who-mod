@@ -4,6 +4,8 @@
 	"key.dwm.categories.main": "Doctor Who",
 	"key.dwm.screwdriver_settings_key": "Screwdriver Settings",
 
+	"block.dwm.engineer_table": "Engineer Table",
+
 	"block.dwm.tardis_exterior_police_box": "TARDIS Police Box",
 
 	"block.dwm.tardis_doors_police_box": "TARDIS Police Box Doors",
@@ -32,6 +34,8 @@
 	"item.dwm.tardis_system_shields_generator.desc": "Shields System",
 
 	"item.dwm.tardis_repair_kit": "TARDIS Repair Kit",
+
+	"entity.minecraft.villager.dwm.engineer": "Engineer",
 
 	"title.dwm.tardis_id": "TARDIS: %s",
 

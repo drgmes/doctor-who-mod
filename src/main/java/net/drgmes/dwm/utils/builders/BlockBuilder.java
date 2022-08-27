@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.builders.block;
+package net.drgmes.dwm.utils.builders;
 
 import net.drgmes.dwm.datagen.common.ModLootTableProvider;
 import net.drgmes.dwm.datagen.common.ModRecipeProvider;
@@ -15,15 +15,16 @@ import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.TagKey;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class BlockBuilder {
-    public final String name;
     public final ArrayList<TagKey<Block>> tags = new ArrayList<>();
 
+    private final String name;
     private final Block block;
     private final Item blockItem;
 
@@ -41,7 +42,7 @@ public class BlockBuilder {
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
-        return AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(0.5f);
+        return AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(2.0f);
     }
 
     public String getName() {
@@ -73,5 +74,6 @@ public class BlockBuilder {
     }
 
     public void registerTags() {
+        this.tags.add(BlockTags.PICKAXE_MINEABLE);
     }
 }

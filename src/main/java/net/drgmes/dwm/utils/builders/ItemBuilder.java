@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.builders.item;
+package net.drgmes.dwm.utils.builders;
 
 import net.drgmes.dwm.datagen.common.ModRecipeProvider;
 import net.drgmes.dwm.setup.ModCreativeTabs;
@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class ItemBuilder {
-    public final String name;
     public final ArrayList<TagKey<Item>> tags = new ArrayList<>();
 
+    private final String name;
     private final Item item;
 
     public ItemBuilder(String name, Item item) {

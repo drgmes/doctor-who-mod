@@ -1,8 +1,8 @@
 package net.drgmes.dwm.setup;
 
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
-import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
-import net.drgmes.dwm.utils.builders.item.ItemBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
+import net.drgmes.dwm.utils.builders.EntityBuilder;
+import net.drgmes.dwm.utils.builders.ItemBuilder;
 
 public class ModRenderers {
     public static void setup() {

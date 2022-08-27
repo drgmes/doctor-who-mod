@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
 import net.drgmes.dwm.setup.ModBlockEntities;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;

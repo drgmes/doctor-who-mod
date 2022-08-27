@@ -1,6 +1,6 @@
 package net.drgmes.dwm.entities.tardis.consoles.controls;
 
-import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
+import net.drgmes.dwm.utils.builders.EntityBuilder;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.entity.SpawnGroup;
 

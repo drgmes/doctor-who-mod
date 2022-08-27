@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisarscreator;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.data.client.BlockStateModelGenerator;
 
 public class TardisArsCreatorBlockBuilder extends BlockBuilder {

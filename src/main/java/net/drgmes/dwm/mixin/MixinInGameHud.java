@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(InGameHud.class)
 public class MixinInGameHud {
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrixStack, float tickDelta, CallbackInfo ci) {
+    private void render(MatrixStack matrixStack, float tickDelta, CallbackInfo ci) {
         ScrewdriverScanModeOverlay.INSTANCE.render(matrixStack, tickDelta);
     }
 }

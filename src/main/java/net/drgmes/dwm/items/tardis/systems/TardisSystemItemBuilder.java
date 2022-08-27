@@ -1,7 +1,7 @@
 package net.drgmes.dwm.items.tardis.systems;
 
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
-import net.drgmes.dwm.utils.builders.item.ItemBuilder;
+import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.data.client.ItemModelGenerator;
 import net.minecraft.item.Item;

@@ -1,5 +1,6 @@
 package net.drgmes.dwm.setup;
 
+import net.drgmes.dwm.blocks.common.engineertable.EngineerTableBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoleimperial.TardisConsoleImperialBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockBuilder;
@@ -9,12 +10,15 @@ import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExte
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 
 import java.util.ArrayList;
 
 public class ModBlocks {
     public static final ArrayList<BlockBuilder> BLOCK_BUILDERS = new ArrayList<>();
+
+    // Common
+    public static final BlockBuilder ENGINEER_TABLE = new EngineerTableBlockBuilder("engineer_table");
 
     // Tardis Exteriors
     public static final BlockBuilder TARDIS_EXTERIOR_POLICE_BOX = new TardisExteriorPoliceBoxBlockBuilder("tardis_exterior_police_box");

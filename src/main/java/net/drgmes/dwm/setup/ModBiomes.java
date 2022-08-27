@@ -7,8 +7,8 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.OverworldBiomeCreator;
 
 public class ModBiomes {
-    public static final Biome TARDIS = Registration.registerBiome("tardis", OverworldBiomeCreator::createTheVoid);
     public static final RegistryKey<Biome> TARDIS_KEY = RegistryKey.of(Registry.BIOME_KEY, DWM.getIdentifier("tardis"));
+    public static final Biome TARDIS = Registration.registerBiome("tardis", OverworldBiomeCreator::createTheVoid);
 
     public static void init() {
     }

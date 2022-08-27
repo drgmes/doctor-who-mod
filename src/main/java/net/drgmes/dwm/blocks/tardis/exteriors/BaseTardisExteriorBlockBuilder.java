@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.datagen.common.ModLootTableProvider;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
@@ -39,6 +39,7 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerTags() {
+        super.registerTags();
         this.tags.add(BlockTags.DRAGON_IMMUNE);
     }
 }

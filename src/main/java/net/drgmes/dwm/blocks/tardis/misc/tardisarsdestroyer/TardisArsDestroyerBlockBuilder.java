@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.common.ModLootTableProvider;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.BlockStateModelGenerator;
@@ -26,5 +26,9 @@ public class TardisArsDestroyerBlockBuilder extends BlockBuilder {
     @Override
     public void registerDrop(ModLootTableProvider modLootTableProvider) {
         modLootTableProvider.addDrop(this.getBlock(), BlockLootTableGenerator.dropsNothing());
+    }
+
+    @Override
+    public void registerTags() {
     }
 }

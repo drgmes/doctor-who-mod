@@ -2,8 +2,8 @@ package net.drgmes.dwm.datagen.client;
 
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModItems;
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
-import net.drgmes.dwm.utils.builders.item.ItemBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
+import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.BlockStateModelGenerator;

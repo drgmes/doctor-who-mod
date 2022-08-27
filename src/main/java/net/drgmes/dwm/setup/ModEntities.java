@@ -1,7 +1,7 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.entities.tardis.consoles.controls.TardisConsoleControlEntityBuilder;
-import net.drgmes.dwm.utils.builders.entity.EntityBuilder;
+import net.drgmes.dwm.utils.builders.EntityBuilder;
 
 import java.util.ArrayList;
 

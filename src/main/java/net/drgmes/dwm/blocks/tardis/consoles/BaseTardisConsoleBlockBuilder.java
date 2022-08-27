@@ -1,6 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.consoles;
 
-import net.drgmes.dwm.utils.builders.block.BlockBuilder;
+import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.data.client.BlockStateModelGenerator;

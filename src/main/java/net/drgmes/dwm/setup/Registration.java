@@ -1,5 +1,6 @@
 package net.drgmes.dwm.setup;
 
+import com.google.common.collect.ImmutableSet;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
@@ -22,7 +23,9 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.poi.PointOfInterestType;
 import qouteall.q_misc_util.LifecycleHack;
 
 import java.util.function.Supplier;
@@ -31,6 +34,7 @@ public class Registration {
     public static void setupCommon() {
         LifecycleHack.markNamespaceStable(DWM.MODID);
 
+        ModSounds.init();
         ModItems.init();
         ModBlocks.init();
         ModBlockEntities.init();
@@ -39,15 +43,16 @@ public class Registration {
         ModBiomes.init();
         ModDimensions.init();
         ModInventories.init();
-        ModSounds.init();
+        ModVillagerProfessions.init();
 
         ArsCategories.init();
         ArsStructures.init();
 
         ModConfig.setup();
+        ModResourcePacks.setup();
         ModEvents.setup();
         ModDimensions.setup();
-        ModResourcePacks.setup();
+        ModVillagerProfessions.setup();
     }
 
     @Environment(EnvType.CLIENT)
@@ -90,6 +95,10 @@ public class Registration {
 
     public static <T extends Biome> T registerBiome(String name, Supplier<T> biomeSupplier) {
         return Registry.register(BuiltinRegistries.BIOME, DWM.getIdentifier(name), biomeSupplier.get());
+    }
+
+    public static VillagerProfession registerVillagerProfession(String name, PointOfInterestType poiType, SoundEvent workSound) {
+        return Registry.register(Registry.VILLAGER_PROFESSION, DWM.getIdentifier(name), new VillagerProfession(name, (entry) -> entry.value().equals(poiType), (entry) -> entry.value().equals(poiType), ImmutableSet.of(), ImmutableSet.of(), workSound));
     }
 
     public static SoundEvent registerSoundEvent(String name) {

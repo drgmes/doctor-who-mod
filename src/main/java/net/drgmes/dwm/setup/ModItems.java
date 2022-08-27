@@ -8,7 +8,7 @@ import net.drgmes.dwm.items.tardis.keys.TardisKeyItemBuilder;
 import net.drgmes.dwm.items.tardis.misc.tardisrepairkit.TardisRepairKitItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.TardisSystemDematerializationCircuitItemBuilder;
-import net.drgmes.dwm.utils.builders.item.ItemBuilder;
+import net.drgmes.dwm.utils.builders.ItemBuilder;
 
 import java.util.ArrayList;
 
