@@ -1,13 +1,11 @@
 package net.drgmes.dwm.setup;
 
-import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
-import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.common.repairkit.RepairKitItemBuilder;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItemBuilder;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItemBuilder;
-import net.drgmes.dwm.items.tardis.systems.TardisSystemItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.TardisSystemDematerializationCircuitItemBuilder;
+import net.drgmes.dwm.items.tardis.systems.directionalunit.TardisSystemDirectionalUnitItemBuilder;
+import net.drgmes.dwm.items.tardis.systems.shieldsgenerator.TardisSystemShieldsGeneratorItemBuilder;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 
 import java.util.ArrayList;
@@ -27,9 +25,9 @@ public class ModItems {
     public static final ItemBuilder TARDIS_KEY_1 = new TardisKeyItemBuilder("tardis_key_1");
 
     // Tardis Systems
-    public static final ItemBuilder TARDIS_SYSTEM_DEMATERIALIZATION_CIRCUIT = new TardisSystemDematerializationCircuitItemBuilder("tardis_system_dematerialization_circuit", TardisSystemMaterialization.class);
-    public static final ItemBuilder TARDIS_SYSTEM_DIRECTIONAL_UNIT = new TardisSystemItemBuilder("tardis_system_directional_unit", TardisSystemFlight.class);
-    public static final ItemBuilder TARDIS_SYSTEM_SHIELDS_GENERATOR = new TardisSystemItemBuilder("tardis_system_shields_generator", TardisSystemShields.class);
+    public static final ItemBuilder TARDIS_SYSTEM_DEMATERIALIZATION_CIRCUIT = new TardisSystemDematerializationCircuitItemBuilder("tardis_system_dematerialization_circuit");
+    public static final ItemBuilder TARDIS_SYSTEM_DIRECTIONAL_UNIT = new TardisSystemDirectionalUnitItemBuilder("tardis_system_directional_unit");
+    public static final ItemBuilder TARDIS_SYSTEM_SHIELDS_GENERATOR = new TardisSystemShieldsGeneratorItemBuilder("tardis_system_shields_generator");
 
     public static void init() {
     }
