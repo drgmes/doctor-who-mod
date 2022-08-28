@@ -7,7 +7,9 @@
 		"MixinLivingEntity",
 		"MixinMinecraftClient",
 		"MixinPortal",
-		"MixinServerTeleportationManager"
+		"MixinServerTeleportationManager",
+		"IMixinStructurePool",
+		"MixinStructurePools"
 	],
 	"client": [
 		"MixinInGameHud"
