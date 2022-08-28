@@ -1,8 +1,8 @@
 {
 	"texture_size": [32, 32],
 	"textures": {
-		"0": "dwm:item/tardis/misc/tardis_repair_kit",
-		"particle": "dwm:item/tardis/misc/tardis_repair_kit"
+		"0": "dwm:item/common/repair_kit",
+		"particle": "dwm:item/common/repair_kit"
 	},
 	"elements": [
 		{

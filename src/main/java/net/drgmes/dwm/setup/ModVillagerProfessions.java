@@ -19,7 +19,7 @@ public class ModVillagerProfessions {
         ENGINEER.setTradeOffers(ImmutableMap.of(
             1,
             new TradeOffers.Factory[]{
-                new TradeOffers.SellItemFactory(ModItems.TARDIS_REPAIR_KIT.getItem(), 36, 1, 1, 10),
+                new TradeOffers.SellItemFactory(ModItems.REPAIR_KIT.getItem(), 36, 1, 1, 10),
             }
         ));
     }

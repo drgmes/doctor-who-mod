@@ -20,6 +20,8 @@
 	"block.dwm.tardis_ars_creator": "TARDIS ARS Creator",
 	"block.dwm.tardis_ars_destroyer": "TARDIS ARS Destroyer",
 
+	"item.dwm.repair_kit": "Repair Kit",
+
 	"item.dwm.screwdriver_11": "11th Doctor's Sonic Screwdriver",
 	"item.dwm.screwdriver_12": "12th Doctor's Sonic Screwdriver",
 	"item.dwm.screwdriver_13": "13th Doctor's Sonic Screwdriver",
@@ -32,8 +34,6 @@
 	"item.dwm.tardis_system_directional_unit.desc": "Navigation and Flight System",
 	"item.dwm.tardis_system_shields_generator": "Shields Generator",
 	"item.dwm.tardis_system_shields_generator.desc": "Shields System",
-
-	"item.dwm.tardis_repair_kit": "TARDIS Repair Kit",
 
 	"entity.minecraft.villager.dwm.engineer": "Engineer",
 

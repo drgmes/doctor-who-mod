@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.engines;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.tardis.misc.tardisrepairkit.TardisRepairKitItem;
+import net.drgmes.dwm.items.common.repairkit.RepairKitItem;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.AbstractBlock;
@@ -32,7 +32,7 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
             ItemStack heldItem = player.getStackInHand(hand);
 
             if (tardis.isBroken()) {
-                if (heldItem.getItem() instanceof TardisRepairKitItem) {
+                if (heldItem.getItem() instanceof RepairKitItem) {
                     tardis.setBrokenState(false);
                     tardis.updateConsoleTiles();
                     tardis.getConsoleRoom().updateRoomsEntrances(tardis);
