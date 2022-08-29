@@ -28,7 +28,7 @@ public class ScrewdriverScanModeOverlay {
     private static final int LINE_MARGIN = 1;
     private static final float LINE_SCALE = 0.5F;
 
-    public void render(MatrixStack matrixStack, float delta) {
+    public void render(MatrixStack matrixStack) {
         MinecraftClient mc = MinecraftClient.getInstance();
         ClientPlayerEntity player = mc.player;
         if (player == null || mc.world == null) return;
@@ -43,13 +43,12 @@ public class ScrewdriverScanModeOverlay {
 
         int screenWidth = mc.getWindow().getScaledWidth();
         int screenHeight = mc.getWindow().getScaledHeight();
-        int maxTextLength = Math.round((screenWidth - 192) / 2F - PADDING * 1.5F);
 
         float modeTextScale = 0.5F;
-        float modeTextOffset = player.isCreative() ? 3.175F : 5.175F;
-        Vec2f modePos = new Vec2f((screenWidth - 192 + PADDING) / 2F + 2, screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
+        float modeTextOffset = player.isCreative() ? 3F : 5F;
         MutableText modeTitle = Screwdriver.getInteractionMode(screwdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
         MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", modeTitle);
+        Vec2f modePos = new Vec2f(screenWidth - ((screenWidth - 192 + PADDING) / 2F) - mc.textRenderer.getWidth(modeText) * modeTextScale, screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
@@ -59,6 +58,7 @@ public class ScrewdriverScanModeOverlay {
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
+        int maxTextLength = Math.round((screenWidth - 192) / 2F - PADDING * 1.5F);
         Text title = Text.Serializer.fromJson(tag.getString("title"));
         List<Text> lines = new ArrayList<>();
         List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
