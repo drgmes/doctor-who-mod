@@ -93,6 +93,7 @@ public class TardisStateManager extends PersistentState {
 
     public TardisStateManager(ServerWorld world, boolean mustBeBroken) {
         this.broken = mustBeBroken;
+        this.doorsLocked = mustBeBroken;
 
         this.setWorld(world);
 
@@ -377,7 +378,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public boolean setDoorsLockState(boolean flag, PlayerEntity player) {
-        if (player != null && this.getOwner() != null && !player.getUuid().equals(this.getOwner())) return false;
+        if (player != null && (this.getOwner() == null || (this.getOwner() != null && !player.getUuid().equals(this.getOwner())))) return false;
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
 

@@ -66,7 +66,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {
-                        if (!tardis.getOwner().equals(player.getUuid())) return;
+                        if (tardis.getOwner() != null && !tardis.getOwner().equals(player.getUuid())) return;
+                        if (tardis.getOwner() == null) tardis.setOwner(player.getUuid());
                         heldItemTag.putString("tardisId", tardisId);
                     }
 
@@ -129,7 +130,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             tardisExteriorBlockEntity.remat();
 
             TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(false)).ifPresent((tardis) -> {
-                if (tardis.isValid()) tardis.setOwner(entity.getUuid());
+                tardis.setOwner(entity.getUuid());
             });
         }
 

@@ -53,8 +53,10 @@ public class TardisKeyItem extends Item {
                         tardis.setDestinationFacing(Direction.fromRotation(player.getHeadYaw()));
                         tardis.setDestinationDimension(world.getRegistryKey());
                         tardis.setDestinationPosition(player.getBlockPos());
-                        tardis.getSystem(TardisSystemFlight.class).setFlight(true);
-                        player.getItemCooldownManager().set(itemStack.getItem(), (int) (DWM.TIMINGS.DEMAT + DWM.TIMINGS.REMAT + 10));
+
+                        if (tardis.getSystem(TardisSystemFlight.class).setFlight(true)) {
+                            player.getItemCooldownManager().set(itemStack.getItem(), (int) (DWM.TIMINGS.DEMAT + DWM.TIMINGS.REMAT + 10));
+                        }
                     }
 
                     return;

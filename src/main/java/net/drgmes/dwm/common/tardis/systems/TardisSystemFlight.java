@@ -69,10 +69,13 @@ public class TardisSystemFlight implements ITardisSystem {
         return (int) Math.ceil((this.tickInProgressGoal - this.tickInProgress) / this.tickInProgressGoal * 100);
     }
 
-    public void setFlight(boolean flag) {
+    public boolean setFlight(boolean flag) {
         if (flag ? this.takeoff() : this.land()) {
             this.tardis.updateConsoleTiles();
+            return true;
         }
+
+        return false;
     }
 
     public boolean takeoff() {
