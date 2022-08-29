@@ -22,7 +22,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     public String tardisId;
 
     private int tickInProgress = 0;
-    private boolean isMaterialized = false;
+    private boolean isMaterialized = true;
     private boolean inRematProgress = false;
     private boolean inDematProgress = false;
 
@@ -71,37 +71,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
             if (this.tickInProgress < goal) this.tickInProgress++;
             else this.resetMaterializationState(this.inRematProgress);
         }
-
-        if (this.world instanceof ServerWorld) {
-            ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId());
-            if (tardisWorld == null) return;
-
-            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisWorld);
-            if (tardisHolder.isEmpty()) return;
-
-            if (!tardisHolder.get().isValid()
-                || !tardisHolder.get().getCurrentExteriorDimension().equals(this.world.getRegistryKey())
-                || !tardisHolder.get().getCurrentExteriorPosition().equals(this.getPos())
-            ) {
-                if (this.getMaterializedPercent() >= 100) {
-                    this.demat();
-
-                    PacketHelper.sendToClient(
-                        TardisExteriorRemoteCallablePackets.class,
-                        "updateTardisExteriorData",
-                        world.getWorldChunk(this.getPos()),
-                        this.getPos(), false, true
-                    );
-                }
-                else if (!this.inDematProgress) {
-                    this.world.removeBlock(this.getPos().up(), false);
-                    this.world.removeBlock(this.getPos(), false);
-                }
-            }
-        }
     }
 
     public void remat() {
+        this.isMaterialized = false;
         this.inRematProgress = true;
         ModSounds.playTardisLandingSound(this.world, this.getPos());
     }
@@ -125,11 +98,11 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     }
 
     public String getTardisId() {
-        if (this.tardisId == null) this.tardisId = UUID.randomUUID().toString();
+        if (this.tardisId == null || this.tardisId.equals("")) this.tardisId = UUID.randomUUID().toString();
         return this.tardisId;
     }
 
-    public ServerWorld getTardisWorld() {
-        return TardisHelper.getOrCreateTardisWorld(this);
+    public ServerWorld getTardisWorld(boolean mustBeBroken) {
+        return TardisHelper.getOrCreateTardisWorld(this, mustBeBroken);
     }
 }

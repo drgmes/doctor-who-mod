@@ -57,7 +57,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return ActionResult.PASS;
 
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(true)).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
 
                 String tardisId = DimensionHelper.getWorldId(tardis.getWorld());
@@ -118,7 +118,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     protected BlockState getDefaultBlockState() {
-        return super.getDefaultState()
+        return super.getDefaultBlockState()
             .with(OPEN, false)
             .with(LIT, false);
     }
@@ -128,7 +128,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.remat();
 
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(false)).ifPresent((tardis) -> {
                 if (tardis.isValid()) tardis.setOwner(entity.getUuid());
             });
         }
@@ -138,6 +138,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     protected BlockState syncNeighborState(BlockState blockState, BlockState neighborBlockState) {
-        return super.syncNeighborState(blockState, neighborBlockState).with(OPEN, neighborBlockState.get(OPEN));
+        return super.syncNeighborState(blockState, neighborBlockState)
+            .with(OPEN, neighborBlockState.get(OPEN))
+            .with(LIT, neighborBlockState.get(LIT));
     }
 }

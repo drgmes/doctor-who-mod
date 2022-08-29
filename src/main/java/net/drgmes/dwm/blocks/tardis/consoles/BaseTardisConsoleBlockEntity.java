@@ -41,7 +41,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
-    public final TardisStateManager tardisStateManager = new TardisStateManager(null);
+    public final TardisStateManager tardisStateManager = new TardisStateManager(null, false);
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public ItemStack screwdriverItemStack = ItemStack.EMPTY;
     public TardisConsoleTypeEntry consoleType;

@@ -329,7 +329,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private boolean tryLandToForeignTardis(ServerWorld exteriorWorld) {
         if (exteriorWorld.getBlockEntity(this.tardis.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            ServerWorld foreignTardisWorld = tardisExteriorBlockEntity.getTardisWorld();
+            ServerWorld foreignTardisWorld = tardisExteriorBlockEntity.getTardisWorld(true);
 
             if (foreignTardisWorld != null) {
                 Optional<TardisStateManager> tardisHolder = TardisStateManager.get(foreignTardisWorld);

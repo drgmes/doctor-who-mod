@@ -42,7 +42,7 @@ public abstract class BaseRotatableWaterloggedDoubleBlockWithEntity extends Base
 
     @Override
     protected BlockState getDefaultBlockState() {
-        return super.getDefaultState().with(HALF, DoubleBlockHalf.LOWER);
+        return super.getDefaultBlockState().with(HALF, DoubleBlockHalf.LOWER);
     }
 
     @Override

@@ -79,8 +79,8 @@ public class TardisStateManager extends PersistentState {
     private Direction currExteriorFacing;
     private Direction destExteriorFacing;
 
-    private boolean broken = true;
-    private boolean doorsLocked = true;
+    private boolean broken = false;
+    private boolean doorsLocked = false;
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
@@ -91,7 +91,9 @@ public class TardisStateManager extends PersistentState {
     private int energyForge = 0;
     private int xyzStep = 1;
 
-    public TardisStateManager(ServerWorld world) {
+    public TardisStateManager(ServerWorld world, boolean mustBeBroken) {
+        this.broken = mustBeBroken;
+
         this.setWorld(world);
 
         this.addSystem(new TardisSystemMaterialization(this));
@@ -99,12 +101,12 @@ public class TardisStateManager extends PersistentState {
         this.addSystem(new TardisSystemShields(this));
     }
 
-    public static Optional<TardisStateManager> get(ServerWorld world) {
+    public static Optional<TardisStateManager> get(ServerWorld world, boolean mustBeBroken) {
         if (world == null) return Optional.empty();
 
         TardisStateManager tardisStateManager = world.getPersistentStateManager().getOrCreate(
             (tag) -> TardisStateManager.createFromNbt(world, tag),
-            () -> new TardisStateManager(world),
+            () -> new TardisStateManager(world, mustBeBroken),
             DWM.LOCS.TARDIS.getPath()
         );
 
@@ -112,8 +114,12 @@ public class TardisStateManager extends PersistentState {
         return Optional.ofNullable(tardisStateManager);
     }
 
+    public static Optional<TardisStateManager> get(ServerWorld world) {
+        return get(world, true);
+    }
+
     public static TardisStateManager createFromNbt(ServerWorld world, NbtCompound tag) {
-        TardisStateManager tardisStateManager = new TardisStateManager(world);
+        TardisStateManager tardisStateManager = new TardisStateManager(world, false);
         tardisStateManager.readNbt(tag);
         return tardisStateManager;
     }
@@ -121,6 +127,18 @@ public class TardisStateManager extends PersistentState {
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         tag.putString("consoleRoom", this.getConsoleRoom().name);
+
+        tag.putInt("energyArtron", this.energyArtron);
+        tag.putInt("energyForge", this.energyForge);
+        tag.putInt("xyzStep", this.xyzStep);
+
+        tag.putBoolean("broken", this.broken);
+        tag.putBoolean("doorsLocked", this.doorsLocked);
+        tag.putBoolean("doorsOpened", this.doorsOpened);
+        tag.putBoolean("lightEnabled", this.lightEnabled);
+        tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
+        tag.putBoolean("energyArtronHarvesting", this.energyArtronHarvesting);
+        tag.putBoolean("energyForgeHarvesting", this.energyForgeHarvesting);
 
         if (this.owner != null) tag.putUuid("owner", this.owner);
 
@@ -150,18 +168,6 @@ public class TardisStateManager extends PersistentState {
             tag.putInt("destExteriorPositionZ", this.destExteriorPosition.getZ());
         }
 
-        tag.putInt("energyArtron", this.energyArtron);
-        tag.putInt("energyForge", this.energyForge);
-        tag.putInt("xyzStep", this.xyzStep);
-
-        tag.putBoolean("broken", this.broken);
-        tag.putBoolean("doorsLocked", this.doorsLocked);
-        tag.putBoolean("doorsOpened", this.doorsOpened);
-        tag.putBoolean("lightEnabled", this.lightEnabled);
-        tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
-        tag.putBoolean("energyArtronHarvesting", this.energyArtronHarvesting);
-        tag.putBoolean("energyForgeHarvesting", this.energyForgeHarvesting);
-
         NbtCompound tdTagSystemComponents = new NbtCompound();
         Inventories.writeNbt(tdTagSystemComponents, this.systemComponents);
         tag.put("tdTagSystemComponents", tdTagSystemComponents);
@@ -182,7 +188,19 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void readNbt(NbtCompound tag) {
-        if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"));
+        this.energyArtron = tag.getInt("energyArtron");
+        this.energyForge = tag.getInt("energyForge");
+        this.xyzStep = tag.getInt("xyzStep");
+
+        this.broken = tag.getBoolean("broken");
+        this.doorsLocked = tag.getBoolean("doorsLocked");
+        this.doorsOpened = tag.getBoolean("doorsOpened");
+        this.lightEnabled = tag.getBoolean("lightEnabled");
+        this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
+        this.energyArtronHarvesting = tag.getBoolean("energyArtronHarvesting");
+        this.energyForgeHarvesting = tag.getBoolean("energyForgeHarvesting");
+
+        if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"), this.broken);
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
 
         if (tag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getWorldKey(tag.getString("prevExteriorDimension"));
@@ -196,18 +214,6 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("prevExteriorFacing")) this.prevExteriorFacing = getDirectionByKey(tag, "prevExteriorFacing");
         if (tag.contains("currExteriorFacing")) this.currExteriorFacing = getDirectionByKey(tag, "currExteriorFacing");
         if (tag.contains("destExteriorFacing")) this.destExteriorFacing = getDirectionByKey(tag, "destExteriorFacing");
-
-        this.energyArtron = tag.getInt("energyArtron");
-        this.energyForge = tag.getInt("energyForge");
-        this.xyzStep = tag.getInt("xyzStep");
-
-        this.broken = tag.getBoolean("broken");
-        this.doorsLocked = tag.getBoolean("doorsLocked");
-        this.doorsOpened = tag.getBoolean("doorsOpened");
-        this.lightEnabled = tag.getBoolean("lightEnabled");
-        this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
-        this.energyArtronHarvesting = tag.getBoolean("energyArtronHarvesting");
-        this.energyForgeHarvesting = tag.getBoolean("energyForgeHarvesting");
 
         this.systemComponents = DefaultedList.ofSize(this.systemComponents.size(), ItemStack.EMPTY);
         Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents);
@@ -242,7 +248,12 @@ public class TardisStateManager extends PersistentState {
     }
 
     public TardisConsoleRoomEntry getConsoleRoom() {
-        return this.consoleRoom != null ? this.consoleRoom : TardisConsoleRooms.DEFAULT;
+        return this.consoleRoom != null
+            ? this.consoleRoom
+            : (this.isBroken()
+                ? TardisConsoleRooms.DEFAULT_ABANDONED
+                : TardisConsoleRooms.DEFAULT
+            );
     }
 
     public void setConsoleRoom(TardisConsoleRoomEntry consoleRoom) {

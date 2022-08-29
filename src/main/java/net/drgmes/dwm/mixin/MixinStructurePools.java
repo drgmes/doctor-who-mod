@@ -17,10 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MixinStructurePools {
     @Inject(method = "register", at = @At("HEAD"))
     private static void register(StructurePool templatePool, CallbackInfoReturnable<RegistryEntry<StructurePool>> cir) {
-        addElementToPool(templatePool, new Identifier("village/plains/houses"), DWM.getIdentifier("village/plains/houses/engineer"), 10);
-        addElementToPool(templatePool, new Identifier("village/savanna/houses"), DWM.getIdentifier("village/savanna/houses/engineer"), 10);
-        addElementToPool(templatePool, new Identifier("village/snowy/houses"), DWM.getIdentifier("village/snowy/houses/engineer"), 10);
-        addElementToPool(templatePool, new Identifier("village/taiga/houses"), DWM.getIdentifier("village/taiga/houses/engineer"), 10);
+        addElementToPool(templatePool, new Identifier("village/plains/houses"), DWM.getIdentifier("village/plains/houses/engineer"), 8);
+        addElementToPool(templatePool, new Identifier("village/savanna/houses"), DWM.getIdentifier("village/savanna/houses/engineer"), 8);
+        addElementToPool(templatePool, new Identifier("village/snowy/houses"), DWM.getIdentifier("village/snowy/houses/engineer"), 8);
+        addElementToPool(templatePool, new Identifier("village/taiga/houses"), DWM.getIdentifier("village/taiga/houses/engineer"), 8);
+
+        addElementToPool(templatePool, new Identifier("ancient_city/structures"), DWM.getIdentifier("tardis_exteriors/ancient_city/tardis_exterior_police_box"), 1);
+        addElementToPool(templatePool, new Identifier("bastion/treasure/bases/centers"), DWM.getIdentifier("tardis_exteriors/bastion/tardis_exterior_police_box"), 1);
     }
 
     private static void addElementToPool(StructurePool pool, Identifier targetPool, Identifier elementId, int weight) {

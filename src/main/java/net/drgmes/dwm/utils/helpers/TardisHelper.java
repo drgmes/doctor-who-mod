@@ -21,6 +21,7 @@ import qouteall.q_misc_util.MiscHelper;
 import qouteall.q_misc_util.my_util.DQuaternion;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
@@ -49,8 +50,8 @@ public class TardisHelper {
         return Map.entry(portal, portalReversed);
     }
 
-    public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction) {
-        ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, TardisHelper::tardisSetup, TardisHelper::tardisDimensionBuilder);
+    public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, Consumer<ServerWorld> tardisSetup) {
+        ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, tardisSetup, TardisHelper::tardisDimensionBuilder);
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
             tardis.setDimension(dimension, false);
             tardis.setFacing(direction, false);
@@ -60,12 +61,18 @@ public class TardisHelper {
         return tardisWorld;
     }
 
-    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile) {
+    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile, boolean mustBeBroken) {
         return tile.getWorld() == null || tile.getWorld().isClient ? null : TardisHelper.getOrCreateTardisWorld(
             tile.getTardisId(),
             tile.getWorld().getRegistryKey(),
             tile.getPos(),
-            tile.getCachedState().get(BaseTardisExteriorBlock.FACING)
+            tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
+            (tardisWorld) -> {
+                TardisStateManager.get(tardisWorld, mustBeBroken).ifPresent((tardis) -> {
+                    tardis.getConsoleRoom().place(tardis);
+                    tardis.updateConsoleTiles();
+                });
+            }
         );
     }
 
@@ -77,12 +84,5 @@ public class TardisHelper {
             server.getRegistryManager().getManaged(Registry.DIMENSION_TYPE_KEY).getOrCreateEntry(ModDimensionTypes.TARDIS),
             new TardisChunkGenerator(server)
         );
-    }
-
-    private static void tardisSetup(ServerWorld tardisWorld) {
-        TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-            tardis.getConsoleRoom().place(tardis);
-            tardis.updateConsoleTiles();
-        });
     }
 }

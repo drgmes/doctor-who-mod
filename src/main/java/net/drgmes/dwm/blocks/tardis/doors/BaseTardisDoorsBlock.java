@@ -153,7 +153,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
 
     @Override
     protected BlockState getDefaultBlockState() {
-        return super.getDefaultState().with(OPEN, false);
+        return super.getDefaultBlockState().with(OPEN, false);
     }
 
     @Override

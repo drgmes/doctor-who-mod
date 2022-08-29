@@ -148,7 +148,7 @@ public class TardisConsoleRemoteCallablePackets {
         }
 
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(consoleRoomId);
+            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(consoleRoomId, tardis.isBroken());
             boolean isConsoleRoomGenerated = consoleRoom.place(tardis);
 
             if (isConsoleRoomGenerated) {
