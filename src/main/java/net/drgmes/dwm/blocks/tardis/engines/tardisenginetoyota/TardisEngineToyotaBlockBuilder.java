@@ -3,6 +3,8 @@ package net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota;
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models.TardisEngineToyotaModel;
 import net.drgmes.dwm.setup.ModBlockEntities;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -13,6 +15,7 @@ public class TardisEngineToyotaBlockBuilder extends BaseTardisEngineBlockBuilder
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void registerCustomRender() {
         EntityModelLayerRegistry.registerModelLayer(TardisEngineToyotaModel.LAYER_LOCATION, TardisEngineToyotaModel::getTexturedModelData);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_ENGINE_TOYOTA, TardisEngineToyotaBlockRenderer::new);

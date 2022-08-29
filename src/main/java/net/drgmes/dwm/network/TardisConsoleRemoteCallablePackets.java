@@ -13,6 +13,8 @@ import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStora
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapBannerMarker;
@@ -35,20 +37,24 @@ import net.minecraft.world.gen.structure.Structure;
 import java.util.*;
 
 public class TardisConsoleRemoteCallablePackets {
-    private static final MinecraftClient mc = MinecraftClient.getInstance();
-
     // /////////// //
     // Clientbound //
     // /////////// //
 
+    @Environment(EnvType.CLIENT)
     public static void updateTardisConsoleData(BlockPos blockPos, NbtCompound tag) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             tardisConsoleBlockEntity.readNbt(tag);
             tardisConsoleBlockEntity.markDirty();
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void updateTardisConsoleControlsStates(BlockPos blockPos, NbtCompound tag) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
             controlsStorage.load(tag);
@@ -58,31 +64,51 @@ public class TardisConsoleRemoteCallablePackets {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void updateTardisConsoleMonitorPage(BlockPos blockPos, int monitorPage) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             tardisConsoleBlockEntity.monitorPage = monitorPage;
             tardisConsoleBlockEntity.markDirty();
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void updateTardisConsoleScrewdriverSlot(BlockPos blockPos, ItemStack screwdriverItemStack) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             tardisConsoleBlockEntity.screwdriverItemStack = screwdriverItemStack;
             tardisConsoleBlockEntity.markDirty();
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void clearTardisConsoleScrewdriverSlot(BlockPos blockPos) {
         updateTardisConsoleScrewdriverSlot(blockPos, ItemStack.EMPTY);
     }
 
-    public static void openTardisConsoleMonitor(BlockPos blockPos, String tardisId, String consoleRoomId) {
+    @Environment(EnvType.CLIENT)
+    public static void openTardisConsoleMonitor(BlockPos blockPos, String tardisId, String consoleRoomId, NbtCompound tag) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
-            mc.setScreen(new TardisConsoleMonitorConsoleRoomsScreen(tardisConsoleBlockEntity, tardisId, consoleRoomId));
+            NbtCompound consoleRoomsTag = tag.getCompound("consoleRooms");
+            List<TardisConsoleRoomEntry> consoleRooms = new ArrayList<>();
+            List<String> keys = new ArrayList<>(consoleRoomsTag.getKeys().stream().toList());
+
+            keys.sort(Comparator.comparing((key) -> key));
+            keys.forEach((key) -> consoleRooms.add(TardisConsoleRoomEntry.create(consoleRoomsTag.getCompound(key), false)));
+
+            mc.setScreen(new TardisConsoleMonitorConsoleRoomsScreen(tardisConsoleBlockEntity, tardisId, consoleRoomId, tag.getInt("selectedConsoleRoomIndex"), consoleRooms));
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void openTardisConsoleTelepathicInterfaceLocations(BlockPos blockPos, NbtCompound tag) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             List<Map.Entry<Identifier, TardisConsoleTelepathicInterfaceLocationsScreen.EDataType>> locations = new ArrayList<>();
             List<String> keys = new ArrayList<>(tag.getKeys().stream().toList());
@@ -99,7 +125,10 @@ public class TardisConsoleRemoteCallablePackets {
         }
     }
 
+    @Environment(EnvType.CLIENT)
     public static void openTardisConsoleTelepathicInterfaceMapBanners(BlockPos blockPos, NbtCompound tag) {
+        final MinecraftClient mc = MinecraftClient.getInstance();
+
         if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisConsoleBlockEntity tardisConsoleBlockEntity) {
             mc.setScreen(new TardisConsoleTelepathicInterfaceMapBannersScreen(tardisConsoleBlockEntity, MapState.fromNbt(tag)));
         }

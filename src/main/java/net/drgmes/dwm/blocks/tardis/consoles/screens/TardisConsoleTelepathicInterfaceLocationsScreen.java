@@ -43,26 +43,6 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
     }
 
     @Override
-    protected void init() {
-        int locationsListGhostSpace = 10;
-        int locationsListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int locationsListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - locationsListGhostSpace;
-        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - locationsListGhostSpace - 1;
-
-        Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
-        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
-
-        Vec2f locationsListPos = this.getRenderPos(BACKGROUND_BORDERS, locationsListOffset);
-        this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
-
-        this.addDrawableChild(this.locationsListWidget);
-        this.addDrawableChild(this.search);
-
-        super.init();
-        this.update();
-    }
-
-    @Override
     public void resize(MinecraftClient mc, int width, int height) {
         String search = this.search.getText();
         LocationsListWidget.LocationEntry selected = this.selected;
@@ -74,19 +54,6 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         if (!this.search.getText().isEmpty()) {
             this.reloadLocationsList();
         }
-    }
-
-    @Override
-    protected void apply() {
-        if (this.selected != null) {
-            PacketHelper.sendToServer(
-                TardisConsoleRemoteCallablePackets.class,
-                "applyTardisConsoleTelepathicInterfaceLocation",
-                this.selected.entry.getKey(), this.selected.entry.getValue().name()
-            );
-        }
-
-        super.apply();
     }
 
     @Override
@@ -120,6 +87,39 @@ public class TardisConsoleTelepathicInterfaceLocationsScreen extends BaseTardisC
         }
 
         this.filteredLocations = this.locations;
+    }
+
+    @Override
+    protected void init() {
+        int locationsListGhostSpace = 10;
+        int locationsListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
+        int locationsListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - locationsListGhostSpace;
+        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - locationsListGhostSpace - 1;
+
+        Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
+        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
+
+        Vec2f locationsListPos = this.getRenderPos(BACKGROUND_BORDERS, locationsListOffset);
+        this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
+
+        this.addDrawableChild(this.locationsListWidget);
+        this.addDrawableChild(this.search);
+
+        super.init();
+        this.update();
+    }
+
+    @Override
+    protected void apply() {
+        if (this.selected != null) {
+            PacketHelper.sendToServer(
+                TardisConsoleRemoteCallablePackets.class,
+                "applyTardisConsoleTelepathicInterfaceLocation",
+                this.selected.entry.getKey(), this.selected.entry.getValue().name()
+            );
+        }
+
+        super.apply();
     }
 
     private void update() {

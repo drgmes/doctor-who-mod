@@ -26,6 +26,23 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
     }
 
     @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        BannersListWidget.BannerEntry selected = this.selected;
+        super.resize(mc, width, height);
+        this.selected = selected;
+    }
+
+    @Override
+    public void tick() {
+        this.bannersListWidget.setSelected(this.selected);
+    }
+
+    public void setSelected(BannersListWidget.BannerEntry entry) {
+        this.selected = entry == this.selected ? null : entry;
+        this.update();
+    }
+
+    @Override
     protected void init() {
         int bannersListGhostSpace = 10;
         int bannersListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
@@ -40,13 +57,6 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
     }
 
     @Override
-    public void resize(MinecraftClient mc, int width, int height) {
-        BannersListWidget.BannerEntry selected = this.selected;
-        super.resize(mc, width, height);
-        this.selected = selected;
-    }
-
-    @Override
     protected void apply() {
         if (this.selected != null) {
             PacketHelper.sendToServer(
@@ -57,16 +67,6 @@ public class TardisConsoleTelepathicInterfaceMapBannersScreen extends BaseTardis
         }
 
         this.close();
-    }
-
-    @Override
-    public void tick() {
-        this.bannersListWidget.setSelected(this.selected);
-    }
-
-    public void setSelected(BannersListWidget.BannerEntry entry) {
-        this.selected = entry == this.selected ? null : entry;
-        this.update();
     }
 
     private void update() {

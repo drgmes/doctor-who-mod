@@ -8,8 +8,6 @@ import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
 import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRoleType;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
@@ -22,7 +20,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3f;
 
-@Environment(EnvType.CLIENT)
 public class TardisConsoleImperialBlockRenderer extends BaseTardisConsoleBlockRenderer<TardisConsoleImperialBlockEntity> {
     public TardisConsoleImperialBlockRenderer(BlockEntityRendererFactory.Context context) {
         super(context);

@@ -1,8 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -11,7 +9,6 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
 
-@Environment(EnvType.CLIENT)
 public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<TardisToyotaSpinnerBlockEntity> {
     protected final BlockEntityRendererFactory.Context ctx;
 

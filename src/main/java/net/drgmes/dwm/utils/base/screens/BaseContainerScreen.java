@@ -1,7 +1,5 @@
 package net.drgmes.dwm.utils.base.screens;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
@@ -12,7 +10,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 
-@Environment(EnvType.CLIENT)
 public abstract class BaseContainerScreen<T extends ScreenHandler> extends AbstractInventoryScreen<T> implements IBaseScreen {
     public BaseContainerScreen(T menu, PlayerInventory inventory, Text component) {
         super(menu, inventory, component);

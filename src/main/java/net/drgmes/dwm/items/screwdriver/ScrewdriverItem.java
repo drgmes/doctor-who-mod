@@ -4,6 +4,8 @@ import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
@@ -44,9 +46,12 @@ public class ScrewdriverItem extends Item {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void inventoryTick(ItemStack itemStack, World world, Entity entity, int slotIdx, boolean flag) {
+        if (!world.isClient) return;
+
         MinecraftClient mc = MinecraftClient.getInstance();
-        if (!entity.world.isClient || mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
+        if (mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
         if (ModKeys.SCREWDRIVER_SETTINGS.isPressed()) {
             if (player.getStackInHand(Hand.MAIN_HAND).equals(itemStack)) {

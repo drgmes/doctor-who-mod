@@ -3,15 +3,12 @@ package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 
-@Environment(EnvType.CLIENT)
 public class TardisExteriorPoliceBoxModel extends Model {
     public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/entity/tardis/exteriors/tardis_exterior_police_box.png"), "main");
     private final ModelPart base;

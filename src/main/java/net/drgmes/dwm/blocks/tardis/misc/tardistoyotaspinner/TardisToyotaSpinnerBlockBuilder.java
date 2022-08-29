@@ -4,6 +4,8 @@ import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyota
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -21,6 +23,7 @@ public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void registerCustomRender() {
         EntityModelLayerRegistry.registerModelLayer(TardisToyotaSpinnerModel.LAYER_LOCATION, TardisToyotaSpinnerModel::getTexturedModelData);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_TOYOTA_SPINNER, TardisToyotaSpinnerBlockRenderer::new);

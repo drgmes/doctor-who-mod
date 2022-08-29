@@ -151,23 +151,9 @@ public class TardisStateManager extends PersistentState {
         if (this.currExteriorFacing != null) tag.putString("currExteriorFacing", this.currExteriorFacing.getName());
         if (this.destExteriorFacing != null) tag.putString("destExteriorFacing", this.destExteriorFacing.getName());
 
-        if (this.prevExteriorPosition != null) {
-            tag.putInt("prevExteriorPositionX", this.prevExteriorPosition.getX());
-            tag.putInt("prevExteriorPositionY", this.prevExteriorPosition.getY());
-            tag.putInt("prevExteriorPositionZ", this.prevExteriorPosition.getZ());
-        }
-
-        if (this.currExteriorPosition != null) {
-            tag.putInt("currExteriorPositionX", this.currExteriorPosition.getX());
-            tag.putInt("currExteriorPositionY", this.currExteriorPosition.getY());
-            tag.putInt("currExteriorPositionZ", this.currExteriorPosition.getZ());
-        }
-
-        if (this.destExteriorPosition != null) {
-            tag.putInt("destExteriorPositionX", this.destExteriorPosition.getX());
-            tag.putInt("destExteriorPositionY", this.destExteriorPosition.getY());
-            tag.putInt("destExteriorPositionZ", this.destExteriorPosition.getZ());
-        }
+        if (this.prevExteriorPosition != null) tag.putLong("prevExteriorPosition", this.prevExteriorPosition.asLong());
+        if (this.currExteriorPosition != null) tag.putLong("currExteriorPosition", this.currExteriorPosition.asLong());
+        if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
 
         NbtCompound tdTagSystemComponents = new NbtCompound();
         Inventories.writeNbt(tdTagSystemComponents, this.systemComponents);
@@ -208,13 +194,13 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getWorldKey(tag.getString("currExteriorDimension"));
         if (tag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getWorldKey(tag.getString("destExteriorDimension"));
 
-        if (tag.contains("prevExteriorPositionX")) this.prevExteriorPosition = getBlockPosByKey(tag, "prevExteriorPosition");
-        if (tag.contains("currExteriorPositionX")) this.currExteriorPosition = getBlockPosByKey(tag, "currExteriorPosition");
-        if (tag.contains("destExteriorPositionX")) this.destExteriorPosition = getBlockPosByKey(tag, "destExteriorPosition");
-
         if (tag.contains("prevExteriorFacing")) this.prevExteriorFacing = getDirectionByKey(tag, "prevExteriorFacing");
         if (tag.contains("currExteriorFacing")) this.currExteriorFacing = getDirectionByKey(tag, "currExteriorFacing");
         if (tag.contains("destExteriorFacing")) this.destExteriorFacing = getDirectionByKey(tag, "destExteriorFacing");
+
+        if (tag.contains("prevExteriorPosition")) this.prevExteriorPosition = BlockPos.fromLong(tag.getLong("prevExteriorPosition"));
+        if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
+        if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
         this.systemComponents = DefaultedList.ofSize(this.systemComponents.size(), ItemStack.EMPTY);
         Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents);
@@ -881,10 +867,6 @@ public class TardisStateManager extends PersistentState {
 
         this.systems.values().forEach(ITardisSystem::tick);
         this.validateEntrancePortals();
-    }
-
-    private static BlockPos getBlockPosByKey(NbtCompound tag, String key) {
-        return new BlockPos(tag.getInt(key + "X"), tag.getInt(key + "Y"), tag.getInt(key + "Z"));
     }
 
     private static Direction getDirectionByKey(NbtCompound tag, String key) {

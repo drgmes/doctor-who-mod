@@ -4,6 +4,8 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.datagen.common.ModRecipeProvider;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.models.TardisSystemDematerializationCircuitModel;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.data.server.RecipeProvider;
@@ -19,6 +21,7 @@ public class TardisSystemDematerializationCircuitItemBuilder extends TardisSyste
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     public void registerCustomRender() {
         EntityModelLayerRegistry.registerModelLayer(TardisSystemDematerializationCircuitModel.LAYER_LOCATION, TardisSystemDematerializationCircuitModel::getTexturedModelData);
         BuiltinItemRendererRegistry.INSTANCE.register(this.getItem(), new TardisSystemDematerializationCircuitItemRenderer());

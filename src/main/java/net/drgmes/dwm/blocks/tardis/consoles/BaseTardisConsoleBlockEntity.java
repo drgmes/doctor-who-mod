@@ -4,6 +4,8 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.screens.TardisConsoleTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoles.TardisConsoleTypeEntry;
 import net.drgmes.dwm.common.tardis.consoles.controls.*;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
@@ -184,29 +186,29 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
         }
     }
 
-    public void sendMonitorOpenPacket(ServerWorld world, TardisStateManager tardis) {
+    public void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
         PacketHelper.sendToClient(
             TardisConsoleRemoteCallablePackets.class,
             "openTardisConsoleMonitor",
-            world.getWorldChunk(this.getPos()),
-            this.getPos(), DimensionHelper.getWorldId(tardis.getWorld()), tardis.getConsoleRoom().name
+            player,
+            this.getPos(), DimensionHelper.getWorldId(tardis.getWorld()), tardis.getConsoleRoom().name, createConsoleRoomsList(tardis.getConsoleRoom().name)
         );
     }
 
-    public void sendTelepathicInterfaceLocationsOpenPacket(ServerWorld world) {
+    public void sendTelepathicInterfaceLocationsOpenPacket(ServerPlayerEntity player) {
         PacketHelper.sendToClient(
             TardisConsoleRemoteCallablePackets.class,
             "openTardisConsoleTelepathicInterfaceLocations",
-            world.getWorldChunk(this.getPos()),
-            this.getPos(), createLocationsListFromRegistry(world)
+            player,
+            this.getPos(), createLocationsListFromRegistry(player.getWorld())
         );
     }
 
-    public void sendTelepathicInterfaceMapBannersOpenPacket(ServerWorld world, MapState mapData) {
+    public void sendTelepathicInterfaceMapBannersOpenPacket(ServerPlayerEntity player, MapState mapData) {
         PacketHelper.sendToClient(
             TardisConsoleRemoteCallablePackets.class,
             "openTardisConsoleTelepathicInterfaceMapBanners",
-            world.getWorldChunk(this.getPos()),
+            player,
             this.getPos(), mapData.writeNbt(new NbtCompound())
         );
     }
@@ -227,7 +229,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 return;
             }
 
-            this.sendMonitorOpenPacket(serverWorld, tardisHolder.get());
+            this.sendMonitorOpenPacket(player, tardisHolder.get());
             return;
         }
 
@@ -256,7 +258,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 BlockPos blockPos = new BlockPos(mapData.centerX, destExteriorPosition.getY(), mapData.centerZ);
 
                 if (mapData.getBanners().size() > 1) {
-                    this.sendTelepathicInterfaceMapBannersOpenPacket(serverWorld, mapData);
+                    this.sendTelepathicInterfaceMapBannersOpenPacket(player, mapData);
                     return;
                 }
                 else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBannerMarker banner) {
@@ -274,7 +276,7 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
                 return;
             }
 
-            this.sendTelepathicInterfaceLocationsOpenPacket(serverWorld);
+            this.sendTelepathicInterfaceLocationsOpenPacket(player);
             return;
         }
 
@@ -347,6 +349,20 @@ public abstract class BaseTardisConsoleBlockEntity extends BlockEntity {
             tardisHolder.get().applyControlsStorageToData(this.controlsStorage);
             this.displayNotification(tardisHolder.get(), this.controlsStorage, control.role, player);
         }
+    }
+
+    private static NbtCompound createConsoleRoomsList(String consoleRoomId) {
+        List<TardisConsoleRoomEntry> list = TardisConsoleRooms.CONSOLE_ROOMS.values().stream().filter((consoleRoom) -> !consoleRoom.isHidden).toList();
+
+        AtomicInteger i = new AtomicInteger();
+        NbtCompound tag = new NbtCompound();
+        NbtCompound consoleRoomsTag = new NbtCompound();
+        list.forEach((entry) -> consoleRoomsTag.put(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), entry.writeNbt(new NbtCompound())));
+
+        tag.put("consoleRooms", consoleRoomsTag);
+        tag.putInt("selectedConsoleRoomIndex", Math.max(0, Math.min(list.size(), list.indexOf(TardisConsoleRooms.getConsoleRoom(consoleRoomId)))));
+
+        return tag;
     }
 
     private static NbtCompound createLocationsListFromRegistry(ServerWorld world) {

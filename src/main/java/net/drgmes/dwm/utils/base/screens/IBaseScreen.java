@@ -1,6 +1,8 @@
 package net.drgmes.dwm.utils.base.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -8,6 +10,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 
+@Environment(EnvType.CLIENT)
 public interface IBaseScreen {
     void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight);
     void fillGradient(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, int colorStart, int colorEnd);

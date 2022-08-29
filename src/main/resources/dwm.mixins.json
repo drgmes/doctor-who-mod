@@ -6,13 +6,13 @@
 	"mixins": [
 		"IMixinStructurePool",
 		"MixinLivingEntity",
-		"MixinMinecraftClient",
 		"MixinPortal",
 		"MixinServerTeleportationManager",
 		"MixinStructurePools"
 	],
 	"client": [
-		"MixinInGameHud"
+		"MixinInGameHud",
+		"MixinMinecraftClient"
 	],
 	"injectors": {
 		"defaultRequire": 1

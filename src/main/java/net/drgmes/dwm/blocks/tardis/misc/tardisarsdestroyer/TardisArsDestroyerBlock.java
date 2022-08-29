@@ -3,6 +3,8 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.screens.TardisArsDestroyerScreen;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,6 +27,7 @@ public class TardisArsDestroyerBlock extends BaseRotatableWaterloggedBlockWithEn
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!TardisHelper.isTardisDimension(world)) return ActionResult.PASS;

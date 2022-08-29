@@ -9,6 +9,7 @@ import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
@@ -22,25 +23,22 @@ import net.minecraft.util.registry.Registry;
 import java.util.List;
 
 public class TardisConsoleRoomEntry {
-    public final Text title;
     public final String name;
+    public final String title;
     public final BlockPos center;
     public final BlockPos entrance;
 
     public String decoratorBlock;
-    public String imageUrl;
-    public String repairTo;
-    public boolean isHidden;
+    public String imageUrl = "";
+    public String repairTo = "";
+    public boolean isHidden = false;
 
     protected TardisConsoleRoomEntry(String name, String title, BlockPos center, BlockPos entrance) {
-        this.title = Text.translatable(title);
         this.name = name;
+        this.title = title;
         this.center = center.toImmutable();
         this.entrance = entrance.toImmutable();
-
         this.decoratorBlock = Registry.BLOCK.getId(Blocks.CHISELED_QUARTZ_BLOCK).toString();
-        this.imageUrl = "";
-        this.isHidden = false;
     }
 
     public static TardisConsoleRoomEntry create(String name, String title, BlockPos center, BlockPos entrance) {
@@ -49,8 +47,42 @@ public class TardisConsoleRoomEntry {
         return consoleRoom;
     }
 
+    public static TardisConsoleRoomEntry create(NbtCompound tag, boolean saveToRegistry) {
+        String name = tag.getString("name");
+        String title = tag.getString("title");
+        BlockPos center = BlockPos.fromLong(tag.getLong("center"));
+        BlockPos entrance = BlockPos.fromLong(tag.getLong("entrance"));
+
+        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, center, entrance);
+        if (saveToRegistry) TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
+        consoleRoom.setDecoratorBlock(tag.getString("decoratorBlock"));
+        consoleRoom.setImageUrl(tag.getString("imageUrl"));
+        consoleRoom.setRepairTo(tag.getString("repairTo"));
+        consoleRoom.setHidden(tag.getBoolean("isHidden"));
+        return consoleRoom;
+    }
+
+    public NbtCompound writeNbt(NbtCompound tag) {
+        tag.putBoolean("isHidden", this.isHidden);
+
+        tag.putString("name", this.name);
+        tag.putString("title", this.title);
+        tag.putString("decoratorBlock", this.decoratorBlock);
+        tag.putString("imageUrl", this.imageUrl);
+        tag.putString("repairTo", this.repairTo);
+
+        tag.putLong("center", this.center.asLong());
+        tag.putLong("entrance", this.entrance.asLong());
+
+        return tag;
+    }
+
     public StructureTemplate getTemplate(ServerWorld world) {
         return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("console_rooms/" + this.name));
+    }
+
+    public Text getTitle() {
+        return Text.translatable(this.title);
     }
 
     public BlockPos getCenterPosition() {

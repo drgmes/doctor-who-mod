@@ -2,8 +2,6 @@ package net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota;
 
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models.TardisEngineToyotaModel;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -12,7 +10,6 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3f;
 
-@Environment(EnvType.CLIENT)
 public class TardisEngineToyotaBlockRenderer extends BaseTardisEngineBlockRenderer<TardisEngineToyotaBlockEntity> {
     public TardisEngineToyotaBlockRenderer(BlockEntityRendererFactory.Context context) {
         super(context);

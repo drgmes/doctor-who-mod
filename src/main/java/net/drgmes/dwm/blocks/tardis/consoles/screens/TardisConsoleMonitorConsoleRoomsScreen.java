@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardis.consoles.screens;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
-import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
@@ -13,6 +12,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +23,7 @@ public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMon
     private final String tardisId;
     private final String currentConsoleRoomId;
 
-    private List<TardisConsoleRoomEntry> consoleRooms;
+    private final List<TardisConsoleRoomEntry> consoleRooms;
     private int selectedConsoleRoomIndex;
 
     private ButtonWidget acceptButton;
@@ -31,13 +31,13 @@ public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMon
     private ButtonWidget prevButton;
     private ButtonWidget nextButton;
 
-    public TardisConsoleMonitorConsoleRoomsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, String tardisId, String consoleRoomId) {
+    public TardisConsoleMonitorConsoleRoomsScreen(BaseTardisConsoleBlockEntity tardisConsoleBlockEntity, String tardisId, String consoleRoomId, int selectedConsoleRoomIndex, List<TardisConsoleRoomEntry> consoleRooms) {
         super(DWM.TEXTS.MONITOR_NAME_CONSOLE_ROOMS, tardisConsoleBlockEntity);
 
         this.tardisId = tardisId;
         this.currentConsoleRoomId = consoleRoomId;
-        this.consoleRooms = TardisConsoleRooms.CONSOLE_ROOMS.values().stream().filter((consoleRoom) -> !consoleRoom.isHidden).toList();
-        this.selectedConsoleRoomIndex = Math.max(0, Math.min(this.consoleRooms.size(), this.consoleRooms.indexOf(TardisConsoleRooms.getConsoleRoom(consoleRoomId))));
+        this.selectedConsoleRoomIndex = selectedConsoleRoomIndex;
+        this.consoleRooms = Collections.unmodifiableList(consoleRooms);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class TardisConsoleMonitorConsoleRoomsScreen extends BaseTardisConsoleMon
         TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
 
         Vec2f titlePos = this.getRenderPos(padding, padding);
-        this.getTextRenderer().drawWithShadow(matrixStack, selectedConsoleRoom.title, titlePos.x, titlePos.y, 0xE0E0E0);
+        this.getTextRenderer().drawWithShadow(matrixStack, selectedConsoleRoom.getTitle(), titlePos.x, titlePos.y, 0xE0E0E0);
 
         Vec2f imagePos = this.getRenderPos(padding, padding + this.getTextRenderer().fontHeight * 1.5F);
         Identifier consoleRoomImage = DWM.getIdentifier("images/console_rooms/" + selectedConsoleRoom.name + ".png");

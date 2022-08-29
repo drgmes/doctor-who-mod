@@ -3,6 +3,8 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisarscreator;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.screens.TardisArsCreatorScreen;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlock;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
@@ -19,6 +21,7 @@ public class TardisArsCreatorBlock extends BaseRotatableWaterloggedBlock {
     }
 
     @Override
+    @Environment(EnvType.CLIENT)
     @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!TardisHelper.isTardisDimension(world)) return ActionResult.PASS;

@@ -2,8 +2,6 @@ package net.drgmes.dwm.common.screwdriver.modes.scan;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
-import net.drgmes.dwm.network.ScrewdriverRemoteCallablePackets;
-import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -16,6 +14,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.MusicDiscItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -92,7 +91,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
             lines.add(Text.literal("Can Summon: " + (blockState.get(Properties.CAN_SUMMON) ? "Yes" : "No")));
         }
 
-        updateScrewdriverData(player, hand, title, lines);
+        updateScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
         return ActionResult.SUCCESS;
     }
 
@@ -123,11 +122,11 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
             if (armor > 0) lines.add(Text.literal("Armor: " + armor));
         }
 
-        updateScrewdriverData(player, hand, title, lines);
+        updateScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
         return ActionResult.SUCCESS;
     }
 
-    private void updateScrewdriverData(PlayerEntity player, Hand hand, Text title, List<Text> lines) {
+    private void updateScrewdriverData(ServerPlayerEntity player, Hand hand, Text title, List<Text> lines) {
         ItemStack screwdriverItemStack = player.getStackInHand(hand);
         if (!Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) return;
 
@@ -140,10 +139,6 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
         tag.put("linesTag", linesTag);
 
-        PacketHelper.sendToServer(
-            ScrewdriverRemoteCallablePackets.class,
-            "updateScrewdriverData",
-            screwdriverItemStack, hand == Hand.MAIN_HAND
-        );
+        player.setStackInHand(hand, screwdriverItemStack);
     }
 }

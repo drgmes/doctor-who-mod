@@ -5,13 +5,10 @@ import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlEntry
 import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
 import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRoleType;
 import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlEntry;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 
-@Environment(EnvType.CLIENT)
 public abstract class BaseTardisConsoleBlockRenderer<C extends BaseTardisConsoleBlockEntity> implements BlockEntityRenderer<C> {
     protected final BlockEntityRendererFactory.Context ctx;
 

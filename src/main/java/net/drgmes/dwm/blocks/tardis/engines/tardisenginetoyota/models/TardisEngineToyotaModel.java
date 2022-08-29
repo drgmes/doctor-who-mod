@@ -2,15 +2,12 @@ package net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.engines.BaseTardisEngineBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
 
-@Environment(EnvType.CLIENT)
 public class TardisEngineToyotaModel extends Model {
     public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/entity/tardis/engines/tardis_engine_toyota.png"), "main");
     private final ModelPart base;

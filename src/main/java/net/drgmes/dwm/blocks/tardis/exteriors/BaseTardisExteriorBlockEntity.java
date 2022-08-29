@@ -1,11 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.network.TardisExteriorRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.DimensionHelper;
-import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -15,7 +11,6 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.Optional;
 import java.util.UUID;
 
 public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
