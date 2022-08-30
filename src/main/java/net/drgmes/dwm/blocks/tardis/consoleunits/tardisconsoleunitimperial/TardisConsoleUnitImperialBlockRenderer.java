@@ -178,16 +178,16 @@ public class TardisConsoleUnitImperialBlockRenderer extends BaseTardisConsoleUni
 
     private void renderScreenPage2(TardisConsoleUnitImperialBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, TardisStateManager tardis) {
         String shieldsState = tardis.isShieldsEnabled() ? "ON" : "OFF";
-        String artronEnergyHarvestingState = tardis.isEnergyArtronHarvesting() ? "ON" : "OFF";
-        String forgeEnergyHarvestingState = tardis.isEnergyForgeHarvesting() ? "ON" : "OFF";
+        String fuelHarvestingState = tardis.isFuelHarvesting() ? "ON" : "OFF";
+        String energyHarvestingState = tardis.isEnergyHarvesting() ? "ON" : "OFF";
 
         this.printStringsToScreen(matrixStack, buffer, light, 0.002F, new String[]{
             this.buildScreenParamText("Shields", shieldsState),
-            this.buildScreenParamText("Artron Energy Harvesting", artronEnergyHarvestingState),
-            this.buildScreenParamText("Forge Energy Harvesting", forgeEnergyHarvestingState),
+            this.buildScreenParamText("Fuel Harvesting", fuelHarvestingState),
+            this.buildScreenParamText("Energy Harvesting", energyHarvestingState),
             "",
-            this.buildScreenParamText("Artron Energy", tardis.getEnergyArtron() + " AE"),
-            this.buildScreenParamText("Forge Energy", tardis.getEnergyForge() + " FE"),
+            this.buildScreenParamText("Fuel Level", tardis.getFuelLevel() + " AE"),
+            this.buildScreenParamText("Energy Level", tardis.getEnergyLevel() + " FE"),
         });
     }
 

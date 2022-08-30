@@ -495,7 +495,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         boolean isInFlight = flightSystem.inProgress();
 
         Text component = switch (role) {
-            case DOORS, LIGHT, ENERGY_ARTRON_HARVESTING, ENERGY_FORGE_HARVESTING -> !isMaterialized ? null : Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
+            case DOORS, LIGHT, FUEL_HARVESTING, ENERGY_HARVESTING -> !isMaterialized ? null : Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
             case HANDBRAKE -> Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
             case SAFE_DIRECTION -> Text.translatable(role.message, Text.translatable(role.message + "." + value));
             case FACING -> isInFlight ? null : Text.translatable(role.message, Text.translatable(role.message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2)));

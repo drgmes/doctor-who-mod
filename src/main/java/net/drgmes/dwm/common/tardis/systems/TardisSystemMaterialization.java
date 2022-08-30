@@ -176,8 +176,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setDoorsOpenState(false);
             this.tardis.setLightState(false);
             this.tardis.setShieldsState(false);
-            this.tardis.setEnergyArtronHarvesting(false);
-            this.tardis.setEnergyForgeHarvesting(false);
+            this.tardis.setFuelHarvesting(false);
+            this.tardis.setEnergyHarvesting(false);
             this.tardis.updateConsoleTiles();
 
             this.updateExterior(exteriorWorld, true, false);

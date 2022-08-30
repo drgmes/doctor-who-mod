@@ -84,11 +84,11 @@ public class TardisStateManager extends PersistentState {
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
-    private boolean energyArtronHarvesting = false;
-    private boolean energyForgeHarvesting = false;
+    private boolean fuelHarvesting = false;
+    private boolean energyHarvesting = false;
 
-    private int energyArtron = 0;
-    private int energyForge = 0;
+    private int fuelLevel = 0;
+    private int energyLevel = 0;
     private int xyzStep = 1;
 
     public TardisStateManager(ServerWorld world, boolean mustBeBroken) {
@@ -129,8 +129,8 @@ public class TardisStateManager extends PersistentState {
     public NbtCompound writeNbt(NbtCompound tag) {
         tag.putString("consoleRoom", this.getConsoleRoom().name);
 
-        tag.putInt("energyArtron", this.energyArtron);
-        tag.putInt("energyForge", this.energyForge);
+        tag.putInt("fuelLevel", this.fuelLevel);
+        tag.putInt("energyLevel", this.energyLevel);
         tag.putInt("xyzStep", this.xyzStep);
 
         tag.putBoolean("broken", this.broken);
@@ -138,8 +138,8 @@ public class TardisStateManager extends PersistentState {
         tag.putBoolean("doorsOpened", this.doorsOpened);
         tag.putBoolean("lightEnabled", this.lightEnabled);
         tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
-        tag.putBoolean("energyArtronHarvesting", this.energyArtronHarvesting);
-        tag.putBoolean("energyForgeHarvesting", this.energyForgeHarvesting);
+        tag.putBoolean("fuelHarvesting", this.fuelHarvesting);
+        tag.putBoolean("energyHarvesting", this.energyHarvesting);
 
         if (this.owner != null) tag.putUuid("owner", this.owner);
 
@@ -175,8 +175,8 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void readNbt(NbtCompound tag) {
-        this.energyArtron = tag.getInt("energyArtron");
-        this.energyForge = tag.getInt("energyForge");
+        this.fuelLevel = tag.getInt("fuelLevel");
+        this.energyLevel = tag.getInt("energyLevel");
         this.xyzStep = tag.getInt("xyzStep");
 
         this.broken = tag.getBoolean("broken");
@@ -184,8 +184,8 @@ public class TardisStateManager extends PersistentState {
         this.doorsOpened = tag.getBoolean("doorsOpened");
         this.lightEnabled = tag.getBoolean("lightEnabled");
         this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
-        this.energyArtronHarvesting = tag.getBoolean("energyArtronHarvesting");
-        this.energyForgeHarvesting = tag.getBoolean("energyForgeHarvesting");
+        this.fuelHarvesting = tag.getBoolean("fuelHarvesting");
+        this.energyHarvesting = tag.getBoolean("energyHarvesting");
 
         if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"), this.broken);
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
@@ -432,39 +432,39 @@ public class TardisStateManager extends PersistentState {
         return true;
     }
 
-    public boolean isEnergyArtronHarvesting() {
-        return this.energyArtronHarvesting;
+    public boolean isFuelHarvesting() {
+        return this.fuelHarvesting;
     }
 
-    public void setEnergyArtronHarvesting(boolean flag) {
-        this.energyArtronHarvesting = flag;
+    public void setFuelHarvesting(boolean flag) {
+        this.fuelHarvesting = flag;
         this.markDirty();
     }
 
-    public int getEnergyArtron() {
-        return this.energyArtron;
+    public int getFuelLevel() {
+        return this.fuelLevel;
     }
 
-    public void setEnergyArtron(int value) {
-        this.energyArtron = value;
+    public void setFuelLevel(int value) {
+        this.fuelLevel = value;
         this.markDirty();
     }
 
-    public boolean isEnergyForgeHarvesting() {
-        return this.energyForgeHarvesting;
+    public boolean isEnergyHarvesting() {
+        return this.energyHarvesting;
     }
 
-    public void setEnergyForgeHarvesting(boolean flag) {
-        this.energyForgeHarvesting = flag;
+    public void setEnergyHarvesting(boolean flag) {
+        this.energyHarvesting = flag;
         this.markDirty();
     }
 
-    public int getEnergyForge() {
-        return this.energyForge;
+    public int getEnergyLevel() {
+        return this.energyLevel;
     }
 
-    public void setEnergyForge(int value) {
-        this.energyForge = value;
+    public void setEnergyLevel(int value) {
+        this.energyLevel = value;
         this.markDirty();
     }
 
@@ -706,8 +706,8 @@ public class TardisStateManager extends PersistentState {
         controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, this.getSystem(TardisSystemShields.class).inProgress());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_ARTRON_HARVESTING, this.isEnergyArtronHarvesting());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_FORGE_HARVESTING, this.isEnergyForgeHarvesting());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.FUEL_HARVESTING, this.isFuelHarvesting());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_HARVESTING, this.isEnergyHarvesting());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.LIGHT, this.isLightEnabled());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.DOORS, this.isDoorsOpened());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.FACING, switch (this.getDestinationExteriorFacing()) {
@@ -853,8 +853,8 @@ public class TardisStateManager extends PersistentState {
 
             this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.DOORS));
             this.setLightState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.LIGHT));
-            this.setEnergyArtronHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_ARTRON_HARVESTING));
-            this.setEnergyForgeHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_FORGE_HARVESTING));
+            this.setFuelHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.FUEL_HARVESTING));
+            this.setEnergyHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_HARVESTING));
         }
 
         this.updateConsoleTiles();
