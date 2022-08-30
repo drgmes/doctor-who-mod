@@ -1,7 +1,7 @@
 package net.drgmes.dwm.setup;
 
-import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoleimperial.TardisConsoleImperialBlockEntity;
-import net.drgmes.dwm.blocks.tardis.consoles.tardisconsoletoyota.TardisConsoleToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.TardisConsoleUnitImperialBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
@@ -36,16 +36,16 @@ public class ModBlockEntities {
     // Tardis Consoles //
     // /////////////// //
 
-    public static final BlockEntityType<TardisConsoleImperialBlockEntity> TARDIS_CONSOLE_IMPERIAL = Registration.registerBlockEntity(
-        "tardis_console_imperial",
-        TardisConsoleImperialBlockEntity::new,
-        ModBlocks.TARDIS_CONSOLE_IMPERIAL.getBlock()
+    public static final BlockEntityType<TardisConsoleUnitImperialBlockEntity> TARDIS_CONSOLE_UNIT_IMPERIAL = Registration.registerBlockEntity(
+        "tardis_console_unit_imperial",
+        TardisConsoleUnitImperialBlockEntity::new,
+        ModBlocks.TARDIS_CONSOLE_UNIT_IMPERIAL.getBlock()
     );
 
-    public static final BlockEntityType<TardisConsoleToyotaBlockEntity> TARDIS_CONSOLE_TOYOTA = Registration.registerBlockEntity(
-        "tardis_console_toyota",
-        TardisConsoleToyotaBlockEntity::new,
-        ModBlocks.TARDIS_CONSOLE_TOYOTA.getBlock()
+    public static final BlockEntityType<TardisConsoleUnitToyotaBlockEntity> TARDIS_CONSOLE_UNIT_TOYOTA = Registration.registerBlockEntity(
+        "tardis_console_unit_toyota",
+        TardisConsoleUnitToyotaBlockEntity::new,
+        ModBlocks.TARDIS_CONSOLE_UNIT_TOYOTA.getBlock()
     );
 
     // ////////////// //

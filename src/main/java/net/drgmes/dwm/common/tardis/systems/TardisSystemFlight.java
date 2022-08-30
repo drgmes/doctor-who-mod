@@ -2,7 +2,7 @@ package net.drgmes.dwm.common.tardis.systems;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
+import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.nbt.NbtCompound;
@@ -133,7 +133,7 @@ public class TardisSystemFlight implements ITardisSystem {
 
         Runnable defferedConsumer = () -> {
             this.isInFlight = false;
-            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(ETardisConsoleControlRole.STARTER, false));
+            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, false));
             this.tardis.updateConsoleTiles();
         };
 

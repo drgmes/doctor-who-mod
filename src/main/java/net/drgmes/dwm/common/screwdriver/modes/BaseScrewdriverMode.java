@@ -1,6 +1,6 @@
 package net.drgmes.dwm.common.screwdriver.modes;
 
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlock;
+import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.setup.ModEntities;
@@ -46,7 +46,7 @@ public class BaseScrewdriverMode {
     }
 
     protected boolean checkIsValidHitBlock(BlockState blockState) {
-        if (blockState.getBlock() instanceof BaseTardisConsoleBlock) return false;
+        if (blockState.getBlock() instanceof BaseTardisConsoleUnitBlock) return false;
         if (blockState.getBlock() instanceof BaseTardisExteriorBlock) return false;
         if (blockState.getBlock() instanceof BaseTardisDoorsBlock) return false;
         return true;
@@ -54,10 +54,10 @@ public class BaseScrewdriverMode {
 
     protected boolean checkIsValidHitEntity(Entity entity) {
         if (entity.getType() == Portal.entityType) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL.getEntityType()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_SMALL.getEntityType()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_MEDIUM.getEntityType()) return false;
-        if (entity.getType() == ModEntities.TARDIS_CONSOLE_CONTROL_LARGE.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_SMALL.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_MEDIUM.getEntityType()) return false;
+        if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_LARGE.getEntityType()) return false;
         return true;
     }
 }

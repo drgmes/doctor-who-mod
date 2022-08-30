@@ -74,10 +74,10 @@ public class DWM {
                 public static final Vec2f ARS_INTERFACE_SIZE = new Vec2f(403, 303);
 
                 public static class CONSOLE {
-                    public static final Identifier MONITOR = DWM.getIdentifier("textures/gui/tardis/console/monitor.png");
+                    public static final Identifier MONITOR = DWM.getIdentifier("textures/gui/tardis/console_unit/monitor.png");
                     public static final Vec2f MONITOR_SIZE = new Vec2f(403, 303);
 
-                    public static final Identifier TELEPATHIC_INTERFACE = DWM.getIdentifier("textures/gui/tardis/console/telepathic_interface.png");
+                    public static final Identifier TELEPATHIC_INTERFACE = DWM.getIdentifier("textures/gui/tardis/console_unit/telepathic_interface.png");
                     public static final Vec2f TELEPATHIC_INTERFACE_SIZE = new Vec2f(403, 303);
                 }
 

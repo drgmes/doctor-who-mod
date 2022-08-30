@@ -10,14 +10,14 @@ public class TardisConsoleRooms {
 
     public static final TardisConsoleRoomEntry DEFAULT = new TardisConsoleRoomEntry(
         "imperial_classic",
-        "Imperial Classic",
+        "dwm.console_room.imperial_classic",
         new BlockPos(8, 2, 8),
         new BlockPos(8, 2, 2)
     ).setHidden(true);
 
     public static final TardisConsoleRoomEntry DEFAULT_ABANDONED = new TardisConsoleRoomEntry(
         "imperial_abandoned",
-        "Imperial Abandoned",
+        "dwm.console_room.imperial_abandoned",
         new BlockPos(8, 2, 8),
         new BlockPos(8, 2, 2)
     ).setHidden(true).setRepairTo("imperial_classic");

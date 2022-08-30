@@ -1,0 +1,168 @@
+{
+	"itemGroup.dwm.general": "Doctor Who",
+
+	"key.dwm.categories.main": "Doctor Who",
+	"key.dwm.screwdriver_settings_key": "Налаштування звукової викрутки",
+
+	"block.dwm.engineer_table": "Стіл інженера",
+
+	"block.dwm.tardis_exterior_police_box": "ТАРДІС (Поліцейська будка)",
+
+	"block.dwm.tardis_doors_police_box": "Двері ТАРДІС (Поліцейська будка)",
+
+	"block.dwm.tardis_console_unit_imperial": "Консоль ТАРДІС (Імперська)",
+	"block.dwm.tardis_console_unit_toyota": "Консоль ТАРДІС (Toyota)",
+
+	"block.dwm.tardis_engine_imperial": "Двигун ТАРДІС (Імперська)",
+	"block.dwm.tardis_engine_toyota": "Двигун ТАРДІС (Toyota)",
+
+	"block.dwm.tardis_toyota_spinner": "Спіннер",
+	"block.dwm.tardis_ars_creator": "Система архітектурної реконфігурації",
+	"block.dwm.tardis_ars_destroyer": "Руйнівник архітектурної конфігурації",
+
+	"item.dwm.repair_kit": "Ремонтний набір",
+
+	"item.dwm.screwdriver_11": "Звукова викрутка 11-го",
+	"item.dwm.screwdriver_12": "Звукова викрутка 12-го",
+	"item.dwm.screwdriver_13": "Звукова викрутка 13-ї",
+
+	"item.dwm.tardis_key_1": "Ключ ТАРДІС",
+
+	"item.dwm.tardis_system_dematerialization_circuit": "Дематеріалізаційна схема",
+	"item.dwm.tardis_system_dematerialization_circuit.desc": "Система дематеріалізації",
+	"item.dwm.tardis_system_directional_unit": "Спрямовуючий модуль",
+	"item.dwm.tardis_system_directional_unit.desc": "Системи навігації та польоту",
+	"item.dwm.tardis_system_shields_generator": "Генератор щитів",
+	"item.dwm.tardis_system_shields_generator.desc": "Система щитів",
+
+	"entity.minecraft.villager.dwm.engineer": "Інженер",
+
+	"title.dwm.tardis_id": "ТАРДІС: %s",
+
+	"title.dwm.screwdriver.mode": "Режим: %s",
+	"title.dwm.screwdriver.mode.scan": "Сканування",
+	"title.dwm.screwdriver.mode.setting": "Налаштування",
+	"title.dwm.screwdriver.mode.tardis_relocation": "Релокація",
+
+	"title.dwm.ars.categories.back": "[Назад]",
+	"title.dwm.ars.category.rooms": "Кімнати",
+	"title.dwm.ars.category.rooms.tag": "Кімнати",
+	"title.dwm.ars.category.rooms.wooden": "Дерев'яні кімнати",
+	"title.dwm.ars.category.rooms.wooden.tag": "Дерев'яні",
+	"title.dwm.ars.category.rooms.tech": "Технологічні кімнати",
+	"title.dwm.ars.category.rooms.tech.tag": "Технологічні",
+	"title.dwm.ars.category.hallways": "Коридори",
+	"title.dwm.ars.category.hallways.tag": "Коридори",
+	"title.dwm.ars.category.hallways.wooden": "Дерев'яні коридори",
+	"title.dwm.ars.category.hallways.wooden.tag": "Дерев'яні",
+	"title.dwm.ars.category.hallways.tech": "Технологічні коридори",
+	"title.dwm.ars.category.hallways.tech.tag": "Технологічні",
+
+	"title.dwm.ars.structure.hallway_tech_short": "Технологічний коридор (короткий)",
+	"title.dwm.ars.structure.hallway_tech_medium": "Технологічний коридор (середній)",
+	"title.dwm.ars.structure.hallway_tech_long": "Технологічний коридор (довгий)",
+	"title.dwm.ars.structure.hallway_tech_junction_x": "Технологічне перехрестя (X)",
+	"title.dwm.ars.structure.hallway_tech_junction_t": "Технологічне перехрестя (T)",
+	"title.dwm.ars.structure.hallway_tech_junction_t_left": "Технологічне перехрестя (T-ліворуч)",
+	"title.dwm.ars.structure.hallway_tech_junction_t_right": "Технологічне перехрестя (T-праворуч)",
+	"title.dwm.ars.structure.hallway_tech_turn_left_short": "Технологічний поворот ліворуч (короткий)",
+	"title.dwm.ars.structure.hallway_tech_turn_right_short": "Технологічний поворот праворуч (короткий)",
+	"title.dwm.ars.structure.hallway_tech_turn_left_long": "Технологічний поворот ліворуч (довгий)",
+	"title.dwm.ars.structure.hallway_tech_turn_right_long": "Технологічний поворот праворуч (довгий)",
+	"title.dwm.ars.structure.room_tech_small": "Технологічна кімната (маленька)",
+	"title.dwm.ars.structure.room_tech_medium": "Технологічна кімната (середня)",
+	"title.dwm.ars.structure.room_tech_large": "Технологічна кімната (велика)",
+	"title.dwm.ars.structure.room_tech_huge": "Технологічна кімната (величезна)",
+	"title.dwm.ars.structure.room_tech_storage": "Технологічне сховище",
+
+	"screen.dwm.screwdriver_interface.title": "Інтерфейс налаштування звукової викрутки",
+	"screen.dwm.screwdriver_interface.button.mode": "Режим: %s",
+
+	"screen.dwm.ars_interface.title": "Система архітектурної реконфігурації",
+	"screen.dwm.ars_interface.message": "Ви впевнені, що хочете зруйнувати",
+	"screen.dwm.ars_interface.field.search": "Пошук",
+	"screen.dwm.ars_interface.button.cancel": "Скасувати",
+	"screen.dwm.ars_interface.button.generate": "Сгенерувати кімнату",
+	"screen.dwm.ars_interface.button.destroy": "Зруйнувати кімнату",
+
+	"screen.dwm.monitor.title.console_rooms": "Консольні кімнати",
+	"screen.dwm.monitor.button.console_rooms.cancel": "Скасувати",
+	"screen.dwm.monitor.button.console_rooms.accept": "Оновити кімнату",
+	"screen.dwm.monitor.button.console_rooms.prev": "Попередня",
+	"screen.dwm.monitor.button.console_rooms.next": "Наступна",
+
+	"screen.dwm.telepathic_interface.title.locations": "Телепатичний інтерфейс: Виберіть локацію",
+	"screen.dwm.telepathic_interface.title.banners": "Телепатичний інтерфейс: Виберіть маркер",
+	"screen.dwm.telepathic_interface.field.search": "Пошук",
+	"screen.dwm.telepathic_interface.button.cancel": "Скасувати",
+	"screen.dwm.telepathic_interface.button.accept": "Знайти",
+
+	"message.dwm.tardis.broken": "§eТАРДІС§r §cнесправна§r. Застосуйте §eремонтний набір§r на блоці двигуна",
+	"message.dwm.tardis.repaired": "§eТАРДІС§r §aвідремонтована",
+	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eДематеріалізаційна схема §cне встановлена",
+	"message.dwm.tardis.system.directional_unit.not_installed": "§eСпрямовуючий модуль §cне встановлен",
+	"message.dwm.tardis.system.shields_generator.not_installed": "§eГенератор щитів §cне встановлен",
+
+	"message.dwm.tardis.ars_interface.generated.success": "Кімната §aсгенерована",
+	"message.dwm.tardis.ars_interface.generated.failed": "Кімната §cне сгенерована",
+	"message.dwm.tardis.ars_interface.generated.failed.details": "Помилка! Область не порожня. Проблемна точка: %s",
+
+	"message.dwm.tardis.ars_interface.destroy.success": "Кімната §aзруйнована",
+	"message.dwm.tardis.ars_interface.destroy.failed": "Кімната §cне зруйнована",
+
+	"message.dwm.tardis.monitor.console_rooms.prepare": "Залишіть ТАРДІС для початку перебудови",
+	"message.dwm.tardis.monitor.console_rooms.started": "Перебудова ТАРДІС розпочата",
+	"message.dwm.tardis.monitor.console_rooms.success": "Перебудова ТАРДІС §aуспішно §rзавершена",
+	"message.dwm.tardis.monitor.console_rooms.failed": "Перебудова ТАРДІС §cне вдалася",
+
+	"message.dwm.tardis.telepathic_interface.map.loaded": "Координати мапи §aзавантажені",
+	"message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координати маркера %s завантажені",
+
+	"message.dwm.tardis.telepathic_interface.biome.found": "Біом §aзнайдений",
+	"message.dwm.tardis.telepathic_interface.biome.not_found": "Біом §cне знайдений",
+	"message.dwm.tardis.telepathic_interface.structure.found": "Структура §aзнайдено",
+	"message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне знайдено",
+
+	"message.dwm.tardis.control.role.doors.locked": "Двері §eзаблоковані",
+	"message.dwm.tardis.control.role.doors.unlocked": "Двері §eрозблоковані",
+	"message.dwm.tardis.control.role.doors.active": "Двері §eвідкриті",
+	"message.dwm.tardis.control.role.doors.inactive": "Двері §eзакриті",
+	"message.dwm.tardis.control.role.shields.active": "Щити §eактивовані",
+	"message.dwm.tardis.control.role.shields.inactive": "Щити §eдеактивовані",
+	"message.dwm.tardis.control.role.light.active": "Зовнішнє світло §eактивовано",
+	"message.dwm.tardis.control.role.light.inactive": "Зовнішнє світло §eдеактивовано",
+	"message.dwm.tardis.control.role.energy.artron.active": "Збір палива §eактивовано",
+	"message.dwm.tardis.control.role.energy.artron.inactive": "Збір палива §eдеактивовано",
+	"message.dwm.tardis.control.role.energy.forge.active": "Збір енергії §eактивовано",
+	"message.dwm.tardis.control.role.energy.forge.inactive": "Збір енергії §eдеактивовано",
+	"message.dwm.tardis.control.role.handbrake.active": "Ручне гальмо §eактивовано",
+	"message.dwm.tardis.control.role.handbrake.inactive": "Ручне гальмо §eдеактивовано",
+
+	"message.dwm.tardis.control.role.facing": "Напрям: %s",
+	"message.dwm.tardis.control.role.facing.0": "§eПівніч",
+	"message.dwm.tardis.control.role.facing.1": "§eПівдень",
+	"message.dwm.tardis.control.role.facing.2": "§eЗахід",
+	"message.dwm.tardis.control.role.facing.3": "§eСхід",
+
+	"message.dwm.tardis.control.role.safedirection": "Напрямок вертикального сканування: %s",
+	"message.dwm.tardis.control.role.safedirection.0": "§eВгору",
+	"message.dwm.tardis.control.role.safedirection.1": "§eВниз",
+	"message.dwm.tardis.control.role.safedirection.2": "§eТочне",
+
+	"message.dwm.tardis.control.role.dimension": "Вимір: %s",
+	"message.dwm.tardis.control.role.xset": "X: %s",
+	"message.dwm.tardis.control.role.yset": "Y: %s",
+	"message.dwm.tardis.control.role.zset": "Z: %s",
+	"message.dwm.tardis.control.role.xyzstep": "Модифікатор координат: %s",
+
+	"message.dwm.screwdriver.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
+
+	"dwm.console_room.imperial_abandoned": "Імперська (занедбана)",
+	"dwm.console_room.imperial_classic": "Імперська (класична)",
+	"dwm.console_room.toyota_abandoned": "Toyota (занедбана)",
+	"dwm.console_room.toyota_classic": "Toyota (класична)",
+
+	"config.dwm.tardis.dimensionsBlacklist": "Список вимірів, які не будуть доступні у списку вибору вимірів ТАРДІС",
+	"config.dwm.tardis.hideTheEndConditionally": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений",
+	"config.dwm.tardis.tardisMaxFlightTime": "Максимальний час польоту ТАРДІС"
+}

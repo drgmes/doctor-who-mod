@@ -1,21 +1,21 @@
 package net.drgmes.dwm.common.tardis;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoles.BaseTardisConsoleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlock;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
-import net.drgmes.dwm.common.tardis.consoles.controls.ETardisConsoleControlRole;
-import net.drgmes.dwm.common.tardis.consoles.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
+import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItem;
-import net.drgmes.dwm.network.TardisConsoleRemoteCallablePackets;
+import net.drgmes.dwm.network.TardisConsoleUnitRemoteCallablePackets;
 import net.drgmes.dwm.network.TardisExteriorRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModConfig;
@@ -52,7 +52,7 @@ public class TardisStateManager extends PersistentState {
 
     private final Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new HashMap<>();
     private final List<BaseTardisDoorsBlockEntity> doorTiles = new ArrayList<>();
-    private final List<BaseTardisConsoleBlockEntity> consoleTiles = new ArrayList<>();
+    private final List<BaseTardisConsoleUnitBlockEntity> consoleTiles = new ArrayList<>();
 
     private DefaultedList<ItemStack> systemComponents = DefaultedList.ofSize(SYSTEM_COMPONENTS_CONTAINER_SIZE, ItemStack.EMPTY);
     private DefaultedList<ItemStack> batteryComponents = DefaultedList.ofSize(BATTERY_COMPONENTS_CONTAINER_SIZE, ItemStack.EMPTY);
@@ -663,18 +663,18 @@ public class TardisStateManager extends PersistentState {
     // Tardis Console Tiles methods //
     // //////////////////////////// //
 
-    public List<BaseTardisConsoleBlockEntity> getConsoleTiles() {
+    public List<BaseTardisConsoleUnitBlockEntity> getConsoleTiles() {
         return this.consoleTiles;
     }
 
-    public BaseTardisConsoleBlockEntity getMainConsoleTile() {
+    public BaseTardisConsoleUnitBlockEntity getMainConsoleTile() {
         int size = this.consoleTiles.size();
         return size > 0 ? this.consoleTiles.get(size - 1) : null;
     }
 
     public BlockPos getMainConsolePosition() {
-        BaseTardisConsoleBlockEntity tardisConsoleBlockEntity = this.getMainConsoleTile();
-        return tardisConsoleBlockEntity != null ? tardisConsoleBlockEntity.getPos() : this.getEntrancePosition();
+        BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity = this.getMainConsoleTile();
+        return tardisConsoleUnitBlockEntity != null ? tardisConsoleUnitBlockEntity.getPos() : this.getEntrancePosition();
     }
 
     public void updateConsoleTiles() {
@@ -690,8 +690,8 @@ public class TardisStateManager extends PersistentState {
             tile.markDirty();
 
             PacketHelper.sendToClient(
-                TardisConsoleRemoteCallablePackets.class,
-                "updateTardisConsoleData",
+                TardisConsoleUnitRemoteCallablePackets.class,
+                "updateTardisConsoleUnitData",
                 this.world.getWorldChunk(tile.getPos()),
                 tile.getPos(), tag
             );
@@ -703,15 +703,15 @@ public class TardisStateManager extends PersistentState {
     // /////////////////////////// //
 
     public void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage) {
-        controlsStorage.values.put(ETardisConsoleControlRole.STARTER, this.getSystem(TardisSystemFlight.class).inProgress());
-        controlsStorage.values.put(ETardisConsoleControlRole.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
-        controlsStorage.values.put(ETardisConsoleControlRole.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
-        controlsStorage.values.put(ETardisConsoleControlRole.SHIELDS, this.getSystem(TardisSystemShields.class).inProgress());
-        controlsStorage.values.put(ETardisConsoleControlRole.ENERGY_ARTRON_HARVESTING, this.isEnergyArtronHarvesting());
-        controlsStorage.values.put(ETardisConsoleControlRole.ENERGY_FORGE_HARVESTING, this.isEnergyForgeHarvesting());
-        controlsStorage.values.put(ETardisConsoleControlRole.LIGHT, this.isLightEnabled());
-        controlsStorage.values.put(ETardisConsoleControlRole.DOORS, this.isDoorsOpened());
-        controlsStorage.values.put(ETardisConsoleControlRole.FACING, switch (this.getDestinationExteriorFacing()) {
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, this.getSystem(TardisSystemFlight.class).inProgress());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, this.getSystem(TardisSystemShields.class).inProgress());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_ARTRON_HARVESTING, this.isEnergyArtronHarvesting());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_FORGE_HARVESTING, this.isEnergyForgeHarvesting());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.LIGHT, this.isLightEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.DOORS, this.isDoorsOpened());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.FACING, switch (this.getDestinationExteriorFacing()) {
             default -> 0;
             case EAST -> 1;
             case SOUTH -> 2;
@@ -728,28 +728,28 @@ public class TardisStateManager extends PersistentState {
         if (this.destExteriorPosition == null) this.destExteriorPosition = this.currExteriorPosition;
 
         // Flight
-        boolean starter = (boolean) controlsStorage.get(ETardisConsoleControlRole.STARTER);
-        boolean handbrake = (boolean) controlsStorage.get(ETardisConsoleControlRole.HANDBRAKE);
+        boolean starter = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.STARTER);
+        boolean handbrake = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.HANDBRAKE);
         if (this.getSystem(TardisSystemFlight.class).isEnabled()) {
             this.getSystem(TardisSystemFlight.class).setFlight(!handbrake && starter);
             isInFlight = this.getSystem(TardisSystemFlight.class).inProgress();
         }
         else {
-            controlsStorage.values.put(ETardisConsoleControlRole.STARTER, isInFlight);
+            controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
             if (isInFlight && !starter) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
             else if (!isInFlight && starter) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
         }
 
         // Materialization
-        boolean materialization = (boolean) controlsStorage.get(ETardisConsoleControlRole.MATERIALIZATION);
+        boolean materialization = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.MATERIALIZATION);
         if (this.getSystem(TardisSystemMaterialization.class).isEnabled()) {
-            this.getSystem(TardisSystemMaterialization.class).setSafeDirection(Math.abs((int) controlsStorage.get(ETardisConsoleControlRole.SAFE_DIRECTION)));
+            this.getSystem(TardisSystemMaterialization.class).setSafeDirection(Math.abs((int) controlsStorage.get(ETardisConsoleUnitControlRole.SAFE_DIRECTION)));
             this.getSystem(TardisSystemMaterialization.class).setMaterializationState(materialization);
             isMaterialized = this.getSystem(TardisSystemMaterialization.class).isMaterialized();
         }
         else {
-            controlsStorage.values.put(ETardisConsoleControlRole.STARTER, isInFlight);
-            controlsStorage.values.put(ETardisConsoleControlRole.MATERIALIZATION, isMaterialized);
+            controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
+            controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, isMaterialized);
             if (isMaterialized && !materialization) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
             else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
         }
@@ -757,8 +757,8 @@ public class TardisStateManager extends PersistentState {
         // Only if Tardis is not in flight (and could be when dematerialized)
         if (!isInFlight) {
             // Facing
-            int facing = (int) controlsStorage.get(ETardisConsoleControlRole.FACING);
-            this.destExteriorFacing = switch (facing >= 0 ? facing : ETardisConsoleControlRole.FACING.maxIntValue + facing) {
+            int facing = (int) controlsStorage.get(ETardisConsoleUnitControlRole.FACING);
+            this.destExteriorFacing = switch (facing >= 0 ? facing : ETardisConsoleUnitControlRole.FACING.maxIntValue + facing) {
                 default -> Direction.NORTH;
                 case 1 -> Direction.EAST;
                 case 2 -> Direction.SOUTH;
@@ -766,23 +766,23 @@ public class TardisStateManager extends PersistentState {
             };
 
             // X Set
-            int xSet = (int) controlsStorage.get(ETardisConsoleControlRole.XSET);
+            int xSet = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XSET);
             if (xSet != 0) this.destExteriorPosition = xSet > 0 ? this.destExteriorPosition.east(this.xyzStep) : this.destExteriorPosition.west(this.xyzStep);
 
             // Y Set
-            int ySet = (int) controlsStorage.get(ETardisConsoleControlRole.YSET);
+            int ySet = (int) controlsStorage.get(ETardisConsoleUnitControlRole.YSET);
             if (ySet != 0) this.destExteriorPosition = ySet > 0 ? this.destExteriorPosition.up(this.xyzStep) : this.destExteriorPosition.down(this.xyzStep);
 
             // Z Set
-            int zSet = (int) controlsStorage.get(ETardisConsoleControlRole.ZSET);
+            int zSet = (int) controlsStorage.get(ETardisConsoleUnitControlRole.ZSET);
             if (zSet != 0) this.destExteriorPosition = zSet > 0 ? this.destExteriorPosition.south(this.xyzStep) : this.destExteriorPosition.north(this.xyzStep);
 
             // XYZ Step
-            int xyzStep = (int) controlsStorage.get(ETardisConsoleControlRole.XYZSTEP);
+            int xyzStep = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XYZSTEP);
             if (xyzStep != 0) this.xyzStep = Math.max(1, Math.min(10000, (int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1))));
 
             // Randomizer
-            if ((int) controlsStorage.get(ETardisConsoleControlRole.RANDOMIZER) != 0) {
+            if ((int) controlsStorage.get(ETardisConsoleUnitControlRole.RANDOMIZER) != 0) {
                 boolean facingRandom = Math.random() * 10 > 5;
 
                 if (facingRandom) this.destExteriorPosition = this.destExteriorPosition.east((int) Math.round(Math.random() * 10 * this.xyzStep));
@@ -793,8 +793,8 @@ public class TardisStateManager extends PersistentState {
             }
 
             // Dimension
-            int dimPrev = (int) controlsStorage.get(ETardisConsoleControlRole.DIM_PREV);
-            int dimNext = (int) controlsStorage.get(ETardisConsoleControlRole.DIM_NEXT);
+            int dimPrev = (int) controlsStorage.get(ETardisConsoleUnitControlRole.DIM_PREV);
+            int dimNext = (int) controlsStorage.get(ETardisConsoleUnitControlRole.DIM_NEXT);
             if (dimPrev != 0 || dimNext != 0) {
                 Iterable<ServerWorld> worlds = MiscHelper.getServer().getWorlds();
                 List<RegistryKey<World>> worldKeys = new ArrayList<>();
@@ -828,13 +828,13 @@ public class TardisStateManager extends PersistentState {
             }
 
             // Reset to Prev
-            int resetToPrev = (int) controlsStorage.get(ETardisConsoleControlRole.RESET_TO_PREV);
+            int resetToPrev = (int) controlsStorage.get(ETardisConsoleUnitControlRole.RESET_TO_PREV);
             if (resetToPrev != 0) this.destExteriorDimension = this.getPreviousExteriorDimension();
             if (resetToPrev != 0) this.destExteriorFacing = this.getPreviousExteriorFacing();
             if (resetToPrev != 0) this.destExteriorPosition = this.getPreviousExteriorPosition();
 
             // Reset to Current
-            int resetToCurr = (int) controlsStorage.get(ETardisConsoleControlRole.RESET_TO_CURR);
+            int resetToCurr = (int) controlsStorage.get(ETardisConsoleUnitControlRole.RESET_TO_CURR);
             if (resetToCurr != 0) this.destExteriorDimension = this.getCurrentExteriorDimension();
             if (resetToCurr != 0) this.destExteriorFacing = this.getCurrentExteriorFacing();
             if (resetToCurr != 0) this.destExteriorPosition = this.getCurrentExteriorPosition();
@@ -843,19 +843,19 @@ public class TardisStateManager extends PersistentState {
         // Only if Tardis materialized
         if (isMaterialized) {
             // Shields
-            boolean shields = (boolean) controlsStorage.get(ETardisConsoleControlRole.SHIELDS);
+            boolean shields = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS);
             if (this.getSystem(TardisSystemShields.class).isEnabled()) {
                 this.getSystem(TardisSystemShields.class).setState(shields);
             }
             else {
-                controlsStorage.values.put(ETardisConsoleControlRole.SHIELDS, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, false);
                 if (shields) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
             }
 
-            this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleControlRole.DOORS));
-            this.setLightState((boolean) controlsStorage.get(ETardisConsoleControlRole.LIGHT));
-            this.setEnergyArtronHarvesting((boolean) controlsStorage.get(ETardisConsoleControlRole.ENERGY_ARTRON_HARVESTING));
-            this.setEnergyForgeHarvesting((boolean) controlsStorage.get(ETardisConsoleControlRole.ENERGY_FORGE_HARVESTING));
+            this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.DOORS));
+            this.setLightState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.LIGHT));
+            this.setEnergyArtronHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_ARTRON_HARVESTING));
+            this.setEnergyForgeHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_FORGE_HARVESTING));
         }
 
         this.updateConsoleTiles();

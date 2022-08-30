@@ -1,0 +1,168 @@
+{
+	"itemGroup.dwm.general": "Doctor Who",
+
+	"key.dwm.categories.main": "Doctor Who",
+	"key.dwm.screwdriver_settings_key": "Настройки звуковой отвёртки",
+
+	"block.dwm.engineer_table": "Стол инженера",
+
+	"block.dwm.tardis_exterior_police_box": "ТАРДИС (Полицейская будка)",
+
+	"block.dwm.tardis_doors_police_box": "Двери ТАРДИС (Полицейская будка)",
+
+	"block.dwm.tardis_console_unit_imperial": "Консоль ТАРДИС (Имперская)",
+	"block.dwm.tardis_console_unit_toyota": "Консоль ТАРДИС (Toyota)",
+
+	"block.dwm.tardis_engine_imperial": "Двигатель ТАРДИС (Имперский)",
+	"block.dwm.tardis_engine_toyota": "Двигатель ТАРДИС (Toyota)",
+
+	"block.dwm.tardis_toyota_spinner": "Спиннер",
+	"block.dwm.tardis_ars_creator": "Система архитектурной реконфигурации",
+	"block.dwm.tardis_ars_destroyer": "Разрушитель архитектурной конфигурации",
+
+	"item.dwm.repair_kit": "Ремонтный набор",
+
+	"item.dwm.screwdriver_11": "Звуковая отвёртка 11-го",
+	"item.dwm.screwdriver_12": "Звуковая отвёртка 12-го",
+	"item.dwm.screwdriver_13": "Звуковая отвёртка 13-й",
+
+	"item.dwm.tardis_key_1": "Ключ ТАРДИС",
+
+	"item.dwm.tardis_system_dematerialization_circuit": "Дематериализационная схема",
+	"item.dwm.tardis_system_dematerialization_circuit.desc": "Система дематериализации",
+	"item.dwm.tardis_system_directional_unit": "Направляющий модуль",
+	"item.dwm.tardis_system_directional_unit.desc": "Системы навигации и полёта",
+	"item.dwm.tardis_system_shields_generator": "Генератор щитов",
+	"item.dwm.tardis_system_shields_generator.desc": "Система щитов",
+
+	"entity.minecraft.villager.dwm.engineer": "Инженер",
+
+	"title.dwm.tardis_id": "ТАРДИС: %s",
+
+	"title.dwm.screwdriver.mode": "Режим: %s",
+	"title.dwm.screwdriver.mode.scan": "Сканирование",
+	"title.dwm.screwdriver.mode.setting": "Настройка",
+	"title.dwm.screwdriver.mode.tardis_relocation": "Релокация",
+
+	"title.dwm.ars.categories.back": "[Назад]",
+	"title.dwm.ars.category.rooms": "Комнаты",
+	"title.dwm.ars.category.rooms.tag": "Комнаты",
+	"title.dwm.ars.category.rooms.wooden": "Деревянные комнаты",
+	"title.dwm.ars.category.rooms.wooden.tag": "Деревянные",
+	"title.dwm.ars.category.rooms.tech": "Технологичные комнаты",
+	"title.dwm.ars.category.rooms.tech.tag": "Технологичные",
+	"title.dwm.ars.category.hallways": "Коридоры",
+	"title.dwm.ars.category.hallways.tag": "Коридоры",
+	"title.dwm.ars.category.hallways.wooden": "Деревянные коридоры",
+	"title.dwm.ars.category.hallways.wooden.tag": "Деревянные",
+	"title.dwm.ars.category.hallways.tech": "Технологичные коридоры",
+	"title.dwm.ars.category.hallways.tech.tag": "Технологичные",
+
+	"title.dwm.ars.structure.hallway_tech_short": "Технологичный коридор (короткий)",
+	"title.dwm.ars.structure.hallway_tech_medium": "Технологичный коридор (средний)",
+	"title.dwm.ars.structure.hallway_tech_long": "Технологичный коридор (длинный)",
+	"title.dwm.ars.structure.hallway_tech_junction_x": "Технологичный перекрёсток (X)",
+	"title.dwm.ars.structure.hallway_tech_junction_t": "Технологичный перекрёсток (T)",
+	"title.dwm.ars.structure.hallway_tech_junction_t_left": "Технологичный перекрёсток (T-налево)",
+	"title.dwm.ars.structure.hallway_tech_junction_t_right": "Технологичный перекрёсток (T-направо)",
+	"title.dwm.ars.structure.hallway_tech_turn_left_short": "Технологичный поворот налево (короткий)",
+	"title.dwm.ars.structure.hallway_tech_turn_right_short": "Технологичный поворот направо (короткий)",
+	"title.dwm.ars.structure.hallway_tech_turn_left_long": "Технологичный поворот налево (длинный)",
+	"title.dwm.ars.structure.hallway_tech_turn_right_long": "Технологичный поворот направо (длинный)",
+	"title.dwm.ars.structure.room_tech_small": "Технологичная комната (маленькая)",
+	"title.dwm.ars.structure.room_tech_medium": "Технологичная комната (средняя)",
+	"title.dwm.ars.structure.room_tech_large": "Технологичная комната (большая)",
+	"title.dwm.ars.structure.room_tech_huge": "Технологичная комната (огромная)",
+	"title.dwm.ars.structure.room_tech_storage": "Технологичное хранилище",
+
+	"screen.dwm.screwdriver_interface.title": "Интерфейс настройки звуковой отвёртки",
+	"screen.dwm.screwdriver_interface.button.mode": "Режим: %s",
+
+	"screen.dwm.ars_interface.title": "Система архитектурной реконфигурации",
+	"screen.dwm.ars_interface.message": "Вы уверены, что хотите разрушить",
+	"screen.dwm.ars_interface.field.search": "Поиск",
+	"screen.dwm.ars_interface.button.cancel": "Отмена",
+	"screen.dwm.ars_interface.button.generate": "Сгенерировать комнату",
+	"screen.dwm.ars_interface.button.destroy": "Разрушить комнату",
+
+	"screen.dwm.monitor.title.console_rooms": "Консольные комнаты",
+	"screen.dwm.monitor.button.console_rooms.cancel": "Отмена",
+	"screen.dwm.monitor.button.console_rooms.accept": "Обновить комнату",
+	"screen.dwm.monitor.button.console_rooms.prev": "Предыдущая",
+	"screen.dwm.monitor.button.console_rooms.next": "Следующая",
+
+	"screen.dwm.telepathic_interface.title.locations": "Телепатический интерфейс: Выберите локацию",
+	"screen.dwm.telepathic_interface.title.banners": "Телепатический интерфейс: Выберите маркер",
+	"screen.dwm.telepathic_interface.field.search": "Поиск",
+	"screen.dwm.telepathic_interface.button.cancel": "Отмена",
+	"screen.dwm.telepathic_interface.button.accept": "Найти",
+
+	"message.dwm.tardis.broken": "§eТАРДИС§r §cнеисправна§r. Используйте §eремонтный набор§r на блоке двигателя",
+	"message.dwm.tardis.repaired": "§eТАРДИС§r §aотремонтирована",
+	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eДематериализационная схема §cне установлена",
+	"message.dwm.tardis.system.directional_unit.not_installed": "§eНаправляющий модуль §cне установлен",
+	"message.dwm.tardis.system.shields_generator.not_installed": "§eГенератор щитов §cне установлен",
+
+	"message.dwm.tardis.ars_interface.generated.success": "Комната §aсгенерирована",
+	"message.dwm.tardis.ars_interface.generated.failed": "Комната §cне сгенерирована",
+	"message.dwm.tardis.ars_interface.generated.failed.details": "Ошибка! Область не пуста. Проблемная точка: %s",
+
+	"message.dwm.tardis.ars_interface.destroy.success": "Комната §aразрушена",
+	"message.dwm.tardis.ars_interface.destroy.failed": "Комната §cне разрушена",
+
+	"message.dwm.tardis.monitor.console_rooms.prepare": "Покиньте ТАРДИС для начала перестройки",
+	"message.dwm.tardis.monitor.console_rooms.started": "Перестройка ТАРДИС запущена",
+	"message.dwm.tardis.monitor.console_rooms.success": "Перестройка ТАРДИС §aуспешно §rзавершена",
+	"message.dwm.tardis.monitor.console_rooms.failed": "Перестройка ТАРДИС §cпровалена",
+
+	"message.dwm.tardis.telepathic_interface.map.loaded": "Координаты карты §aзагружены",
+	"message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координаты маркера %s загружены",
+
+	"message.dwm.tardis.telepathic_interface.biome.found": "Биом §aнайден",
+	"message.dwm.tardis.telepathic_interface.biome.not_found": "Биом §cне найден",
+	"message.dwm.tardis.telepathic_interface.structure.found": "Структура §aнайдена",
+	"message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне найдена",
+
+	"message.dwm.tardis.control.role.doors.locked": "Двери §eзаблокированы",
+	"message.dwm.tardis.control.role.doors.unlocked": "Двери §eразблокированы",
+	"message.dwm.tardis.control.role.doors.active": "Двери §eоткрыты",
+	"message.dwm.tardis.control.role.doors.inactive": "Двери §eзакрыты",
+	"message.dwm.tardis.control.role.shields.active": "Щиты §eактивированы",
+	"message.dwm.tardis.control.role.shields.inactive": "Щиты §eдеактивированы",
+	"message.dwm.tardis.control.role.light.active": "Внешний свет §eактивирован",
+	"message.dwm.tardis.control.role.light.inactive": "Внешний свет §eдеактивирован",
+	"message.dwm.tardis.control.role.energy.artron.active": "Сбор топлива §eактивирован",
+	"message.dwm.tardis.control.role.energy.artron.inactive": "Сбор топлива §eдеактивирован",
+	"message.dwm.tardis.control.role.energy.forge.active": "Сбор энергии §eактивирован",
+	"message.dwm.tardis.control.role.energy.forge.inactive": "Сбор энергии §eдеактивирован",
+	"message.dwm.tardis.control.role.handbrake.active": "Ручной тормоз §eактивирован",
+	"message.dwm.tardis.control.role.handbrake.inactive": "Ручной тормоз §eдеактивирован",
+
+	"message.dwm.tardis.control.role.facing": "Направление: %s",
+	"message.dwm.tardis.control.role.facing.0": "§eСевер",
+	"message.dwm.tardis.control.role.facing.1": "§eЮг",
+	"message.dwm.tardis.control.role.facing.2": "§eЗапад",
+	"message.dwm.tardis.control.role.facing.3": "§eВосток",
+
+	"message.dwm.tardis.control.role.safedirection": "Направление вертикального сканирования: %s",
+	"message.dwm.tardis.control.role.safedirection.0": "§eВверх",
+	"message.dwm.tardis.control.role.safedirection.1": "§eВниз",
+	"message.dwm.tardis.control.role.safedirection.2": "§eТочное",
+
+	"message.dwm.tardis.control.role.dimension": "Измерение: %s",
+	"message.dwm.tardis.control.role.xset": "X: %s",
+	"message.dwm.tardis.control.role.yset": "Y: %s",
+	"message.dwm.tardis.control.role.zset": "Z: %s",
+	"message.dwm.tardis.control.role.xyzstep": "Модификатор координат: %s",
+
+	"message.dwm.screwdriver.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
+
+	"dwm.console_room.imperial_abandoned": "Имперская (заброшенная)",
+	"dwm.console_room.imperial_classic": "Имперская (классическая)",
+	"dwm.console_room.toyota_abandoned": "Toyota (заброшенная)",
+	"dwm.console_room.toyota_classic": "Toyota (классическая)",
+
+	"config.dwm.tardis.dimensionsBlacklist": "Список измерений, которые не будут доступны в списке выбора измерений ТАРДИС",
+	"config.dwm.tardis.hideTheEndConditionally": "Скрывать измерение Края из списка выбора измерений ТАРДИС, пока Дракон не побежден",
+	"config.dwm.tardis.tardisMaxFlightTime": "Максимальное время полёта ТАРДИС"
+}

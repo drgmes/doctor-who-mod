@@ -6,15 +6,15 @@
 
 	"block.dwm.engineer_table": "Engineer Table",
 
-	"block.dwm.tardis_exterior_police_box": "TARDIS Police Box",
+	"block.dwm.tardis_exterior_police_box": "TARDIS (Police Box)",
 
-	"block.dwm.tardis_doors_police_box": "TARDIS Police Box Doors",
+	"block.dwm.tardis_doors_police_box": "TARDIS Doors (Police Box)",
 
-	"block.dwm.tardis_console_imperial": "TARDIS Imperial Console",
-	"block.dwm.tardis_console_toyota": "TARDIS Toyota Console",
+	"block.dwm.tardis_console_unit_imperial": "TARDIS Console Unit (Imperial)",
+	"block.dwm.tardis_console_unit_toyota": "TARDIS Console Unit (Toyota)",
 
-	"block.dwm.tardis_engine_imperial": "TARDIS Imperial Engine",
-	"block.dwm.tardis_engine_toyota": "TARDIS Toyota Engine",
+	"block.dwm.tardis_engine_imperial": "TARDIS Engine (Imperial)",
+	"block.dwm.tardis_engine_toyota": "TARDIS Engine (Toyota)",
 
 	"block.dwm.tardis_toyota_spinner": "TARDIS Toyota Spinner",
 	"block.dwm.tardis_ars_creator": "TARDIS ARS Creator",
@@ -97,7 +97,7 @@
 	"screen.dwm.telepathic_interface.button.cancel": "Cancel",
 	"screen.dwm.telepathic_interface.button.accept": "Find",
 
-	"message.dwm.tardis.broken": "§eTARDIS§r is §cBroken§r. Use §cRepair Kit§r on the engine block",
+	"message.dwm.tardis.broken": "§eTARDIS§r is §cBroken§r. Use §eRepair Kit§r on the engine block",
 	"message.dwm.tardis.repaired": "§eTARDIS§r has been §aRepaired",
 	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eDematerialization Circuit §cNot Installed",
 	"message.dwm.tardis.system.directional_unit.not_installed": "§eDirectional Unit §cNot Installed",
@@ -131,10 +131,10 @@
 	"message.dwm.tardis.control.role.shields.inactive": "Shields §eDisabled",
 	"message.dwm.tardis.control.role.light.active": "Exterior Light §eEnabled",
 	"message.dwm.tardis.control.role.light.inactive": "Exterior Light §eDisabled",
-	"message.dwm.tardis.control.role.energy.artron.active": "AU Harvesting §eEnabled",
-	"message.dwm.tardis.control.role.energy.artron.inactive": "AU Harvesting §eDisabled",
-	"message.dwm.tardis.control.role.energy.forge.active": "FE Harvesting §eEnabled",
-	"message.dwm.tardis.control.role.energy.forge.inactive": "FE Harvesting §eDisabled",
+	"message.dwm.tardis.control.role.energy.artron.active": "Fuel harvesting §eEnabled",
+	"message.dwm.tardis.control.role.energy.artron.inactive": "Fuel harvesting §eDisabled",
+	"message.dwm.tardis.control.role.energy.forge.active": "Energy harvesting §eEnabled",
+	"message.dwm.tardis.control.role.energy.forge.inactive": "Energy harvesting §eDisabled",
 	"message.dwm.tardis.control.role.handbrake.active": "Handbrake §eEnabled",
 	"message.dwm.tardis.control.role.handbrake.inactive": "Handbrake §eDisabled",
 
@@ -153,9 +153,14 @@
 	"message.dwm.tardis.control.role.xset": "X: %s",
 	"message.dwm.tardis.control.role.yset": "Y: %s",
 	"message.dwm.tardis.control.role.zset": "Z: %s",
-	"message.dwm.tardis.control.role.xyzstep": "Scaling: %s",
+	"message.dwm.tardis.control.role.xyzstep": "Coords Scaling: %s",
 
 	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
+
+	"dwm.console_room.imperial_abandoned": "Imperial Abandoned",
+	"dwm.console_room.imperial_classic": "Imperial Classic",
+	"dwm.console_room.toyota_abandoned": "Toyota Abandoned",
+	"dwm.console_room.toyota_classic": "Toyota Classic",
 
 	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
 	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
