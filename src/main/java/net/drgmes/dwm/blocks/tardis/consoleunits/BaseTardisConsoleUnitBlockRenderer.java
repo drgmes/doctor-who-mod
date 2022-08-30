@@ -110,14 +110,8 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         if (!tile.tardisStateManager.isValid() || tile.tardisStateManager.isBroken()) return;
 
         switch (tile.monitorPage) {
-            case 1: {
-                this.renderScreenPage2(tile, matrixStack, buffer, tile.tardisStateManager);
-                break;
-            }
-
-            default: {
-                this.renderScreenPage1(tile, matrixStack, buffer, tile.tardisStateManager);
-            }
+            case 1 -> this.renderScreenPage2(tile, matrixStack, buffer, tile.tardisStateManager);
+            default -> this.renderScreenPage1(tile, matrixStack, buffer, tile.tardisStateManager);
         }
     }
 
@@ -174,8 +168,8 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.buildScreenParamText("fuel_harvesting", fuelHarvestingState),
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
-            this.buildScreenParamText("fuel", String.valueOf(tardis.getFuelLevel())),
-            this.buildScreenParamText("energy", String.valueOf(tardis.getEnergyLevel())),
+            this.buildScreenParamText("fuel", String.valueOf(tardis.getFuelStorage().getAmount())),
+            this.buildScreenParamText("energy", String.valueOf(tardis.getEnergyStorage().getAmount())),
         });
     }
 

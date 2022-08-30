@@ -46,6 +46,11 @@ dependencies {
         transitive(false)
     }
 
+    include modApi("teamreborn:energy:${project.teamreborn_energy_api_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
     include("curse.maven:forgeconfigapiport-547434:${project.forge_config_api_version}")
     include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}")
     include("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}")

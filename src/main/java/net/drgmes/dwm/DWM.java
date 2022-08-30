@@ -34,6 +34,7 @@ public class DWM {
 
         public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
         public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");
+        public static final Text TARDIS_NOT_ENOUGH_FUEL = Text.translatable("message." + DWM.MODID + ".tardis.fuel.not_enough");
         public static final Text TARDIS_DOORS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.locked");
         public static final Text TARDIS_DOORS_UNLOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
 

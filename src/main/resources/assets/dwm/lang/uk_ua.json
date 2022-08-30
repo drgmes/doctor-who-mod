@@ -120,6 +120,7 @@
 
 	"message.dwm.tardis.broken": "§eТАРДІС§r §cнесправна§r. Застосуйте §eремонтний набір§r на блоці двигуна",
 	"message.dwm.tardis.repaired": "§eТАРДІС§r §aвідремонтована",
+	"message.dwm.tardis.fuel.not_enough": "§cНедостатньо палива",
 	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eДематеріалізаційна схема §cне встановлена",
 	"message.dwm.tardis.system.directional_unit.not_installed": "§eСпрямовуючий модуль §cне встановлен",
 	"message.dwm.tardis.system.shields_generator.not_installed": "§eГенератор щитів §cне встановлен",

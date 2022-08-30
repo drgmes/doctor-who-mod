@@ -120,6 +120,7 @@
 
 	"message.dwm.tardis.broken": "§eTARDIS§r is §cBroken§r. Use §eRepair Kit§r on the engine block",
 	"message.dwm.tardis.repaired": "§eTARDIS§r has been §aRepaired",
+	"message.dwm.tardis.fuel.not_enough": "§cNot enough fuel",
 	"message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eDematerialization Circuit §cNot Installed",
 	"message.dwm.tardis.system.directional_unit.not_installed": "§eDirectional Unit §cNot Installed",
 	"message.dwm.tardis.system.shields_generator.not_installed": "§eShields Generator §cNot Installed",

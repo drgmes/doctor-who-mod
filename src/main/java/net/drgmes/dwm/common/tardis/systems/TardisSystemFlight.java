@@ -5,6 +5,7 @@ import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -56,6 +57,22 @@ public class TardisSystemFlight implements ITardisSystem {
     @Override
     public void tick() {
         if (this.tickInProgress > 0) {
+            if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % 20 == 0 && !Transaction.isOpen()) {
+                Transaction transaction = Transaction.openOuter();
+                long fuelExtracted = this.tardis.getFuelStorage().extract(1, transaction);
+
+                if (fuelExtracted != 0) {
+                    transaction.commit();
+                    this.tardis.updateConsoleTiles();
+                }
+                else {
+                    ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+                    transaction.close();
+                    this.land();
+                    return;
+                }
+            }
+
             this.tickInProgress -= this.destinationDistanceRate;
 
             this.playFlySound();
@@ -79,13 +96,19 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public boolean takeoff() {
+        if (!this.isEnabled()) return false;
+        if (this.inProgress()) return false;
+
         if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
             ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
             return false;
         }
 
-        if (!this.isEnabled()) return false;
-        if (this.inProgress()) return false;
+        if (this.tardis.getFuelStorage().getAmount() == 0) {
+            ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+            return false;
+        }
+
         this.isFlightLaunched = true;
 
         return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
@@ -107,13 +130,14 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public boolean land() {
+        if (!this.isEnabled()) return false;
+        if (!this.inProgress()) return false;
+
         if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
             ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
             return false;
         }
 
-        if (!this.isEnabled()) return false;
-        if (!this.inProgress()) return false;
         this.isFlightLaunched = false;
 
         if (this.tickInProgress > 1) {

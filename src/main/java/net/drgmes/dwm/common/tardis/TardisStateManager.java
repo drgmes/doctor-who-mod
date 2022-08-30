@@ -24,6 +24,7 @@ import net.drgmes.dwm.types.IMixinPortal;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
@@ -42,6 +43,7 @@ import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 import qouteall.imm_ptl.core.portal.Portal;
 import qouteall.q_misc_util.MiscHelper;
+import team.reborn.energy.api.base.SimpleEnergyStorage;
 
 import java.util.*;
 
@@ -59,9 +61,10 @@ public class TardisStateManager extends PersistentState {
     private DefaultedList<ItemStack> upgradeComponents = DefaultedList.ofSize(UPGRADE_COMPONENTS_CONTAINER_SIZE, ItemStack.EMPTY);
 
     private ServerWorld world;
-
-    private TardisConsoleRoomEntry consoleRoom;
     private UUID owner;
+    private SimpleEnergyStorage fuelStorage;
+    private SimpleEnergyStorage energyStorage;
+    private TardisConsoleRoomEntry consoleRoom;
 
     private List<Map.Entry<Portal, Portal>> portalsToRooms = new ArrayList<>();
     private Portal portalFromTardis;
@@ -86,9 +89,6 @@ public class TardisStateManager extends PersistentState {
     private boolean shieldsEnabled = false;
     private boolean fuelHarvesting = false;
     private boolean energyHarvesting = false;
-
-    private int fuelLevel = 0;
-    private int energyLevel = 0;
     private int xyzStep = 1;
 
     public TardisStateManager(ServerWorld world, boolean mustBeBroken) {
@@ -96,7 +96,8 @@ public class TardisStateManager extends PersistentState {
         this.doorsLocked = mustBeBroken;
 
         this.setWorld(world);
-
+        this.setFuelStorage(64, 16, 16);
+        this.setEnergyStorage(64, 16, 16);
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));
@@ -127,19 +128,17 @@ public class TardisStateManager extends PersistentState {
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
-        tag.putString("consoleRoom", this.getConsoleRoom().name);
+        NbtCompound tdTagSystemComponents = new NbtCompound();
+        Inventories.writeNbt(tdTagSystemComponents, this.systemComponents);
+        tag.put("tdTagSystemComponents", tdTagSystemComponents);
 
-        tag.putInt("fuelLevel", this.fuelLevel);
-        tag.putInt("energyLevel", this.energyLevel);
-        tag.putInt("xyzStep", this.xyzStep);
+        NbtCompound tdTagBatteryComponents = new NbtCompound();
+        Inventories.writeNbt(tdTagBatteryComponents, this.batteryComponents);
+        tag.put("tdTagBatteryComponents", tdTagBatteryComponents);
 
-        tag.putBoolean("broken", this.broken);
-        tag.putBoolean("doorsLocked", this.doorsLocked);
-        tag.putBoolean("doorsOpened", this.doorsOpened);
-        tag.putBoolean("lightEnabled", this.lightEnabled);
-        tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
-        tag.putBoolean("fuelHarvesting", this.fuelHarvesting);
-        tag.putBoolean("energyHarvesting", this.energyHarvesting);
+        NbtCompound tdTagUpgradeComponents = new NbtCompound();
+        Inventories.writeNbt(tdTagUpgradeComponents, this.upgradeComponents);
+        tag.put("tdTagUpgradeComponents", tdTagUpgradeComponents);
 
         if (this.owner != null) tag.putUuid("owner", this.owner);
 
@@ -155,17 +154,19 @@ public class TardisStateManager extends PersistentState {
         if (this.currExteriorPosition != null) tag.putLong("currExteriorPosition", this.currExteriorPosition.asLong());
         if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
 
-        NbtCompound tdTagSystemComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagSystemComponents, this.systemComponents);
-        tag.put("tdTagSystemComponents", tdTagSystemComponents);
+        tag.putString("consoleRoom", this.getConsoleRoom().name);
 
-        NbtCompound tdTagBatteryComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagBatteryComponents, this.batteryComponents);
-        tag.put("tdTagBatteryComponents", tdTagBatteryComponents);
+        tag.putInt("xyzStep", this.xyzStep);
+        tag.putLong("fuelAmount", this.fuelStorage.amount);
+        tag.putLong("energyAmount", this.energyStorage.amount);
 
-        NbtCompound tdTagUpgradeComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagUpgradeComponents, this.upgradeComponents);
-        tag.put("tdTagUpgradeComponents", tdTagUpgradeComponents);
+        tag.putBoolean("broken", this.broken);
+        tag.putBoolean("doorsLocked", this.doorsLocked);
+        tag.putBoolean("doorsOpened", this.doorsOpened);
+        tag.putBoolean("lightEnabled", this.lightEnabled);
+        tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
+        tag.putBoolean("fuelHarvesting", this.fuelHarvesting);
+        tag.putBoolean("energyHarvesting", this.energyHarvesting);
 
         this.systems.values().forEach((system) -> {
             tag.put(system.getClass().getName(), system.save());
@@ -175,17 +176,14 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void readNbt(NbtCompound tag) {
-        this.fuelLevel = tag.getInt("fuelLevel");
-        this.energyLevel = tag.getInt("energyLevel");
-        this.xyzStep = tag.getInt("xyzStep");
+        this.systemComponents = DefaultedList.ofSize(this.systemComponents.size(), ItemStack.EMPTY);
+        Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents);
 
-        this.broken = tag.getBoolean("broken");
-        this.doorsLocked = tag.getBoolean("doorsLocked");
-        this.doorsOpened = tag.getBoolean("doorsOpened");
-        this.lightEnabled = tag.getBoolean("lightEnabled");
-        this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
-        this.fuelHarvesting = tag.getBoolean("fuelHarvesting");
-        this.energyHarvesting = tag.getBoolean("energyHarvesting");
+        this.batteryComponents = DefaultedList.ofSize(this.batteryComponents.size(), ItemStack.EMPTY);
+        Inventories.readNbt(tag.getCompound("tdTagBatteryComponents"), this.batteryComponents);
+
+        this.upgradeComponents = DefaultedList.ofSize(this.upgradeComponents.size(), ItemStack.EMPTY);
+        Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
 
         if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"), this.broken);
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
@@ -202,14 +200,20 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
-        this.systemComponents = DefaultedList.ofSize(this.systemComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents);
+        this.setFuelStorage(64, 16, 16);
+        this.setEnergyStorage(64, 16, 16);
 
-        this.batteryComponents = DefaultedList.ofSize(this.batteryComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagBatteryComponents"), this.batteryComponents);
+        this.xyzStep = tag.getInt("xyzStep");
+        this.fuelStorage.amount = Math.min(tag.getLong("fuelAmount"), this.fuelStorage.getCapacity());
+        this.energyStorage.amount = Math.min(tag.getLong("energyAmount"), this.fuelStorage.getCapacity());
 
-        this.upgradeComponents = DefaultedList.ofSize(this.upgradeComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
+        this.broken = tag.getBoolean("broken");
+        this.doorsLocked = tag.getBoolean("doorsLocked");
+        this.doorsOpened = tag.getBoolean("doorsOpened");
+        this.lightEnabled = tag.getBoolean("lightEnabled");
+        this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
+        this.fuelHarvesting = tag.getBoolean("fuelHarvesting");
+        this.energyHarvesting = tag.getBoolean("energyHarvesting");
 
         this.systems.values().forEach((system) -> {
             if (tag.contains(system.getClass().getName())) {
@@ -388,7 +392,7 @@ public class TardisStateManager extends PersistentState {
         this.doorsOpened = flag;
 
         BlockPos entrancePosition = this.getEntrancePosition();
-        BlockState entranceBlockState = this.getWorld().getBlockState(entrancePosition);
+        BlockState entranceBlockState = this.world.getBlockState(entrancePosition);
         BaseTardisDoorsBlock<?> tardisDoorsBlock = (BaseTardisDoorsBlock<?>) entranceBlockState.getBlock();
         if (flag) ModSounds.playTardisDoorsOpenSound(this.world, entrancePosition, tardisDoorsBlock.isWooden());
         else ModSounds.playTardisDoorsCloseSound(this.world, entrancePosition, tardisDoorsBlock.isWooden());
@@ -432,6 +436,19 @@ public class TardisStateManager extends PersistentState {
         return true;
     }
 
+    public int getXYZStep() {
+        return this.xyzStep;
+    }
+
+    public void setXYZStep(int value) {
+        this.xyzStep = value;
+        this.markDirty();
+    }
+
+    // //////////////////////////// //
+    // Tardis Energy & Fuel methods //
+    // //////////////////////////// //
+
     public boolean isFuelHarvesting() {
         return this.fuelHarvesting;
     }
@@ -441,13 +458,17 @@ public class TardisStateManager extends PersistentState {
         this.markDirty();
     }
 
-    public int getFuelLevel() {
-        return this.fuelLevel;
+    public SimpleEnergyStorage getFuelStorage() {
+        return this.fuelStorage;
     }
 
-    public void setFuelLevel(int value) {
-        this.fuelLevel = value;
-        this.markDirty();
+    public void setFuelStorage(long capacity, long maxInsert, long maxExtract) {
+        this.fuelStorage = new SimpleEnergyStorage(capacity, maxInsert, maxExtract) {
+            @Override
+            protected void onFinalCommit() {
+                TardisStateManager.this.markDirty();
+            }
+        };
     }
 
     public boolean isEnergyHarvesting() {
@@ -459,22 +480,17 @@ public class TardisStateManager extends PersistentState {
         this.markDirty();
     }
 
-    public int getEnergyLevel() {
-        return this.energyLevel;
+    public SimpleEnergyStorage getEnergyStorage() {
+        return this.energyStorage;
     }
 
-    public void setEnergyLevel(int value) {
-        this.energyLevel = value;
-        this.markDirty();
-    }
-
-    public int getXYZStep() {
-        return this.xyzStep;
-    }
-
-    public void setXYZStep(int value) {
-        this.xyzStep = value;
-        this.markDirty();
+    public void setEnergyStorage(long capacity, long maxInsert, long maxExtract) {
+        this.energyStorage = new SimpleEnergyStorage(capacity, maxInsert, maxExtract) {
+            @Override
+            protected void onFinalCommit() {
+                TardisStateManager.this.markDirty();
+            }
+        };
     }
 
     // ////////////////////// //
@@ -540,7 +556,7 @@ public class TardisStateManager extends PersistentState {
 
         String worldId = DimensionHelper.getWorldId(world);
         Map.Entry<Portal, Portal> portals = TardisHelper.createTardisPortals(
-            this.getWorld(),
+            this.world,
             this.getEntranceFacing(),
             this.getCurrentExteriorFacing(),
             this.getEntrancePosition().up(),
@@ -575,20 +591,20 @@ public class TardisStateManager extends PersistentState {
             BlockPos farTacBlockPos = TardisHelper.TARDIS_POS.add(1024, 0, 1024).multiply(++index).withY(TardisHelper.TARDIS_POS.getY()).toImmutable();
 
             Map.Entry<Portal, Portal> portals = TardisHelper.createTardisPortals(
-                this.getWorld(),
+                this.world,
                 direction,
                 Direction.SOUTH,
                 tacBlockPos.up(),
                 farTacBlockPos.up(),
-                this.getWorld().getRegistryKey(),
+                this.world.getRegistryKey(),
                 -0.5, -0.5, -0.5,
                 3, 3
             );
 
             ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
             ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
-            this.getWorld().spawnEntity(portals.getKey());
-            this.getWorld().spawnEntity(portals.getValue());
+            this.world.spawnEntity(portals.getKey());
+            this.world.spawnEntity(portals.getValue());
             this.portalsToRooms.add(portals);
         }
     }
@@ -737,8 +753,8 @@ public class TardisStateManager extends PersistentState {
         }
         else {
             controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
-            if (isInFlight && !starter) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
-            else if (!isInFlight && starter) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
+            if (isInFlight && !starter) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
+            else if (!isInFlight && starter) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
         }
 
         // Materialization
@@ -751,8 +767,8 @@ public class TardisStateManager extends PersistentState {
         else {
             controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
             controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, isMaterialized);
-            if (isMaterialized && !materialization) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
-            else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
+            if (isMaterialized && !materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
+            else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
         }
 
         // Only if Tardis is not in flight (and could be when dematerialized)
@@ -850,7 +866,7 @@ public class TardisStateManager extends PersistentState {
             }
             else {
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, false);
-                if (shields) ModSounds.playTardisFailSound(this.getWorld(), this.getMainConsolePosition());
+                if (shields) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
             }
 
             this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.DOORS));
@@ -864,10 +880,23 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void tick() {
-        if (!this.isValid()) return;
-
         this.systems.values().forEach(ITardisSystem::tick);
         this.validateEntrancePortals();
+
+        if (!this.world.isClient) {
+            if (this.fuelHarvesting && this.world.getTime() % 30 == 0 && !Transaction.isOpen()) {
+                Transaction transaction = Transaction.openOuter();
+                long fuelInserted = this.fuelStorage.insert(1, transaction);
+
+                if (fuelInserted != 0) {
+                    transaction.commit();
+                    this.updateConsoleTiles();
+                }
+                else {
+                    transaction.close();
+                }
+            }
+        }
     }
 
     private static Direction getDirectionByKey(NbtCompound tag, String key) {
