@@ -683,10 +683,12 @@ public class TardisStateManager extends PersistentState {
                 tile.sendControlsUpdatePacket(this.world);
             }
 
-            NbtCompound tag = new NbtCompound();
+            NbtCompound tardisStateManagerTag = new NbtCompound();
+            this.writeNbt(tardisStateManagerTag);
+            tile.tardisStateManager.readNbt(tardisStateManagerTag);
+
+            NbtCompound tag = tile.createNbt();
             this.writeNbt(tag);
-            tile.readNbt(tag);
-            tile.markDirty();
 
             PacketHelper.sendToClient(
                 TardisConsoleUnitRemoteCallablePackets.class,

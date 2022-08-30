@@ -352,12 +352,12 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             return;
         }
 
-        if (!isUpdated) {
-            updateResult = this.controlsStorage.update(control.role, hand);
-            isUpdated = true;
-        }
+        if ((isUpdated && updateResult) || (!isUpdated && this.controlsStorage.update(control.role, hand))) {
+            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid() || this.throwNotifyIfBroken(tardisHolder, player)) {
+                this.sendControlsUpdatePacket(serverWorld);
+                return;
+            }
 
-        if (updateResult) {
             int monitorPageLength = 2;
 
             // Next Screen Page
@@ -368,21 +368,13 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             int monitorPagePrev = (int) controlsStorage.get(ETardisConsoleUnitControlRole.MONITOR_PAGE_PREV);
             if (monitorPagePrev != 0) this.monitorPage = this.monitorPage < 1 ? monitorPageLength - 1 : this.monitorPage - 1;
 
-            if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket(serverWorld);
-            this.markDirty();
-
-            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) {
-                this.sendControlsUpdatePacket(serverWorld);
-                return;
-            }
-
-            if (this.throwNotifyIfBroken(tardisHolder, player)) {
-                this.sendControlsUpdatePacket(serverWorld);
-                return;
+            if (monitorPagePrev != 0 || monitorPageNext != 0) {
+                this.sendMonitorUpdatePacket(serverWorld);
+                this.markDirty();
             }
 
             tardisHolder.get().applyControlsStorageToData(this.controlsStorage);
-            this.displayNotification(tardisHolder.get(), this.controlsStorage, control.role, player);
+            this.displayNotification(tardisHolder.get(), control.role, player);
         }
     }
 
@@ -480,8 +472,8 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         return false;
     }
 
-    private void displayNotification(TardisStateManager tardis, TardisConsoleControlsStorage controlsStorage, ETardisConsoleUnitControlRole role, PlayerEntity player) {
-        Object value = controlsStorage.get(role);
+    private void displayNotification(TardisStateManager tardis, ETardisConsoleUnitControlRole role, PlayerEntity player) {
+        Object value = this.controlsStorage.get(role);
 
         TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
         TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
