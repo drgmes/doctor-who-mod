@@ -161,4 +161,8 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     protected BlockState syncNeighborState(BlockState blockState, BlockState neighborBlockState) {
         return super.syncNeighborState(blockState, neighborBlockState).with(OPEN, neighborBlockState.get(OPEN));
     }
+
+    public boolean isWooden() {
+        return false;
+    }
 }

@@ -18,4 +18,9 @@ public class TardisExteriorPoliceBoxBlock extends BaseTardisExteriorBlock<Tardis
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
         return new TardisExteriorPoliceBoxBlockEntity(blockPos, blockState);
     }
+
+    @Override
+    public boolean isWooden() {
+        return true;
+    }
 }

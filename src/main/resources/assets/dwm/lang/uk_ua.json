@@ -157,6 +157,17 @@
 
 	"message.dwm.screwdriver.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
 
+	"subtitle.screwdriver.screwdriver_main": "Звукова викрутка лунає",
+	"subtitle.tardis.tardis_doors_close": "Двері ТАРДІС закрилися",
+	"subtitle.tardis.tardis_doors_lock": "Двері ТАРДІС заблоковані",
+	"subtitle.tardis.tardis_doors_open": "Двері ТАРДІС відкрилися",
+	"subtitle.tardis.tardis_doors_unlock": "Двері ТАРДІС розблоковані",
+	"subtitle.tardis.tardis_error": "ТАРДІС видає помилку",
+	"subtitle.tardis.tardis_fly": "Шум польоту ТАРДІС",
+	"subtitle.tardis.tardis_land": "Шум матеріалізації ТАРДІС",
+	"subtitle.tardis.tardis_takeoff": "Шум дематеріалізації ТАРДІС",
+	"subtitle.tardis.tardis_control": "Активовано елемент керування ТАРДІС",
+
 	"dwm.console_room.imperial_abandoned": "Імперська (занедбана)",
 	"dwm.console_room.imperial_classic": "Імперська (класична)",
 	"dwm.console_room.toyota_abandoned": "Toyota (занедбана)",

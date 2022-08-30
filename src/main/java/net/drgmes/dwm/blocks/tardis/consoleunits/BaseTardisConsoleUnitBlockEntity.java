@@ -14,6 +14,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.TardisConsoleUnitRemoteCallablePackets;
 import net.drgmes.dwm.setup.ModDimensions;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -216,31 +217,23 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public void useControl(TardisConsoleControlEntry control, Hand hand, Entity entity) {
         if (!(this.world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) return;
 
+        boolean isUpdated = false;
+        boolean updateResult = false;
+
         Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.world)
             ? TardisStateManager.get(serverWorld)
             : Optional.empty();
 
         // Monitor
         if (control.role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
-            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return;
-
-            if (tardisHolder.get().isBroken()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
-                return;
-            }
-
+            if (this.throwNotifyIfBroken(tardisHolder, player)) return;
             this.sendMonitorOpenPacket(player, tardisHolder.get());
             return;
         }
 
         // Telepathic Interface
         if (control.role == ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
-            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return;
-
-            if (tardisHolder.get().isBroken()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
-                return;
-            }
+            if (this.throwNotifyIfBroken(tardisHolder, player)) return;
 
             ItemStack mainHandItemStack = player.getMainHandStack();
             ItemStack offHandItemStack = player.getOffHandStack();
@@ -278,6 +271,45 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
             this.sendTelepathicInterfaceLocationsOpenPacket(player);
             return;
+        }
+
+        // Handbrake
+        if (control.role == ETardisConsoleUnitControlRole.HANDBRAKE) {
+            if (this.throwNotifyIfBroken(tardisHolder, player)) return;
+
+            boolean oldValue = (boolean) this.controlsStorage.get(control.role);
+            updateResult = this.controlsStorage.update(control.role, hand);
+            isUpdated = true;
+            boolean value = (boolean) this.controlsStorage.get(control.role);
+
+            if (value != oldValue && value) ModSounds.playTardisHandbrakeOnSound(serverWorld, this.getPos());
+            else if (value != oldValue) ModSounds.playTardisHandbrakeOffSound(serverWorld, this.getPos());
+        }
+
+        // Starter
+        if (control.role == ETardisConsoleUnitControlRole.STARTER) {
+            boolean handbrake = (boolean) this.controlsStorage.get(ETardisConsoleUnitControlRole.HANDBRAKE);
+
+            if (!handbrake && tardisHolder.isPresent() && tardisHolder.get().isValid() && !tardisHolder.get().isBroken()) {
+                boolean oldValue = (boolean) this.controlsStorage.get(control.role);
+                updateResult = this.controlsStorage.update(control.role, hand);
+                isUpdated = true;
+                boolean value = (boolean) this.controlsStorage.get(control.role);
+
+                if (value != oldValue) ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_3, 1.0F, 1.0F);
+            }
+        }
+
+        // Materialization
+        if (control.role == ETardisConsoleUnitControlRole.MATERIALIZATION) {
+            if (tardisHolder.isPresent() && tardisHolder.get().isValid() && !tardisHolder.get().isBroken()) {
+                boolean oldValue = (boolean) this.controlsStorage.get(control.role);
+                updateResult = this.controlsStorage.update(control.role, hand);
+                isUpdated = true;
+                boolean value = (boolean) this.controlsStorage.get(control.role);
+
+                if (value != oldValue) ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_2, 1.0F, 1.0F);
+            }
         }
 
         // Screwdriver Slot
@@ -320,7 +352,12 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             return;
         }
 
-        if (this.controlsStorage.update(control.role, hand)) {
+        if (!isUpdated) {
+            updateResult = this.controlsStorage.update(control.role, hand);
+            isUpdated = true;
+        }
+
+        if (updateResult) {
             int monitorPageLength = 2;
 
             // Next Screen Page
@@ -329,8 +366,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
             // Prev Screen Page
             int monitorPagePrev = (int) controlsStorage.get(ETardisConsoleUnitControlRole.MONITOR_PAGE_PREV);
-            if (monitorPagePrev != 0)
-                this.monitorPage = this.monitorPage < 1 ? monitorPageLength - 1 : this.monitorPage - 1;
+            if (monitorPagePrev != 0) this.monitorPage = this.monitorPage < 1 ? monitorPageLength - 1 : this.monitorPage - 1;
 
             if (monitorPagePrev != 0 || monitorPageNext != 0) this.sendMonitorUpdatePacket(serverWorld);
             this.markDirty();
@@ -340,8 +376,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 return;
             }
 
-            if (tardisHolder.get().isBroken()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+            if (this.throwNotifyIfBroken(tardisHolder, player)) {
                 this.sendControlsUpdatePacket(serverWorld);
                 return;
             }
@@ -432,6 +467,17 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     private void removeControls() {
         for (TardisConsoleControlEntity control : this.controls) control.discard();
         this.controls.clear();
+    }
+
+    private boolean throwNotifyIfBroken(Optional<TardisStateManager> tardisHolder, PlayerEntity player) {
+        if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return true;
+
+        if (tardisHolder.get().isBroken()) {
+            player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+            return true;
+        }
+
+        return false;
     }
 
     private void displayNotification(TardisStateManager tardis, TardisConsoleControlsStorage controlsStorage, ETardisConsoleUnitControlRole role, PlayerEntity player) {

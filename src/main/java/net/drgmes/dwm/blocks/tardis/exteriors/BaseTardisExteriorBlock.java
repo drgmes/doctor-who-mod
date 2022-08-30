@@ -143,4 +143,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             .with(OPEN, neighborBlockState.get(OPEN))
             .with(LIT, neighborBlockState.get(LIT));
     }
+
+    public boolean isWooden() {
+        return false;
+    }
 }

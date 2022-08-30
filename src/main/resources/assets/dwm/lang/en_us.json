@@ -157,6 +157,17 @@
 
 	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
+	"subtitle.screwdriver.screwdriver_main": "Sonic Screwdriver sounds",
+	"subtitle.tardis.tardis_doors_close": "TARDIS Doors closed",
+	"subtitle.tardis.tardis_doors_lock": "TARDIS Doors locked",
+	"subtitle.tardis.tardis_doors_open": "TARDIS Doors opened",
+	"subtitle.tardis.tardis_doors_unlock": "TARDIS Doors unlocked",
+	"subtitle.tardis.tardis_error": "TARDIS emits failure",
+	"subtitle.tardis.tardis_fly": "TARDIS flight noise",
+	"subtitle.tardis.tardis_land": "TARDIS landing noise",
+	"subtitle.tardis.tardis_takeoff": "TARDIS takeoff noise",
+	"subtitle.tardis.tardis_control": "TARDIS Control pressed",
+
 	"dwm.console_room.imperial_abandoned": "Imperial Abandoned",
 	"dwm.console_room.imperial_classic": "Imperial Classic",
 	"dwm.console_room.toyota_abandoned": "Toyota Abandoned",

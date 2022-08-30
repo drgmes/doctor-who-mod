@@ -387,8 +387,11 @@ public class TardisStateManager extends PersistentState {
         if (this.doorsOpened == flag) return false;
         this.doorsOpened = flag;
 
-        if (flag) ModSounds.playTardisDoorsOpenSound(this.world, this.getEntrancePosition());
-        else ModSounds.playTardisDoorsCloseSound(this.world, this.getEntrancePosition());
+        BlockPos entrancePosition = this.getEntrancePosition();
+        BlockState entranceBlockState = this.getWorld().getBlockState(entrancePosition);
+        BaseTardisDoorsBlock<?> tardisDoorsBlock = (BaseTardisDoorsBlock<?>) entranceBlockState.getBlock();
+        if (flag) ModSounds.playTardisDoorsOpenSound(this.world, entrancePosition, tardisDoorsBlock.isWooden());
+        else ModSounds.playTardisDoorsCloseSound(this.world, entrancePosition, tardisDoorsBlock.isWooden());
 
         this.updateEntrancePortals();
         this.updateDoorsTiles();
@@ -882,10 +885,10 @@ public class TardisStateManager extends PersistentState {
         BlockPos exteriorBlockPos = this.getCurrentExteriorPosition();
         BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorBlockPos);
 
-        if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock) {
+        if (exteriorBlockState.getBlock() instanceof BaseTardisExteriorBlock tardisExteriorBlock) {
             if (exteriorBlockState.get(BaseTardisExteriorBlock.OPEN) != this.isDoorsOpened()) {
-                if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(exteriorWorld, exteriorBlockPos);
-                else ModSounds.playTardisDoorsCloseSound(exteriorWorld, exteriorBlockPos);
+                if (this.isDoorsOpened()) ModSounds.playTardisDoorsOpenSound(exteriorWorld, exteriorBlockPos, tardisExteriorBlock.isWooden());
+                else ModSounds.playTardisDoorsCloseSound(exteriorWorld, exteriorBlockPos, tardisExteriorBlock.isWooden());
             }
 
             if (exteriorBlockState.get(BaseTardisExteriorBlock.LIT) != this.isLightEnabled()) {
