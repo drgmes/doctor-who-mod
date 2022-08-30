@@ -49,6 +49,11 @@ public class DWM {
         public static final Text MONITOR_BTN_CONSOLE_ROOMS_PREV = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.prev");
         public static final Text MONITOR_BTN_CONSOLE_ROOMS_NEXT = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.next");
 
+        public static final Text MONITOR_STATE_ON = Text.translatable("title." + DWM.MODID + ".monitor.state.value.on");
+        public static final Text MONITOR_STATE_OFF = Text.translatable("title." + DWM.MODID + ".monitor.state.value.off");
+        public static final Text MONITOR_STATE_YES = Text.translatable("title." + DWM.MODID + ".monitor.state.value.yes");
+        public static final Text MONITOR_STATE_NO = Text.translatable("title." + DWM.MODID + ".monitor.state.value.no");
+
         public static final Text TELEPATHIC_INTERFACE_NAME_LOCATIONS = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_NAME_BANNERS = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.title.banners");
         public static final Text TELEPATHIC_INTERFACE_FLD_SEARCH = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.field.search");
