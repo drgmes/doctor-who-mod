@@ -165,16 +165,20 @@
 	"message.dwm.tardis.control.role.facing.2": "§eWEST",
 	"message.dwm.tardis.control.role.facing.3": "§eEAST",
 
-	"message.dwm.tardis.control.role.safedirection": "Vertical Scanning Direction: %s",
-	"message.dwm.tardis.control.role.safedirection.0": "§eTOP",
-	"message.dwm.tardis.control.role.safedirection.1": "§eBOTTOM",
-	"message.dwm.tardis.control.role.safedirection.2": "§eDIRECT",
+	"message.dwm.tardis.control.role.safe_direction": "Vertical Scanning Direction: %s",
+	"message.dwm.tardis.control.role.safe_direction.0": "§eTOP",
+	"message.dwm.tardis.control.role.safe_direction.1": "§eBOTTOM",
+	"message.dwm.tardis.control.role.safe_direction.2": "§eDIRECT",
 
 	"message.dwm.tardis.control.role.dimension": "Dimension: %s",
-	"message.dwm.tardis.control.role.xset": "X: %s",
-	"message.dwm.tardis.control.role.yset": "Y: %s",
-	"message.dwm.tardis.control.role.zset": "Z: %s",
-	"message.dwm.tardis.control.role.xyzstep": "Coords Scaling: %s",
+	"message.dwm.tardis.control.role.x_set": "X: %s",
+	"message.dwm.tardis.control.role.y_set": "Y: %s",
+	"message.dwm.tardis.control.role.z_set": "Z: %s",
+	"message.dwm.tardis.control.role.xyz_step": "Coords Scaling: %s",
+
+	"message.dwm.tardis.control.role.reset_to_prev": "Coords have been reset to the §ePrevious§r position",
+	"message.dwm.tardis.control.role.reset_to_curr": "Coords have been reset to the §eCurrent§r position",
+	"message.dwm.tardis.control.role.randomizer": "Coords were randomly updated",
 
 	"message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
 

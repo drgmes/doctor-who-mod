@@ -165,16 +165,20 @@
 	"message.dwm.tardis.control.role.facing.2": "§eЗапад",
 	"message.dwm.tardis.control.role.facing.3": "§eВосток",
 
-	"message.dwm.tardis.control.role.safedirection": "Направление вертикального сканирования: %s",
-	"message.dwm.tardis.control.role.safedirection.0": "§eВверх",
-	"message.dwm.tardis.control.role.safedirection.1": "§eВниз",
-	"message.dwm.tardis.control.role.safedirection.2": "§eТочное",
+	"message.dwm.tardis.control.role.safe_direction": "Направление вертикального сканирования: %s",
+	"message.dwm.tardis.control.role.safe_direction.0": "§eВверх",
+	"message.dwm.tardis.control.role.safe_direction.1": "§eВниз",
+	"message.dwm.tardis.control.role.safe_direction.2": "§eТочное",
 
 	"message.dwm.tardis.control.role.dimension": "Измерение: %s",
-	"message.dwm.tardis.control.role.xset": "X: %s",
-	"message.dwm.tardis.control.role.yset": "Y: %s",
-	"message.dwm.tardis.control.role.zset": "Z: %s",
-	"message.dwm.tardis.control.role.xyzstep": "Модификатор координат: %s",
+	"message.dwm.tardis.control.role.x_set": "X: %s",
+	"message.dwm.tardis.control.role.y_set": "Y: %s",
+	"message.dwm.tardis.control.role.z_set": "Z: %s",
+	"message.dwm.tardis.control.role.xyz_step": "Модификатор координат: %s",
+
+	"message.dwm.tardis.control.role.reset_to_prev": "Координаты были сброшены на §eпредыдущую§r позицию",
+	"message.dwm.tardis.control.role.reset_to_curr": "Координаты были сброшены на §eтекущую§r позицию",
+	"message.dwm.tardis.control.role.randomizer": "Координаты были случайно обновлены",
 
 	"message.dwm.screwdriver.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
 

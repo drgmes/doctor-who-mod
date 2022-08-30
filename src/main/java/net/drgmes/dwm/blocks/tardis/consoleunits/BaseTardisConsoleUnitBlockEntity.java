@@ -486,21 +486,22 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         boolean isMaterialized = materializationSystem.isMaterialized();
         boolean isInFlight = flightSystem.inProgress();
 
+        String message = role.message == null ? null : "message." + DWM.MODID + ".tardis.control.role." + role.message;
         Text component = switch (role) {
-            case DOORS, LIGHT, FUEL_HARVESTING, ENERGY_HARVESTING -> !isMaterialized ? null : Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
-            case HANDBRAKE -> Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive"));
-            case SAFE_DIRECTION -> Text.translatable(role.message, Text.translatable(role.message + "." + value));
-            case FACING -> isInFlight ? null : Text.translatable(role.message, Text.translatable(role.message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2)));
-            case XYZSTEP -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getXYZStep());
-            case XSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getX());
-            case YSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getY());
-            case ZSET -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorPosition().getZ());
-            case DIM_PREV, DIM_NEXT -> isInFlight ? null : Text.translatable(role.message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
-            case SHIELDS -> !isMaterialized ? null : (isShieldsSystemEnabled ? Text.translatable(role.message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED);
+            case DOORS, LIGHT, FUEL_HARVESTING, ENERGY_HARVESTING -> !isMaterialized ? null : Text.translatable(message + ((boolean) value ? ".active" : ".inactive"));
+            case HANDBRAKE -> Text.translatable(message + ((boolean) value ? ".active" : ".inactive"));
+            case SAFE_DIRECTION -> Text.translatable(message, Text.translatable(message + "." + value));
+            case FACING -> isInFlight ? null : Text.translatable(message, Text.translatable(message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2)));
+            case XYZSTEP -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getXYZStep());
+            case XSET -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getX());
+            case YSET -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getY());
+            case ZSET -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getZ());
+            case DIM_PREV, DIM_NEXT -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
+            case SHIELDS -> !isMaterialized ? null : (isShieldsSystemEnabled ? Text.translatable(message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED);
             case STARTER -> isMaterializationSystemEnabled ? (isFlightSystemEnabled ? null : DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED) : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
             case MATERIALIZATION -> isMaterializationSystemEnabled ? null : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
 
-            default -> isInFlight || role.message == null ? null : Text.translatable(role.message, value);
+            default -> isInFlight || message == null ? null : Text.translatable(message, value);
         };
 
         if (component != null) {
