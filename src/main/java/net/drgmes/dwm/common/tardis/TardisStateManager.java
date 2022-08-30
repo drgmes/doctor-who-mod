@@ -235,12 +235,8 @@ public class TardisStateManager extends PersistentState {
     }
 
     public TardisConsoleRoomEntry getConsoleRoom() {
-        return this.consoleRoom != null
-            ? this.consoleRoom
-            : (this.isBroken()
-                ? TardisConsoleRooms.DEFAULT_ABANDONED
-                : TardisConsoleRooms.DEFAULT
-            );
+        if (this.consoleRoom == null) this.setConsoleRoom(this.isBroken() ? TardisConsoleRooms.DEFAULT_ABANDONED : TardisConsoleRooms.DEFAULT);
+        return this.consoleRoom;
     }
 
     public void setConsoleRoom(TardisConsoleRoomEntry consoleRoom) {
