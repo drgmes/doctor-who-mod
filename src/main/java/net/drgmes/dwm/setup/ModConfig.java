@@ -30,7 +30,10 @@ public class ModConfig {
     public static class Common {
         public ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionsBlacklist;
         public ForgeConfigSpec.BooleanValue hideTheEndConditionally;
+        public ForgeConfigSpec.IntValue tardisFlightDistanceRate;
         public ForgeConfigSpec.IntValue tardisMaxFlightTime;
+        public ForgeConfigSpec.IntValue tardisFuelRefillTiming;
+        public ForgeConfigSpec.IntValue tardisFuelConsumeTiming;
 
         public Common(ForgeConfigSpec.Builder builder) {
             builder.push("Common Settings");
@@ -47,10 +50,25 @@ public class ModConfig {
                         .translation("config.dwm.tardis.hideTheEndConditionally")
                         .define("hideTheEndConditionally", true);
 
+                    tardisFlightDistanceRate = builder
+                        .comment("Time ratio divider in ticks per distance traveled (aka TARDIS speed)")
+                        .translation("config.dwm.tardis.tardisFlightDistanceRate")
+                        .defineInRange("tardisFlightDistanceRate", 1000, 1, Integer.MAX_VALUE);
+
                     tardisMaxFlightTime = builder
-                        .comment("Max flight time for TARDIS")
+                        .comment("Max flight time in ticks for TARDIS")
                         .translation("config.dwm.tardis.tardisMaxFlightTime")
                         .defineInRange("tardisMaxFlightTime", 4000, 1, Integer.MAX_VALUE);
+
+                    tardisFuelRefillTiming = builder
+                        .comment("Frequency of restoration of 1 unit of fuel")
+                        .translation("config.dwm.tardis.tardisFuelRefillTiming")
+                        .defineInRange("tardisFuelRefillTiming", 40, 1, Integer.MAX_VALUE);
+
+                    tardisFuelConsumeTiming = builder
+                        .comment("Frequency of consumption of 1 unit of fuel")
+                        .translation("config.dwm.tardis.tardisFuelConsumeTiming")
+                        .defineInRange("tardisFuelConsumeTiming", 20, 1, Integer.MAX_VALUE);
                 }
                 builder.pop();
             }

@@ -201,5 +201,8 @@
 
 	"config.dwm.tardis.dimensionsBlacklist": "Список измерений, которые не будут доступны в списке выбора измерений ТАРДИС",
 	"config.dwm.tardis.hideTheEndConditionally": "Скрывать измерение Края из списка выбора измерений ТАРДИС, пока Дракон не побежден",
-	"config.dwm.tardis.tardisMaxFlightTime": "Максимальное время полёта ТАРДИС"
+	"config.dwm.tardis.tardisFlightDistanceRate": "Делитель соотношения времени в тиках к пройденному расстоянию (он же - скорость ТАРДИС)",
+	"config.dwm.tardis.tardisMaxFlightTime": "Максимальное время полёта ТАРДИС в тиках",
+	"config.dwm.tardis.tardisFuelRefillTiming": "Частота восстановления 1 единицы топлива",
+	"config.dwm.tardis.tardisFuelConsumeTiming": "Частота потребления 1 единицы топлива"
 }

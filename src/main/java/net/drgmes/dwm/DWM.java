@@ -22,7 +22,6 @@ public class DWM {
         public static final float DEMAT = 240;
         public static final float REMAT = 180;
         public static final float FLIGHT_LOOP = 32;
-        public static final float ERROR_SOUND = 120;
 
         public static final int SCREWDRIVER_TIMEOUT = 4;
     }

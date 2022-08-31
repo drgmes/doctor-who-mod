@@ -884,7 +884,7 @@ public class TardisStateManager extends PersistentState {
         this.validateEntrancePortals();
 
         if (!this.world.isClient) {
-            if (this.fuelHarvesting && this.world.getTime() % 30 == 0 && !Transaction.isOpen()) {
+            if (this.fuelHarvesting && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && !Transaction.isOpen()) {
                 Transaction transaction = Transaction.openOuter();
                 long fuelInserted = this.fuelStorage.insert(1, transaction);
 

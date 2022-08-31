@@ -201,5 +201,8 @@
 
 	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
 	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
-	"config.dwm.tardis.tardisMaxFlightTime": "Max flight time for TARDIS"
+	"config.dwm.tardis.tardisFlightDistanceRate": "Time ratio divider in ticks per distance traveled (aka TARDIS speed)",
+	"config.dwm.tardis.tardisMaxFlightTime": "Max flight time in ticks for TARDIS",
+	"config.dwm.tardis.tardisFuelRefillTiming": "Frequency of restoration of 1 unit of fuel",
+	"config.dwm.tardis.tardisFuelConsumeTiming": "Frequency of consumption of 1 unit of fuel"
 }

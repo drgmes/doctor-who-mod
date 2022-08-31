@@ -57,7 +57,7 @@ public class TardisSystemFlight implements ITardisSystem {
     @Override
     public void tick() {
         if (this.tickInProgress > 0) {
-            if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % 20 == 0 && !Transaction.isOpen()) {
+            if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % ModConfig.COMMON.tardisFuelConsumeTiming.get() == 0 && !Transaction.isOpen()) {
                 Transaction transaction = Transaction.openOuter();
                 long fuelExtracted = this.tardis.getFuelStorage().extract(1, transaction);
 
@@ -118,7 +118,7 @@ public class TardisSystemFlight implements ITardisSystem {
             BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
             RegistryKey<World> currExteriorDimension = this.tardis.getCurrentExteriorDimension();
             RegistryKey<World> destExteriorDimension = this.tardis.getDestinationExteriorDimension();
-            float distance = Math.max(1, currExteriorPosition.getManhattanDistance(destExteriorPosition) / 200);
+            float distance = Math.max(1, currExteriorPosition.getManhattanDistance(destExteriorPosition) / (ModConfig.COMMON.tardisFlightDistanceRate.get()));
             float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
 
             this.isSoundFlyPlayed = false;
