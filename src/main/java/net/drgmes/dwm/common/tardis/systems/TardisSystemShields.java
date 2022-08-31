@@ -4,6 +4,8 @@ import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.ExperienceOrbEntity;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
@@ -56,6 +58,9 @@ public class TardisSystemShields implements ITardisSystem {
             List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, Box.of(blockPosVec, radius, radius, radius), EntityPredicates.EXCEPT_SPECTATOR);
 
             for (Entity entity : entities) {
+                if (entity instanceof ItemEntity) continue;
+                if (entity instanceof ExperienceOrbEntity) continue;
+
                 if (entity instanceof PlayerEntity player) {
                     if (!player.isTouchingWater()) continue;
                     player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 40));
