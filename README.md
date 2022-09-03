@@ -45,6 +45,7 @@ Currently available:
 * Flights on the **TARDIS**
 * Generation of rooms inside the **TARDIS**
 * Sonic screwdrivers with multiple modes
+* Lot of decoration blocks and new ore
 
 It is planned to add:
 
