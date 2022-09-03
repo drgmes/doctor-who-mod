@@ -96,8 +96,8 @@ public class TardisStateManager extends PersistentState {
         this.doorsLocked = mustBeBroken;
 
         this.setWorld(world);
-        this.setFuelStorage(64, 16, 16);
-        this.setEnergyStorage(64, 16, 16);
+        this.setFuelStorage(1024, 16, 16);
+        this.setEnergyStorage(1024, 16, 16);
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));
