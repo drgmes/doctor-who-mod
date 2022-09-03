@@ -31,17 +31,17 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}") {
+    include modApi("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
 
-    modImplementation("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}") {
+    include modApi("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
 
-    modImplementation("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}") {
+    include modApi("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
@@ -50,10 +50,6 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
-
-    include("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}")
-    include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}")
-    include("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}")
 }
 
 loom {
