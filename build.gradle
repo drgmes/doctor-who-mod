@@ -13,8 +13,8 @@ group = project.maven_group
 
 repositories {
     maven { url 'https://jitpack.io' }
-    maven { url 'https://cursemaven.com' }
     maven { url 'https://ladysnake.jfrog.io/artifactory/mods' }
+    maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven' }
 
     flatDir {
         dir 'libs'
@@ -31,7 +31,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modImplementation("curse.maven:forgeconfigapiport-547434:${project.forge_config_api_version}") {
+    modImplementation("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
@@ -51,7 +51,7 @@ dependencies {
         transitive(false)
     }
 
-    include("curse.maven:forgeconfigapiport-547434:${project.forge_config_api_version}")
+    include("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}")
     include("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}")
     include("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}")
 }
