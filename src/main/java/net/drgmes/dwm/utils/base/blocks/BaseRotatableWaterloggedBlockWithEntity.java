@@ -12,7 +12,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.listener.GameEventListener;
 
-public abstract class BaseRotatableWaterloggedBlockWithEntity extends BaseRotatableWaterloggedBlock implements BlockEntityProvider {
+public class BaseRotatableWaterloggedBlockWithEntity extends BaseRotatableWaterloggedBlock implements BlockEntityProvider {
     public BaseRotatableWaterloggedBlockWithEntity(Settings settings) {
         super(settings);
     }

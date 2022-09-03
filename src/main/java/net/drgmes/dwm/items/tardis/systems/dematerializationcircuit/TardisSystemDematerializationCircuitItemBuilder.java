@@ -38,7 +38,7 @@ public class TardisSystemDematerializationCircuitItemBuilder extends TardisSyste
             .pattern("idi")
             .pattern("aea")
             .pattern("grg")
-            .criterion("has_iron_ingot", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
             .offerTo(exporter);
     }
 }

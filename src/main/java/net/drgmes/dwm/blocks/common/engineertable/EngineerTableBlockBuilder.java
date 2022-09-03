@@ -1,6 +1,5 @@
 package net.drgmes.dwm.blocks.common.engineertable;
 
-import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.common.ModRecipeProvider;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.block.AbstractBlock;
@@ -29,20 +28,21 @@ public class EngineerTableBlockBuilder extends BlockBuilder {
     @Override
     public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerNorthDefaultHorizontalRotation(this.getBlock());
-        blockStateModelGenerator.registerParentedItemModel(this.getBlockItem(), DWM.getIdentifier("block/" + this.getName()));
+        blockStateModelGenerator.registerParentedItemModel(this.getBlockItem(), this.getId());
     }
 
+    @Override
     public void registerRecipe(ModRecipeProvider provider, Consumer<RecipeJsonProvider> exporter) {
         ShapedRecipeJsonBuilder.create(this.getBlock())
-            .input('i', Items.IRON_INGOT)
-            .input('c', Items.COPPER_INGOT)
-            .input('g', Items.GOLD_INGOT)
-            .input('p', ItemTags.PLANKS)
-            .input('w', Blocks.CRAFTING_TABLE)
-            .input('s', Blocks.CHEST)
-            .pattern("icg")
-            .pattern("pwp")
-            .pattern("psp")
+            .input('#', Blocks.CRAFTING_TABLE)
+            .input('0', Blocks.CHEST)
+            .input('1', Items.COPPER_INGOT)
+            .input('2', Items.IRON_INGOT)
+            .input('3', Items.GOLD_INGOT)
+            .input('4', ItemTags.PLANKS)
+            .pattern("123")
+            .pattern("4#4")
+            .pattern("404")
             .criterion("has_planks", RecipeProvider.conditionsFromTag(ItemTags.PLANKS))
             .offerTo(exporter);
     }

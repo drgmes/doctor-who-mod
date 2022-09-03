@@ -1,0 +1,68 @@
+{
+	"parent": "minecraft:block/block",
+	"ambientocclusion": false,
+	"display": {
+		"gui": {
+			"rotation": [30, 135, 0],
+			"scale": [0.625, 0.625, 0.625]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"scale": [0.5, 0.5, 0.5]
+		}
+	},
+	"elements": [
+		{
+			"from": [4, 0, 4],
+			"to": [12, 16, 12],
+			"faces": {
+				"down": {
+					"texture": "#wall_y",
+					"cullface": "down"
+				},
+				"up": {
+					"texture": "#wall_y"
+				},
+				"north": {
+					"texture": "#wall_x"
+				},
+				"south": {
+					"texture": "#wall_x"
+				},
+				"west": {
+					"texture": "#wall_x"
+				},
+				"east": {
+					"texture": "#wall_x"
+				}
+			}
+		},
+		{
+			"from": [5, 0, 0],
+			"to": [11, 13, 16],
+			"faces": {
+				"down": {
+					"texture": "#wall_y",
+					"cullface": "down"
+				},
+				"up": {
+					"texture": "#wall_y"
+				},
+				"north": {
+					"texture": "#wall_x",
+					"cullface": "north"
+				},
+				"south": {
+					"texture": "#wall_x",
+					"cullface": "south"
+				},
+				"west": {
+					"texture": "#wall_x"
+				},
+				"east": {
+					"texture": "#wall_x"
+				}
+			}
+		}
+	]
+}

@@ -20,7 +20,7 @@ public class TardisArsDestroyerBlockBuilder extends BlockBuilder {
     @Override
     public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
         blockStateModelGenerator.registerSimpleState(this.getBlock());
-        blockStateModelGenerator.registerParentedItemModel(this.getBlockItem(), DWM.getIdentifier("block/" + this.getName()));
+        blockStateModelGenerator.registerParentedItemModel(this.getBlockItem(), this.getId());
     }
 
     @Override

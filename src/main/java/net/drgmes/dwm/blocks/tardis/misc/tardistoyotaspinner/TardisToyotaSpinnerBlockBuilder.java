@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
+import net.drgmes.dwm.utils.helpers.BlockStateHelper;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,7 +33,7 @@ public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
-        ModelHelper.createBlockStateWithModel(blockStateModelGenerator, this.getBlock(), ModelHelper.BLOCK_INVISIBLE);
+        BlockStateHelper.createSimpleBlockStateWithModel(blockStateModelGenerator, this, ModelHelper.BLOCK_INVISIBLE);
     }
 
     @Override

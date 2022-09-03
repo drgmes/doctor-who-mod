@@ -11,6 +11,11 @@ public class ModCreativeTabs {
         () -> new ItemStack(ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlockItem())
     );
 
+    public static final ItemGroup DECORATIONS = FabricItemGroupBuilder.build(
+        DWM.getIdentifier("decorations"),
+        () -> new ItemStack(ModBlocks.CARBON_FIBER.getBlockItem())
+    );
+
     public static void init() {
     }
 }

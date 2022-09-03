@@ -25,7 +25,7 @@ public class TardisSystemDirectionalUnitItemBuilder extends TardisSystemItemBuil
             .pattern(" a ")
             .pattern("rer")
             .pattern("ifi")
-            .criterion("has_iron_ingot", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
             .offerTo(exporter);
     }
 }

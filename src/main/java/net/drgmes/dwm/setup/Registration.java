@@ -25,6 +25,8 @@ import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.poi.PointOfInterestType;
 import qouteall.q_misc_util.LifecycleHack;
 
@@ -42,6 +44,7 @@ public class Registration {
         ModEntities.init();
         ModBiomes.init();
         ModDimensions.init();
+        ModWorldGen.init();
         ModInventories.init();
         ModVillagerProfessions.init();
 
@@ -95,6 +98,14 @@ public class Registration {
 
     public static <T extends Biome> T registerBiome(String name, Supplier<T> biomeSupplier) {
         return Registry.register(BuiltinRegistries.BIOME, DWM.getIdentifier(name), biomeSupplier.get());
+    }
+
+    public static <T extends ConfiguredFeature<?, ?>> T registerConfiguredFeature(String name, T configuredFeature) {
+        return Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, DWM.getIdentifier(name), configuredFeature);
+    }
+
+    public static <T extends PlacedFeature> T registerPlacedFeature(String name, T placedFeature) {
+        return Registry.register(BuiltinRegistries.PLACED_FEATURE, DWM.getIdentifier(name), placedFeature);
     }
 
     public static VillagerProfession registerVillagerProfession(String name, PointOfInterestType poiType, SoundEvent workSound) {

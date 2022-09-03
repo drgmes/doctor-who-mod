@@ -11,7 +11,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.Direction;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public abstract class BaseRotatableBlock extends HorizontalFacingBlock {
+public class BaseRotatableBlock extends HorizontalFacingBlock {
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     public BaseRotatableBlock(AbstractBlock.Settings settings) {

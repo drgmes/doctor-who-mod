@@ -15,7 +15,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public abstract class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatableWaterloggedBlockWithEntity {
+public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatableWaterloggedBlockWithEntity {
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 
     public BaseRotatableWaterloggedDoubleBlockWithEntity(Settings settings) {

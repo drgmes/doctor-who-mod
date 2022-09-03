@@ -12,7 +12,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
-public abstract class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements Waterloggable {
+public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public BaseRotatableWaterloggedBlock(AbstractBlock.Settings settings) {

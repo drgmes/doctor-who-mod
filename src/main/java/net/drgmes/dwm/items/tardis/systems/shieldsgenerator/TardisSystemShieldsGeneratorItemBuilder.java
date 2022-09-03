@@ -24,7 +24,7 @@ public class TardisSystemShieldsGeneratorItemBuilder extends TardisSystemItemBui
             .pattern("grg")
             .pattern("iai")
             .pattern("grg")
-            .criterion("has_iron_ingot", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
             .offerTo(exporter);
     }
 }

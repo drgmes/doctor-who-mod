@@ -1,6 +1,10 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.items.common.repairkit.RepairKitItemBuilder;
+import net.drgmes.dwm.items.common.titaniumingot.TitaniumIngotItemBuilder;
+import net.drgmes.dwm.items.common.titaniumnugget.TitaniumNuggetItemBuilder;
+import net.drgmes.dwm.items.common.titaniumplate.TitaniumPlateItemBuilder;
+import net.drgmes.dwm.items.common.titaniumraw.TitaniumRawItemBuilder;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItemBuilder;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.TardisSystemDematerializationCircuitItemBuilder;
@@ -13,7 +17,11 @@ import java.util.ArrayList;
 public class ModItems {
     public static final ArrayList<ItemBuilder> ITEM_BUILDERS = new ArrayList<>();
 
-    // Misc
+    // Common
+    public static final ItemBuilder TITANIUM_RAW = new TitaniumRawItemBuilder("titanium_raw_item");
+    public static final ItemBuilder TITANIUM_INGOT = new TitaniumIngotItemBuilder("titanium_ingot");
+    public static final ItemBuilder TITANIUM_PLATE = new TitaniumPlateItemBuilder("titanium_plate");
+    public static final ItemBuilder TITANIUM_NUGGET = new TitaniumNuggetItemBuilder("titanium_nugget");
     public static final ItemBuilder REPAIR_KIT = new RepairKitItemBuilder("repair_kit");
 
     // Screwdrivers

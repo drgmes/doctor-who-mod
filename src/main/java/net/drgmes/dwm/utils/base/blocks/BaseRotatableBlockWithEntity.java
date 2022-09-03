@@ -13,8 +13,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.listener.GameEventListener;
 
-public abstract class BaseRotatableBlockWithEntity extends BaseRotatableBlock implements BlockEntityProvider {
-
+public class BaseRotatableBlockWithEntity extends BaseRotatableBlock implements BlockEntityProvider {
     public BaseRotatableBlockWithEntity(AbstractBlock.Settings settings) {
         super(settings);
     }

@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.datagen.common.ModLootTableProvider;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
+import net.drgmes.dwm.utils.helpers.BlockStateHelper;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
@@ -24,7 +25,7 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
 
     @Override
     public void registerBlockStateAndModel(BlockStateModelGenerator blockStateModelGenerator) {
-        ModelHelper.createBlockStateWithModel(blockStateModelGenerator, this.getBlock(), ModelHelper.BLOCK_INVISIBLE);
+        BlockStateHelper.createSimpleBlockStateWithModel(blockStateModelGenerator, this, ModelHelper.BLOCK_INVISIBLE);
     }
 
     @Override
