@@ -1,4 +1,5 @@
 {
+	"credit": "drgmes",
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "dwm:block/tardis/engines/tardis_engine_imperial",
