@@ -25,6 +25,7 @@ import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
@@ -546,7 +547,7 @@ public class TardisStateManager extends PersistentState {
 
     public void updateDoorsTiles() {
         this.doorTiles.forEach((tile) -> {
-            this.world.setBlockState(tile.getPos(), tile.getCachedState().with(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), 3);
+            this.world.setBlockState(tile.getPos(), tile.getCachedState().with(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), Block.NOTIFY_ALL);
         });
     }
 
@@ -929,11 +930,11 @@ public class TardisStateManager extends PersistentState {
 
             exteriorBlockState = exteriorBlockState.with(BaseTardisExteriorBlock.OPEN, this.isDoorsOpened());
             exteriorBlockState = exteriorBlockState.with(BaseTardisExteriorBlock.LIT, this.isLightEnabled());
-            exteriorWorld.setBlockState(exteriorBlockPos, exteriorBlockState, 3);
+            exteriorWorld.setBlockState(exteriorBlockPos, exteriorBlockState, Block.NOTIFY_ALL);
 
             if (exteriorWorld.getBlockState(exteriorBlockPos.up()).getBlock() instanceof BaseTardisExteriorBlock) {
                 exteriorBlockState = exteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
-                exteriorWorld.setBlockState(exteriorBlockPos.up(), exteriorBlockState, 3);
+                exteriorWorld.setBlockState(exteriorBlockPos.up(), exteriorBlockState, Block.NOTIFY_ALL);
             }
         }
 

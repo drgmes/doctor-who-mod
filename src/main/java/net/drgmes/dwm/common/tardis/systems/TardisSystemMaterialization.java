@@ -11,6 +11,7 @@ import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
@@ -292,11 +293,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.LOWER);
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().isIn(FluidTags.WATER));
-        exteriorWorld.setBlockState(exteriorBlockPos, tardisExteriorBlockState, 3);
+        exteriorWorld.setBlockState(exteriorBlockPos, tardisExteriorBlockState, Block.NOTIFY_ALL);
 
         BlockState tardisExteriorUpBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
         tardisExteriorUpBlockState = tardisExteriorUpBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorUpBlockState.getFluidState().isIn(FluidTags.WATER));
-        exteriorWorld.setBlockState(exteriorBlockPos.up(), tardisExteriorUpBlockState, 3);
+        exteriorWorld.setBlockState(exteriorBlockPos.up(), tardisExteriorUpBlockState, Block.NOTIFY_ALL);
 
         if (exteriorWorld.getBlockEntity(exteriorBlockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.tardisId = DimensionHelper.getWorldId(this.tardis.getWorld());

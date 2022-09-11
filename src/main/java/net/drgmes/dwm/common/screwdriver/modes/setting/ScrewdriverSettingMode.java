@@ -78,16 +78,16 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         // Dispenser
         if (block instanceof DispenserBlock dispenserBlock) {
             if (!world.isClient) dispenserBlock.scheduledTick(blockState, (ServerWorld) world, blockPos, world.random);
-            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, true), 3);
-            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, false), 3);
+            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, true), Block.NOTIFY_ALL);
+            world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, false), Block.NOTIFY_ALL);
             return ActionResult.SUCCESS;
         }
 
         // NoteBlock
         if (block instanceof NoteBlock noteBlock) {
             noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), Block.NOTIFY_ALL);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), Block.NOTIFY_ALL);
             return ActionResult.SUCCESS;
         }
 
@@ -151,11 +151,11 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         // NoteBlock
         if (block instanceof NoteBlock noteBlock) {
             blockState = player.isSneaking() ? blockState.cycle(NoteBlock.INSTRUMENT) : blockState.cycle(NoteBlock.NOTE);
-            world.setBlockState(blockPos, blockState, 3);
+            world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL);
 
             noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), 3);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), 3);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), Block.NOTIFY_ALL);
+            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), Block.NOTIFY_ALL);
             return ActionResult.SUCCESS;
         }
 
@@ -244,7 +244,7 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
 
         for (Property<?> prop : props) {
             if (blockState.contains(prop)) {
-                if (!world.isClient) world.setBlockState(blockPos, blockState.cycle(prop), 3);
+                if (!world.isClient) world.setBlockState(blockPos, blockState.cycle(prop), Block.NOTIFY_ALL);
                 return ActionResult.SUCCESS;
             }
         }

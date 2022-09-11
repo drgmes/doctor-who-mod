@@ -21,9 +21,6 @@ public class MixinStructurePools {
         addElementToPool(templatePool, new Identifier("village/savanna/houses"), DWM.getIdentifier("village/savanna/houses/engineer"), 8);
         addElementToPool(templatePool, new Identifier("village/snowy/houses"), DWM.getIdentifier("village/snowy/houses/engineer"), 8);
         addElementToPool(templatePool, new Identifier("village/taiga/houses"), DWM.getIdentifier("village/taiga/houses/engineer"), 8);
-
-        addElementToPool(templatePool, new Identifier("ancient_city/structures"), DWM.getIdentifier("tardis_exteriors/ancient_city/tardis_exterior_police_box"), 1);
-        addElementToPool(templatePool, new Identifier("bastion/treasure/bases/centers"), DWM.getIdentifier("tardis_exteriors/bastion/tardis_exterior_police_box"), 1);
     }
 
     private static void addElementToPool(StructurePool pool, Identifier targetPool, Identifier elementId, int weight) {

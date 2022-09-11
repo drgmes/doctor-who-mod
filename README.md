@@ -14,7 +14,7 @@ of adventure and danger.
 ***
 To get a **TARDIS**, you must first buy a TARDIS key from an engineer who lives in the village,
 or simply put an engineer table to an unemployed villager.
-The next step is to find the **TARDIS** in the Ancient City, or, more rarely, in the Piglin Bastion's treasury.
+The next step is to find the **TARDIS** which can be found anywhere, but more often underground.
 Oh yeah, and don't forget to buy a repair kit, because your new **TARDIS**... isn't exactly new.
 
 The final step is to equip your **TARDIS** with special systems that give you the ability to fly your spacetime machine.

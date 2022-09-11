@@ -435,6 +435,9 @@
 	"dwm.console_room.toyota_abandoned": "Toyota Abandoned",
 	"dwm.console_room.toyota_classic": "Toyota Classic",
 
+	"config.dwm.tardis.abandonedTardisUndergroundSpawnChance": "Chance to spawn an Abandoned TARDIS in the underground",
+	"config.dwm.tardis.abandonedTardisSurfaceSpawnChance": "Chance to spawn an Abandoned TARDIS on the surface",
+	"config.dwm.tardis.abandonedTardisNetherSpawnChance": "Chance to spawn an Abandoned TARDIS on the Nether",
 	"config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
 	"config.dwm.tardis.hideTheEndConditionally": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
 	"config.dwm.tardis.tardisFlightDistanceRate": "Time ratio divider in ticks per distance traveled (aka TARDIS speed)",

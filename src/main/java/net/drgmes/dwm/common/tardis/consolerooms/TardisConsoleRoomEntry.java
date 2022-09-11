@@ -189,34 +189,34 @@ public class TardisConsoleRoomEntry {
             else {
                 if (world.isAir(farTacBlockPos.down(2).south())) {
                     this.fillWall(world, farTacBlockPos, BlockRotation.NONE, this.getDecoratorBlock().getDefaultState());
-                    world.setBlockState(farTacBlockPos, ModBlocks.TARDIS_ARS_CREATOR.getBlock().getDefaultState(), 3);
+                    world.setBlockState(farTacBlockPos, ModBlocks.TARDIS_ARS_CREATOR.getBlock().getDefaultState(), Block.NOTIFY_ALL);
                 }
 
-                world.setBlockState(farTacBlockPos.add(upBlockPos), world.getBlockState(tacBlockPos.add(upBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(downBlockPos), world.getBlockState(tacBlockPos.add(downBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(upWestBlockPos), world.getBlockState(tacBlockPos.add(upWestBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(upEastBlockPos), world.getBlockState(tacBlockPos.add(upEastBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(downWestBlockPos), world.getBlockState(tacBlockPos.add(downWestBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(downEastBlockPos), world.getBlockState(tacBlockPos.add(downEastBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(westBlockPos), world.getBlockState(tacBlockPos.add(westBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(eastBlockPos), world.getBlockState(tacBlockPos.add(eastBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(westUpBlockPos), world.getBlockState(tacBlockPos.add(westUpBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(westDownBlockPos), world.getBlockState(tacBlockPos.add(westDownBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(eastUpBlockPos), world.getBlockState(tacBlockPos.add(eastUpBlockPos.rotate(rotation))), 3);
-                world.setBlockState(farTacBlockPos.add(eastDownBlockPos), world.getBlockState(tacBlockPos.add(eastDownBlockPos.rotate(rotation))), 3);
+                world.setBlockState(farTacBlockPos.add(upBlockPos), world.getBlockState(tacBlockPos.add(upBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(downBlockPos), world.getBlockState(tacBlockPos.add(downBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(upWestBlockPos), world.getBlockState(tacBlockPos.add(upWestBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(upEastBlockPos), world.getBlockState(tacBlockPos.add(upEastBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(downWestBlockPos), world.getBlockState(tacBlockPos.add(downWestBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(downEastBlockPos), world.getBlockState(tacBlockPos.add(downEastBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(westBlockPos), world.getBlockState(tacBlockPos.add(westBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(eastBlockPos), world.getBlockState(tacBlockPos.add(eastBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(westUpBlockPos), world.getBlockState(tacBlockPos.add(westUpBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(westDownBlockPos), world.getBlockState(tacBlockPos.add(westDownBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(eastUpBlockPos), world.getBlockState(tacBlockPos.add(eastUpBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
+                world.setBlockState(farTacBlockPos.add(eastDownBlockPos), world.getBlockState(tacBlockPos.add(eastDownBlockPos.rotate(rotation))), Block.NOTIFY_ALL);
             }
         }
     }
 
     private void fillWall(ServerWorld world, BlockPos blockPos, BlockRotation rotation, BlockState blockState) {
-        world.setBlockState(blockPos, blockState, 3);
-        world.setBlockState(blockPos.add(BlockPos.ZERO.up()), blockState, 3);
-        world.setBlockState(blockPos.add(BlockPos.ZERO.down()), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().east()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.east()).rotate(rotation)), blockState, 3);
+        world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(BlockPos.ZERO.up()), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(BlockPos.ZERO.down()), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
     }
 }

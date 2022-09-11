@@ -47,7 +47,7 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
 
     @Override
     public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        world.setBlockState(blockPos.up(), blockState.with(HALF, DoubleBlockHalf.UPPER), 3);
+        world.setBlockState(blockPos.up(), blockState.with(HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
     }
 
     @Override

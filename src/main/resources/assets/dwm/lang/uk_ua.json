@@ -435,6 +435,9 @@
 	"dwm.console_room.toyota_abandoned": "Toyota (занедбана)",
 	"dwm.console_room.toyota_classic": "Toyota (класична)",
 
+	"config.dwm.tardis.abandonedTardisUndergroundSpawnChance": "Шанс створити покинуту ТАРДІС у підземеллі",
+	"config.dwm.tardis.abandonedTardisSurfaceSpawnChance": "Шанс створити покинуту ТАРДИС на поверхні",
+	"config.dwm.tardis.abandonedTardisNetherSpawnChance": "Шанс створити покинуту ТАРДИС у Нижньому світі",
 	"config.dwm.tardis.dimensionsBlacklist": "Список вимірів, які не будуть доступні у списку вибору вимірів ТАРДІС",
 	"config.dwm.tardis.hideTheEndConditionally": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений",
 	"config.dwm.tardis.tardisFlightDistanceRate": "Дільник співвідношення часу в тиках до пройденої відстані (він же - швидкість TARDIS)",

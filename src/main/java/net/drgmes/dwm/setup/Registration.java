@@ -26,6 +26,7 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.PlacedFeature;
 import net.minecraft.world.poi.PointOfInterestType;
 import qouteall.q_misc_util.LifecycleHack;
@@ -35,6 +36,8 @@ import java.util.function.Supplier;
 public class Registration {
     public static void setupCommon() {
         LifecycleHack.markNamespaceStable(DWM.MODID);
+
+        ModConfig.setup();
 
         ModSounds.init();
         ModItems.init();
@@ -51,7 +54,6 @@ public class Registration {
         ArsCategories.init();
         ArsStructures.init();
 
-        ModConfig.setup();
         ModResourcePacks.setup();
         ModEvents.setup();
         ModDimensions.setup();
@@ -98,6 +100,10 @@ public class Registration {
 
     public static <T extends Biome> T registerBiome(String name, Supplier<T> biomeSupplier) {
         return Registry.register(BuiltinRegistries.BIOME, DWM.getIdentifier(name), biomeSupplier.get());
+    }
+
+    public static <T extends Feature<?>> T registerFeature(String name, T feature) {
+        return Registry.register(Registry.FEATURE, DWM.getIdentifier(name), feature);
     }
 
     public static <T extends ConfiguredFeature<?, ?>> T registerConfiguredFeature(String name, T configuredFeature) {

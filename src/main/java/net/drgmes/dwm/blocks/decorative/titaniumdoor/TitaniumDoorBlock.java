@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.decorative.titaniumdoor;
 
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +20,7 @@ public class TitaniumDoorBlock extends DoorBlock {
     @Override
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         blockState = blockState.cycle(OPEN);
-        world.setBlockState(blockPos, blockState, 3);
+        world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL);
         world.syncWorldEvent(player, blockState.get(OPEN) ? 1005 : 1011, blockPos, 0);
         world.emitGameEvent(player, this.isOpen(blockState) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
 

@@ -9,6 +9,7 @@ import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
@@ -142,7 +143,7 @@ public class ArsStructure {
                 });
             }
 
-            world.setBlockState(tacBlockPos, ModBlocks.TARDIS_ARS_CREATOR.getBlock().getDefaultState().with(TardisArsDestroyerBlock.FACING, direction), 3);
+            world.setBlockState(tacBlockPos, ModBlocks.TARDIS_ARS_CREATOR.getBlock().getDefaultState().with(TardisArsDestroyerBlock.FACING, direction), Block.NOTIFY_ALL);
             ModSounds.playTardisArsStructureDestroyedSound(world, tacBlockPos);
             return true;
         }
@@ -151,14 +152,14 @@ public class ArsStructure {
     }
 
     private void fillWall(ServerWorld world, BlockPos blockPos, BlockRotation rotation, BlockState blockState) {
-        world.setBlockState(blockPos, blockState, 3);
-        world.setBlockState(blockPos.add(BlockPos.ZERO.up()), blockState, 3);
-        world.setBlockState(blockPos.add(BlockPos.ZERO.down()), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.east()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().east()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().west()).rotate(rotation)), blockState, 3);
-        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(rotation)), blockState, 3);
+        world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(BlockPos.ZERO.up()), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(BlockPos.ZERO.down()), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.up().east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().west()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
+        world.setBlockState(blockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(rotation)), blockState, Block.NOTIFY_ALL);
     }
 }

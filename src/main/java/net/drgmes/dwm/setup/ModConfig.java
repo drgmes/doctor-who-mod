@@ -28,6 +28,10 @@ public class ModConfig {
     }
 
     public static class Common {
+        public ForgeConfigSpec.IntValue abandonedTardisUndergroundSpawnChance;
+        public ForgeConfigSpec.IntValue abandonedTardisSurfaceSpawnChance;
+        public ForgeConfigSpec.IntValue abandonedTardisNetherSpawnChance;
+
         public ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionsBlacklist;
         public ForgeConfigSpec.BooleanValue hideTheEndConditionally;
         public ForgeConfigSpec.IntValue tardisFlightDistanceRate;
@@ -36,8 +40,27 @@ public class ModConfig {
         public ForgeConfigSpec.IntValue tardisFuelConsumeTiming;
 
         public Common(ForgeConfigSpec.Builder builder) {
-            builder.push("Common Settings");
+            builder.push("CommonSettings");
             {
+                builder.push("WorldGeneration");
+                {
+                    abandonedTardisUndergroundSpawnChance = builder
+                        .comment("Chance to spawn an Abandoned TARDIS in the underground")
+                        .translation("config.dwm.tardis.abandonedTardisUndergroundSpawnChance")
+                        .defineInRange("abandonedTardisUndergroundSpawnChance", 5, 1, Integer.MAX_VALUE);
+
+                    abandonedTardisSurfaceSpawnChance = builder
+                        .comment("Chance to spawn an Abandoned TARDIS on the surface")
+                        .translation("config.dwm.tardis.abandonedTardisSurfaceSpawnChance")
+                        .defineInRange("abandonedTardisSurfaceSpawnChance", 200, 1, Integer.MAX_VALUE);
+
+                    abandonedTardisNetherSpawnChance = builder
+                        .comment("Chance to spawn an Abandoned TARDIS in the Nether")
+                        .translation("config.dwm.tardis.abandonedTardisNetherSpawnChance")
+                        .defineInRange("abandonedTardisNetherSpawnChance", 10, 1, Integer.MAX_VALUE);
+                }
+                builder.pop();
+
                 builder.push("TARDIS");
                 {
                     dimensionsBlacklist = builder

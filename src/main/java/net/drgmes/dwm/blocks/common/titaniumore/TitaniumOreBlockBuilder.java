@@ -35,24 +35,6 @@ public class TitaniumOreBlockBuilder extends BlockBuilder {
         modLootTableProvider.addDrop(this.getBlock(), BlockLootTableGenerator.oreDrops(this.getBlock(), ModItems.TITANIUM_RAW.getItem()));
     }
 
-//    @Override
-//    public void registerWorldGen() {
-//        ModWorldGen.appendOreTarget(this, OreFeatures.STONE_ORE_REPLACEABLES);
-//        ModWorldGen.appendOreTarget(this, OreFeatures.STONE_ORE_REPLACEABLES, this.name + "_large");
-//
-//        ModWorldGen.OVERWORLD_ORES.add(new OreFeatureBuilder(this.getName(), 5, new PlacementModifier[]{
-//            CountPlacement.of(10),
-//            InSquarePlacement.spread(),
-//            HeightRangePlacement.triangle(VerticalAnchor.absolute(-48), VerticalAnchor.absolute(112))
-//        }));
-//
-//        ModWorldGen.OVERWORLD_ORES.add(new OreFeatureBuilder(this.getName() + "_large", 15, new PlacementModifier[]{
-//            CountPlacement.of(8),
-//            InSquarePlacement.spread(),
-//            HeightRangePlacement.triangle(VerticalAnchor.absolute(-48), VerticalAnchor.absolute(112))
-//        }));
-//    }
-
     @Override
     public void registerTags() {
         super.registerTags();

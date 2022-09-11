@@ -100,7 +100,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
 
         Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
-        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, listWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
+        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_FLD_SEARCH);
 
         this.addDrawableChild(this.listWidget);
         this.addDrawableChild(this.search);

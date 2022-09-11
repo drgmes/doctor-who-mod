@@ -12,7 +12,6 @@ import java.util.function.Function;
 public class DWM {
     public static final String MODID = "dwm";
     public static final Logger LOGGER = LoggerFactory.getLogger(DWM.MODID);
-    public static final int CHUNKS_UPDATE_RADIUS = 2;
 
     public static Identifier getIdentifier(String path) {
         return Identifier.of(DWM.MODID, path);
