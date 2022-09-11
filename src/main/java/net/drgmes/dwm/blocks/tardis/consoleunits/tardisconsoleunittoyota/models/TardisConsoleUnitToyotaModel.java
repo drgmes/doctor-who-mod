@@ -17,7 +17,7 @@ public class TardisConsoleUnitToyotaModel extends Model {
     private final ModelPart rotor_rods;
 
     public TardisConsoleUnitToyotaModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderLayer::getEntityTranslucentCull);
 
         this.base = root.getChild("base");
         this.controls = root.getChild("controls");

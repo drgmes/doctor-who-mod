@@ -14,7 +14,7 @@ public class TardisEngineToyotaModel extends Model {
     private final ModelPart covers;
 
     public TardisEngineToyotaModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderLayer::getEntityTranslucentCull);
 
         this.base = root.getChild("base");
         this.covers = root.getChild("covers");

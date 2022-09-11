@@ -15,7 +15,7 @@ public class TardisSystemDematerializationCircuitModel extends Model {
     private final ModelPart bb_main;
 
     public TardisSystemDematerializationCircuitModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderLayer::getEntityTranslucentCull);
 
         this.caps = root.getChild("caps");
         this.rods = root.getChild("rods");

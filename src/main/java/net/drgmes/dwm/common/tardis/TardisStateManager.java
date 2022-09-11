@@ -36,6 +36,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -934,6 +935,7 @@ public class TardisStateManager extends PersistentState {
 
             if (exteriorWorld.getBlockState(exteriorBlockPos.up()).getBlock() instanceof BaseTardisExteriorBlock) {
                 exteriorBlockState = exteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.UPPER);
+                exteriorBlockState = exteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorWorld.getBlockState(exteriorBlockPos.up()).getFluidState().isIn(FluidTags.WATER));
                 exteriorWorld.setBlockState(exteriorBlockPos.up(), exteriorBlockState, Block.NOTIFY_ALL);
             }
         }

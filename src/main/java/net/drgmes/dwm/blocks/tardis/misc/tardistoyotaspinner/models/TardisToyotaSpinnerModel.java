@@ -16,7 +16,7 @@ public class TardisToyotaSpinnerModel extends Model {
     private final ModelPart rotor_3;
 
     public TardisToyotaSpinnerModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderLayer::getEntityTranslucentCull);
 
         this.platform = root.getChild("platform");
         this.rotor_1 = root.getChild("rotor_1");

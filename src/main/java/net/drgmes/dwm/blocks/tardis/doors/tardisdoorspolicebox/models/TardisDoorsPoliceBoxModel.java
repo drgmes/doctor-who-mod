@@ -16,7 +16,7 @@ public class TardisDoorsPoliceBoxModel extends Model {
     private final ModelPart door_right;
 
     public TardisDoorsPoliceBoxModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucent);
+        super(RenderLayer::getEntityTranslucentCull);
 
         this.base = root.getChild("base");
         this.door_left = root.getChild("door_left");

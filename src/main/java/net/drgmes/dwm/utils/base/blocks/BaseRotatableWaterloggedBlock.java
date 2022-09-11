@@ -10,6 +10,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.FluidTags;
 import org.checkerframework.checker.nullness.qual.NonNull;
 
 public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements Waterloggable {
@@ -25,7 +26,7 @@ public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements
         BlockState blockState = super.getPlacementState(context);
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
 
-        return blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+        return blockState.with(WATERLOGGED, fluidState.isIn(FluidTags.WATER));
     }
 
     @Override
