@@ -18,8 +18,10 @@ public class TardisExteriorPoliceBoxItemRenderer implements BuiltinItemRendererR
         TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(modelLayer));
         VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(modelLayer.getId()));
 
+        float scale = 4.565F;
         matrixStack.push();
-        matrixStack.translate(0, 1.5, 0);
+        matrixStack.scale(scale, scale, scale);
+        matrixStack.translate(0, 1.625F, 0);
         matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
         model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
         matrixStack.pop();

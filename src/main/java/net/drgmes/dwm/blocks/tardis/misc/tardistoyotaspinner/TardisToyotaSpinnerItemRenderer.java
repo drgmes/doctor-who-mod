@@ -18,8 +18,10 @@ public class TardisToyotaSpinnerItemRenderer implements BuiltinItemRendererRegis
         TardisToyotaSpinnerModel model = new TardisToyotaSpinnerModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(modelLayer));
         VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(modelLayer.getId()));
 
+        float scale = 3F;
         matrixStack.push();
-        matrixStack.translate(0, 1.5, 0);
+        matrixStack.scale(scale, scale, scale);
+        matrixStack.translate(0, 1.85F, 0);
         matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
         model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
         matrixStack.pop();

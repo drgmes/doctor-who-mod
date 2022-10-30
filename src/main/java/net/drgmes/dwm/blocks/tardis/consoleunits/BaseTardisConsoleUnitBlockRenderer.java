@@ -8,6 +8,7 @@ import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitCont
 import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlEntry;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -159,17 +160,27 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
     }
 
     private void renderScreenPage2(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
+        String NONE = "-";
+
+        TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
+
         String shieldsState = tardis.isShieldsEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String fuelHarvestingState = tardis.isFuelHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String energyHarvestingState = tardis.isEnergyHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
 
+        long energyAmount = tardis.getEnergyStorage().getAmount();
+        String energyAmountText = String.valueOf(energyAmount > 1000 ? String.format("%.1f", (float) energyAmount / 1000) : energyAmount);
+        energyAmountText += (energyAmount > 1000 ? "k" : "");
+        energyAmountText += " E";
+        energyAmountText = energyAmountText.replace(",", ".");
+
         this.printStringsToScreen(matrixStack, buffer, new String[]{
-            this.buildScreenParamText("shields", shieldsState),
+            this.buildScreenParamText("shields", !shieldsSystem.isEnabled() ? NONE : shieldsState),
             this.buildScreenParamText("fuel_harvesting", fuelHarvestingState),
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
             this.buildScreenParamText("fuel", String.valueOf(tardis.getFuelStorage().getAmount())),
-            this.buildScreenParamText("energy", String.valueOf(tardis.getEnergyStorage().getAmount())),
+            this.buildScreenParamText("energy", energyAmountText),
         });
     }
 

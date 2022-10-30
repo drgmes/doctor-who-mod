@@ -19,7 +19,7 @@ public class TardisEngineToyotaItemRenderer implements BuiltinItemRendererRegist
         VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(modelLayer.getId()));
 
         matrixStack.push();
-        matrixStack.translate(0, 1.5, 0);
+        matrixStack.translate(0, 2.85F, 0);
         matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(180));
         model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
         matrixStack.pop();

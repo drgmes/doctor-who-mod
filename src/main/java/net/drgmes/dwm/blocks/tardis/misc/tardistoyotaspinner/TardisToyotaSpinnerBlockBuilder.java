@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
 import net.drgmes.dwm.setup.ModBlockEntities;
+import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.BlockStateHelper;
 import net.drgmes.dwm.utils.helpers.ModelHelper;
@@ -16,7 +17,7 @@ import net.minecraft.data.client.ItemModelGenerator;
 
 public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
     public TardisToyotaSpinnerBlockBuilder(String name) {
-        super(name, new TardisToyotaSpinnerBlock(getBlockSettings()));
+        super(name, new TardisToyotaSpinnerBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
