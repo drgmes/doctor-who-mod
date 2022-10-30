@@ -22,6 +22,11 @@
 	"block.dwm.tardis_toyota_spinner": "Спіннер",
 	"block.dwm.tardis_ars_creator": "Система архітектурної реконфігурації",
 	"block.dwm.tardis_ars_destroyer": "Руйнівник архітектурної конфігурації",
+	"block.dwm.tardis_roundel": "Блок ронделі",
+	"block.dwm.tardis_roundel_attachment_dark": "Рондель (Темна)",
+	"block.dwm.tardis_roundel_attachment_light": "Рондель (Світла)",
+	"block.dwm.tardis_roundel_attachment_dark_lamp": "Рондель (Темна лампа)",
+	"block.dwm.tardis_roundel_attachment_light_lamp": "Рондель (Світла лампа)",
 
 	"block.dwm.carbon_fiber": "Блок з вуглецевого волокна",
 	"block.dwm.titanium_block": "Титановий блок",

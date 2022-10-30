@@ -7,8 +7,10 @@ import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImp
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
+import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import team.reborn.energy.api.EnergyStorage;
 
 public class ModBlockEntities {
 
@@ -80,6 +82,13 @@ public class ModBlockEntities {
         ModBlocks.TARDIS_TOYOTA_SPINNER.getBlock()
     );
 
+    public static final BlockEntityType<TardisRoundelBlockEntity> TARDIS_ROUNDEL = Registration.registerBlockEntity(
+        "tardis_roundel",
+        TardisRoundelBlockEntity::new,
+        ModBlocks.TARDIS_ROUNDEL.getBlock()
+    );
+
     public static void init() {
+        EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity.energyStorage, TARDIS_ROUNDEL);
     }
 }

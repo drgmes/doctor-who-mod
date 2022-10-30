@@ -25,6 +25,7 @@ import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PacketHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -98,8 +99,8 @@ public class TardisStateManager extends PersistentState {
         this.doorsLocked = mustBeBroken;
 
         this.setWorld(world);
-        this.setFuelStorage(1024, 16, 16);
-        this.setEnergyStorage(1024, 16, 16);
+        this.initFuelStorage();
+        this.initEnergyStorage();
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));
@@ -187,6 +188,9 @@ public class TardisStateManager extends PersistentState {
         this.upgradeComponents = DefaultedList.ofSize(this.upgradeComponents.size(), ItemStack.EMPTY);
         Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
 
+        this.initFuelStorage();
+        this.initEnergyStorage();
+
         if (tag.contains("consoleRoom")) this.consoleRoom = TardisConsoleRooms.getConsoleRoom(tag.getString("consoleRoom"), this.broken);
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
 
@@ -202,12 +206,9 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
-        this.setFuelStorage(64, 16, 16);
-        this.setEnergyStorage(64, 16, 16);
-
         this.xyzStep = tag.getInt("xyzStep");
         this.fuelStorage.amount = Math.min(tag.getLong("fuelAmount"), this.fuelStorage.getCapacity());
-        this.energyStorage.amount = Math.min(tag.getLong("energyAmount"), this.fuelStorage.getCapacity());
+        this.energyStorage.amount = Math.min(tag.getLong("energyAmount"), this.energyStorage.getCapacity());
 
         this.broken = tag.getBoolean("broken");
         this.doorsLocked = tag.getBoolean("doorsLocked");
@@ -447,9 +448,9 @@ public class TardisStateManager extends PersistentState {
         this.markDirty();
     }
 
-    // //////////////////////////// //
-    // Tardis Energy & Fuel methods //
-    // //////////////////////////// //
+    // /////////////////// //
+    // Tardis Fuel methods //
+    // /////////////////// //
 
     public boolean isFuelHarvesting() {
         return this.fuelHarvesting;
@@ -464,14 +465,26 @@ public class TardisStateManager extends PersistentState {
         return this.fuelStorage;
     }
 
-    public void setFuelStorage(long capacity, long maxInsert, long maxExtract) {
-        this.fuelStorage = new SimpleEnergyStorage(capacity, maxInsert, maxExtract) {
+    public void setFuelStorage(long capacity) {
+        this.fuelStorage = new TardisEnergyStorage(capacity) {
             @Override
-            protected void onFinalCommit() {
-                TardisStateManager.this.markDirty();
+            public boolean supportsInsertion() {
+                return super.supportsInsertion() && TardisStateManager.this.isFuelHarvesting();
             }
         };
     }
+
+    public void initFuelStorage() {
+        int fuelCapacity = 64;
+
+        if (this.fuelStorage == null || this.fuelStorage.getCapacity() != fuelCapacity) {
+            this.setFuelStorage(fuelCapacity);
+        }
+    }
+
+    // ///////////////////// //
+    // Tardis Energy methods //
+    // ///////////////////// //
 
     public boolean isEnergyHarvesting() {
         return this.energyHarvesting;
@@ -486,13 +499,21 @@ public class TardisStateManager extends PersistentState {
         return this.energyStorage;
     }
 
-    public void setEnergyStorage(long capacity, long maxInsert, long maxExtract) {
-        this.energyStorage = new SimpleEnergyStorage(capacity, maxInsert, maxExtract) {
+    public void setEnergyStorage(long capacity) {
+        this.energyStorage = new TardisEnergyStorage(capacity) {
             @Override
-            protected void onFinalCommit() {
-                TardisStateManager.this.markDirty();
+            public boolean supportsInsertion() {
+                return super.supportsInsertion() && TardisStateManager.this.isEnergyHarvesting();
             }
         };
+    }
+
+    public void initEnergyStorage() {
+        int energyCapacity = 256000;
+
+        if (this.energyStorage == null || this.energyStorage.getCapacity() != energyCapacity) {
+            this.setEnergyStorage(energyCapacity);
+        }
     }
 
     // ////////////////////// //
@@ -881,22 +902,18 @@ public class TardisStateManager extends PersistentState {
         this.markDirty();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public void tick() {
         this.systems.values().forEach(ITardisSystem::tick);
         this.validateEntrancePortals();
 
         if (!this.world.isClient) {
-            if (this.fuelHarvesting && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && !Transaction.isOpen()) {
+            if (this.isFuelHarvesting() && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && !Transaction.isOpen()) {
                 Transaction transaction = Transaction.openOuter();
                 long fuelInserted = this.fuelStorage.insert(1, transaction);
 
-                if (fuelInserted != 0) {
-                    transaction.commit();
-                    this.updateConsoleTiles();
-                }
-                else {
-                    transaction.close();
-                }
+                if (fuelInserted != 0) transaction.commit();
+                else transaction.close();
             }
         }
     }
@@ -946,5 +963,24 @@ public class TardisStateManager extends PersistentState {
             world.getWorldChunk(exteriorBlockPos),
             exteriorBlockPos, this.isDoorsOpened(), false
         );
+    }
+
+    private class TardisEnergyStorage extends SimpleEnergyStorage {
+        public TardisEnergyStorage(long capacity) {
+            super(capacity, Long.MAX_VALUE, Long.MAX_VALUE);
+        }
+
+        @Override
+        @SuppressWarnings("UnstableApiUsage")
+        public long insert(long maxAmount, TransactionContext transaction) {
+            return this.supportsInsertion() ? super.insert(maxAmount, transaction) : 0;
+        }
+
+        @Override
+        @SuppressWarnings("UnstableApiUsage")
+        protected void onFinalCommit() {
+            TardisStateManager.this.markDirty();
+            TardisStateManager.this.updateConsoleTiles();
+        }
     }
 }

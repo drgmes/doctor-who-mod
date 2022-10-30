@@ -1,5 +1,6 @@
 package net.drgmes.dwm.common.screwdriver.modes.setting;
 
+import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -47,6 +48,16 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         BlockState blockState = world.getBlockState(blockPos);
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
+
+        if (world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            if (!world.isClient) {
+                tardisRoundelBlockEntity.uncovered = !tardisRoundelBlockEntity.uncovered;
+                tardisRoundelBlockEntity.markDirty();
+                tardisRoundelBlockEntity.sendUpdatePacket();
+            }
+
+            return ActionResult.SUCCESS;
+        }
 
         // SculkShriekerBlock
         if (blockEntity instanceof SculkShriekerBlockEntity sculkShriekerBlockEntity) {

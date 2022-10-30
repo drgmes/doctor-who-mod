@@ -22,6 +22,11 @@
 	"block.dwm.tardis_toyota_spinner": "TARDIS Toyota Spinner",
 	"block.dwm.tardis_ars_creator": "TARDIS ARS Creator",
 	"block.dwm.tardis_ars_destroyer": "TARDIS ARS Destroyer",
+	"block.dwm.tardis_roundel": "Roundel Block",
+	"block.dwm.tardis_roundel_attachment_dark": "Roundel (Dark)",
+	"block.dwm.tardis_roundel_attachment_light": "Roundel (Light)",
+	"block.dwm.tardis_roundel_attachment_dark_lamp": "Roundel (Dark Lamp)",
+	"block.dwm.tardis_roundel_attachment_light_lamp": "Roundel (Light Lamp)",
 
 	"block.dwm.carbon_fiber": "Carbon Fiber Block",
 	"block.dwm.titanium_block": "Titanium Block",
