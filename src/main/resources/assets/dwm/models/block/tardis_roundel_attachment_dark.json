@@ -1,7 +1,0 @@
-{
-	"parent": "dwm:block/tardis_roundel_attachment",
-	"textures": {
-		"0": "dwm:block/tardis/misc/tardis_roundel_attachment_dark",
-		"particle": "dwm:block/tardis/misc/tardis_roundel_attachment_dark"
-	}
-}

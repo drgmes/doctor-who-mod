@@ -1,8 +1,0 @@
-{
-	"title": "dwm.console_room.imperial_abandoned",
-	"center": [8, 2, 8],
-	"entrance": [8, 2, 2],
-	"decorator_block": "minecraft:chiseled_quartz_block",
-	"repair_to": "imperial_classic",
-	"hidden": true
-}

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "dwm",
+  "version": "${modVersion}",
+  "name": "${modName}",
+  "description": "${modDescription}",
+  "authors": ["${modAuthors}"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/doctor-who-mod-fabric",
+    "sources": "https://gitlab.com/drgmes-mc-mods/doctor-who-mod"
+  },
+  "license": "${modLicense}",
+  "icon": "assets/dwm/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.drgmes.dwm.fabric.DWMFabric"
+    ],
+    "client": [
+      "net.drgmes.dwm.fabric.DWMFabric"
+    ],
+    "server": [
+      "net.drgmes.dwm.fabric.DWMFabric"
+    ],
+    "fabric-datagen": [
+      "net.drgmes.dwm.fabric.datagen.DataGenerators"
+    ]
+  },
+  "mixins": [
+    "dwm.mixins.json",
+    "dwm-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=${minecraftVersion}",
+    "architectury": ">=${architecturyVersion}",
+    "forgeconfigapiport": ">=${forgeConfigApiPortVersion}"
+  }
+}

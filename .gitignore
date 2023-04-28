@@ -6,7 +6,6 @@ out/
 classes/
 gradlew
 gradlew.bat
-gradle.properties
 
 # IDE
 .idea/
@@ -23,12 +22,15 @@ bin/
 # macos
 *.DS_Store
 
-# fabric
+# run
 run/
-!run/config/fabric_loader_dependencies.json
+common/run/
+forge/run/
+fabric/run/
+!fabric/run/config/fabric_loader_dependencies.json
 
 # misc
 .github
 libs/
 remappedSrc/
-src/main/generated/
+generated/
