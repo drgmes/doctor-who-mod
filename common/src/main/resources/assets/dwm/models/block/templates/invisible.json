@@ -1,6 +1,6 @@
 {
-	"parent": "builtin/entity",
-	"textures": {
-		"particle": "dwm:block/invisible"
-	}
+  "parent": "builtin/entity",
+  "textures": {
+    "particle": "dwm:block/invisible"
+  }
 }

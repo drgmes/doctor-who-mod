@@ -1,8 +1,8 @@
 {
-	"title": "dwm.console_room.toyota_abandoned",
-	"center": [14, 6, 18],
-	"entrance": [14, 7, 6],
-	"decorator_block": "minecraft:gray_terracotta",
-	"repair_to": "toyota_classic",
-	"hidden": true
+  "title": "dwm.console_room.toyota_abandoned",
+  "center": [14, 6, 18],
+  "entrance": [14, 7, 6],
+  "decorator_block": "minecraft:gray_terracotta",
+  "repair_to": "toyota_classic",
+  "hidden": true
 }

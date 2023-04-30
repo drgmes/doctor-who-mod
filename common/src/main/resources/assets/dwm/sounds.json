@@ -1,74 +1,74 @@
 {
-	"screwdriver_main": {
-		"subtitle": "subtitle.screwdriver.screwdriver_main",
-		"sounds": ["dwm:screwdriver/screwdriver_main"]
-	},
-	"tardis_broken_flaring": {
-		"subtitle": "subtitle.tardis.tardis_broken_flaring",
-		"sounds": ["dwm:tardis/tardis_broken_flaring"]
-	},
-	"tardis_doors_knock": {
-		"subtitle": "subtitle.tardis.tardis_doors_knock",
-		"sounds": ["dwm:tardis/tardis_doors_knock"]
-	},
-	"tardis_doors_unlock": {
-		"subtitle": "subtitle.tardis.tardis_doors_unlock",
-		"sounds": ["dwm:tardis/tardis_doors_unlock"]
-	},
-	"tardis_doors_lock": {
-		"subtitle": "subtitle.tardis.tardis_doors_lock",
-		"sounds": ["dwm:tardis/tardis_doors_lock"]
-	},
-	"tardis_doors_close": {
-		"subtitle": "subtitle.tardis.tardis_doors_close",
-		"sounds": ["dwm:tardis/tardis_doors_close"]
-	},
-	"tardis_doors_wooden_close": {
-		"subtitle": "subtitle.tardis.tardis_doors_close",
-		"sounds": ["dwm:tardis/tardis_doors_wooden_close"]
-	},
-	"tardis_control_1": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_1"]
-	},
-	"tardis_control_2": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_2"]
-	},
-	"tardis_control_3": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_3"]
-	},
-	"tardis_control_4": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_4"]
-	},
-	"tardis_control_handbrake_on": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_handbrake_on"]
-	},
-	"tardis_control_handbrake_off": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_handbrake_off"]
-	},
-	"tardis_control_randomizer": {
-		"subtitle": "subtitle.tardis.tardis_control",
-		"sounds": ["dwm:tardis/controls/tardis_control_randomizer"]
-	},
-	"tardis_error": {
-		"subtitle": "subtitle.tardis.tardis_error",
-		"sounds": ["dwm:tardis/tardis_error"]
-	},
-	"tardis_fly": {
-		"subtitle": "subtitle.tardis.tardis_fly",
-		"sounds": ["dwm:tardis/tardis_fly"]
-	},
-	"tardis_land": {
-		"subtitle": "subtitle.tardis.tardis_land",
-		"sounds": ["dwm:tardis/tardis_land"]
-	},
-	"tardis_takeoff": {
-		"subtitle": "subtitle.tardis.tardis_takeoff",
-		"sounds": ["dwm:tardis/tardis_takeoff"]
-	}
+  "screwdriver_main": {
+    "subtitle": "subtitle.screwdriver.screwdriver_main",
+    "sounds": ["dwm:screwdriver/screwdriver_main"]
+  },
+  "tardis_broken_flaring": {
+    "subtitle": "subtitle.tardis.tardis_broken_flaring",
+    "sounds": ["dwm:tardis/tardis_broken_flaring"]
+  },
+  "tardis_doors_knock": {
+    "subtitle": "subtitle.tardis.tardis_doors_knock",
+    "sounds": ["dwm:tardis/tardis_doors_knock"]
+  },
+  "tardis_doors_unlock": {
+    "subtitle": "subtitle.tardis.tardis_doors_unlock",
+    "sounds": ["dwm:tardis/tardis_doors_unlock"]
+  },
+  "tardis_doors_lock": {
+    "subtitle": "subtitle.tardis.tardis_doors_lock",
+    "sounds": ["dwm:tardis/tardis_doors_lock"]
+  },
+  "tardis_doors_close": {
+    "subtitle": "subtitle.tardis.tardis_doors_close",
+    "sounds": ["dwm:tardis/tardis_doors_close"]
+  },
+  "tardis_doors_wooden_close": {
+    "subtitle": "subtitle.tardis.tardis_doors_close",
+    "sounds": ["dwm:tardis/tardis_doors_wooden_close"]
+  },
+  "tardis_control_1": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_1"]
+  },
+  "tardis_control_2": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_2"]
+  },
+  "tardis_control_3": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_3"]
+  },
+  "tardis_control_4": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_4"]
+  },
+  "tardis_control_handbrake_on": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_handbrake_on"]
+  },
+  "tardis_control_handbrake_off": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_handbrake_off"]
+  },
+  "tardis_control_randomizer": {
+    "subtitle": "subtitle.tardis.tardis_control",
+    "sounds": ["dwm:tardis/controls/tardis_control_randomizer"]
+  },
+  "tardis_error": {
+    "subtitle": "subtitle.tardis.tardis_error",
+    "sounds": ["dwm:tardis/tardis_error"]
+  },
+  "tardis_fly": {
+    "subtitle": "subtitle.tardis.tardis_fly",
+    "sounds": ["dwm:tardis/tardis_fly"]
+  },
+  "tardis_land": {
+    "subtitle": "subtitle.tardis.tardis_land",
+    "sounds": ["dwm:tardis/tardis_land"]
+  },
+  "tardis_takeoff": {
+    "subtitle": "subtitle.tardis.tardis_takeoff",
+    "sounds": ["dwm:tardis/tardis_takeoff"]
+  }
 }

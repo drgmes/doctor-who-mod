@@ -39,7 +39,7 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
 
                 if (prevInProgress != this.inProgress) {
                     new TardisToyotaSpinnerUpdatePacket(this.getPos(), this.inProgress)
-                      .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                        .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
                 }
             });
         }

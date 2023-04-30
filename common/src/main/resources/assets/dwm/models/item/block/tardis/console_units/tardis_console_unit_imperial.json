@@ -1,33 +1,33 @@
 {
-	"parent": "dwm:item/templates/entity_block_item",
-	"model": "dwm:models/item/block/tardis/console_units/tardis_console_unit_imperial.obj",
-	"loader": "forge:obj",
-	"flip_v": true,
-	"textures": {
-		"texture0": "dwm:block/tardis/console_units/tardis_console_unit_imperial"
-	},
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [0, 90, 0],
-			"translation": [0, 0, 0],
-			"scale": [0.065, 0.065, 0.065]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 90, 0],
-			"translation": [0, 0, 0],
-			"scale": [0.065, 0.065, 0.065]
-		},
-		"ground": {
-			"translation": [0, 3, 0],
-			"scale": [0.045, 0.045, 0.045]
-		},
-		"gui": {
-			"rotation": [30, 225, 0],
-			"translation": [-1.25, -5, 0],
-			"scale": [0.09375, 0.09375, 0.09375]
-		},
-		"fixed": {
-			"scale": [0.075, 0.075, 0.075]
-		}
-	}
+  "parent": "dwm:item/templates/entity_block_item",
+  "model": "dwm:models/item/block/tardis/console_units/tardis_console_unit_imperial.obj",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "dwm:block/tardis/console_units/tardis_console_unit_imperial"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.065, 0.065, 0.065]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 90, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.065, 0.065, 0.065]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.045, 0.045, 0.045]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "translation": [-1.25, -5, 0],
+      "scale": [0.09375, 0.09375, 0.09375]
+    },
+    "fixed": {
+      "scale": [0.075, 0.075, 0.075]
+    }
+  }
 }

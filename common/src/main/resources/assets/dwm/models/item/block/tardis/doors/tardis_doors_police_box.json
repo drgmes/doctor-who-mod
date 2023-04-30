@@ -1,45 +1,45 @@
 {
-	"parent": "dwm:item/templates/entity_block_item",
-	"model": "dwm:models/item/block/tardis/doors/tardis_doors_police_box.obj",
-	"loader": "forge:obj",
-	"flip_v": true,
-	"textures": {
-		"texture0": "dwm:block/tardis/doors/tardis_doors_police_box"
-	},
-	"display": {
-		"thirdperson_righthand": {
-			"rotation": [75, 45, 0],
-			"translation": [4, 2.5, 0],
-			"scale": [0.275, 0.275, 0.275]
-		},
-		"thirdperson_lefthand": {
-			"rotation": [75, 45, 0],
-			"translation": [0, -1, 0],
-			"scale": [0.275, 0.275, 0.275]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 45, 0],
-			"translation": [4.5, 0, 0],
-			"scale": [0.3, 0.3, 0.3]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 45, 0],
-			"translation": [0, 0, 4.5],
-			"scale": [0.3, 0.3, 0.3]
-		},
-		"ground": {
-			"translation": [0, 3, 0],
-			"scale": [0.15, 0.15, 0.15]
-		},
-		"gui": {
-			"rotation": [30, 225, 0],
-			"translation": [-5, -2, 0],
-			"scale": [0.425, 0.425, 0.425]
-		},
-		"fixed": {
-			"rotation": [0, 0, 0],
-			"translation": [4, -3, 4.5],
-			"scale": [0.5, 0.5, 0.5]
-		}
-	}
+  "parent": "dwm:item/templates/entity_block_item",
+  "model": "dwm:models/item/block/tardis/doors/tardis_doors_police_box.obj",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "dwm:block/tardis/doors/tardis_doors_police_box"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [4, 2.5, 0],
+      "scale": [0.275, 0.275, 0.275]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, -1, 0],
+      "scale": [0.275, 0.275, 0.275]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [4.5, 0, 0],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 0, 4.5],
+      "scale": [0.3, 0.3, 0.3]
+    },
+    "ground": {
+      "translation": [0, 3, 0],
+      "scale": [0.15, 0.15, 0.15]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "translation": [-5, -2, 0],
+      "scale": [0.425, 0.425, 0.425]
+    },
+    "fixed": {
+      "rotation": [0, 0, 0],
+      "translation": [4, -3, 4.5],
+      "scale": [0.5, 0.5, 0.5]
+    }
+  }
 }
