@@ -32,12 +32,21 @@ public class TechReborn {
     }
 
     public static EnergyStorage getOrCreateTardisEnergyStorage(ServerWorld world) {
-        Optional<TardisStateManager> tardis = TardisStateManager.get(world);
-        if (tardis.isEmpty()) return null;
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(world);
+        if (tardisHolder.isEmpty()) return null;
 
-        String id = DimensionHelper.getWorldId(world);
-        if (!energyStorages.containsKey(id)) energyStorages.put(id, new TardisEnergyStorage(tardis.get()));
-        return energyStorages.get(id);
+        String tardisId = DimensionHelper.getWorldId(world);
+        if (!energyStorages.containsKey(tardisId)) energyStorages.put(tardisId, new TardisEnergyStorage(tardisHolder.get()));
+        return energyStorages.get(tardisId);
+    }
+
+    public static void removeTardisEnergyStorage(String tardisId) {
+        if (!energyStorages.containsKey(tardisId)) return;
+        energyStorages.remove(tardisId);
+    }
+
+    public static void clearTardisEnergyStorage() {
+        energyStorages.clear();
     }
 
     private static class TardisEnergyStorage extends SimpleEnergyStorage {

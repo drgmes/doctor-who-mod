@@ -47,7 +47,7 @@ public class MixinPortal implements IMixinPortal {
         Portal $this = (Portal) (Object) this;
         if ($this.world.isClient || $this.isRemoved()) return;
 
-        boolean isTardisIdEmpty = this.getTardisId() == null || Objects.equals(this.getTardisId(), "");
+        boolean isTardisIdEmpty = this.tardisId == null || Objects.equals(this.tardisId, "");
 
         if (this.isTardisEntrance || this.isTardisRoomsEntrance) {
             if (isTardisIdEmpty) {
@@ -55,7 +55,7 @@ public class MixinPortal implements IMixinPortal {
                 return;
             }
 
-            ServerWorld tardisWorld = DimensionHelper.getModWorld(this.getTardisId(), $this.getServer());
+            ServerWorld tardisWorld = DimensionHelper.getModWorld(this.tardisId, $this.getServer());
             if (!TardisHelper.isTardisDimension(tardisWorld)) {
                 $this.discard();
                 return;
@@ -63,13 +63,13 @@ public class MixinPortal implements IMixinPortal {
 
             if (this.isTardisEntrance) {
                 TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                    if (!tardis.getPortalsState().checkIsEntrancePortalValid($this)) $this.discard();
+                    if (!tardis.getPortalsState().checkIsEntrancePortalEquals($this)) $this.discard();
                 });
             }
 
             if (this.isTardisRoomsEntrance) {
                 TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                    if (!tardis.getPortalsState().checkIsRoomEntrancePortalValid($this)) $this.discard();
+                    if (!tardis.getPortalsState().checkIsRoomEntrancePortalEquals($this)) $this.discard();
                 });
             }
         }

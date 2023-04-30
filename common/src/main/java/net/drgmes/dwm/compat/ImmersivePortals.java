@@ -32,6 +32,15 @@ public class ImmersivePortals {
         return tardisPortalsStates.get(tardisId);
     }
 
+    public static void removeTardisPortalsState(String tardisId) {
+        if (!tardisPortalsStates.containsKey(tardisId)) return;
+        tardisPortalsStates.remove(tardisId);
+    }
+
+    public static void clearTardisPortalsState() {
+        tardisPortalsStates.clear();
+    }
+
     public static Map.Entry<Portal, Portal> createPortals(ServerWorld world, Direction originFacing, Direction destinationFacing, BlockPos originBlockPos, BlockPos destinationBlockPos, RegistryKey<World> destinationWorldKey, double originFacingOffset, double destinationFacingOffset, double blockOffset, int width, int height) {
         Vec3d originPos = Vec3d.ofCenter(originBlockPos, blockOffset).offset(originFacing, originFacingOffset);
         Vec3d destinationPos = Vec3d.ofCenter(destinationBlockPos, blockOffset).offset(destinationFacing, destinationFacingOffset);
@@ -144,11 +153,16 @@ public class ImmersivePortals {
             this.portalsToRooms.clear();
         }
 
+        public boolean isEntrancePortalFromTardisValid() {
+            return this.portalFromTardis != null && !this.portalFromTardis.isRemoved() && this.portalFromTardis.isPortalValid();
+        }
+
+        public boolean isEntrancePortalToTardisValid() {
+            return this.portalToTardis != null && !this.portalToTardis.isRemoved() && this.portalToTardis.isPortalValid();
+        }
+
         public boolean isEntrancePortalsValid() {
-            if (this.portalFromTardis == null || this.portalToTardis == null) return false;
-            if (this.portalFromTardis.isRemoved() || this.portalToTardis.isRemoved()) return false;
-            if (!this.portalFromTardis.isPortalValid() || !this.portalToTardis.isPortalValid()) return false;
-            return true;
+            return this.isEntrancePortalFromTardisValid() && this.isEntrancePortalToTardisValid();
         }
 
         public boolean isRoomEntrancePortalsValid() {
@@ -163,11 +177,11 @@ public class ImmersivePortals {
             return true;
         }
 
-        public boolean checkIsEntrancePortalValid(Portal portal) {
+        public boolean checkIsEntrancePortalEquals(Portal portal) {
             return (this.portalFromTardis != null && this.portalFromTardis.equals(portal)) || (this.portalToTardis != null && this.portalToTardis.equals(portal));
         }
 
-        public boolean checkIsRoomEntrancePortalValid(Portal portal) {
+        public boolean checkIsRoomEntrancePortalEquals(Portal portal) {
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
                 if ((portalsToRoom.getKey().equals(portal)) || (portalsToRoom.getValue().equals(portal))) return true;
             }

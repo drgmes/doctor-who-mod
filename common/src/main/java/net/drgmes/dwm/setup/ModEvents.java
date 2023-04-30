@@ -7,6 +7,9 @@ import dev.architectury.event.events.common.PlayerEvent;
 import dev.architectury.event.events.common.TickEvent;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.compat.ImmersivePortals;
+import net.drgmes.dwm.compat.ModCompats;
+import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.network.server.ScrewdriverUsePacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -21,9 +24,17 @@ public class ModEvents {
         // Level Events //
         // //////////// //
 
+        LifecycleEvent.SERVER_STARTED.register((world) -> {
+            if (ModCompats.immersivePortals()) ImmersivePortals.clearTardisPortalsState();
+            if (ModCompats.techReborn()) TechReborn.clearTardisEnergyStorage();
+        });
+
         LifecycleEvent.SERVER_LEVEL_LOAD.register((world) -> {
             if (TardisHelper.isTardisDimension(world)) {
                 TardisStateManager.get(world).ifPresent((tardis) -> {
+                    if (ModCompats.immersivePortals()) ImmersivePortals.removeTardisPortalsState(tardis.getId());
+                    if (ModCompats.techReborn()) TechReborn.removeTardisEnergyStorage(tardis.getId());
+
                     tardis.updateEntrancePortals();
                     tardis.updateRoomEntrancePortals();
                 });

@@ -798,11 +798,9 @@ public class TardisStateManager extends PersistentState {
             this.validatePortals();
         }
 
-        if (!this.world.isClient) {
-            if (this.isFuelHarvesting() && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && this.fuelAmount < this.fuelCapacity) {
-                this.setFuelAmount(this.fuelAmount + 1);
-                this.updateConsoleTiles();
-            }
+        if (this.isFuelHarvesting() && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && this.fuelAmount < this.fuelCapacity) {
+            this.setFuelAmount(this.fuelAmount + 1);
+            this.updateConsoleTiles();
         }
     }
 
