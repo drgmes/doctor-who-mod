@@ -74,6 +74,12 @@ public class TardisStateManager extends PersistentState {
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
+    private boolean shieldsOxygenEnabled = false;
+    private boolean shieldsFireProofEnabled = false;
+    private boolean shieldsMedicalEnabled = false;
+    private boolean shieldsMiningEnabled = false;
+    private boolean shieldsGravitationEnabled = false;
+    private boolean shieldsSpecialEnabled = false;
     private boolean fuelHarvesting = false;
     private boolean energyHarvesting = false;
 
@@ -151,6 +157,12 @@ public class TardisStateManager extends PersistentState {
         tag.putBoolean("doorsOpened", this.doorsOpened);
         tag.putBoolean("lightEnabled", this.lightEnabled);
         tag.putBoolean("shieldsEnabled", this.shieldsEnabled);
+        tag.putBoolean("shieldsOxygenEnabled", this.shieldsOxygenEnabled);
+        tag.putBoolean("shieldsFireProofEnabled", this.shieldsFireProofEnabled);
+        tag.putBoolean("shieldsMedicalEnabled", this.shieldsMedicalEnabled);
+        tag.putBoolean("shieldsMiningEnabled", this.shieldsMiningEnabled);
+        tag.putBoolean("shieldsGravitationEnabled", this.shieldsGravitationEnabled);
+        tag.putBoolean("shieldsSpecialEnabled", this.shieldsSpecialEnabled);
         tag.putBoolean("fuelHarvesting", this.fuelHarvesting);
         tag.putBoolean("energyHarvesting", this.energyHarvesting);
 
@@ -199,6 +211,12 @@ public class TardisStateManager extends PersistentState {
         this.doorsOpened = tag.getBoolean("doorsOpened");
         this.lightEnabled = tag.getBoolean("lightEnabled");
         this.shieldsEnabled = tag.getBoolean("shieldsEnabled");
+        this.shieldsOxygenEnabled = tag.getBoolean("shieldsOxygenEnabled");
+        this.shieldsFireProofEnabled = tag.getBoolean("shieldsFireProofEnabled");
+        this.shieldsMedicalEnabled = tag.getBoolean("shieldsMedicalEnabled");
+        this.shieldsMiningEnabled = tag.getBoolean("shieldsMiningEnabled");
+        this.shieldsGravitationEnabled = tag.getBoolean("shieldsGravitationEnabled");
+        this.shieldsSpecialEnabled = tag.getBoolean("shieldsSpecialEnabled");
         this.fuelHarvesting = tag.getBoolean("fuelHarvesting");
         this.energyHarvesting = tag.getBoolean("energyHarvesting");
 
@@ -421,7 +439,105 @@ public class TardisStateManager extends PersistentState {
         if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
         else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
 
-        this.updateExterior();
+        if (!flag) {
+            this.shieldsOxygenEnabled = false;
+            this.shieldsFireProofEnabled = false;
+            this.shieldsMedicalEnabled = false;
+            this.shieldsMiningEnabled = false;
+            this.shieldsGravitationEnabled = false;
+            this.shieldsSpecialEnabled = false;
+        }
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsOxygenEnabled() {
+        return this.shieldsOxygenEnabled;
+    }
+
+    public boolean setShieldsOxygenState(boolean flag) {
+        if (this.shieldsOxygenEnabled == flag) return false;
+        this.shieldsOxygenEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsFireProofEnabled() {
+        return this.shieldsFireProofEnabled;
+    }
+
+    public boolean setShieldsFireProofState(boolean flag) {
+        if (this.shieldsFireProofEnabled == flag) return false;
+        this.shieldsFireProofEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsMedicalEnabled() {
+        return this.shieldsMedicalEnabled;
+    }
+
+    public boolean setShieldsMedicalState(boolean flag) {
+        if (this.shieldsMedicalEnabled == flag) return false;
+        this.shieldsMedicalEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsMiningEnabled() {
+        return this.shieldsMiningEnabled;
+    }
+
+    public boolean setShieldsMiningState(boolean flag) {
+        if (this.shieldsMiningEnabled == flag) return false;
+        this.shieldsMiningEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsGravitationEnabled() {
+        return this.shieldsGravitationEnabled;
+    }
+
+    public boolean setShieldsGravitationState(boolean flag) {
+        if (this.shieldsGravitationEnabled == flag) return false;
+        this.shieldsGravitationEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isShieldsSpecialEnabled() {
+        return this.shieldsSpecialEnabled;
+    }
+
+    public boolean setShieldsSpecialState(boolean flag) {
+        if (this.shieldsSpecialEnabled == flag) return false;
+        this.shieldsSpecialEnabled = flag;
+
+        if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
         this.markDirty();
         return true;
     }
@@ -631,10 +747,18 @@ public class TardisStateManager extends PersistentState {
     // /////////////////////////// //
 
     public void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage) {
+        TardisSystemShields shieldsSystem = this.getSystem(TardisSystemShields.class);
+
         controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, this.getSystem(TardisSystemFlight.class).inProgress());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, this.getSystem(TardisSystemShields.class).inProgress());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, shieldsSystem.inProgress());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN, shieldsSystem.isEnabled() && this.isShieldsOxygenEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, shieldsSystem.isEnabled() && this.isShieldsFireProofEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MEDICAL, shieldsSystem.isEnabled() && this.isShieldsMedicalEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MINING, shieldsSystem.isEnabled() && this.isShieldsMiningEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION, shieldsSystem.isEnabled() && this.isShieldsGravitationEnabled());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, shieldsSystem.isEnabled() && this.isShieldsSpecialEnabled());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.FUEL_HARVESTING, this.isFuelHarvesting());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_HARVESTING, this.isEnergyHarvesting());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.LIGHT, this.isLightEnabled());
@@ -774,9 +898,22 @@ public class TardisStateManager extends PersistentState {
             boolean shields = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS);
             if (this.getSystem(TardisSystemShields.class).isEnabled()) {
                 this.getSystem(TardisSystemShields.class).setState(shields);
+
+                this.setShieldsOxygenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN) && shields);
+                this.setShieldsFireProofState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF) && shields);
+                this.setShieldsMedicalState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_MEDICAL) && shields);
+                this.setShieldsMiningState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_MINING) && shields);
+                this.setShieldsGravitationState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION) && shields);
+                this.setShieldsSpecialState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL) && shields);
             }
             else {
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MEDICAL, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MINING, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION, false);
+                controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, false);
                 if (shields) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
             }
 

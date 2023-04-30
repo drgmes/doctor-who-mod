@@ -502,6 +502,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             case ZSET -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getZ());
             case DIM_PREV, DIM_NEXT -> isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
             case SHIELDS -> !isMaterialized ? null : (isShieldsSystemEnabled ? Text.translatable(message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED);
+            case SHIELDS_OXYGEN, SHIELDS_FIRE_PROOF, SHIELDS_MEDICAL, SHIELDS_MINING, SHIELDS_GRAVITATION, SHIELDS_SPECIAL -> !isMaterialized ? null : (isShieldsSystemEnabled && tardis.isShieldsEnabled() ? Text.translatable(message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_ACTIVE);
             case STARTER -> isMaterializationSystemEnabled ? (isFlightSystemEnabled ? (tardis.getFuelAmount() > 0 ? null : DWM.TEXTS.TARDIS_NOT_ENOUGH_FUEL) : DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED) : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
             case MATERIALIZATION -> isMaterializationSystemEnabled ? null : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
 

@@ -30,6 +30,7 @@ public class DWM {
         public static final Text DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.dematerialization_circuit.not_installed");
         public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
         public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
+        public static final Text SHIELDS_GENERATOR_NOT_ACTIVE = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_active");
 
         public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message." + DWM.MODID + ".tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
         public static final Text TARDIS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.locked");

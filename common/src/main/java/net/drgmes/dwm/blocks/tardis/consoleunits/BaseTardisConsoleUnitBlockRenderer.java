@@ -163,7 +163,14 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
     private void renderScreenPage2(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
         String NONE = "-";
 
+        boolean isShieldsEnabled = tardis.getSystem(TardisSystemShields.class).isEnabled();
         String shieldsState = tardis.isShieldsEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsOxygenState = tardis.isShieldsOxygenEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsFireProofState = tardis.isShieldsFireProofEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsMedicalState = tardis.isShieldsMedicalEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsMiningState = tardis.isShieldsMiningEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsGravitationState = tardis.isShieldsGravitationEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+        String shieldsSpecialState = tardis.isShieldsSpecialEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String fuelHarvestingState = tardis.isFuelHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String energyHarvestingState = tardis.isEnergyHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
 
@@ -180,7 +187,14 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         energyAmountText = energyAmountText.replace(",", ".");
 
         this.printStringsToScreen(matrixStack, buffer, new String[]{
-            this.buildScreenParamText("shields", !tardis.getSystem(TardisSystemShields.class).isEnabled() ? NONE : shieldsState),
+            this.buildScreenParamText("shields", !isShieldsEnabled ? NONE : shieldsState),
+            this.buildScreenParamText("shields_oxygen", !isShieldsEnabled ? NONE : shieldsOxygenState),
+            this.buildScreenParamText("shields_fire_proof", !isShieldsEnabled ? NONE : shieldsFireProofState),
+            this.buildScreenParamText("shields_medical", !isShieldsEnabled ? NONE : shieldsMedicalState),
+            this.buildScreenParamText("shields_mining", !isShieldsEnabled ? NONE : shieldsMiningState),
+            this.buildScreenParamText("shields_gravitation", !isShieldsEnabled ? NONE : shieldsGravitationState),
+            this.buildScreenParamText("shields_special", !isShieldsEnabled ? NONE : shieldsSpecialState),
+            "",
             this.buildScreenParamText("fuel_harvesting", fuelHarvestingState),
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",

@@ -62,8 +62,36 @@ public class TardisSystemShields implements ITardisSystem {
                 if (entity instanceof ExperienceOrbEntity) continue;
 
                 if (entity instanceof PlayerEntity player) {
-                    if (!player.isTouchingWater()) continue;
-                    player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 40));
+                    if (this.tardis.isShieldsOxygenEnabled()) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.WATER_BREATHING, 40));
+                    }
+
+                    if (this.tardis.isShieldsFireProofEnabled()) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 40));
+                    }
+
+                    if (this.tardis.isShieldsMedicalEnabled()) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 40));
+                        player.removeStatusEffect(StatusEffects.POISON);
+                        player.removeStatusEffect(StatusEffects.NAUSEA);
+                    }
+
+                    if (this.tardis.isShieldsMiningEnabled()) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 40));
+                        player.removeStatusEffect(StatusEffects.MINING_FATIGUE);
+                    }
+
+                    if (this.tardis.isShieldsGravitationEnabled()) {
+                        player.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, 40));
+                        if (!player.isSneaking()) player.addStatusEffect(new StatusEffectInstance(StatusEffects.LEVITATION, 10));
+                    }
+
+                    if (this.tardis.isShieldsSpecialEnabled()) {
+                        player.removeStatusEffect(StatusEffects.BLINDNESS);
+                        player.removeStatusEffect(StatusEffects.DARKNESS);
+                        player.removeStatusEffect(StatusEffects.WITHER);
+                    }
+
                     continue;
                 }
 
