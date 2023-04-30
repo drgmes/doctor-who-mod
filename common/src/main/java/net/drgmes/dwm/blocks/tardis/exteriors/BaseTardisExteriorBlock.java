@@ -100,12 +100,18 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (tardisExteriorBlockEntity.getMaterializedPercent() < 100) return ActionResult.PASS;
 
+            ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
+            NbtCompound heldItemTag = heldItem.getOrCreateNbt();
+
+            if (tardisExteriorBlockEntity.tardisId == null && !(heldItem.getItem() instanceof TardisKeyItem)) {
+                player.sendMessage(DWM.TEXTS.TARDIS_LOCKED, true);
+                ModSounds.playTardisDoorsKnockSound(world, finalBlockPos);
+                return ActionResult.PASS;
+            }
+
             TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(true)).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
-
                 String tardisId = tardis.getId();
-                ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
-                NbtCompound heldItemTag = heldItem.getOrCreateNbt();
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {

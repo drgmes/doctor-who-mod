@@ -29,7 +29,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        this.tardisId = tag.getString("tardisId");
+        if (tag.contains("tardisId")) this.tardisId = tag.getString("tardisId");
         this.tickInProgress = tag.getInt("tickInProgress");
         this.isMaterialized = tag.getBoolean("isMaterialized");
         this.inRematProgress = tag.getBoolean("inRematProgress");
@@ -40,7 +40,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     public void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
-        tag.putString("tardisId", this.getTardisId());
+        if (this.tardisId != null) tag.putString("tardisId", this.tardisId);
         tag.putInt("tickInProgress", this.tickInProgress);
         tag.putBoolean("isMaterialized", this.isMaterialized);
         tag.putBoolean("inRematProgress", this.inRematProgress);
