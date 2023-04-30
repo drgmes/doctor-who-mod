@@ -366,8 +366,8 @@
   "message.dwm.tardis.repaired": "§eТАРДІС§r §aвідремонтована",
   "message.dwm.tardis.fuel.not_enough": "§cНедостатньо палива",
   "message.dwm.tardis.system.dematerialization_circuit.not_installed": "§eДематеріалізаційна схема §cне встановлена",
-  "message.dwm.tardis.system.directional_unit.not_installed": "§eСпрямовуючий модуль §cне встановлен",
-  "message.dwm.tardis.system.shields_generator.not_installed": "§eГенератор щитів §cне встановлен",
+  "message.dwm.tardis.system.directional_unit.not_installed": "§eСпрямовуючий модуль §cне встановлено",
+  "message.dwm.tardis.system.shields_generator.not_installed": "§eГенератор щитів §cне встановлено",
 
   "message.dwm.tardis.ars_interface.generated.success": "Кімната §aсгенерована",
   "message.dwm.tardis.ars_interface.generated.failed": "Кімната §cне сгенерована",
@@ -384,10 +384,10 @@
   "message.dwm.tardis.telepathic_interface.map.loaded": "Координати мапи §aзавантажені",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координати маркера %s завантажені",
 
-  "message.dwm.tardis.telepathic_interface.biome.found": "Біом §aзнайдений",
-  "message.dwm.tardis.telepathic_interface.biome.not_found": "Біом §cне знайдений",
-  "message.dwm.tardis.telepathic_interface.structure.found": "Структура §aзнайдено",
-  "message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне знайдено",
+  "message.dwm.tardis.telepathic_interface.biome.found": "Біом §aзнайдено",
+  "message.dwm.tardis.telepathic_interface.biome.not_found": "Біом §cне знайдено",
+  "message.dwm.tardis.telepathic_interface.structure.found": "Структура §aзнайдена",
+  "message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне знайдена",
 
   "message.dwm.tardis.control.role.doors.locked": "Двері §eзаблоковані",
   "message.dwm.tardis.control.role.doors.unlocked": "Двері §eрозблоковані",
@@ -411,9 +411,10 @@
   "message.dwm.tardis.control.role.facing.3": "§eСхід",
 
   "message.dwm.tardis.control.role.safe_direction": "Напрямок вертикального сканування: %s",
-  "message.dwm.tardis.control.role.safe_direction.0": "§eВгору",
-  "message.dwm.tardis.control.role.safe_direction.1": "§eВниз",
+  "message.dwm.tardis.control.role.safe_direction.0": "§eСпочатку вгору",
+  "message.dwm.tardis.control.role.safe_direction.1": "§eСпочатку вниз",
   "message.dwm.tardis.control.role.safe_direction.2": "§eТочне",
+  "message.dwm.tardis.control.role.safe_direction.3": "§eВідсутнє",
 
   "message.dwm.tardis.control.role.dimension": "Вимір: %s",
   "message.dwm.tardis.control.role.x_set": "X: %s",

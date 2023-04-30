@@ -411,9 +411,10 @@
   "message.dwm.tardis.control.role.facing.3": "§eВосток",
 
   "message.dwm.tardis.control.role.safe_direction": "Направление вертикального сканирования: %s",
-  "message.dwm.tardis.control.role.safe_direction.0": "§eВверх",
-  "message.dwm.tardis.control.role.safe_direction.1": "§eВниз",
+  "message.dwm.tardis.control.role.safe_direction.0": "§eВначале вверх",
+  "message.dwm.tardis.control.role.safe_direction.1": "§eВначале вниз",
   "message.dwm.tardis.control.role.safe_direction.2": "§eТочное",
+  "message.dwm.tardis.control.role.safe_direction.3": "§eОтсутствует",
 
   "message.dwm.tardis.control.role.dimension": "Измерение: %s",
   "message.dwm.tardis.control.role.x_set": "X: %s",

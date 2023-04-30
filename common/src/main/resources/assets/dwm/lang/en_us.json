@@ -414,6 +414,7 @@
   "message.dwm.tardis.control.role.safe_direction.0": "§eTOP",
   "message.dwm.tardis.control.role.safe_direction.1": "§eBOTTOM",
   "message.dwm.tardis.control.role.safe_direction.2": "§eDIRECT",
+  "message.dwm.tardis.control.role.safe_direction.3": "§eNONE",
 
   "message.dwm.tardis.control.role.dimension": "Dimension: %s",
   "message.dwm.tardis.control.role.x_set": "X: %s",

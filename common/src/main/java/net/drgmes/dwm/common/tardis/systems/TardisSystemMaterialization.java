@@ -34,6 +34,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public enum ESafeDirection {
         TOP,
         BOTTOM,
+        DIRECT,
         NONE
     }
 
@@ -149,7 +150,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public void setSafeDirection(int value) {
         if (value == 0) this.safeDirection = ESafeDirection.TOP;
         else if (value == 1) this.safeDirection = ESafeDirection.BOTTOM;
-        else if (value == 2) this.safeDirection = ESafeDirection.NONE;
+        else if (value == 2) this.safeDirection = ESafeDirection.DIRECT;
+        else if (value == 3) this.safeDirection = ESafeDirection.NONE;
     }
 
     public boolean setMaterializationState(boolean flag) {
@@ -235,7 +237,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setDestinationPosition(initialExteriorBlockPos);
         }
 
-        if (this.safeDirection == ESafeDirection.NONE && this.tryLandToForeignTardis(exteriorWorld)) {
+        if ((this.safeDirection == ESafeDirection.DIRECT || this.safeDirection == ESafeDirection.NONE) && this.tryLandToForeignTardis(exteriorWorld)) {
             return true;
         }
 
@@ -364,6 +366,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
             safePosition = this.getSafePosition(exteriorWorld, exteriorBlockPos, exteriorFacing, ESafeDirection.BOTTOM);
             if (safePosition == null) safePosition = this.getSafePosition(exteriorWorld, exteriorBlockPos, exteriorFacing, ESafeDirection.TOP);
         }
+        else {
+            safePosition = this.getSafePosition(exteriorWorld, exteriorBlockPos, exteriorFacing, this.safeDirection);
+        }
 
         if (safePosition != null) {
             this.tardis.setPosition(safePosition, false);
@@ -377,17 +382,23 @@ public class TardisSystemMaterialization implements ITardisSystem {
     private BlockPos getSafePosition(ServerWorld exteriorWorld, BlockPos exteriorBlockPos, Direction exteriorFacing, ESafeDirection safeDirection) {
         if (safeDirection == ESafeDirection.TOP) exteriorBlockPos = exteriorBlockPos.down();
         else if (safeDirection == ESafeDirection.BOTTOM) exteriorBlockPos = exteriorBlockPos.up();
-        else return null;
 
+        boolean checkBottom = safeDirection != ESafeDirection.NONE;
         boolean freeSpaceFound;
-        do {
-            exteriorBlockPos = safeDirection == ESafeDirection.TOP ? exteriorBlockPos.up() : exteriorBlockPos.down();
-            freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, exteriorFacing);
+        boolean isBuildLimitValid;
 
+        do {
+            exteriorBlockPos = safeDirection == ESafeDirection.TOP
+                ? exteriorBlockPos.up()
+                : safeDirection == ESafeDirection.BOTTOM
+                    ? exteriorBlockPos.down()
+                    : exteriorBlockPos;
+
+            freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, exteriorFacing, checkBottom);
             if (!freeSpaceFound) {
                 for (Direction direction : Direction.values()) {
                     if (direction == exteriorFacing) continue;
-                    freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, direction);
+                    freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, direction, checkBottom);
 
                     if (freeSpaceFound) {
                         this.tardis.setFacing(direction, false);
@@ -396,23 +407,26 @@ public class TardisSystemMaterialization implements ITardisSystem {
                     }
                 }
             }
-        } while (!freeSpaceFound && exteriorWorld.isInBuildLimit(exteriorBlockPos));
 
-        return freeSpaceFound ? exteriorBlockPos : null;
+            isBuildLimitValid = exteriorWorld.isInBuildLimit(exteriorBlockPos) && exteriorWorld.isInBuildLimit(exteriorBlockPos.up());
+            if (safeDirection == ESafeDirection.DIRECT || safeDirection == ESafeDirection.NONE) break;
+        } while (!freeSpaceFound && isBuildLimitValid);
+
+        return freeSpaceFound && isBuildLimitValid ? exteriorBlockPos : null;
     }
 
-    private boolean checkBlockIsSafe(World world, BlockPos blockPos, Direction direction) {
+    private boolean checkBlockIsSafe(World world, BlockPos blockPos, Direction direction, boolean checkBottom) {
         boolean isEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos), true);
         boolean isUpEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos.up()), true);
         boolean isBottomSolid = WorldHelper.checkBlockIsSolid(world.getBlockState(blockPos.down()));
 
-        if (ModCompats.immersivePortals()) return isBottomSolid && isEmpty && isUpEmpty;
+        if (ModCompats.immersivePortals()) return (!checkBottom || isBottomSolid) && isEmpty && isUpEmpty;
 
         boolean isFrontEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos.offset(direction)), false);
         boolean isFrontUpEmpty = WorldHelper.checkBlockIsEmpty(world.getBlockState(blockPos.offset(direction).up()), false);
         boolean isFrontBottomSolid = WorldHelper.checkBlockIsSolid(world.getBlockState(blockPos.offset(direction).down()));
 
-        return isBottomSolid && isEmpty && isUpEmpty && isFrontBottomSolid && isFrontEmpty && isFrontUpEmpty;
+        return (!checkBottom || isBottomSolid) && isEmpty && isUpEmpty && (!checkBottom || isFrontBottomSolid) && isFrontEmpty && isFrontUpEmpty;
     }
 
     private void updateExterior(ServerWorld exteriorWorld, boolean demat, boolean remat) {

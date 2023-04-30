@@ -19,7 +19,7 @@ public enum ETardisConsoleUnitControlRole {
     STARTER(ETardisConsoleUnitControlRoleType.BOOLEAN_DIRECT, null, 0),
     MATERIALIZATION(ETardisConsoleUnitControlRoleType.BOOLEAN_DIRECT, null, 0),
     FACING(ETardisConsoleUnitControlRoleType.NUMBER_DIRECT, "facing", 4, ModSounds.TARDIS_CONTROL_4),
-    SAFE_DIRECTION(ETardisConsoleUnitControlRoleType.NUMBER_DIRECT_BLOCK, "safe_direction", 3, ModSounds.TARDIS_CONTROL_3),
+    SAFE_DIRECTION(ETardisConsoleUnitControlRoleType.NUMBER_DIRECT_BLOCK, "safe_direction", 4, ModSounds.TARDIS_CONTROL_3),
     DIM_PREV(ETardisConsoleUnitControlRoleType.ANIMATION, "dimension", 5, ModSounds.TARDIS_CONTROL_1),
     DIM_NEXT(ETardisConsoleUnitControlRoleType.ANIMATION, "dimension", 5, ModSounds.TARDIS_CONTROL_1),
     RESET_TO_PREV(ETardisConsoleUnitControlRoleType.ANIMATION, "reset_to_prev", 5, ModSounds.TARDIS_CONTROL_2),
