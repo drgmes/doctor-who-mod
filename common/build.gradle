@@ -1,0 +1,35 @@
+architectury {
+    common(rootProject.enabled_platforms.split(","))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/dwm.accesswidener")
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "dev.architectury:architectury:${rootProject.architectury_version}"
+    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
+
+    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") { transitive(false) }
+    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") { transitive false }
+    modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") { transitive false }
+}
+
+publishing {
+    publications {
+        mavenCommon(MavenPublication) {
+            artifactId = rootProject.mod_id
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/main/generated'
+}

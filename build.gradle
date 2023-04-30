@@ -1,130 +1,47 @@
 plugins {
-    id 'fabric-loom' version '0.12-SNAPSHOT'
-    id 'maven-publish'
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+architectury {
+    minecraft = rootProject.minecraft_version
+}
 
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
+subprojects {
+    apply plugin: "dev.architectury.loom"
 
-repositories {
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://ladysnake.jfrog.io/artifactory/mods' }
-    maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven' }
+    loom {
+        silentMojangMappingsLicense()
+    }
 
-    flatDir {
-        dir 'libs'
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+
+//        mappings loom.officialMojangMappings()
+        mappings "net.fabricmc:yarn:${rootProject.minecraft_version}+${rootProject.yarn_mappings_version}:v2"
     }
 }
 
-dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-    implementation "com.electronwill.night-config:core:3.6.5"
-    implementation "com.electronwill.night-config:toml:3.6.5"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    archivesBaseName = rootProject.mod_id
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-    include modApi("net.minecraftforge:forgeconfigapiport-fabric:${project.forge_config_api_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
-    }
-
-    include modApi("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:v${project.imm_ptl_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
-    }
-
-    include modApi("com.github.qouteall.ImmersivePortalsMod:q_misc_util:v${project.imm_ptl_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
-    }
-
-    include modApi("teamreborn:energy:${project.teamreborn_energy_api_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
-    }
-}
-
-loom {
-    runs {
-        datagenServer {
-            inherit server
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-            vmArg "-Dfabric-api.datagen.strict-validation"
-
-            ideConfigGenerated = true
-            runDir "run"
-        }
-    }
-}
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version
-    }
-}
-
-sourceSets.main.resources {
-    srcDir 'src/main/generated'
-}
-
-tasks.withType(JavaCompile).configureEach {
-    // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
-    it.options.release = 17
-}
-
-java {
-    withSourcesJar()
-}
-
-jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}" }
-    }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-    }
-}
-
-curseforge {
-    apiKey = project.mod_project_api_key
-
-    project {
-        id = project.mod_project_id
-        releaseType = project.mod_release_type
-        addGameVersion project.mod_game_version
-        addGameVersion "Fabric"
-
-        mainArtifact(remapJar) {
-            displayName = "[$project.version] $project.archives_name"
-        }
-
-        afterEvaluate {
-            uploadTask.dependsOn("remapJar")
-        }
+        maven { url 'https://jitpack.io' }
+        maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
     }
 
-    options {
-        forgeGradleIntegration = false
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 17
+    }
+
+    java {
+        withSourcesJar()
     }
 }

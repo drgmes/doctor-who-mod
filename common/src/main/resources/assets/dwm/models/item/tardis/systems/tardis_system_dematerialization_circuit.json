@@ -1,0 +1,33 @@
+{
+	"parent": "dwm:item/templates/entity_block_item",
+	"model": "dwm:models/item/tardis/systems/tardis_system_dematerialization_circuit.obj",
+	"loader": "forge:obj",
+	"flip_v": true,
+	"textures": {
+		"texture0": "dwm:item/tardis/systems/tardis_system_dematerialization_circuit"
+	},
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 1, 0],
+			"scale": [0.065, 0.065, 0.065]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 2, 0],
+			"scale": [0.065, 0.065, 0.065]
+		},
+		"ground": {
+			"translation": [0, 3, 0],
+			"scale": [0.075, 0.075, 0.075]
+		},
+		"gui": {
+			"rotation": [30, 225, 0],
+			"translation": [-1.775, 0.5, 0],
+			"scale": [0.185, 0.185, 0.185]
+		},
+		"fixed": {
+			"scale": [0.075, 0.075, 0.075]
+		}
+	}
+}

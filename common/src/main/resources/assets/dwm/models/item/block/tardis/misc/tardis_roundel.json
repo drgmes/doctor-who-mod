@@ -1,0 +1,9 @@
+{
+  "parent": "dwm:item/templates/entity_block_item",
+  "model": "dwm:models/item/block/tardis/misc/tardis_roundel.obj",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "dwm:block/tardis/misc/tardis_roundel_dark"
+  }
+}

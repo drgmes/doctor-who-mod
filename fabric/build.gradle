@@ -1,0 +1,120 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    fabric()
+}
+
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+
+    runs {
+        datagen {
+            inherit client
+            name "Data Generation"
+            runDir "run"
+
+            vmArg "-Dfabric-api.datagen"
+            vmArg "-Dfabric-api.datagen.output-dir=${file("../common/src/main/generated")}"
+            vmArg "-Dfabric-api.datagen.strict-validation"
+
+            ideConfigGenerated = true
+        }
+    }
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentFabric.extendsFrom common
+}
+
+dependencies {
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
+    modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
+    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
+
+    include modApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
+}
+
+processResources {
+    inputs.property "minecraftVersion", rootProject.minecraft_version
+    inputs.property "architecturyVersion", rootProject.architectury_version
+    inputs.property "forgeConfigApiPortVersion", rootProject.forge_config_api_port_version
+    inputs.property "modVersion", rootProject.mod_version
+    inputs.property "modName", rootProject.mod_name
+    inputs.property "modAuthors", rootProject.mod_authors
+    inputs.property "modLicense", rootProject.mod_license
+    inputs.property "modDescription", rootProject.mod_description
+
+    filesMatching("fabric.mod.json") {
+        expand "minecraftVersion": project.minecraft_version,
+                "architecturyVersion": project.architectury_version,
+                "forgeConfigApiPortVersion": project.forge_config_api_port_version,
+                "modVersion": project.mod_version,
+                "modName": rootProject.mod_name,
+                "modAuthors": rootProject.mod_authors,
+                "modLicense": rootProject.mod_license,
+                "modDescription": rootProject.mod_description
+    }
+}
+
+shadowJar {
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    classifier "dev-shadow"
+}
+
+remapJar {
+    injectAccessWidener = true
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    classifier null
+}
+
+jar {
+    classifier "dev"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenFabric(MavenPublication) {
+            artifactId = rootProject.mod_id + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}
