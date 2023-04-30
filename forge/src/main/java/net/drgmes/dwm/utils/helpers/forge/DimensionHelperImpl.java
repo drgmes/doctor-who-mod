@@ -84,6 +84,11 @@ public class DimensionHelperImpl {
         return world;
     }
 
+    public static void removeWorld(String id, MinecraftServer server) {
+        // TODO
+        throw new AssertionError();
+    }
+
     @SuppressWarnings("unchecked")
     private static <FIELDHOLDER, FIELDTYPE> Function<FIELDHOLDER, FIELDTYPE> getInstanceField(Class<FIELDHOLDER> fieldHolderClass, String fieldName) {
         Field field = ObfuscationReflectionHelper.findField(fieldHolderClass, fieldName);

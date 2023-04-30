@@ -360,6 +360,7 @@
   "screen.dwm.telepathic_interface.button.cancel": "Cancel",
   "screen.dwm.telepathic_interface.button.accept": "Find",
 
+  "message.dwm.tardis.removed": "TARDIS (%s) removed",
   "message.dwm.tardis.locked": "Doors §eLocked§r. Need a key",
   "message.dwm.tardis.broken": "§eTARDIS§r is §cBroken§r. Use §eRepair Kit§r on the engine block",
   "message.dwm.tardis.repaired": "§eTARDIS§r has been §aRepaired",
@@ -425,6 +426,9 @@
   "message.dwm.tardis.control.role.randomizer": "Coords were randomly updated",
 
   "message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
+
+  "argument.dwm.tardis.invalid": "Invalid TARDIS ID",
+  "argument.dwm.tardis.player_present": "You are inside",
 
   "subtitle.screwdriver.screwdriver_main": "Sonic Screwdriver sounds",
   "subtitle.tardis.tardis_doors_close": "TARDIS Doors closed",

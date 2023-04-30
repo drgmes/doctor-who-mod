@@ -2,6 +2,7 @@ package net.drgmes.dwm;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import org.slf4j.Logger;
@@ -30,6 +31,7 @@ public class DWM {
         public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
         public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
 
+        public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message." + DWM.MODID + ".tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
         public static final Text TARDIS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.locked");
         public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
         public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");

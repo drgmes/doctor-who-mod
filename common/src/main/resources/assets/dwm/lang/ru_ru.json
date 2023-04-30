@@ -360,6 +360,7 @@
   "screen.dwm.telepathic_interface.button.cancel": "Отмена",
   "screen.dwm.telepathic_interface.button.accept": "Найти",
 
+  "message.dwm.tardis.removed": "ТАРДИС (%s) удалена",
   "message.dwm.tardis.locked": "Двери §eзаблокированы§r. Нужен ключ",
   "message.dwm.tardis.broken": "§eТАРДИС§r §cнеисправна§r. Используйте §eремонтный набор§r на блоке двигателя",
   "message.dwm.tardis.repaired": "§eТАРДИС§r §aотремонтирована",
@@ -425,6 +426,9 @@
   "message.dwm.tardis.control.role.randomizer": "Координаты были случайно обновлены",
 
   "message.dwm.screwdriver.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
+
+  "argument.dwm.tardis.invalid": "Неверный идентификатор ТАРДИС",
+  "argument.dwm.tardis.player_present": "Вы находитесь внутри",
 
   "subtitle.screwdriver.screwdriver_main": "Звуковая отвёртка звучит",
   "subtitle.tardis.tardis_doors_close": "Двери ТАРДИС закрылись",

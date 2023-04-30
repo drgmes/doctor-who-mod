@@ -67,6 +67,7 @@ public class Registration {
         ArsStructures.init();
 
         ModEvents.setup();
+        ModCommands.setup();
         ModBlockEntities.setup();
     }
 

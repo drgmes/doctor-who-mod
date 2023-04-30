@@ -46,4 +46,9 @@ public class DimensionHelper {
     public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
         throw new AssertionError();
     }
+
+    @ExpectPlatform
+    public static void removeWorld(String id, MinecraftServer server) {
+        throw new AssertionError();
+    }
 }

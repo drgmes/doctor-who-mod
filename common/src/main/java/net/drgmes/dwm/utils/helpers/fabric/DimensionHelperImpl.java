@@ -27,4 +27,14 @@ public class DimensionHelperImpl {
         if (initialConsumer != null) initialConsumer.accept(world);
         return world;
     }
+
+    public static void removeWorld(String id, MinecraftServer server) {
+        Identifier worldIdentifier = DWM.getIdentifier(id);
+        RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
+        ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
+        if (world == null) return;
+
+        DimensionAPI.removeDimensionDynamically(world);
+        DimensionAPI.deleteDimensionConfiguration(worldKey);
+    }
 }
