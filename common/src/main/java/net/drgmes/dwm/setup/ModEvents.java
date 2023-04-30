@@ -66,9 +66,10 @@ public class ModEvents {
 
             if (result.shouldSwingHand()) {
                 new ScrewdriverUsePacket(screwdriverItemStack, hand == Hand.MAIN_HAND, isAlternativeAction).sendToServer();
+                return EventResult.interruptTrue();
             }
 
-            return EventResult.interruptDefault();
+            return EventResult.interruptFalse();
         }
 
         return EventResult.pass();
