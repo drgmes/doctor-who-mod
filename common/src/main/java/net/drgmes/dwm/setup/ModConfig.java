@@ -38,6 +38,7 @@ public class ModConfig {
         public ForgeConfigSpec.IntValue tardisMaxFlightTime;
         public ForgeConfigSpec.IntValue tardisFuelRefillTiming;
         public ForgeConfigSpec.IntValue tardisFuelConsumeTiming;
+        public ForgeConfigSpec.IntValue tardisFuelToEnergyRating;
 
         public Common(ForgeConfigSpec.Builder builder) {
             builder.push("CommonSettings");
@@ -84,6 +85,11 @@ public class ModConfig {
                         .comment("Frequency of consumption of 1 unit of fuel")
                         .translation("config.dwm.tardis.tardisFuelConsumeTiming")
                         .defineInRange("tardisFuelConsumeTiming", 20, 1, Integer.MAX_VALUE);
+
+                    tardisFuelToEnergyRating = builder
+                        .comment("Price of energy per flight tick when fuel is over")
+                        .translation("config.dwm.tardis.tardisFuelToEnergyRating")
+                        .defineInRange("tardisFuelToEnergyRating", 5000, 1, Integer.MAX_VALUE);
                 }
                 builder.pop();
             }

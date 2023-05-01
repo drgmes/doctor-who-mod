@@ -84,9 +84,9 @@ public class TardisStateManager extends PersistentState {
     private boolean energyHarvesting = false;
 
     private int xyzStep = 1;
-    private int fuelCapacity = 64;
+    private int fuelCapacity = 100;
     private int fuelAmount = 0;
-    private int energyCapacity = 256000;
+    private int energyCapacity = 1000000;
     private int energyAmount = 0;
 
     private TardisConsoleRoomEntry consoleRoom;
@@ -565,7 +565,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void setXYZStep(int value) {
-        this.xyzStep = value;
+        this.xyzStep = Math.min(100000, Math.max(1, value));
         this.markDirty();
     }
 
@@ -831,7 +831,7 @@ public class TardisStateManager extends PersistentState {
 
             // XYZ Step
             int xyzStep = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XYZSTEP);
-            if (xyzStep != 0) this.xyzStep = Math.max(1, Math.min(10000, (int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1))));
+            if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
 
             // Randomizer
             if ((int) controlsStorage.get(ETardisConsoleUnitControlRole.RANDOMIZER) != 0) {

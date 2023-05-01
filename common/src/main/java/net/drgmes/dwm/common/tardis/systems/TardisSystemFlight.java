@@ -57,9 +57,14 @@ public class TardisSystemFlight implements ITardisSystem {
         if (this.tickInProgress > 0) {
             if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % ModConfig.COMMON.tardisFuelConsumeTiming.get() == 0) {
                 int fuelAmount = this.tardis.getFuelAmount();
+                int energyAmount = this.tardis.getEnergyAmount();
 
                 if (fuelAmount >= 1) {
                     this.tardis.setFuelAmount(fuelAmount - 1);
+                    this.tardis.updateConsoleTiles();
+                }
+                else if (energyAmount >= ModConfig.COMMON.tardisFuelToEnergyRating.get()) {
+                    this.tardis.setEnergyAmount(energyAmount - ModConfig.COMMON.tardisFuelToEnergyRating.get());
                     this.tardis.updateConsoleTiles();
                 }
                 else {
@@ -100,7 +105,7 @@ public class TardisSystemFlight implements ITardisSystem {
             return false;
         }
 
-        if (this.tardis.getFuelAmount() <= 0) {
+        if (this.tardis.getFuelAmount() <= 0 && this.tardis.getEnergyAmount() <= 0) {
             ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
             return false;
         }

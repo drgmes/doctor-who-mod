@@ -472,5 +472,6 @@
   "config.dwm.tardis.tardisFlightDistanceRate": "Time ratio divider in ticks per distance traveled (aka TARDIS speed)",
   "config.dwm.tardis.tardisMaxFlightTime": "Max flight time in ticks for TARDIS",
   "config.dwm.tardis.tardisFuelRefillTiming": "Frequency of restoration of 1 unit of fuel",
-  "config.dwm.tardis.tardisFuelConsumeTiming": "Frequency of consumption of 1 unit of fuel"
+  "config.dwm.tardis.tardisFuelConsumeTiming": "Frequency of consumption of 1 unit of fuel",
+  "config.dwm.tardis.tardisFuelToEnergyRating": "Price of energy per flight tick when fuel is over"
 }

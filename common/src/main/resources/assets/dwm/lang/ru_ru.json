@@ -472,5 +472,6 @@
   "config.dwm.tardis.tardisFlightDistanceRate": "Делитель соотношения времени в тиках к пройденному расстоянию (он же - скорость ТАРДИС)",
   "config.dwm.tardis.tardisMaxFlightTime": "Максимальное время полёта ТАРДИС в тиках",
   "config.dwm.tardis.tardisFuelRefillTiming": "Частота восстановления 1 единицы топлива",
-  "config.dwm.tardis.tardisFuelConsumeTiming": "Частота потребления 1 единицы топлива"
+  "config.dwm.tardis.tardisFuelConsumeTiming": "Частота потребления 1 единицы топлива",
+  "config.dwm.tardis.tardisFuelToEnergyRating": "Цена энергии за полетный тик, когда закончилось топливо"
 }
