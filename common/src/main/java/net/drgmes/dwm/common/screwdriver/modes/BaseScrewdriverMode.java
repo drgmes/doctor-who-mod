@@ -4,6 +4,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.setup.ModEntities;
+import net.drgmes.dwm.types.IMixinPortal;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -52,7 +53,7 @@ public class BaseScrewdriverMode {
     }
 
     protected boolean checkIsValidHitEntity(Entity entity) {
-//        if (entity.getType() == Portal.entityType) return false;
+        if (entity instanceof IMixinPortal) return false;
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL.getEntityType()) return false;
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_SMALL.getEntityType()) return false;
         if (entity.getType() == ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_MEDIUM.getEntityType()) return false;

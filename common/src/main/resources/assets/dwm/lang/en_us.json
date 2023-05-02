@@ -283,8 +283,11 @@
 
   "title.dwm.screwdriver.mode": "Mode: %s",
   "title.dwm.screwdriver.mode.scan": "Scan",
+  "title.dwm.screwdriver.mode.scan.description": "Allows you to get information about a block or entity.",
   "title.dwm.screwdriver.mode.setting": "Setting",
+  "title.dwm.screwdriver.mode.setting.description": "Allows you to change the state of various blocks/mechanisms, as well as interact in a special way with some entities. \n\n§6WARNING§r: Does not work with wood or some hair dryers!",
   "title.dwm.screwdriver.mode.tardis_relocation": "Relocation",
+  "title.dwm.screwdriver.mode.tardis_relocation.description": "Allows you to set a new destination location for the TARDIS. Before use, you must bind the device to the TARDIS.",
 
   "title.dwm.monitor.state.value.on": "On",
   "title.dwm.monitor.state.value.off": "Off",

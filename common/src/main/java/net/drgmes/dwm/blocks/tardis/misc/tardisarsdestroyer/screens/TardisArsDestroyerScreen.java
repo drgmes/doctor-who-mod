@@ -40,12 +40,6 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     @Override
-    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
-        this.renderConfirmationMessage(matrixStack);
-    }
-
-    @Override
     protected void init() {
         super.init();
 
@@ -63,6 +57,20 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         this.addDrawableChild(this.acceptButton);
     }
 
+    @Override
+    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
+        this.renderConfirmationMessage(matrixStack);
+    }
+
+    protected void apply() {
+        if (this.tardisArsDestroyerBlockEntity.arsStructure != null) {
+            new ArsDestroyerApplyPacket(this.tardisArsDestroyerBlockEntity.getPos(), this.tardisArsDestroyerBlockEntity.arsStructure.getCategory().getPath(), this.tardisArsDestroyerBlockEntity.arsStructure.getName()).sendToServer();
+        }
+
+        this.close();
+    }
+
     protected void renderConfirmationMessage(MatrixStack matrixStack) {
         if (this.tardisArsDestroyerBlockEntity == null || this.tardisArsDestroyerBlockEntity.arsStructure == null) return;
 
@@ -77,13 +85,5 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         float nameX = (this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2;
         Vec2f namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);
         this.textRenderer.drawWithShadow(matrixStack, name, namePos.x, namePos.y, 0xE0E0E0);
-    }
-
-    protected void apply() {
-        if (this.tardisArsDestroyerBlockEntity.arsStructure != null) {
-            new ArsDestroyerApplyPacket(this.tardisArsDestroyerBlockEntity.getPos(), this.tardisArsDestroyerBlockEntity.arsStructure.getCategory().getPath(), this.tardisArsDestroyerBlockEntity.arsStructure.getName()).sendToServer();
-        }
-
-        this.close();
     }
 }

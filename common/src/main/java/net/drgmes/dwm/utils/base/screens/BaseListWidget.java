@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.base.screens;
 
 import com.google.common.collect.ImmutableList;
+import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.Element;
@@ -10,10 +11,8 @@ import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Language;
 import net.minecraft.util.math.Vec2f;
 
 import java.util.Collections;
@@ -60,8 +59,10 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         @Override
         public void render(MatrixStack matrixStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
             MutableText text = this.getText().copy();
-            if (BaseListWidget.this.getSelectedOrNull() == this) text = Text.empty().append(Text.literal("> ").formatted(Formatting.WHITE, Formatting.BOLD)).append(text.formatted(Formatting.RESET));
-            textRenderer.drawWithShadow(matrixStack, Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, width, Style.EMPTY)).get(0), left + padding, top + 2, 0xFFFFFF);
+            if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(Formatting.WHITE, Formatting.BOLD)).append(text.formatted(Formatting.RESET));
+
+            Vec2f pos = new Vec2f(left + padding, top + 2);
+            ScreenHelper.drawClipped(client, matrixStack, text, pos, (int) textRenderer.fontHeight + padding, width, 0xFFFFFF);
         }
 
         @Override
@@ -86,13 +87,17 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
         @Override
         public boolean mouseClicked(double mouseX, double mouseY, int delta) {
-            BaseListWidget.this.setSelected(this);
+            setSelected(this);
             return false;
         }
 
         @Override
         public boolean isFocused() {
             return false;
+        }
+
+        public boolean isSelected() {
+            return getSelectedOrNull() == this;
         }
     }
 }

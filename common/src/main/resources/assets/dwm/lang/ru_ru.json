@@ -283,8 +283,11 @@
 
   "title.dwm.screwdriver.mode": "Режим: %s",
   "title.dwm.screwdriver.mode.scan": "Сканирование",
+  "title.dwm.screwdriver.mode.scan.description": "Позволяет получить информацию о блоке или сущности.",
   "title.dwm.screwdriver.mode.setting": "Настройка",
+  "title.dwm.screwdriver.mode.setting.description": "Позволяет изменять состояние различных блоков/механизмов, а также по-особому взаимодействовать с некоторыми сущностями. \n\n§6ВНИМАНИЕ§r: Не работает с деревом или в присутствии некоторых моделей фенов!",
   "title.dwm.screwdriver.mode.tardis_relocation": "Релокация",
+  "title.dwm.screwdriver.mode.tardis_relocation.description": "Позволяет установить новую локацию назначения для ТАРДИС. Перед использованием необходимо совершить привязку девайса к ТАРДИС.",
 
   "title.dwm.monitor.state.value.on": "Вкл.",
   "title.dwm.monitor.state.value.off": "Выкл.",

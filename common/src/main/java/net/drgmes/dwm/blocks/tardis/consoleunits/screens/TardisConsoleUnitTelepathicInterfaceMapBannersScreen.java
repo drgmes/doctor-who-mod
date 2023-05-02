@@ -25,29 +25,12 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     @Override
-    public void resize(MinecraftClient mc, int width, int height) {
-        BannersListWidget.BannerEntry selected = this.selected;
-        super.resize(mc, width, height);
-        this.selected = selected;
-    }
-
-    @Override
-    public void tick() {
-        this.bannersListWidget.setSelected(this.selected);
-    }
-
-    public void setSelected(BannersListWidget.BannerEntry entry) {
-        this.selected = entry == this.selected ? null : entry;
-        this.update();
-    }
-
-    @Override
     protected void init() {
-        int bannersListGhostSpace = 2;
         int bannersListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int bannersListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - BUTTON_HEIGHT - bannersListGhostSpace;
+        int bannersListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - BUTTON_HEIGHT - 3;
+        int bannersListOffset = (int) this.getBackgroundSize().y - bannersListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - 2;
 
-        Vec2f bannersListPos = this.getRenderPos(BACKGROUND_BORDERS, BACKGROUND_BORDERS);
+        Vec2f bannersListPos = this.getRenderPos(BACKGROUND_BORDERS, bannersListOffset);
         this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
         this.addDrawableChild(this.bannersListWidget);
 
@@ -62,6 +45,23 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         }
 
         this.close();
+    }
+
+    @Override
+    public void tick() {
+        this.bannersListWidget.setSelected(this.selected);
+    }
+
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        BannersListWidget.BannerEntry selected = this.selected;
+        super.resize(mc, width, height);
+        this.selected = selected;
+    }
+
+    protected void setSelected(BannersListWidget.BannerEntry entry) {
+        this.selected = entry == this.selected ? null : entry;
+        this.update();
     }
 
     private void update() {

@@ -42,58 +42,10 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     @Override
-    public void resize(MinecraftClient mc, int width, int height) {
-        String search = this.search.getText();
-        LocationsListWidget.LocationEntry selected = this.selected;
-
-        super.resize(mc, width, height);
-        this.search.setText(search);
-        this.selected = selected;
-
-        if (!this.search.getText().isEmpty()) {
-            this.reloadLocationsList();
-        }
-    }
-
-    @Override
-    public void tick() {
-        this.search.tick();
-        this.locationsListWidget.setSelected(this.selected);
-
-        if (!search.getText().equals(lastSearch)) {
-            this.selected = null;
-            this.reloadLocationsList();
-            this.locationsListWidget.refreshList();
-            this.update();
-        }
-    }
-
-    public void setSelected(LocationsListWidget.LocationEntry entry) {
-        this.selected = entry == this.selected ? null : entry;
-        this.update();
-    }
-
-    public void reloadLocationsList() {
-        boolean hasSearch = this.search != null && !Objects.equals(this.search.getText(), "");
-
-        if (hasSearch) {
-            this.lastSearch = this.search.getText();
-            this.filteredLocations = this.locations.stream().filter((str) -> (
-                str.getKey().getPath().toLowerCase().contains(this.search.getText().toLowerCase())
-            )).toList();
-
-            return;
-        }
-
-        this.filteredLocations = this.locations;
-    }
-
-    @Override
     protected void init() {
-        int locationsListGhostSpace = 2;
         int locationsListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int locationsListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - locationsListGhostSpace;
-        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - locationsListGhostSpace - 1;
+        int locationsListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - 3;
+        int locationsListOffset = (int) this.getBackgroundSize().y - locationsListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - 2;
 
         Vec2f searchPos = this.getRenderPos(BACKGROUND_BORDERS + 1, BACKGROUND_BORDERS + 1);
         this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
@@ -115,6 +67,53 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         }
 
         super.apply();
+    }
+
+    @Override
+    public void tick() {
+        this.search.tick();
+        this.locationsListWidget.setSelected(this.selected);
+
+        if (!search.getText().equals(lastSearch)) {
+            this.selected = null;
+            this.reloadLocationsList();
+            this.locationsListWidget.refreshList();
+            this.update();
+        }
+    }
+
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        String search = this.search.getText();
+        LocationsListWidget.LocationEntry selected = this.selected;
+
+        super.resize(mc, width, height);
+        this.search.setText(search);
+        this.selected = selected;
+
+        if (!this.search.getText().isEmpty()) {
+            this.reloadLocationsList();
+        }
+    }
+
+    protected void setSelected(LocationsListWidget.LocationEntry entry) {
+        this.selected = entry == this.selected ? null : entry;
+        this.update();
+    }
+
+    protected void reloadLocationsList() {
+        boolean hasSearch = this.search != null && !Objects.equals(this.search.getText(), "");
+
+        if (hasSearch) {
+            this.lastSearch = this.search.getText();
+            this.filteredLocations = this.locations.stream().filter((str) -> (
+                str.getKey().getPath().toLowerCase().contains(this.search.getText().toLowerCase())
+            )).toList();
+
+            return;
+        }
+
+        this.filteredLocations = this.locations;
     }
 
     private void update() {

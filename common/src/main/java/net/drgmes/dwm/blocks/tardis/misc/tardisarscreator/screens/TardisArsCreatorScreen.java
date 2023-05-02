@@ -66,19 +66,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     @Override
-    public void tick() {
-        this.search.tick();
-        this.listWidget.setSelected(this.selectedArsStructureEntry);
-
-        if (!search.getText().equals(lastSearch)) {
-            this.selectedArsStructureEntry = null;
-            this.reloadArsStructuresList();
-            this.listWidget.refreshList();
-            this.update();
-        }
-    }
-
-    @Override
     protected void init() {
         super.init();
 
@@ -91,10 +78,9 @@ public class TardisArsCreatorScreen extends BaseScreen {
         Vec2f acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 2, buttonOffset);
         this.acceptButton = ScreenHelper.getButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
 
-        int listGhostSpace = 2;
         int listWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int listHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - listGhostSpace;
-        int listOffset = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - listHeight - listGhostSpace - 1;
+        int listHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - 20 - BUTTON_HEIGHT - 3;
+        int listOffset = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - listHeight - 2;
 
         Vec2f categoriesListPos = this.getRenderPos(BACKGROUND_BORDERS, listOffset);
         this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
@@ -108,6 +94,19 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.addDrawableChild(this.acceptButton);
 
         this.update();
+    }
+
+    @Override
+    public void tick() {
+        this.search.tick();
+        this.listWidget.setSelected(this.selectedArsStructureEntry);
+
+        if (!search.getText().equals(lastSearch)) {
+            this.selectedArsStructureEntry = null;
+            this.reloadArsStructuresList();
+            this.listWidget.refreshList();
+            this.update();
+        }
     }
 
     @Override

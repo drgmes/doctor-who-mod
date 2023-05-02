@@ -26,6 +26,11 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
+    public boolean shouldPause() {
+        return false;
+    }
+
+    @Override
     public int getWidth() {
         return this.width;
     }
@@ -46,18 +51,6 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrixStack);
-        this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);
-        super.render(matrixStack, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public void close() {
-        if (this.client != null) this.client.setScreen(null);
-    }
-
-    @Override
     protected void init() {
 //        if (this.client != null) this.client.keyboard.setRepeatEvents(true);
     }
@@ -68,8 +61,8 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public boolean shouldPause() {
-        return false;
+    public void close() {
+        if (this.client != null) this.client.setScreen(null);
     }
 
     @Override
@@ -81,5 +74,12 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     public boolean mouseClicked(double mouseX, double mouseY, int frame) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
         return super.mouseClicked(mouseX, mouseY, frame);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderBackground(matrixStack);
+        this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);
+        super.render(matrixStack, mouseX, mouseY, delta);
     }
 }

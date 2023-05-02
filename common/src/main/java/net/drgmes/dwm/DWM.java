@@ -64,11 +64,14 @@ public class DWM {
         public static final Text TELEPATHIC_INTERFACE_BTN_ACCEPT = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.button.accept");
 
         public static final Text SCREWDRIVER_MODE_SCAN = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.scan");
+        public static final Text SCREWDRIVER_MODE_SCAN_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.scan.description");
         public static final Text SCREWDRIVER_MODE_SETTING = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.setting");
+        public static final Text SCREWDRIVER_MODE_SETTING_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.setting.description");
         public static final Text SCREWDRIVER_MODE_TARDIS_RELOCATION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation");
+        public static final Text SCREWDRIVER_MODE_TARDIS_RELOCATION_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation.description");
 
         public static final Text SCREWDRIVER_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".screwdriver_interface.title");
-        public static final Function<Screwdriver.EScrewdriverMode, Text> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle());
+        public static final Function<Screwdriver.EScrewdriverMode, Text> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
     }
 
     public static class LOCS {

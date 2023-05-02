@@ -24,16 +24,18 @@ import net.minecraft.world.World;
 
 public class Screwdriver {
     public enum EScrewdriverMode {
-        SCAN(ScrewdriverScanMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SCAN),
-        SETTING(ScrewdriverSettingMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SETTING),
-        TARDIS_RELOCATION(ScrewdriverTardisMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_TARDIS_RELOCATION);
+        SCAN(ScrewdriverScanMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SCAN, DWM.TEXTS.SCREWDRIVER_MODE_SCAN_DESCRIPTION),
+        SETTING(ScrewdriverSettingMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_SETTING, DWM.TEXTS.SCREWDRIVER_MODE_SETTING_DESCRIPTION),
+        TARDIS_RELOCATION(ScrewdriverTardisMode.INSTANCE, DWM.TEXTS.SCREWDRIVER_MODE_TARDIS_RELOCATION, DWM.TEXTS.SCREWDRIVER_MODE_TARDIS_RELOCATION_DESCRIPTION);
 
         private final BaseScrewdriverMode mode;
         private final Text title;
+        private final Text description;
 
-        EScrewdriverMode(BaseScrewdriverMode mode, Text title) {
+        EScrewdriverMode(BaseScrewdriverMode mode, Text title, Text description) {
             this.mode = mode;
             this.title = title;
+            this.description = description;
         }
 
         public BaseScrewdriverMode getInstance() {
@@ -44,9 +46,8 @@ public class Screwdriver {
             return this.title;
         }
 
-        public EScrewdriverMode next() {
-            EScrewdriverMode[] values = EScrewdriverMode.values();
-            return values[(this.ordinal() + 1) % values.length];
+        public Text getDescription() {
+            return this.description;
         }
     }
 

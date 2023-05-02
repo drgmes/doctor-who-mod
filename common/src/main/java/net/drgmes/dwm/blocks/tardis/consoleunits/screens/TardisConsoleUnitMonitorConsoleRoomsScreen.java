@@ -42,12 +42,6 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     }
 
     @Override
-    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
-        this.renderImage(matrixStack);
-    }
-
-    @Override
     protected void init() {
         super.init();
 
@@ -89,6 +83,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         }
 
         super.apply();
+    }
+
+    @Override
+    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
+        this.renderImage(matrixStack);
     }
 
     @Nullable
