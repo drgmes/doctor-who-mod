@@ -40,13 +40,13 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 13.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape NORTH_OPENED_SHAPE = Block.createCuboidShape(-6.0, 0.0, 13.0, 0.0, 16.0, 16.0);
+    protected static final VoxelShape NORTH_OPENED_SHAPE = Block.createCuboidShape(-3.0, 0.0, 13.0, 0.0, 16.0, 16.0);
     protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 3.0);
-    protected static final VoxelShape SOUTH_OPENED_SHAPE = Block.createCuboidShape(-6.0, 0.0, 0.0, 0.0, 16.0, 3.0);
+    protected static final VoxelShape SOUTH_OPENED_SHAPE = Block.createCuboidShape(-3.0, 0.0, 0.0, 0.0, 16.0, 3.0);
     protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 3.0, 16.0, 16.0);
-    protected static final VoxelShape EAST_OPENED_SHAPE = Block.createCuboidShape(0.0, 0.0, -6.0, 3.0, 16.0, 0.0);
+    protected static final VoxelShape EAST_OPENED_SHAPE = Block.createCuboidShape(0.0, 0.0, -3.0, 3.0, 16.0, 0.0);
     protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(13.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape WEST_OPENED_SHAPE = Block.createCuboidShape(13.0, 0.0, -6.0, 16.0, 16.0, 0.0);
+    protected static final VoxelShape WEST_OPENED_SHAPE = Block.createCuboidShape(13.0, 0.0, -3.0, 16.0, 16.0, 0.0);
 
     private final Supplier<BlockEntityBuilder<C>> blockEntityBuilderSupplier;
 
@@ -83,10 +83,10 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         if (blockState.get(OPEN)) {
             return switch (blockState.get(FACING)) {
-                case NORTH -> VoxelShapes.union(NORTH_OPENED_SHAPE, NORTH_OPENED_SHAPE.offset(1.5, 0.0, 0.0));
-                case SOUTH -> VoxelShapes.union(SOUTH_OPENED_SHAPE, SOUTH_OPENED_SHAPE.offset(1.5, 0.0, 0.0));
-                case EAST -> VoxelShapes.union(EAST_OPENED_SHAPE, EAST_OPENED_SHAPE.offset(0, 0, 1.5));
-                default -> VoxelShapes.union(WEST_OPENED_SHAPE, WEST_OPENED_SHAPE.offset(0, 0, 1.5));
+                case NORTH -> VoxelShapes.union(NORTH_OPENED_SHAPE, NORTH_OPENED_SHAPE.offset(1.185, 0.0, 0.0));
+                case SOUTH -> VoxelShapes.union(SOUTH_OPENED_SHAPE, SOUTH_OPENED_SHAPE.offset(1.185, 0.0, 0.0));
+                case EAST -> VoxelShapes.union(EAST_OPENED_SHAPE, EAST_OPENED_SHAPE.offset(0, 0, 1.185));
+                default -> VoxelShapes.union(WEST_OPENED_SHAPE, WEST_OPENED_SHAPE.offset(0, 0, 1.185));
             };
         }
 
