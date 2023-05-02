@@ -75,26 +75,29 @@ public class ImmersivePortals {
         public void createEntrancePortals() {
             if (this.tardis.getWorld() == null) return;
 
-            Map.Entry<Portal, Portal> portals = createPortals(
-                this.tardis.getWorld(),
-                this.tardis.getEntranceFacing(),
-                this.tardis.getCurrentExteriorFacing(),
-                this.tardis.getEntrancePosition().up(),
-                this.tardis.getCurrentExteriorRelativePosition().up(),
-                this.tardis.getCurrentExteriorDimension(),
-                -0.5 + 0.0275, -0.5, 0,
-                1, 2
-            );
+            try {
+                Map.Entry<Portal, Portal> portals = createPortals(
+                    this.tardis.getWorld(),
+                    this.tardis.getEntranceFacing(),
+                    this.tardis.getCurrentExteriorFacing(),
+                    this.tardis.getEntrancePosition().up(),
+                    this.tardis.getCurrentExteriorRelativePosition().up(),
+                    this.tardis.getCurrentExteriorDimension(),
+                    -0.5 + 0.0275, -0.5, 0,
+                    1, 2
+                );
 
-            this.portalFromTardis = portals.getKey();
-            this.portalToTardis = portals.getValue();
+                this.portalFromTardis = portals.getKey();
+                this.portalToTardis = portals.getValue();
 
-            String worldId = this.tardis.getId();
-            ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
-            ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
+                String worldId = this.tardis.getId();
+                ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
+                ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
 
-            if (this.portalFromTardis.getWorld() != null) this.portalFromTardis.getWorld().spawnEntity(this.portalFromTardis);
-            if (this.portalToTardis.getWorld() != null) this.portalToTardis.getWorld().spawnEntity(this.portalToTardis);
+                if (this.portalFromTardis.getWorld() != null) this.portalFromTardis.getWorld().spawnEntity(this.portalFromTardis);
+                if (this.portalToTardis.getWorld() != null) this.portalToTardis.getWorld().spawnEntity(this.portalToTardis);
+            } catch (Exception ignored) {
+            }
         }
 
         public void createRoomsEntrancesPortals() {
@@ -110,23 +113,26 @@ public class ImmersivePortals {
                 BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos).offset(direction).toImmutable();
                 BlockPos farTacBlockPos = TardisHelper.TARDIS_POS.add(1024, 0, 1024).multiply(++index).withY(TardisHelper.TARDIS_POS.getY()).toImmutable();
 
-                Map.Entry<Portal, Portal> portals = createPortals(
-                    this.tardis.getWorld(),
-                    direction,
-                    Direction.SOUTH,
-                    tacBlockPos.up(),
-                    farTacBlockPos.up(),
-                    this.tardis.getWorld().getRegistryKey(),
-                    -0.5, -0.5, -0.5,
-                    3, 3
-                );
+                try {
+                    Map.Entry<Portal, Portal> portals = createPortals(
+                        this.tardis.getWorld(),
+                        direction,
+                        Direction.SOUTH,
+                        tacBlockPos.up(),
+                        farTacBlockPos.up(),
+                        this.tardis.getWorld().getRegistryKey(),
+                        -0.5, -0.5, -0.5,
+                        3, 3
+                    );
 
-                ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
-                ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
+                    ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
+                    ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
 
-                this.tardis.getWorld().spawnEntity(portals.getKey());
-                this.tardis.getWorld().spawnEntity(portals.getValue());
-                this.portalsToRooms.add(portals);
+                    this.tardis.getWorld().spawnEntity(portals.getKey());
+                    this.tardis.getWorld().spawnEntity(portals.getValue());
+                    this.portalsToRooms.add(portals);
+                } catch (Exception ignored) {
+                }
             }
         }
 
