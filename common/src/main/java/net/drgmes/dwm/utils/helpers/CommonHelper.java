@@ -62,4 +62,12 @@ public class CommonHelper {
 
         return buffer.toString();
     }
+
+    public static String formatNumberString(int number) {
+        String str = String.valueOf(number);
+        if (number >= 1000000000) str = String.format("%.1f", (float) number / 1000000000) + "b";
+        else if (number >= 1000000) str = String.format("%.1f", (float) number / 1000000) + "m";
+        else if (number >= 1000) str = String.format("%.1f", (float) number / 1000) + "k";
+        return str.replace(",", ".");
+    }
 }

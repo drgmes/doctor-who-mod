@@ -10,6 +10,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.compat.ModCompats;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -174,17 +175,10 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         String fuelHarvestingState = tardis.isFuelHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String energyHarvestingState = tardis.isEnergyHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
 
-        int fuelAmount = tardis.getFuelAmount();
-        String fuelAmountText = String.valueOf(fuelAmount > 1000 ? String.format("%.1f", (float) fuelAmount / 1000) : fuelAmount);
-        fuelAmountText += (fuelAmount > 1000 ? "k" : "");
-        fuelAmountText += " AE";
-        fuelAmountText = fuelAmountText.replace(",", ".");
-
-        int energyAmount = tardis.getEnergyAmount();
-        String energyAmountText = String.valueOf(energyAmount > 1000 ? String.format("%.1f", (float) energyAmount / 1000) : energyAmount);
-        energyAmountText += (energyAmount > 1000 ? "k" : "");
-        energyAmountText += " E";
-        energyAmountText = energyAmountText.replace(",", ".");
+        String fuelCapacityText = CommonHelper.formatNumberString(tardis.getFuelCapacity());
+        String fuelAmountText = CommonHelper.formatNumberString(tardis.getFuelAmount());
+        String energyCapacityText = CommonHelper.formatNumberString(tardis.getEnergyCapacity());
+        String energyAmountText = CommonHelper.formatNumberString(tardis.getEnergyAmount());
 
         this.printStringsToScreen(matrixStack, buffer, new String[]{
             this.buildScreenParamText("shields", !isShieldsEnabled ? NONE : shieldsState),
@@ -198,8 +192,8 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.buildScreenParamText("fuel_harvesting", fuelHarvestingState),
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
-            this.buildScreenParamText("fuel", fuelAmountText),
-            ModCompats.techReborn() ? this.buildScreenParamText("energy", energyAmountText) : "",
+            this.buildScreenParamText("fuel", fuelAmountText + " / " + fuelCapacityText + " AE"),
+            ModCompats.techReborn() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
         });
     }
 
