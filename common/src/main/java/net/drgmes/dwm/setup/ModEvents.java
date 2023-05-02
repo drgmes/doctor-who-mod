@@ -1,19 +1,19 @@
 package net.drgmes.dwm.setup;
 
 import dev.architectury.event.EventResult;
-import dev.architectury.event.events.common.InteractionEvent;
-import dev.architectury.event.events.common.LifecycleEvent;
-import dev.architectury.event.events.common.PlayerEvent;
-import dev.architectury.event.events.common.TickEvent;
+import dev.architectury.event.events.common.*;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.compat.ImmersivePortals;
 import net.drgmes.dwm.compat.ModCompats;
 import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
+import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.network.server.ScrewdriverUsePacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -45,6 +45,21 @@ public class ModEvents {
             if (TardisHelper.isTardisDimension(world)) {
                 TardisStateManager.get(world).ifPresent(TardisStateManager::tick);
             }
+        });
+
+        // ///////////// //
+        // Entity Events //
+        // ///////////// //
+
+        EntityEvent.ADD.register((entity, world) -> {
+            if (entity instanceof ItemEntity itemEntity) {
+                Item item = itemEntity.getStack().getItem();
+
+                if (item instanceof ScrewdriverItem) itemEntity.setNeverDespawn();
+                else if (item instanceof TardisKeyItem) itemEntity.setNeverDespawn();
+            }
+
+            return EventResult.pass();
         });
 
         // ////////////////// //

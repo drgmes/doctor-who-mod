@@ -11,7 +11,7 @@ public class ScrewdriverItemBuilder extends ItemBuilder {
     }
 
     public static Item.Settings getItemSettings() {
-        return ItemBuilder.getItemSettings().maxCount(1);
+        return ItemBuilder.getItemSettings().fireproof().maxCount(1);
     }
 
     @Override

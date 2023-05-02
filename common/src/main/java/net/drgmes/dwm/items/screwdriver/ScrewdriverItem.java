@@ -10,9 +10,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -28,6 +30,11 @@ import java.util.List;
 public class ScrewdriverItem extends Item {
     public ScrewdriverItem(Settings props) {
         super(props);
+    }
+
+    @Override
+    public boolean damage(DamageSource source) {
+        return super.damage(source) && !source.isIn(DamageTypeTags.IS_EXPLOSION);
     }
 
     @Override

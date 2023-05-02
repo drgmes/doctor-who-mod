@@ -7,10 +7,12 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.client.item.TooltipContext;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -27,6 +29,11 @@ import java.util.List;
 public class TardisKeyItem extends Item {
     public TardisKeyItem(Settings props) {
         super(props);
+    }
+
+    @Override
+    public boolean damage(DamageSource source) {
+        return super.damage(source) && !source.isIn(DamageTypeTags.IS_EXPLOSION);
     }
 
     @Override
