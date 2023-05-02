@@ -59,7 +59,7 @@ public class ModWorldGen {
         (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
         () -> getPlacementModifiers(
             CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(100),
+            RarityFilterPlacementModifier.of(50),
             PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP,
             PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP
         )
@@ -73,7 +73,7 @@ public class ModWorldGen {
         (ctx) -> ctx.hasTag(BiomeTags.IS_NETHER),
         () -> getPlacementModifiers(
             CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(5),
+            RarityFilterPlacementModifier.of(1),
             HeightRangePlacementModifier.uniform(YOffset.BOTTOM, YOffset.aboveBottom(96)),
             EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 32),
             RandomOffsetPlacementModifier.vertically(ConstantIntProvider.create(1))

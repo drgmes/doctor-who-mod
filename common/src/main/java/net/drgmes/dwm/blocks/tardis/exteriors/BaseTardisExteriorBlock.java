@@ -106,7 +106,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
             if (tardisExteriorBlockEntity.tardisId == null && !(heldItem.getItem() instanceof TardisKeyItem)) {
                 player.sendMessage(DWM.TEXTS.TARDIS_LOCKED, true);
                 ModSounds.playTardisDoorsKnockSound(world, finalBlockPos);
-                return ActionResult.PASS;
+                return ActionResult.success(world.isClient);
             }
 
             TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(true)).ifPresent((tardis) -> {
