@@ -1,0 +1,9 @@
+{
+  "title": "dwm.console_room.aquatic_abandoned",
+  "center": [15, 8, 14],
+  "entrance": [15, 7, 1],
+  "teleporter_room": "aquatic_classic",
+  "decorator_block": "minecraft:dark_prismarine",
+  "repair_to": "aquatic_classic",
+  "hidden": true
+}
