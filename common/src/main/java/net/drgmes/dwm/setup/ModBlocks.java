@@ -61,6 +61,7 @@ import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExte
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockBuilder;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.builders.ColoredBlockBuilders;
@@ -94,6 +95,7 @@ public class ModBlocks {
     // Tardis Misc
     public static final BlockBuilder TARDIS_ARS_CREATOR = new TardisArsCreatorBlockBuilder("tardis_ars_creator");
     public static final BlockBuilder TARDIS_ARS_DESTROYER = new TardisArsDestroyerBlockBuilder("tardis_ars_destroyer");
+    public static final BlockBuilder TARDIS_TELEPORTER = new TardisTeleporterBlockBuilder("tardis_teleporter");
     public static final BlockBuilder TARDIS_ROUNDEL = new TardisRoundelBlockBuilder("tardis_roundel");
 
     // Tardis Decorations

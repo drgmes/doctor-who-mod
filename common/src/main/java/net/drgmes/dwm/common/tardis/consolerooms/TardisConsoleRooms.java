@@ -13,14 +13,21 @@ public class TardisConsoleRooms {
         "dwm.console_room.imperial_classic",
         new BlockPos(7, 1, 7),
         new BlockPos(7, 1, 1)
-    ).setHidden(true);
+    )
+        .setHidden(true)
+        .setDecoratorBlock("minecraft:chiseled_quartz_block")
+        .setTeleporterRoom("imperial_classic");
 
     public static final TardisConsoleRoomEntry DEFAULT_ABANDONED = new TardisConsoleRoomEntry(
         "imperial_abandoned",
         "dwm.console_room.imperial_abandoned",
         new BlockPos(7, 1, 7),
         new BlockPos(7, 1, 1)
-    ).setHidden(true).setRepairTo("imperial_classic");
+    )
+        .setHidden(true)
+        .setTeleporterRoom("imperial_classic")
+        .setDecoratorBlock("minecraft:chiseled_quartz_block")
+        .setRepairTo("imperial_classic");
 
     public static TardisConsoleRoomEntry getConsoleRoom(String consoleRoomId, boolean isAbandoned) {
         return CONSOLE_ROOMS.getOrDefault(consoleRoomId, isAbandoned ? DEFAULT_ABANDONED : DEFAULT);

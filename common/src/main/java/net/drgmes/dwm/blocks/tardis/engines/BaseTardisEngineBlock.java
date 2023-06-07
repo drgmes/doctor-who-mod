@@ -35,7 +35,6 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
                 if (heldItem.getItem() instanceof RepairKitItem) {
                     tardis.setBrokenState(false);
                     tardis.updateConsoleTiles();
-                    tardis.getConsoleRoom().updateRoomsEntrances(tardis);
                     tardis.updateRoomEntrancePortals();
 
                     if (!player.isCreative()) {

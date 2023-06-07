@@ -22,6 +22,7 @@
   "block.dwm.tardis_toyota_spinner": "TARDIS Toyota Spinner",
   "block.dwm.tardis_ars_creator": "TARDIS ARS Creator",
   "block.dwm.tardis_ars_destroyer": "TARDIS ARS Destroyer",
+  "block.dwm.tardis_teleporter": "Teleporter",
   "block.dwm.tardis_roundel": "Roundel Block",
   "block.dwm.tardis_roundel_attachment_dark": "Roundel (Dark)",
   "block.dwm.tardis_roundel_attachment_light": "Roundel (Light)",
@@ -471,7 +472,6 @@
 
   "config.dwm.tardis.dimensionsBlacklist": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
   "config.dwm.tardis.hideTheEndConditionally": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
-  "config.dwm.tardis.extendedRoomsGeneration": "If ImmersivePortalsMod present and this option enabled, your ARS-rooms will generating a far away and will be accessible through portals",
   "config.dwm.tardis.tardisFlightDistanceRate": "Time ratio divider in ticks per distance traveled (aka TARDIS speed)",
   "config.dwm.tardis.tardisMaxFlightTime": "Max flight time in ticks for TARDIS",
   "config.dwm.tardis.tardisFuelRefillTiming": "Frequency of restoration of 1 unit of fuel",

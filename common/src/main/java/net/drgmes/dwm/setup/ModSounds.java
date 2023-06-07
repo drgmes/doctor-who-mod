@@ -125,4 +125,12 @@ public class ModSounds {
     public static void playTardisArsStructureDestroyedSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, SoundEvents.BLOCK_BEACON_DEACTIVATE, 1.0F, 1.0F);
     }
+
+    public static void playTardisTeleporterSentSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SoundEvents.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
+    }
+
+    public static void playTardisTeleporterReceivedSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SoundEvents.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
+    }
 }

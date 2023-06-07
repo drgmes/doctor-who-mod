@@ -1,7 +1,8 @@
 package net.drgmes.dwm.utils.helpers;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.block.Blocks;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
@@ -9,6 +10,8 @@ import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+
+import java.util.function.Function;
 
 public class WorldHelper {
     public static BlockRotation getBlockRotation(Direction direction) {
@@ -45,17 +48,30 @@ public class WorldHelper {
         );
     }
 
-    public static void clearArea(World world, BlockBox aabb) {
+    public static boolean foreachArea(BlockBox aabb, Function<BlockPos, Boolean> action) {
         for (double x = aabb.getMaxX(); x >= aabb.getMinX(); x--) {
             for (double y = aabb.getMaxY(); y >= aabb.getMinY(); y--) {
                 for (double z = aabb.getMaxZ(); z >= aabb.getMinZ(); z--) {
-                    BlockPos blockPos = new BlockPos((int) x, (int) y, (int) z);
-                    BlockState blockState = world.getBlockState(blockPos);
-
-                    if (blockState.contains(Properties.DOUBLE_BLOCK_HALF) && blockState.get(Properties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) continue;
-                    world.removeBlock(blockPos, false);
+                    if (!action.apply(new BlockPos((int) x, (int) y, (int) z))) return false;
                 }
             }
         }
+
+        return true;
+    }
+
+    public static void fillArea(World world, BlockBox aabb, Function<BlockPos, BlockState> newBlockStateGetter) {
+        foreachArea(aabb, (bp) -> {
+            world.setBlockState(bp, newBlockStateGetter.apply(bp), Block.NOTIFY_ALL);
+            return true;
+        });
+    }
+
+    public static void fillArea(World world, BlockBox aabb, BlockState newBlockState) {
+        fillArea(world, aabb, (bp) -> newBlockState);
+    }
+
+    public static void clearArea(World world, BlockBox aabb) {
+        fillArea(world, aabb, Blocks.AIR.getDefaultState());
     }
 }

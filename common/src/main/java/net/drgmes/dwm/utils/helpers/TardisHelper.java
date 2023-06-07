@@ -1,5 +1,6 @@
 package net.drgmes.dwm.utils.helpers;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
@@ -18,6 +19,10 @@ import java.util.function.Consumer;
 
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
+
+    public static BlockPos getTardisFarPos(int index) {
+        return TARDIS_POS.add(DWM.COMMON.TARDIS_ROOMS_OFFSET, 0, DWM.COMMON.TARDIS_ROOMS_OFFSET).multiply(index).withY(TARDIS_POS.getY()).toImmutable();
+    }
 
     public static boolean isTardisDimension(World world) {
         return world != null && world.getDimensionKey().equals(ModDimensionTypes.TARDIS);

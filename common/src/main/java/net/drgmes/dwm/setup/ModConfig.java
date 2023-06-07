@@ -33,7 +33,6 @@ public class ModConfig {
     public static class Common {
         public ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionsBlacklist;
         public ForgeConfigSpec.BooleanValue hideTheEndConditionally;
-        public ForgeConfigSpec.BooleanValue extendedRoomsGeneration;
         public ForgeConfigSpec.IntValue tardisFlightDistanceRate;
         public ForgeConfigSpec.IntValue tardisMaxFlightTime;
         public ForgeConfigSpec.IntValue tardisFuelRefillTiming;
@@ -60,11 +59,6 @@ public class ModConfig {
                         .comment("Hide The End from the TARDIS Dimensions List until the Dragon is defeated")
                         .translation("config.dwm.tardis.hideTheEndConditionally")
                         .define("hideTheEndConditionally", true);
-
-                    extendedRoomsGeneration = builder
-                        .comment("If ImmersivePortalsMod present and this option enabled, your ARS-rooms will generating a far away and will be accessible through portals", "This will give more variations to build rooms that would normally overlap and be inaccessible for building")
-                        .translation("config.dwm.tardis.extendedRoomsGeneration")
-                        .define("extendedRoomsGeneration", false);
 
                     tardisFlightDistanceRate = builder
                         .comment("Time ratio divider in ticks per distance traveled (aka TARDIS speed)")

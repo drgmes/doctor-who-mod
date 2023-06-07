@@ -22,6 +22,7 @@
   "block.dwm.tardis_toyota_spinner": "Спиннер",
   "block.dwm.tardis_ars_creator": "Система архитектурной реконфигурации",
   "block.dwm.tardis_ars_destroyer": "Разрушитель архитектурной конфигурации",
+  "block.dwm.tardis_teleporter": "Телепортёр",
   "block.dwm.tardis_roundel": "Блок рондели",
   "block.dwm.tardis_roundel_attachment_dark": "Рондель (Тёмная)",
   "block.dwm.tardis_roundel_attachment_light": "Рондель (Светлая)",
@@ -471,7 +472,6 @@
 
   "config.dwm.tardis.dimensionsBlacklist": "Список измерений, которые не будут доступны в списке выбора измерений ТАРДИС",
   "config.dwm.tardis.hideTheEndConditionally": "Скрывать измерение Края из списка выбора измерений ТАРДИС, пока Дракон не побежден",
-  "config.dwm.tardis.extendedRoomsGeneration": "Если присутствуют мод ImmersivePortals и эта опция включена, ваши ARS-комнаты будут генерироваться вдалеке и будут доступны через порталы",
   "config.dwm.tardis.tardisFlightDistanceRate": "Делитель соотношения времени в тиках к пройденному расстоянию (он же - скорость ТАРДИС)",
   "config.dwm.tardis.tardisMaxFlightTime": "Максимальное время полёта ТАРДИС в тиках",
   "config.dwm.tardis.tardisFuelRefillTiming": "Частота восстановления 1 единицы топлива",

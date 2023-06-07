@@ -1,4 +1,4 @@
-package net.drgmes.dwm.blocks.tardis.misc.tardisarscreator;
+package net.drgmes.dwm.blocks.tardis.misc.tardisteleporter;
 
 import net.drgmes.dwm.datagen.BlockLootDataBuilder;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
@@ -7,9 +7,9 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.TextureKey;
 
-public class TardisArsCreatorBlockBuilder extends BlockBuilder {
-    public TardisArsCreatorBlockBuilder(String name) {
-        super(name, () -> new TardisArsCreatorBlock(getBlockSettings()));
+public class TardisTeleporterBlockBuilder extends BlockBuilder {
+    public TardisTeleporterBlockBuilder(String name) {
+        super(name, () -> new TardisTeleporterBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

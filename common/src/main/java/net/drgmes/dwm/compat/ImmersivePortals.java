@@ -101,35 +101,38 @@ public class ImmersivePortals {
         }
 
         public void createRoomsEntrancesPortals() {
-            if (this.tardis.getWorld() == null) return;
+            ServerWorld tardisWorld = this.tardis.getWorld();
+            if (tardisWorld == null) return;
 
-            int index = 0;
+            int index = -1;
             String worldId = this.tardis.getId();
             StructurePlacementData placeSettings = new StructurePlacementData();
-            List<StructureTemplate.StructureBlockInfo> tacBlockInfos = this.tardis.getConsoleRoom().getTemplate(this.tardis.getWorld()).getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
+            List<StructureTemplate.StructureBlockInfo> tacBlockInfos = this.tardis.getConsoleRoom().getTemplate(tardisWorld).getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
 
             for (StructureTemplate.StructureBlockInfo tacBlockInfo : tacBlockInfos) {
+                index++;
+
                 Direction direction = tacBlockInfo.state.get(TardisArsDestroyerBlock.FACING);
-                BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos).offset(direction).toImmutable();
-                BlockPos farTacBlockPos = TardisHelper.TARDIS_POS.add(1024, 0, 1024).multiply(++index).withY(TardisHelper.TARDIS_POS.getY()).toImmutable();
+                BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos).toImmutable();
+                if (!tardisWorld.isAir(tacBlockPos)) continue;
 
                 try {
                     Map.Entry<Portal, Portal> portals = createPortals(
-                        this.tardis.getWorld(),
+                        tardisWorld,
                         direction,
                         Direction.SOUTH,
-                        tacBlockPos.up(),
-                        farTacBlockPos.up(),
-                        this.tardis.getWorld().getRegistryKey(),
-                        -0.5, -0.5, -0.5,
+                        tacBlockPos.offset(direction).up(),
+                        TardisHelper.getTardisFarPos(index + 1).up(3),
+                        tardisWorld.getRegistryKey(),
+                        -0.50, -0.50, -0.5,
                         3, 3
                     );
 
                     ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
                     ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
 
-                    this.tardis.getWorld().spawnEntity(portals.getKey());
-                    this.tardis.getWorld().spawnEntity(portals.getValue());
+                    tardisWorld.spawnEntity(portals.getKey());
+                    tardisWorld.spawnEntity(portals.getValue());
                     this.portalsToRooms.add(portals);
                 } catch (Exception ignored) {
                 }

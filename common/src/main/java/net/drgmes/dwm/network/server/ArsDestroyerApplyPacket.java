@@ -57,7 +57,7 @@ public class ArsDestroyerApplyPacket extends BaseC2SMessage {
             }
 
             ArsStructure arsStructure = ArsStructures.STRUCTURES.get(ArsCategories.CATEGORIES.get(arsCategoryName)).get(arsStructureName);
-            boolean isArsStructureDestroyed = arsStructure.destroy(player, (ServerWorld) player.world, blockPos);
+            boolean isArsStructureDestroyed = arsStructure.destroy(player, tardis, blockPos);
             player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.destroy." + (isArsStructureDestroyed ? "success" : "failed")), true);
         });
     }

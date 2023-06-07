@@ -18,6 +18,10 @@ public class DWM {
         return new Identifier(DWM.MODID, path);
     }
 
+    public static class COMMON {
+        public static final int TARDIS_ROOMS_OFFSET = 1000;
+    }
+
     public static class TIMINGS {
         public static final float DEMAT = 240;
         public static final float REMAT = 180;

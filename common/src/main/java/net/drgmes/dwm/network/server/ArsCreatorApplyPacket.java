@@ -57,7 +57,7 @@ public class ArsCreatorApplyPacket extends BaseC2SMessage {
             }
 
             ArsStructure arsStructure = ArsStructures.STRUCTURES.get(ArsCategories.CATEGORIES.get(arsCategoryName)).get(arsStructureName);
-            boolean isArsStructureGenerated = arsStructure.place(player, (ServerWorld) player.world, blockPos);
+            boolean isArsStructureGenerated = arsStructure.place(player, tardis, blockPos);
             player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.generated." + (isArsStructureGenerated ? "success" : "failed")), true);
         });
     }

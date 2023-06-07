@@ -6,8 +6,10 @@ import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPolice
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
+import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
 import net.drgmes.dwm.compat.ModCompats;
 import net.drgmes.dwm.compat.TechReborn;
@@ -75,10 +77,22 @@ public class ModBlockEntities {
     // Misc //
     // //// //
 
+    public static final BlockEntityBuilder<TardisArsCreatorBlockEntity> TARDIS_ARS_CREATOR = new BlockEntityBuilder<>(
+        "tardis_ars_creator",
+        TardisArsCreatorBlockEntity::new,
+        ModBlocks.TARDIS_ARS_CREATOR::getBlock
+    );
+
     public static final BlockEntityBuilder<TardisArsDestroyerBlockEntity> TARDIS_ARS_DESTROYER = new BlockEntityBuilder<>(
         "tardis_ars_destroyer",
         TardisArsDestroyerBlockEntity::new,
         ModBlocks.TARDIS_ARS_DESTROYER::getBlock
+    );
+
+    public static final BlockEntityBuilder<TardisTeleporterBlockEntity> TARDIS_TELEPORTER = new BlockEntityBuilder<>(
+        "tardis_teleporter",
+        TardisTeleporterBlockEntity::new,
+        ModBlocks.TARDIS_TELEPORTER::getBlock
     );
 
     public static final BlockEntityBuilder<TardisToyotaSpinnerBlockEntity> TARDIS_TOYOTA_SPINNER = new BlockEntityBuilder<>(

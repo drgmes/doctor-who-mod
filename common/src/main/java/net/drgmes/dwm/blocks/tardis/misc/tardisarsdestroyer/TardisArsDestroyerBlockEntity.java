@@ -10,11 +10,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-
-import java.util.Objects;
+import net.minecraft.util.math.Direction;
 
 public class TardisArsDestroyerBlockEntity extends BlockEntity {
     public ArsStructure arsStructure;
+    public BlockPos tacBlockPos;
+    public Direction tacFacing;
+    public int tacIndex;
+    public boolean tacIsInitial;
 
     public TardisArsDestroyerBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_ARS_DESTROYER.getBlockEntityType(), blockPos, blockState);
@@ -24,10 +27,21 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        if (!Objects.equals(tag.getString("arsStructureId"), "")) {
+        if (tag.contains("arsStructureId")) {
             ArsCategory category = ArsCategories.CATEGORIES.get(tag.getString("arsCategoryId"));
             this.arsStructure = ArsStructures.STRUCTURES.get(category).get(tag.getString("arsStructureId"));
         }
+
+        if (tag.contains("tacBlockPos")) {
+            this.tacBlockPos = BlockPos.fromLong(tag.getLong("tacBlockPos"));
+        }
+
+        if (tag.contains("tacFacing")) {
+            this.tacFacing = Direction.byId(tag.getInt("tacFacing"));
+        }
+
+        this.tacIndex = tag.getInt("tacIndex");
+        this.tacIsInitial = tag.getBoolean("tacIsInitial");
     }
 
     @Override
@@ -38,6 +52,17 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
             tag.putString("arsStructureId", this.arsStructure.getName());
             tag.putString("arsCategoryId", this.arsStructure.getCategory().getPath());
         }
+
+        if (this.tacBlockPos != null) {
+            tag.putLong("tacBlockPos", this.tacBlockPos.asLong());
+        }
+
+        if (this.tacFacing != null) {
+            tag.putInt("tacFacing", this.tacFacing.getId());
+        }
+
+        tag.putInt("tacIndex", this.tacIndex);
+        tag.putBoolean("tacIsInitial", this.tacIsInitial);
     }
 
     @Override

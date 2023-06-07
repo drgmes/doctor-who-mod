@@ -56,6 +56,7 @@ public class ModResourcePacks {
                 if (data.has("image")) consoleRoom.setImageUrl(data.get("image").getAsString());
                 if (data.has("repair_to")) consoleRoom.setRepairTo(data.get("repair_to").getAsString());
                 if (data.has("decorator_block")) consoleRoom.setDecoratorBlock(data.get("decorator_block").getAsString());
+                if (data.has("teleporter_room")) consoleRoom.setTeleporterRoom(data.get("teleporter_room").getAsString());
 
                 count.getAndIncrement();
             } catch (Exception e) {

@@ -2,6 +2,7 @@
   "title": "dwm.console_room.imperial_classic",
   "center": [7, 1, 7],
   "entrance": [7, 1, 1],
+  "teleporter_room": "imperial_classic",
   "decorator_block": "minecraft:chiseled_quartz_block",
   "image": "https://i.imgur.com/nhFyIZn.png"
 }

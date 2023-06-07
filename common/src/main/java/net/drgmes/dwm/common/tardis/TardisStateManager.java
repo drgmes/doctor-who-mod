@@ -693,7 +693,6 @@ public class TardisStateManager extends PersistentState {
     public void updateRoomEntrancePortals() {
         if (this.isBroken()) return;
         if (!ModCompats.immersivePortals()) return;
-        if (!ModConfig.COMMON.extendedRoomsGeneration.get()) return;
         this.getPortalsState().clearRoomEntrancePortals();
         this.getPortalsState().createRoomsEntrancesPortals();
     }
@@ -702,7 +701,7 @@ public class TardisStateManager extends PersistentState {
         if (!ModCompats.immersivePortals()) return;
         if (!this.isDoorsOpened()) this.getPortalsState().clearEntrancePortals();
         if (this.isDoorsOpened() && !this.getPortalsState().isEntrancePortalsValid()) this.updateEntrancePortals();
-        if (ModConfig.COMMON.extendedRoomsGeneration.get() && !this.getPortalsState().isRoomEntrancePortalsValid()) this.updateRoomEntrancePortals();
+        if (!this.getPortalsState().isRoomEntrancePortalsValid()) this.updateRoomEntrancePortals();
     }
 
     // //////////////////////////// //
