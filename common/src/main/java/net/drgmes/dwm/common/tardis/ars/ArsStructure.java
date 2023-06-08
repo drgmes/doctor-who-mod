@@ -1,5 +1,6 @@
 package net.drgmes.dwm.common.tardis.ars;
 
+import com.google.gson.JsonElement;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
@@ -15,13 +16,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -29,15 +34,20 @@ import net.minecraft.util.math.Direction;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
+import java.util.Map;
 
 public class ArsStructure {
     private final String name;
     private final String title;
+    private final String structurePath;
     private final ArsCategory category;
 
-    public ArsStructure(String name, String title, ArsCategory category) {
+    private Map<String, JsonElement> replaces;
+
+    public ArsStructure(String name, String title, String structurePath, ArsCategory category) {
         this.name = name;
         this.title = title;
+        this.structurePath = structurePath;
         this.category = category;
     }
 
@@ -54,8 +64,12 @@ public class ArsStructure {
     }
 
     public StructureTemplate getTemplate(ServerWorld world) {
-        String categoryPath = this.category != null ? this.category.getPath().replace("_", "/") + "/" : "";
-        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("ars/" + categoryPath + this.name));
+        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.structurePath));
+    }
+
+    public ArsStructure setReplaces(Map<String, JsonElement> replaces) {
+        this.replaces = replaces;
+        return this;
     }
 
     public boolean place(PlayerEntity player, TardisStateManager tardis, BlockPos tacBlockPos) {
@@ -77,7 +91,9 @@ public class ArsStructure {
             tardisArsCreatorBlockEntity.isInitial,
             tardisArsCreatorBlockEntity.index,
             (placeSettings, blockPos, tadOffset) -> {
-                boolean isAreaEmpty = WorldHelper.foreachArea(template.calculateBoundingBox(placeSettings, blockPos), (bp) -> {
+                BlockBox aabb = template.calculateBoundingBox(placeSettings, blockPos);
+
+                boolean isAreaEmpty = WorldHelper.foreachArea(aabb, (bp) -> {
                     if (!world.getBlockState(bp).isAir()) {
                         MutableText posText = Text.literal("[" + bp.getX() + " " + bp.getY() + " " + bp.getZ() + "]").formatted(Formatting.YELLOW);
                         player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.generated.failed.details", posText), false);
@@ -88,11 +104,52 @@ public class ArsStructure {
                 });
 
                 if (isAreaEmpty && template.place(world, blockPos, BlockPos.ORIGIN, placeSettings, world.random, Block.NOTIFY_ALL)) {
+                    // Replace blocks in newly generated structure
+                    if (this.replaces != null) {
+                        WorldHelper.foreachArea(aabb, (bp) -> {
+                            try {
+                                BlockState bs = world.getBlockState(bp);
+                                String blockId = Registries.BLOCK.getId(bs.getBlock()).toString();
+
+                                if (this.replaces.containsKey(blockId)) {
+                                    Block replacingBlock = Registries.BLOCK.get(new Identifier(this.replaces.get(blockId).getAsString()));
+
+                                    BlockState replacingBlockState = replacingBlock.getDefaultState();
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.OPEN);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.AXIS);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.FACING);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ORIENTATION);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.HORIZONTAL_AXIS);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.HORIZONTAL_FACING);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.DOUBLE_BLOCK_HALF);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.BLOCK_HALF);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WATERLOGGED);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.STAIR_SHAPE);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.SLAB_TYPE);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.NORTH);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.SOUTH);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WEST);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WEST);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.EAST);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ATTACHED);
+                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ATTACHMENT);
+
+                                    world.setBlockState(bp, replacingBlockState, Block.NOTIFY_ALL);
+                                }
+                            } catch (Exception ignored) {
+                            }
+
+                            return true;
+                        });
+                    }
+
+                    // Clear builder wall
                     WorldHelper.clearArea(world, BlockBox.create(
                         tacBlockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(wallRotation)),
                         tacBlockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(wallRotation))
                     ));
 
+                    // Update info for ARS Destroyer block
                     if (world.getBlockEntity(blockPos.add(tadOffset)) instanceof TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity) {
                         tardisArsDestroyerBlockEntity.arsStructure = this;
                         tardisArsDestroyerBlockEntity.tacFacing = direction;
@@ -188,5 +245,10 @@ public class ArsStructure {
         }
 
         return executor.apply(placeSettings, blockPos, tadOffset);
+    }
+
+    private <T extends Comparable<T>> BlockState copyBlockStateProperty(BlockState origin, BlockState newBlockState, Property<T> property) {
+        if (origin.contains(property) && newBlockState.contains(property)) newBlockState = newBlockState.with(property, origin.get(property));
+        return newBlockState;
     }
 }

@@ -1,0 +1,21 @@
+{
+  "title": "title.dwm.ars.structure.room_aquatic_medium",
+  "structure": "dwm:tardis/ars/rooms/_/medium",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:dark_prismarine",
+    "minecraft:white_concrete": "minecraft:spruce_planks",
+    "minecraft:black_concrete": "minecraft:dark_prismarine",
+    "minecraft:gray_concrete": "minecraft:prismarine",
+    "minecraft:brown_concrete": "minecraft:prismarine_bricks",
+    "minecraft:light_gray_concrete": "minecraft:prismarine",
+    "minecraft:andesite_stairs": "minecraft:prismarine_stairs",
+    "minecraft:diorite_stairs": "minecraft:prismarine_brick_stairs",
+    "minecraft:stone_stairs": "minecraft:dark_prismarine_stairs",
+    "minecraft:stone_slab": "minecraft:dark_prismarine_slab",
+    "minecraft:glass_pane": "minecraft:cyan_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:prismarine_wall",
+    "minecraft:diorite_wall": "minecraft:prismarine_wall",
+    "minecraft:redstone_lamp": "minecraft:sea_lantern",
+    "minecraft:redstone_block": "minecraft:air"
+  }
+}

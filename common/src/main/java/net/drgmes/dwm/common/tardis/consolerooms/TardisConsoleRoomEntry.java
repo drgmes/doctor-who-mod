@@ -87,11 +87,11 @@ public class TardisConsoleRoomEntry {
     }
 
     public StructureTemplate getTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("console_rooms/" + this.name));
+        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("tardis/console_rooms/" + this.name));
     }
 
     public StructureTemplate getTeleporterRoomTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("teleporter_rooms/" + this.teleporterRoom));
+        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("tardis/teleporter_rooms/" + this.teleporterRoom));
     }
 
     public Text getTitle() {

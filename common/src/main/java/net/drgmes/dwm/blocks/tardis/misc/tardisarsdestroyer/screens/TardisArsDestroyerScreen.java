@@ -2,6 +2,8 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
+import net.drgmes.dwm.common.tardis.ars.ArsCategory;
+import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.network.server.ArsDestroyerApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.drgmes.dwm.utils.helpers.ScreenHelper;
@@ -64,8 +66,11 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     protected void apply() {
-        if (this.tardisArsDestroyerBlockEntity.arsStructure != null) {
-            new ArsDestroyerApplyPacket(this.tardisArsDestroyerBlockEntity.getPos(), this.tardisArsDestroyerBlockEntity.arsStructure.getCategory().getPath(), this.tardisArsDestroyerBlockEntity.arsStructure.getName()).sendToServer();
+        ArsStructure structure = this.tardisArsDestroyerBlockEntity.arsStructure;
+
+        if (structure != null) {
+            ArsCategory category = structure.getCategory();
+            new ArsDestroyerApplyPacket(this.tardisArsDestroyerBlockEntity.getPos(), category != null ? category.getPath() : "", structure.getName()).sendToServer();
         }
 
         this.close();

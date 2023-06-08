@@ -1,8 +1,13 @@
 package net.drgmes.dwm.setup;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.ars.ArsCategories;
+import net.drgmes.dwm.common.tardis.ars.ArsCategory;
+import net.drgmes.dwm.common.tardis.ars.ArsStructure;
+import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.minecraft.resource.Resource;
@@ -13,13 +18,19 @@ import net.minecraft.util.math.BlockPos;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 public class ModResourcePacks {
     public static void setup(ResourceManager manager) {
+        Predicate<Identifier> jsonPredicate = (path) -> path.getPath().endsWith(".json");
+
         clear();
-        loadConsoleRooms(manager.findResources("console_rooms", (path) -> path.getPath().endsWith(".json")));
+        loadConsoleRooms(manager.findResources("tardis/console_rooms", jsonPredicate));
+        loadArsCategories(manager.findResources("tardis/ars_categories", jsonPredicate));
+        loadArsRooms(manager.findResources("tardis/ars_rooms", jsonPredicate));
     }
 
     private static void clear() {
@@ -32,7 +43,7 @@ public class ModResourcePacks {
         consoleRoomsResources.forEach((id, resource) -> {
             try {
                 InputStream stream = resource.getInputStream();
-                String path = id.getPath().replace("console_rooms/", "");
+                String path = id.getPath().replace("tardis/console_rooms/", "");
                 if (path.contains("/")) return;
 
                 String consoleRoomsName = path.replace(".json", "");
@@ -64,6 +75,70 @@ public class ModResourcePacks {
             }
         });
 
-        DWM.LOGGER.info("Loaded " + count.get() + "/" + consoleRoomsResources.size() + " console rooms");
+        DWM.LOGGER.info("Loaded " + count.get() + "/" + consoleRoomsResources.size() + " console rooms.");
+    }
+
+    private static void loadArsCategories(Map<Identifier, Resource> arsCategoriesResources) {
+        AtomicInteger count = new AtomicInteger(0);
+
+        arsCategoriesResources.forEach((id, resource) -> {
+            try {
+                InputStream stream = resource.getInputStream();
+                String path = id.getPath().replace("tardis/ars_categories/", "");
+                if (path.contains("/")) return;
+
+                String arsCategoryName = path.replace(".json", "");
+                InputStreamReader inputStreamReader = new InputStreamReader(stream);
+                JsonObject data = JsonHelper.deserialize(inputStreamReader);
+
+                if (data.has("hidden") && data.get("hidden").getAsBoolean()) return;
+
+                ArsCategory parent = data.has("parent") ? ArsCategories.CATEGORIES.getOrDefault(data.get("parent").getAsString(), null) : null;
+                String title = data.has("title") ? data.get("title").getAsString() : arsCategoryName;
+                String tag = data.has("tag") ? data.get("tag").getAsString() : arsCategoryName;
+
+                ArsCategories.register(arsCategoryName, title, tag, parent);
+                count.getAndIncrement();
+            } catch (Exception e) {
+                DWM.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
+            }
+        });
+
+        DWM.LOGGER.info("Loaded " + count.get() + "/" + arsCategoriesResources.size() + " ars categories.");
+    }
+
+    private static void loadArsRooms(Map<Identifier, Resource> arsRoomsResources) {
+        AtomicInteger count = new AtomicInteger(0);
+
+        arsRoomsResources.forEach((id, resource) -> {
+            try {
+                InputStream stream = resource.getInputStream();
+                InputStreamReader inputStreamReader = new InputStreamReader(stream);
+                JsonObject data = JsonHelper.deserialize(inputStreamReader);
+
+                if (data.has("hidden") && data.get("hidden").getAsBoolean()) return;
+
+                String path = id.getPath().replace("tardis/ars_rooms/", "");
+                String[] pathParts = path.split("/");
+
+                String categoryName = String.join("_", Arrays.copyOfRange(pathParts, 0, pathParts.length - 1));
+                String arsRoomName = (!categoryName.equals("") ? categoryName + "_" : "") + pathParts[pathParts.length - 1].replace(".json", "");
+                ArsCategory category = ArsCategories.CATEGORIES.getOrDefault(categoryName, null);
+
+                String title = data.has("title") ? data.get("title").getAsString() : arsRoomName;
+                String structurePath = data.has("structure") ? data.get("structure").getAsString() : null;
+                Map<String, JsonElement> replaces = data.has("replaces") ? data.get("replaces").getAsJsonObject().asMap() : null;
+                if ((!categoryName.equals("") && category == null) || structurePath == null) return;
+
+                ArsStructure arsStructure = ArsStructures.register(arsRoomName, title, structurePath, category);
+                if (replaces != null) arsStructure.setReplaces(replaces);
+
+                count.getAndIncrement();
+            } catch (Exception e) {
+                DWM.LOGGER.error("Error occurred while loading resource json " + id.toString(), e);
+            }
+        });
+
+        DWM.LOGGER.info("Loaded " + count.get() + "/" + arsRoomsResources.size() + " ars rooms.");
     }
 }

@@ -9,8 +9,6 @@ import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.ars.ArsCategories;
-import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.option.KeyBinding;
@@ -62,9 +60,6 @@ public class Registration {
         ModInventories.init();
         ModVillagerProfessions.init();
         ModNetwork.init();
-
-        ArsCategories.init();
-        ArsStructures.init();
 
         ModEvents.setup();
         ModCommands.setup();

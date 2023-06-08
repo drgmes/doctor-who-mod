@@ -28,7 +28,7 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
         super.readNbt(tag);
 
         if (tag.contains("arsStructureId")) {
-            ArsCategory category = ArsCategories.CATEGORIES.get(tag.getString("arsCategoryId"));
+            ArsCategory category = ArsCategories.CATEGORIES.getOrDefault(tag.getString("arsCategoryId"), null);
             this.arsStructure = ArsStructures.STRUCTURES.get(category).get(tag.getString("arsStructureId"));
         }
 
@@ -49,8 +49,9 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
         super.writeNbt(tag);
 
         if (this.arsStructure != null) {
+            ArsCategory category = this.arsStructure.getCategory();
             tag.putString("arsStructureId", this.arsStructure.getName());
-            tag.putString("arsCategoryId", this.arsStructure.getCategory().getPath());
+            tag.putString("arsCategoryId", category != null ? category.getPath() : "");
         }
 
         if (this.tacBlockPos != null) {

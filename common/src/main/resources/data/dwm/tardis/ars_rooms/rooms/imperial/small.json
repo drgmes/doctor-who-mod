@@ -1,0 +1,20 @@
+{
+  "title": "title.dwm.ars.structure.room_imperial_small",
+  "structure": "dwm:tardis/ars/rooms/_/small",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:chiseled_quartz_block",
+    "minecraft:black_concrete": "minecraft:white_concrete",
+    "minecraft:gray_concrete": "minecraft:quartz_block",
+    "minecraft:brown_concrete": "minecraft:quartz_block",
+    "minecraft:light_gray_concrete": "minecraft:quartz_block",
+    "minecraft:andesite_stairs": "minecraft:quartz_stairs",
+    "minecraft:diorite_stairs": "minecraft:quartz_stairs",
+    "minecraft:stone_stairs": "minecraft:quartz_stairs",
+    "minecraft:stone_slab": "minecraft:quartz_slab",
+    "minecraft:glass_pane": "minecraft:light_gray_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:end_rod",
+    "minecraft:diorite_wall": "minecraft:end_rod",
+    "minecraft:redstone_lamp": "minecraft:pearlescent_froglight",
+    "minecraft:redstone_block": "minecraft:air"
+  }
+}

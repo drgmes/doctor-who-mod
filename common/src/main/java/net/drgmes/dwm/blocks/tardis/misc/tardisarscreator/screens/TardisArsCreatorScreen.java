@@ -125,7 +125,10 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     protected void apply() {
         if (this.selectedArsStructureEntry != null) {
-            new ArsCreatorApplyPacket(this.blockPos, this.selectedArsStructureEntry.arsStructure.getCategory().getPath(), this.selectedArsStructureEntry.arsStructure.getName()).sendToServer();
+            ArsStructure structure = this.selectedArsStructureEntry.arsStructure;
+            ArsCategory category = structure.getCategory();
+
+            new ArsCreatorApplyPacket(this.blockPos, category != null ? category.getPath() : "", structure.getName()).sendToServer();
         }
 
         this.close();
@@ -167,7 +170,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     protected void reloadArsStructuresList() {
-        if (this.selectedArsCategory == null || !ArsStructures.STRUCTURES.containsKey(this.selectedArsCategory)) {
+        if (!ArsStructures.STRUCTURES.containsKey(this.selectedArsCategory)) {
             this.arsStructures = new ArrayList<>();
             return;
         }

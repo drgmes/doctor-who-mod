@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.hallway_aquatic_junction_t_right",
+  "structure": "dwm:tardis/ars/hallways/_/junction_t_right",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:dark_prismarine",
+    "minecraft:white_concrete": "minecraft:spruce_planks",
+    "minecraft:black_concrete": "minecraft:dark_prismarine",
+    "minecraft:gray_concrete": "minecraft:prismarine",
+    "minecraft:brown_concrete": "minecraft:prismarine",
+    "minecraft:light_gray_concrete": "minecraft:prismarine",
+    "minecraft:andesite_stairs": "minecraft:prismarine_stairs",
+    "minecraft:diorite_stairs": "minecraft:prismarine_stairs",
+    "minecraft:stone_stairs": "minecraft:dark_prismarine_stairs",
+    "minecraft:stone_slab": "minecraft:dark_prismarine_slab",
+    "minecraft:glass_pane": "minecraft:cyan_stained_glass_pane",
+    "minecraft:redstone_lamp": "minecraft:sea_lantern",
+    "minecraft:redstone_block": "minecraft:air"
+  }
+}
