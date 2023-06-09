@@ -1,10 +1,7 @@
 package net.drgmes.dwm.fabric;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.fabric.setup.ModConfigFabric;
-import net.drgmes.dwm.fabric.setup.ModEventsFabric;
-import net.drgmes.dwm.fabric.setup.ModRenderersFabric;
-import net.drgmes.dwm.fabric.setup.ModResourcePacksFabric;
+import net.drgmes.dwm.fabric.setup.*;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.Registration;
 import net.fabricmc.api.ClientModInitializer;
@@ -21,6 +18,7 @@ public class DWMFabric implements ModInitializer, ClientModInitializer, Dedicate
         ModConfigFabric.setup();
         ModEventsFabric.setup();
         ModResourcePacksFabric.setup();
+        ModCommandsFabric.setup();
 
         Registration.setupCommon();
     }

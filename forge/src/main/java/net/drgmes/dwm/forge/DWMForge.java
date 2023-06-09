@@ -2,6 +2,7 @@ package net.drgmes.dwm.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.forge.setup.ModCommandsForge;
 import net.drgmes.dwm.forge.setup.ModConfigForge;
 import net.drgmes.dwm.forge.setup.ModRenderersForge;
 import net.drgmes.dwm.setup.ModConfig;
@@ -22,6 +23,7 @@ public class DWMForge {
 
         ModConfig.setup();
         ModConfigForge.setup();
+        ModCommandsForge.setup();
 
         Registration.setupCommon();
     }
