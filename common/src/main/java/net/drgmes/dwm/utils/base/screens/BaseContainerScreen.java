@@ -1,9 +1,8 @@
 package net.drgmes.dwm.utils.base.screens;
 
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
@@ -17,11 +16,6 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
         Vec2f backgroundSize = this.getBackgroundSize();
         this.backgroundWidth = (int) backgroundSize.x;
         this.backgroundHeight = (int) backgroundSize.y;
-    }
-
-    @Override
-    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
-        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
     @Override
@@ -55,39 +49,29 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public void fillBackgroundGradient(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, int colorStart, int colorEnd) {
-        DrawableHelper.fillGradient(matrixStack, x, y, textureWidth, textureHeight, colorStart, colorEnd, 0);
-    }
-
-    @Override
     public Text getTitle() {
         return this.title;
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrixStack);
-        this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);
-        super.render(matrixStack, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrixStack, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context);
+        this.renderElements(context, mouseX, mouseY, delta, 0xFF4F5664);
+        super.render(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrixStack, float delta, int mouseX, int mouseY) {
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int frame) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
         return super.mouseClicked(mouseX, mouseY, frame);
-    }
-
-    @Override
-    public boolean shouldPause() {
-        return false;
     }
 }

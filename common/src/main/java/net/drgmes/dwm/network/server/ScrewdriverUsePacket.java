@@ -43,7 +43,7 @@ public class ScrewdriverUsePacket extends BaseC2SMessage {
         PlayerEntity player = context.getPlayer();
 
         if (Screwdriver.checkItemStackIsScrewdriver(this.itemStack)) {
-            ((ScrewdriverItem) this.itemStack.getItem()).useScrewdriver(player.world, player, this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND, this.isAlternativeAction);
+            ((ScrewdriverItem) this.itemStack.getItem()).useScrewdriver(player.getWorld(), player, this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND, this.isAlternativeAction);
         }
     }
 }

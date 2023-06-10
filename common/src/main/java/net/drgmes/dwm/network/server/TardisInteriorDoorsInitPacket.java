@@ -34,7 +34,7 @@ public class TardisInteriorDoorsInitPacket extends BaseC2SMessage {
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        if (player.world.getBlockEntity(this.blockPos) instanceof BaseTardisDoorsBlockEntity tardisDoorsBlockEntity) {
+        if (player.getWorld().getBlockEntity(this.blockPos) instanceof BaseTardisDoorsBlockEntity tardisDoorsBlockEntity) {
             tardisDoorsBlockEntity.init();
         }
     }

@@ -1,9 +1,11 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -28,8 +30,9 @@ public class ScrewdriverScanModeOverlay {
     private static final int LINE_MARGIN = 1;
     private static final float LINE_SCALE = 0.5F;
 
-    public void render(MatrixStack matrixStack) {
+    public void render(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        MatrixStack matrixStack = context.getMatrices();
         ClientPlayerEntity player = mc.player;
         if (player == null || mc.world == null) return;
 
@@ -52,7 +55,7 @@ public class ScrewdriverScanModeOverlay {
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
-        mc.textRenderer.drawWithShadow(matrixStack, modeText, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF);
+        ScreenHelper.draw(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
         matrixStack.pop();
 
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
@@ -81,14 +84,14 @@ public class ScrewdriverScanModeOverlay {
 //        this.fillGradient(matrixStack, (int) bgPos1.x, (int) bgPos1.y, (int) bgPos2.x, (int) bgPos2.y, color, color);
 
         for (OrderedText titleLine : titleLines) {
-            mc.textRenderer.drawWithShadow(matrixStack, titleLine, pos.x, y, 0xFFFFFF);
+            ScreenHelper.draw(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
             y += titleLineHeight;
         }
 
         matrixStack.push();
         matrixStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
         for (Text line : lines) {
-            mc.textRenderer.drawWithShadow(matrixStack, line, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF);
+            ScreenHelper.draw(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
             y += lineHeight;
         }
         matrixStack.pop();

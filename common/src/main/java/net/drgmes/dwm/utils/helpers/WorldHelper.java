@@ -27,7 +27,7 @@ public class WorldHelper {
         return (
             blockState.isAir()
             || blockState.getFluidState().isIn(FluidTags.WATER)
-            || (blockState.getMaterial().isReplaceable() && (ignoreFluids || blockState.getFluidState().isEmpty()))
+            || (blockState.isReplaceable() && (ignoreFluids || blockState.getFluidState().isEmpty()))
         );
     }
 
@@ -35,7 +35,7 @@ public class WorldHelper {
         return (
             !checkBlockIsEmpty(blockState, false)
             && blockState.getFluidState().isEmpty()
-            && blockState.getMaterial().isSolid()
+            && blockState.isSolid()
         );
     }
 
@@ -43,7 +43,7 @@ public class WorldHelper {
         return (
             !checkBlockIsSolid(blockState)
             || blockState.contains(Properties.WATERLOGGED)
-            || !blockState.getMaterial().blocksLight()
+            || !blockState.hasSidedTransparency()
             || !blockState.isOpaque()
         );
     }

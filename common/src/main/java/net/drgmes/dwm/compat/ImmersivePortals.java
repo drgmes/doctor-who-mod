@@ -112,8 +112,8 @@ public class ImmersivePortals {
             for (StructureTemplate.StructureBlockInfo tacBlockInfo : tacBlockInfos) {
                 index++;
 
-                Direction direction = tacBlockInfo.state.get(TardisArsDestroyerBlock.FACING);
-                BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos).toImmutable();
+                Direction direction = tacBlockInfo.state().get(TardisArsDestroyerBlock.FACING);
+                BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos()).toImmutable();
                 if (!tardisWorld.isAir(tacBlockPos)) continue;
 
                 try {

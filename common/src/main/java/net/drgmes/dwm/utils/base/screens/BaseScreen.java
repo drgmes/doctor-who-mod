@@ -2,9 +2,8 @@ package net.drgmes.dwm.utils.base.screens;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public abstract class BaseScreen extends Screen implements IBaseScreen {
@@ -13,16 +12,6 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
 
     protected BaseScreen(Text title) {
         super(title);
-    }
-
-    @Override
-    public void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight) {
-        DrawableHelper.drawTexture(matrixStack, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
-    }
-
-    @Override
-    public void fillBackgroundGradient(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, int colorStart, int colorEnd) {
-        DrawableHelper.fillGradient(matrixStack, x, y, textureWidth, textureHeight, colorStart, colorEnd, 0);
     }
 
     @Override
@@ -90,9 +79,9 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderBackground(matrixStack);
-        this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);
-        super.render(matrixStack, mouseX, mouseY, delta);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context);
+        this.renderElements(context, mouseX, mouseY, delta, 0xFF4F5664);
+        super.render(context, mouseX, mouseY, delta);
     }
 }

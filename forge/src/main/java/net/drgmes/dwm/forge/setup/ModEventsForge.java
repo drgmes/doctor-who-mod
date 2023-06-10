@@ -17,6 +17,6 @@ public class ModEventsForge {
 
     @SubscribeEvent
     public static void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
-        ScrewdriverScanModeOverlay.INSTANCE.render(event.getPoseStack());
+        ScrewdriverScanModeOverlay.INSTANCE.render(event.getGuiGraphics());
     }
 }

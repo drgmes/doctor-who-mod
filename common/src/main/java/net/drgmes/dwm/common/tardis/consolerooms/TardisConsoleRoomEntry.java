@@ -185,11 +185,11 @@ public class TardisConsoleRoomEntry {
         for (StructureTemplate.StructureBlockInfo tacBlockInfo : tacBlockInfos) {
             index++;
 
-            Direction direction = tacBlockInfo.state.get(TardisArsCreatorBlock.FACING).getOpposite();
+            Direction direction = tacBlockInfo.state().get(TardisArsCreatorBlock.FACING).getOpposite();
             BlockRotation rotation = WorldHelper.getBlockRotation(direction);
 
             BlockPos farTacBlockPos = TardisHelper.getTardisFarPos(index + 1).north().subtract(templateOffset.rotate(BlockRotation.CLOCKWISE_180).withY(0));
-            BlockPos blockPos = centerPosition.add(tacBlockInfo.pos).offset(direction).subtract(templateOffset.rotate(rotation)).toImmutable();
+            BlockPos blockPos = centerPosition.add(tacBlockInfo.pos()).offset(direction).subtract(templateOffset.rotate(rotation)).toImmutable();
 
             placeSettings.setRotation(rotation);
             executor.accept(placeSettings, blockPos);
@@ -210,7 +210,7 @@ public class TardisConsoleRoomEntry {
             index++;
 
             BlockPos farTadBlockPos = TardisHelper.getTardisFarPos(index + 1);
-            BlockPos tacBlockPos = this.getCenterPosition().add(tacBlockInfo.pos).toImmutable();
+            BlockPos tacBlockPos = this.getCenterPosition().add(tacBlockInfo.pos()).toImmutable();
 
             // Update info for ARS Builder block
             if (world.getBlockEntity(tacBlockPos) instanceof TardisArsCreatorBlockEntity tardisArsCreatorBlockEntity) {
@@ -221,8 +221,8 @@ public class TardisConsoleRoomEntry {
                 if (tpBlockInfos.size() > 0) {
                     BlockPos templateBlockPos = tacBlockPos.offset(direction).subtract(templateOffset.rotate(wallRotation)).toImmutable();
                     BlockPos farTemplateBlockPos = TardisHelper.getTardisFarPos(index + 1).north().subtract(templateOffset.rotate(BlockRotation.CLOCKWISE_180).withY(0)).toImmutable();
-                    BlockPos tpBlockPos = templateBlockPos.add(tpBlockInfos.get(0).pos.rotate(wallRotation)).toImmutable();
-                    BlockPos farTpBlockPos = farTemplateBlockPos.add(tpBlockInfos.get(0).pos.rotate(BlockRotation.CLOCKWISE_180)).toImmutable();
+                    BlockPos tpBlockPos = templateBlockPos.add(tpBlockInfos.get(0).pos().rotate(wallRotation)).toImmutable();
+                    BlockPos farTpBlockPos = farTemplateBlockPos.add(tpBlockInfos.get(0).pos().rotate(BlockRotation.CLOCKWISE_180)).toImmutable();
 
                     this.updateRoomTeleporter(world, tpBlockPos, farTpBlockPos.up().south(), Direction.SOUTH);
                     this.updateRoomTeleporter(world, farTpBlockPos, tacBlockPos.down().offset(direction.getOpposite()), direction.getOpposite());

@@ -173,7 +173,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     public void sendTelepathicInterfaceLocationsOpenPacket(ServerPlayerEntity player) {
-        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), createLocationsListFromRegistry(player.getWorld(), DimensionHelper.getWorld(this.tardisStateManager.getDestinationExteriorDimension(), player.server)))
+        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), createLocationsListFromRegistry(player.getServerWorld(), DimensionHelper.getWorld(this.tardisStateManager.getDestinationExteriorDimension(), player.server)))
             .sendTo(player);
     }
 
@@ -188,7 +188,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         boolean isUpdated = false;
         boolean updateResult = false;
 
-        Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.world)
+        Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.getWorld())
             ? TardisStateManager.get(serverWorld)
             : Optional.empty();
 

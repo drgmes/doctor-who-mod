@@ -229,7 +229,7 @@ public class ArsStructure {
         placeSettings = placeSettings.setRotation(rotation);
 
         List<StructureTemplate.StructureBlockInfo> tadBlocksInfo = template.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_DESTROYER.getBlock());
-        BlockPos tadOffset = tadBlocksInfo.size() > 0 ? tadBlocksInfo.get(0).pos.withY(0) : BlockPos.ORIGIN;
+        BlockPos tadOffset = tadBlocksInfo.size() > 0 ? tadBlocksInfo.get(0).pos().withY(0) : BlockPos.ORIGIN;
         BlockPos blockPos;
 
         if (isInitial) {

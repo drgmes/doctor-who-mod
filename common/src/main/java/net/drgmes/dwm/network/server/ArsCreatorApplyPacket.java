@@ -47,7 +47,7 @@ public class ArsCreatorApplyPacket extends BaseC2SMessage {
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        ServerWorld serverWorld = (ServerWorld) player.world;
+        ServerWorld serverWorld = (ServerWorld) player.getWorld();
         if (!TardisHelper.isTardisDimension(serverWorld)) return;
 
         TardisStateManager.get(serverWorld).ifPresent((tardis) -> {

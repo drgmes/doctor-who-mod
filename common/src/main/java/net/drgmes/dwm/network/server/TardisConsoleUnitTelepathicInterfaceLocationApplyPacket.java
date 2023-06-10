@@ -56,7 +56,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        TardisStateManager.get((ServerWorld) player.world).ifPresent((tardis) -> {
+        TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
 
             Text message = null;

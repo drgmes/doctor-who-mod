@@ -1,6 +1,6 @@
 package net.drgmes.dwm.utils.builders;
 
-import dev.architectury.registry.CreativeTabRegistry;
+import dev.architectury.registry.registries.DeferredSupplier;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;
 import net.drgmes.dwm.setup.ModCreativeTabs;
@@ -8,6 +8,7 @@ import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.Registration;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
@@ -30,16 +31,16 @@ public class ItemBuilder {
         ModItems.ITEM_BUILDERS.add(this);
     }
 
-    public ItemBuilder(String name, CreativeTabRegistry.TabSupplier tab) {
-        this(name, () -> new Item(getItemSettings(tab)));
+    public ItemBuilder(String name, DeferredSupplier<ItemGroup> tabSupplier) {
+        this(name, () -> new Item(getItemSettings(tabSupplier)));
     }
 
     public ItemBuilder(String name) {
         this(name, () -> new Item(getItemSettings()));
     }
 
-    public static Item.Settings getItemSettings(CreativeTabRegistry.TabSupplier tab) {
-        return new Item.Settings().arch$tab(tab);
+    public static Item.Settings getItemSettings(DeferredSupplier<ItemGroup> tabSupplier) {
+        return new Item.Settings().arch$tab(tabSupplier);
     }
 
     public static Item.Settings getItemSettings() {

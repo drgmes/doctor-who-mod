@@ -1,20 +1,16 @@
 package net.drgmes.dwm.utils.base.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 
 @Environment(EnvType.CLIENT)
 public interface IBaseScreen {
-    void drawTexture(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight);
-    void fillBackgroundGradient(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, int colorStart, int colorEnd);
-
     int getWidth();
     int getHeight();
 
@@ -39,51 +35,46 @@ public interface IBaseScreen {
         return this.getRenderPos(0, 0);
     }
 
-    default void renderElements(MatrixStack matrixStack, int mouseX, int mouseY, float delta, int color) {
-        this.renderBackgroundImage(matrixStack);
-        this.renderTitleBackground(matrixStack, color);
-        this.renderTitle(matrixStack);
-        this.renderAdditional(matrixStack, mouseX, mouseY, delta);
+    default void renderElements(DrawContext context, int mouseX, int mouseY, float delta, int color) {
+        this.renderBackgroundImage(context);
+        this.renderTitleBackground(context, color);
+        this.renderTitle(context);
+        this.renderAdditional(context, mouseX, mouseY, delta);
     }
 
-    default void renderTitleBackground(MatrixStack matrixStack, int color) {
+    default void renderTitleBackground(DrawContext context, int color) {
         float titleWidth = this.getTextRenderer().getWidth(this.getTitleComponent().getString());
         Vec2f pos1 = this.getTitleRenderPos().add(new Vec2f(-4, 0));
         Vec2f pos2 = pos1.add(new Vec2f(titleWidth + 9, this.getTextRenderer().fontHeight + 1));
-        this.fillBackgroundGradient(matrixStack, (int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
+        context.fillGradient((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
     }
 
-    default void renderTitle(MatrixStack matrixStack) {
+    default void renderTitle(DrawContext context) {
         Vec2f pos = this.getTitleRenderPos();
-        this.getTextRenderer().drawWithShadow(matrixStack, this.getTitleComponent(), pos.x, pos.y, 0xE0E0E0);
+        ScreenHelper.draw(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
     }
 
-    default void renderBackgroundImage(MatrixStack matrixStack) {
-        this.drawImage(matrixStack, this.getRenderStartPos(), this.getBackgroundSize(), this.getBackground());
+    default void renderBackgroundImage(DrawContext context) {
+        this.drawImage(context, this.getRenderStartPos(), this.getBackgroundSize(), this.getBackground());
     }
 
-    default void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
+    default void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
     }
 
-    default void drawImage(MatrixStack matrixStack, int x, int y, int textureWidth, int textureHeight, Identifier image) {
-        matrixStack.push();
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, image);
-        drawTexture(matrixStack, x, y, textureWidth, textureHeight);
-        matrixStack.pop();
+    default void drawImage(DrawContext context, int x, int y, int textureWidth, int textureHeight, Identifier image) {
+        context.drawTexture(image, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
     }
 
-    default void drawImage(MatrixStack matrixStack, Vec2f pos, Vec2f size, Identifier image) {
-        this.drawImage(matrixStack, (int) pos.x, (int) pos.y, (int) size.x, (int) size.y, image);
+    default void drawImage(DrawContext context, Vec2f pos, Vec2f size, Identifier image) {
+        this.drawImage(context, (int) pos.x, (int) pos.y, (int) size.x, (int) size.y, image);
+    }
+
+    default boolean shouldCloseOnInventoryKey() {
+        return false;
     }
 
     default boolean onButtonCloseClick(double mouseX, double mouseY) {
         return false;
 //        return ScreenHelper.checkMouseInboundPosition(mouseX, mouseY, this.getCloseButtonPos(), DWM.TEXTURES.BUTTON_CLOSE_SIZE);
-    }
-
-    default boolean shouldCloseOnInventoryKey() {
-        return false;
     }
 }

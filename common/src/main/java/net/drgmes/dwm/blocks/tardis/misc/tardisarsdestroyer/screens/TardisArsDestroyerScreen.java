@@ -7,8 +7,8 @@ import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.network.server.ArsDestroyerApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -60,9 +60,9 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     @Override
-    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
-        this.renderConfirmationMessage(matrixStack);
+    public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(context, mouseX, mouseY, delta);
+        this.renderConfirmationMessage(context);
     }
 
     @Override
@@ -81,19 +81,19 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         this.close();
     }
 
-    protected void renderConfirmationMessage(MatrixStack matrixStack) {
+    protected void renderConfirmationMessage(DrawContext context) {
         if (this.tardisArsDestroyerBlockEntity == null || this.tardisArsDestroyerBlockEntity.arsStructure == null) return;
 
         Text text = Text.translatable("screen." + DWM.MODID + ".ars_interface.message");
         float textX = (this.getBackgroundSize().x - this.textRenderer.getWidth(text)) / 2;
         float textY = (this.getBackgroundSize().y - this.textRenderer.fontHeight * 3) / 2 - BUTTON_HEIGHT;
         Vec2f textPos = this.getRenderPos(textX, textY);
-        this.textRenderer.drawWithShadow(matrixStack, text, textPos.x, textPos.y, 0xE0E0E0);
+        ScreenHelper.draw(text, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
 
         MutableText name = this.tardisArsDestroyerBlockEntity.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
         name.append(Text.literal("?").formatted(Formatting.WHITE));
         float nameX = (this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2;
         Vec2f namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);
-        this.textRenderer.drawWithShadow(matrixStack, name, namePos.x, namePos.y, 0xE0E0E0);
+        ScreenHelper.draw(name, this.textRenderer, context, namePos.x, namePos.y, 0xE0E0E0, true);
     }
 }

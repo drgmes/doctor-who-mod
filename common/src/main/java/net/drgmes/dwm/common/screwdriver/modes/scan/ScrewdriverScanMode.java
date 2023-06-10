@@ -132,7 +132,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
 
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
         tag.putString("title", Text.Serializer.toJson(title));
-        tag.putLong("time", player.world.getTime());
+        tag.putLong("time", player.getServerWorld().getTime());
 
         AtomicInteger i = new AtomicInteger();
         NbtCompound linesTag = new NbtCompound();

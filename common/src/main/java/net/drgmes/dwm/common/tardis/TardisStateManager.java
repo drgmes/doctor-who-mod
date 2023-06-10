@@ -861,7 +861,7 @@ public class TardisStateManager extends PersistentState {
 
                     if (world.getRegistryKey() == World.END) {
                         EnderDragonFight enderDragonFight = world.getEnderDragonFight();
-                        boolean enderDragonWasKilled = enderDragonFight != null && enderDragonFight.hasPreviouslyKilled() && !enderDragonFight.toNbt().getBoolean("NeedsStateScanning");
+                        boolean enderDragonWasKilled = enderDragonFight != null && enderDragonFight.hasPreviouslyKilled() && !enderDragonFight.toData().needsStateScanning();
                         if (!enderDragonWasKilled && ModConfig.COMMON.hideTheEndConditionally.get()) return;
                     }
 

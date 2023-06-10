@@ -108,7 +108,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
             if (doubleBlockHalf == DoubleBlockHalf.UPPER && (tmpBlockState = world.getBlockState(tmpBlockPos = blockPos.down())).isOf(blockState.getBlock()) && tmpBlockState.get(HALF) == DoubleBlockHalf.LOWER) {
                 BlockState tmpBlockState2 = tmpBlockState.contains(Properties.WATERLOGGED) && tmpBlockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
                 world.setBlockState(tmpBlockPos, tmpBlockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-                world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, tmpBlockPos, Block.getRawIdFromState(tmpBlockState));
+                world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, tmpBlockPos, Block.getRawIdFromState(tmpBlockState)); // 2001 event
             }
         }
 

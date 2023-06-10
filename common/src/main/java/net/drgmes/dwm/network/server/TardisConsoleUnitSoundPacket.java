@@ -35,8 +35,8 @@ public class TardisConsoleUnitSoundPacket extends BaseC2SMessage {
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        if (player.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            ModSounds.playTardisConsoleCrackSound(player.world, blockPos);
+        if (player.getWorld().getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+            ModSounds.playTardisConsoleCrackSound(player.getWorld(), blockPos);
         }
     }
 }

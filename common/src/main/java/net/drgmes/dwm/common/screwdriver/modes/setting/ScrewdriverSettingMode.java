@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.stat.Stats;
 import net.minecraft.state.property.Properties;
@@ -105,14 +106,13 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
             ItemStack disk = jukeboxBlockEntity.getStack();
 
             if (disk != null) {
-                // 1010 event
-                world.syncWorldEvent(null, WorldEvents.field_42760, blockPos, Item.getRawId(disk.getItem()));
+                world.syncWorldEvent(null, WorldEvents.JUKEBOX_STARTS_PLAYING, blockPos, Item.getRawId(disk.getItem())); // 1010 event
                 return ActionResult.SUCCESS;
             }
         }
 
         // Wooden Blocks
-        if (blockState.getMaterial() == Material.WOOD) {
+        if (blockState.getSoundGroup() == BlockSoundGroup.WOOD) {
             return ActionResult.FAIL;
         }
 
@@ -136,7 +136,7 @@ public class ScrewdriverSettingMode extends BaseScrewdriverMode {
         }
 
         // Glass Pane
-        if (block instanceof PaneBlock && blockState.getMaterial() == Material.GLASS) {
+        if (block instanceof PaneBlock && blockState.getSoundGroup() == BlockSoundGroup.GLASS) {
             if (player.isSneaking()) {
                 if (!world.isClient) world.breakBlock(blockPos, true);
                 return ActionResult.SUCCESS;

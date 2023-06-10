@@ -87,8 +87,8 @@ public class ModEvents {
         ItemStack screwdriverItemStack = player.getStackInHand(hand);
 
         if (Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) {
-            if (!player.world.isClient) return EventResult.interruptFalse();
-            ActionResult result = ((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(player.world, player, hand, isAlternativeAction).getResult();
+            if (!player.getWorld().isClient) return EventResult.interruptFalse();
+            ActionResult result = ((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(player.getWorld(), player, hand, isAlternativeAction).getResult();
 
             if (result.shouldSwingHand()) {
                 new ScrewdriverUsePacket(screwdriverItemStack, hand == Hand.MAIN_HAND, isAlternativeAction).sendToServer();

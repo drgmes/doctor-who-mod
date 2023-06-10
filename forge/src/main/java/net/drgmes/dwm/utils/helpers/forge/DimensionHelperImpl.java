@@ -64,7 +64,8 @@ public class DimensionHelperImpl {
             false,
             BiomeAccess.hashSeed(dimensionGeneratorSettings.getSeed()),
             ImmutableList.of(),
-            false
+            false,
+            null
         );
 
         WorldBorder worldBorder = server.getOverworld().getWorldBorder();
@@ -78,7 +79,7 @@ public class DimensionHelperImpl {
         if (initialConsumer != null) initialConsumer.accept(world);
         chunkListener.start(new ChunkPos(0, 0));
         ServerChunkManager chunkManager = world.getChunkManager();
-        chunkManager.getLightingProvider().setTaskBatchSize(500);
+        chunkManager.getLightingProvider().doLightUpdates();
         chunkManager.addRegionTicket(ChunkTicketType.START, new ChunkPos(0, 0), 11, Unit.INSTANCE, false);
 
         return world;

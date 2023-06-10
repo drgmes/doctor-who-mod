@@ -6,7 +6,7 @@ import net.drgmes.dwm.network.server.ScrewdriverUpdatePacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -46,13 +46,13 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
     }
 
     @Override
-    public void renderAdditional(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
-        super.renderAdditional(matrixStack, mouseX, mouseY, delta);
+    public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(context, mouseX, mouseY, delta);
 
         int modesListBackgroundColor = 0x40000000;
         Vec2f modesListPos1 = this.getModesListPos();
         Vec2f modesListPos2 = this.getModesListSize();
-        this.fillBackgroundGradient(matrixStack, (int) modesListPos1.x, (int) modesListPos1.y, (int) (modesListPos1.x + modesListPos2.x), (int) (modesListPos1.y + modesListPos2.y), modesListBackgroundColor, modesListBackgroundColor);
+        context.fillGradient((int) modesListPos1.x, (int) modesListPos1.y, (int) (modesListPos1.x + modesListPos2.x), (int) (modesListPos1.y + modesListPos2.y), modesListBackgroundColor, modesListBackgroundColor);
 
         if (this.selected == null) return;
 
@@ -64,16 +64,16 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         Vec2f modeTextPos = new Vec2f(modesListPos1.x + modesListPos2.x + padding, modesListPos1.y + padding + 1.5F);
         Text modeText = DWM.TEXTS.SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
 
-        modeTextPos = modeTextPos.add(ScreenHelper.drawMultiline(mc, matrixStack, modeText, modeTextPos, (int) lineHeight, (int) maxTextLength, 0xFFFFFF));
+        modeTextPos = modeTextPos.add(ScreenHelper.drawMultiline(modeText, mc.textRenderer, context, modeTextPos, (int) lineHeight, (int) maxTextLength, 0xFFFFFF));
 
         float modeDescriptionScale = 0.75F;
         Vec2f modeDescriptionPos = new Vec2f(modeTextPos.x / modeDescriptionScale, (modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale);
         Text modeDescription = this.selected.mode.getDescription();
 
-        matrixStack.push();
-        matrixStack.scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
-        ScreenHelper.drawMultiline(mc, matrixStack, modeDescription, modeDescriptionPos, (int) lineHeight, (int) (maxTextLength / modeDescriptionScale), 0xFFFFFF);
-        matrixStack.pop();
+        context.getMatrices().push();
+        context.getMatrices().scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
+        ScreenHelper.drawMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, (int) lineHeight, (int) (maxTextLength / modeDescriptionScale), 0xFFFFFF);
+        context.getMatrices().pop();
     }
 
     protected void setSelected(ScrewdriverModesListWidget.ScrewdriverModeEntry entry) {

@@ -38,8 +38,8 @@ public class TardisConsoleUnitInitPacket extends BaseC2SMessage {
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        if (player.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            TardisStateManager.get((ServerWorld) player.world).ifPresent((tardis) -> {
+        if (player.getWorld().getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+            TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
                 if (!tardis.isValid()) return;
 
                 NbtCompound tardisData = tardisConsoleUnitBlockEntity.createNbt();
@@ -51,7 +51,7 @@ public class TardisConsoleUnitInitPacket extends BaseC2SMessage {
                 tardisConsoleUnitBlockEntity.readNbt(tardisData);
                 tardisConsoleUnitBlockEntity.markDirty();
 
-                new TardisConsoleUnitUpdatePacket(this.blockPos, tardisData).sendToChunkListeners(player.world.getWorldChunk(this.blockPos));
+                new TardisConsoleUnitUpdatePacket(this.blockPos, tardisData).sendToChunkListeners(player.getWorld().getWorldChunk(this.blockPos));
             });
         }
     }

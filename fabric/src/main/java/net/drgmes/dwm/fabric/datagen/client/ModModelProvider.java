@@ -1,6 +1,5 @@
 package net.drgmes.dwm.fabric.datagen.client;
 
-import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;
 import net.drgmes.dwm.fabric.helpers.BlockStateHelper;
@@ -15,7 +14,6 @@ import net.minecraft.data.client.*;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 public class ModModelProvider extends FabricModelProvider {

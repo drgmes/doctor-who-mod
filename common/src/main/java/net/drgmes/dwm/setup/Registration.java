@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageDecoder;
 import dev.architectury.networking.simple.MessageType;
+import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -14,9 +15,13 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.village.VillagerProfession;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.feature.Feature;
@@ -25,6 +30,7 @@ import net.minecraft.world.poi.PointOfInterestType;
 import java.util.function.Supplier;
 
 public class Registration {
+    public static final DeferredRegister<ItemGroup> ITEM_GROUPS = DeferredRegister.create(DWM.MODID, RegistryKeys.ITEM_GROUP);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(DWM.MODID, RegistryKeys.ITEM);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(DWM.MODID, RegistryKeys.BLOCK);
     public static final DeferredRegister<BlockEntityType<?>> BLOCKS_ENTITIES = DeferredRegister.create(DWM.MODID, RegistryKeys.BLOCK_ENTITY_TYPE);
@@ -37,6 +43,7 @@ public class Registration {
     public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(DWM.MODID, RegistryKeys.SOUND_EVENT);
 
     public static void setupCommon() {
+        ITEM_GROUPS.register();
         ITEMS.register();
         BLOCKS.register();
         BLOCKS_ENTITIES.register();
@@ -73,6 +80,11 @@ public class Registration {
     }
 
     public static void setupServer() {
+    }
+
+    public static RegistrySupplier<ItemGroup> registerItemGroup(String name, Supplier<ItemStack> iconSupplier) {
+        Identifier id = DWM.getIdentifier(name);
+        return ITEM_GROUPS.register(id, () -> CreativeTabRegistry.create(Text.translatable("itemGroup." + id.toTranslationKey()), iconSupplier));
     }
 
     public static <T extends Item> RegistrySupplier<T> registerItem(String name, Supplier<T> itemSupplier) {

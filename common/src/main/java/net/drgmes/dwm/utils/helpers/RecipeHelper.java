@@ -5,7 +5,7 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.entity.EntityPredicate;
+import net.minecraft.predicate.entity.LootContextPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
@@ -52,6 +52,6 @@ public class RecipeHelper {
     }
 
     public static InventoryChangedCriterion.Conditions conditionsFromItemPredicates(ItemPredicate... predicates) {
-        return new InventoryChangedCriterion.Conditions(EntityPredicate.Extended.EMPTY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, predicates);
+        return new InventoryChangedCriterion.Conditions(LootContextPredicate.EMPTY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, predicates);
     }
 }

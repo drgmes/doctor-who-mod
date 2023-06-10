@@ -1,6 +1,6 @@
 package net.drgmes.dwm.utils.builders;
 
-import dev.architectury.registry.CreativeTabRegistry;
+import dev.architectury.registry.registries.DeferredSupplier;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockLootDataBuilder;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
@@ -12,12 +12,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.data.client.TextureKey;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.BlockSoundGroup;
@@ -35,17 +35,17 @@ public class BlockBuilder {
 
     private final String name;
 
-    public BlockBuilder(String name, Supplier<Block> blockSupplier, CreativeTabRegistry.TabSupplier tab) {
+    public BlockBuilder(String name, Supplier<Block> blockSupplier, DeferredSupplier<ItemGroup> tabSupplier) {
         this.name = name;
         this.block = Registration.registerBlock(name, blockSupplier);
-        this.blockItem = Registration.registerItem(name, () -> new BlockItem(this.getBlock(), new Item.Settings().arch$tab(tab)));
+        this.blockItem = Registration.registerItem(name, () -> new BlockItem(this.getBlock(), new Item.Settings().arch$tab(tabSupplier)));
 
         this.registerTags();
         ModBlocks.BLOCK_BUILDERS.add(this);
     }
 
-    public BlockBuilder(String name, CreativeTabRegistry.TabSupplier tab) {
-        this(name, () -> new Block(getBlockSettings()), tab);
+    public BlockBuilder(String name, DeferredSupplier<ItemGroup> tabSupplier) {
+        this(name, () -> new Block(getBlockSettings()), tabSupplier);
     }
 
     public BlockBuilder(String name, Supplier<Block> blockSupplier) {
@@ -57,7 +57,7 @@ public class BlockBuilder {
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
-        return AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(2.0f);
+        return AbstractBlock.Settings.create().sounds(BlockSoundGroup.METAL).strength(2.0f);
     }
 
     public Identifier getId() {

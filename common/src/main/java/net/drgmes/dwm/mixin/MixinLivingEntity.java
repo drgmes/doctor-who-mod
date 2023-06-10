@@ -17,11 +17,11 @@ public class MixinLivingEntity {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     private void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity $this = (LivingEntity) (Object) this;
-        if ($this.world.isClient) return;
+        if ($this.getWorld().isClient) return;
 
-        if (TardisHelper.isTardisDimension($this.world)) {
+        if (TardisHelper.isTardisDimension($this.getWorld())) {
             if (source.isOf(DamageTypes.OUT_OF_WORLD) && amount != Float.MAX_VALUE) {
-                TardisStateManager.get((ServerWorld) $this.world).ifPresent((tardis) -> {
+                TardisStateManager.get((ServerWorld) $this.getWorld()).ifPresent((tardis) -> {
                     BlockPos entrancePosition = tardis.getEntrancePosition();
                     $this.teleport(entrancePosition.getX() + 0.5, entrancePosition.getY(), entrancePosition.getZ() + 0.5);
                 });

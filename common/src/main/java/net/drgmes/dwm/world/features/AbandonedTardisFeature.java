@@ -23,7 +23,7 @@ public class AbandonedTardisFeature extends Feature<DefaultFeatureConfig> {
         StructureWorldAccess world = context.getWorld();
         BlockPos blockPos = context.getOrigin().toImmutable();
 
-        if (world.getBlockState(blockPos.down()).getMaterial().isReplaceable()) {
+        if (world.getBlockState(blockPos.down()).isReplaceable()) {
             blockPos = blockPos.down().toImmutable();
         }
 

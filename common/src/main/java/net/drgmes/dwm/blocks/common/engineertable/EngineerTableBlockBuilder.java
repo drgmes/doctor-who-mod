@@ -5,7 +5,6 @@ import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
@@ -22,7 +21,7 @@ public class EngineerTableBlockBuilder extends BlockBuilder {
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
-        return AbstractBlock.Settings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(1.0f).nonOpaque();
+        return AbstractBlock.Settings.create().sounds(BlockSoundGroup.WOOD).strength(1.0f).nonOpaque();
     }
 
     @Override

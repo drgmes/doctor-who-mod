@@ -28,7 +28,7 @@ public class MixinMinecraftClient {
             ItemStack screwdriverItemStack = this.player.getMainHandStack();
 
             if (Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) {
-                if (((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(this.player.world, this.player, Hand.MAIN_HAND, true).getResult().shouldSwingHand()) {
+                if (((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(this.player.getWorld(), this.player, Hand.MAIN_HAND, true).getResult().shouldSwingHand()) {
                     new ScrewdriverUsePacket(screwdriverItemStack, true, true).sendToServer();
                 }
             }

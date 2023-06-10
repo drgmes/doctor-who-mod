@@ -4,12 +4,12 @@ import com.google.common.collect.ImmutableList;
 import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -69,12 +69,12 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         }
 
         @Override
-        public void render(MatrixStack matrixStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
+        public void render(DrawContext context, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
             MutableText text = this.getText().copy();
             if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
 
             Vec2f pos = new Vec2f(left + padding, top + 2);
-            ScreenHelper.drawClipped(client, matrixStack, text, pos, (int) textRenderer.fontHeight + padding, width, 0xFFFFFF);
+            ScreenHelper.drawClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 
         @Override

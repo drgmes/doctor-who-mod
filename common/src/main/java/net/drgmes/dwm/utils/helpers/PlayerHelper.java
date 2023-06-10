@@ -18,7 +18,7 @@ public class PlayerHelper {
             float range = 0.25F;
             Vec3d min = hitResult.getPos().add(range, range, range);
             Vec3d max = hitResult.getPos().add(-range, -range, -range);
-            for (Entity e : entity.world.getOtherEntities(entity, new Box(min.x, min.y, min.z, max.x, max.y, max.z))) {
+            for (Entity e : entity.getWorld().getOtherEntities(entity, new Box(min.x, min.y, min.z, max.x, max.y, max.z))) {
                 return new EntityHitResult(e);
             }
         }

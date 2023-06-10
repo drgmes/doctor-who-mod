@@ -39,7 +39,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends Ba
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        TardisStateManager.get((ServerWorld) player.world).ifPresent((tardis) -> {
+        TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
 
             MapState mapState = MapState.fromNbt(tag.getCompound("mapState"));

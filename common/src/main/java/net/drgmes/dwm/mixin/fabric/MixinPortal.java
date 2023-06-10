@@ -45,7 +45,7 @@ public class MixinPortal implements IMixinPortal {
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {
         Portal $this = (Portal) (Object) this;
-        if ($this.world.isClient || $this.isRemoved()) return;
+        if ($this.getWorld().isClient || $this.isRemoved()) return;
 
         boolean isTardisIdEmpty = this.tardisId == null || Objects.equals(this.tardisId, "");
 
