@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.client.item.TooltipContext;
@@ -54,7 +55,7 @@ public class TardisKeyItem extends Item {
                     BlockPos blockPos = tardis.getCurrentExteriorPosition();
 
                     if (player.isSneaking()) {
-                        if (!TardisHelper.isTardisDimension(world) && player.hasPermissionLevel(2)) {
+                        if (!TardisHelper.isTardisDimension(world) && (!ModConfig.COMMON.tardisRecallOperatorOnly.get() || player.hasPermissionLevel(2))) {
                             if (tardis.getSystem(TardisSystemFlight.class).inProgress()) return;
                             if (tardis.getSystem(TardisSystemMaterialization.class).inProgress()) return;
 

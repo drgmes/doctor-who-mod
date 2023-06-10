@@ -33,6 +33,7 @@ public class ModConfig {
     public static class Common {
         public ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionsBlacklist;
         public ForgeConfigSpec.BooleanValue hideTheEndConditionally;
+        public ForgeConfigSpec.BooleanValue tardisRecallOperatorOnly;
         public ForgeConfigSpec.IntValue tardisFlightDistanceRate;
         public ForgeConfigSpec.IntValue tardisMaxFlightTime;
         public ForgeConfigSpec.IntValue tardisFuelRefillTiming;
@@ -59,6 +60,11 @@ public class ModConfig {
                         .comment("Hide The End from the TARDIS Dimensions List until the Dragon is defeated")
                         .translation("config.dwm.tardis.hideTheEndConditionally")
                         .define("hideTheEndConditionally", true);
+
+                    tardisRecallOperatorOnly = builder
+                        .comment("Allow only operators to recall the TARDIS by key")
+                        .translation("config.dwm.tardis.tardisRecallOperatorOnly")
+                        .define("tardisRecallOperatorOnly", false);
 
                     tardisFlightDistanceRate = builder
                         .comment("Time ratio divider in ticks per distance traveled (aka TARDIS speed)")
