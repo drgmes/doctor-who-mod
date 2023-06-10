@@ -91,6 +91,11 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         this.renderImage(matrixStack);
     }
 
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
     @Nullable
     private TardisConsoleRoomEntry getSelectedConsoleRoom() {
         return this.consoleRooms.size() > this.selectedConsoleRoomIndex ? this.consoleRooms.get(this.selectedConsoleRoomIndex) : null;

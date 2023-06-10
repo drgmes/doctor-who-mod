@@ -77,6 +77,19 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (super.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+
+        if (this.shouldCloseOnInventoryKey() && this.client != null && this.client.options.inventoryKey.matchesKey(keyCode, scanCode)) {
+            this.close();
+        }
+
+        return true;
+    }
+
+    @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float delta) {
         super.renderBackground(matrixStack);
         this.renderElements(matrixStack, mouseX, mouseY, delta, 0xFF4F5664);

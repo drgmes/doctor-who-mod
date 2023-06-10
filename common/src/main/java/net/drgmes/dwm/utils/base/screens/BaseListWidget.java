@@ -54,12 +54,24 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     }
 
     public abstract class BaseListEntry extends Entry<BaseListEntry> {
+        public Formatting chevronFormat;
+        public Formatting selectedItemFormat;
+
         public abstract Text getText();
+
+        public BaseListEntry(Formatting chevronFormat, Formatting selectedItemFormat) {
+            this.chevronFormat = chevronFormat;
+            this.selectedItemFormat = selectedItemFormat;
+        }
+
+        public BaseListEntry() {
+            this(Formatting.WHITE, Formatting.RESET);
+        }
 
         @Override
         public void render(MatrixStack matrixStack, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
             MutableText text = this.getText().copy();
-            if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(Formatting.WHITE, Formatting.BOLD)).append(text.formatted(Formatting.RESET));
+            if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
 
             Vec2f pos = new Vec2f(left + padding, top + 2);
             ScreenHelper.drawClipped(client, matrixStack, text, pos, (int) textRenderer.fontHeight + padding, width, 0xFFFFFF);

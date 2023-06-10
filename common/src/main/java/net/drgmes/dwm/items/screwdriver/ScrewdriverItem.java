@@ -2,6 +2,7 @@ package net.drgmes.dwm.items.screwdriver;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
+import net.drgmes.dwm.network.server.ScrewdriverUpdatePacket;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
 import net.fabricmc.api.EnvType;
@@ -61,12 +62,24 @@ public class ScrewdriverItem extends Item {
         if (mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
         if (ModKeys.SCREWDRIVER_SETTINGS.isPressed()) {
-            if (player.getStackInHand(Hand.MAIN_HAND).equals(itemStack)) {
-                mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, true));
+            ItemStack mainItemStack = player.getStackInHand(Hand.MAIN_HAND);
+            ItemStack offItemStack = player.getStackInHand(Hand.OFF_HAND);
+
+            if (!mainItemStack.equals(itemStack) && !offItemStack.equals(itemStack)) {
+                return;
             }
-            else if (player.getStackInHand(Hand.OFF_HAND).equals(itemStack)) {
-                mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, false));
+
+            if (player.isSneaking()) {
+                if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return;
+                List<Screwdriver.EScrewdriverMode> modes = List.of(Screwdriver.EScrewdriverMode.values());
+                Screwdriver.EScrewdriverMode mode = modes.get((Screwdriver.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
+
+                Screwdriver.setInteractionMode(itemStack, mode);
+                new ScrewdriverUpdatePacket(itemStack, mainItemStack.equals(itemStack)).sendToServer();
+                return;
             }
+
+            mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, mainItemStack.equals(itemStack)));
         }
     }
 

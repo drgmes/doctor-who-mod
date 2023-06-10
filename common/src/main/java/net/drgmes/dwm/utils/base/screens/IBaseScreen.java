@@ -82,4 +82,8 @@ public interface IBaseScreen {
         return false;
 //        return ScreenHelper.checkMouseInboundPosition(mouseX, mouseY, this.getCloseButtonPos(), DWM.TEXTURES.BUTTON_CLOSE_SIZE);
     }
+
+    default boolean shouldCloseOnInventoryKey() {
+        return false;
+    }
 }

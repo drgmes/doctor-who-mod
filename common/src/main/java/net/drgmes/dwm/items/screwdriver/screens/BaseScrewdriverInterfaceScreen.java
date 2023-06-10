@@ -39,4 +39,9 @@ public abstract class BaseScrewdriverInterfaceScreen extends BaseScreen {
     public Vec2f getTitleRenderPos() {
         return this.getRenderPos(23, 8);
     }
+
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
 }

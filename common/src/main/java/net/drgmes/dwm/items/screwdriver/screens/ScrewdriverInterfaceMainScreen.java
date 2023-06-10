@@ -9,6 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Vec2f;
 
 import java.util.List;
@@ -123,6 +124,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
             private final Screwdriver.EScrewdriverMode mode;
 
             public ScrewdriverModeEntry(Screwdriver.EScrewdriverMode mode) {
+                super(Formatting.WHITE, Formatting.GOLD);
                 this.mode = mode;
             }
 

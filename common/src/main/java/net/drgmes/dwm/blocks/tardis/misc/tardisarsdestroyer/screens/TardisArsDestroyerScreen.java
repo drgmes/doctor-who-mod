@@ -65,6 +65,11 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         this.renderConfirmationMessage(matrixStack);
     }
 
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
     protected void apply() {
         ArsStructure structure = this.tardisArsDestroyerBlockEntity.arsStructure;
 
