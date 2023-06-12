@@ -55,7 +55,7 @@ public class ScrewdriverScanModeOverlay {
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
-        ScreenHelper.draw(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
+        ScreenHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
         matrixStack.pop();
 
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
@@ -84,14 +84,14 @@ public class ScrewdriverScanModeOverlay {
 //        this.fillGradient(matrixStack, (int) bgPos1.x, (int) bgPos1.y, (int) bgPos2.x, (int) bgPos2.y, color, color);
 
         for (OrderedText titleLine : titleLines) {
-            ScreenHelper.draw(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
+            ScreenHelper.drawText(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
             y += titleLineHeight;
         }
 
         matrixStack.push();
         matrixStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
         for (Text line : lines) {
-            ScreenHelper.draw(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
+            ScreenHelper.drawText(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
             y += lineHeight;
         }
         matrixStack.pop();

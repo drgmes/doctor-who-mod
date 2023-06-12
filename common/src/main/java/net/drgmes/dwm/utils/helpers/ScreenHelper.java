@@ -23,25 +23,25 @@ public class ScreenHelper {
         return (mouseX >= pos.x && mouseX <= x) && (mouseY >= pos.y && mouseY <= y);
     }
 
-    public static void draw(OrderedText text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
+    public static void drawText(OrderedText text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
         textRenderer.draw(text, x, y, color, shadow, context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.SEE_THROUGH, 0, 240);
     }
 
-    public static void draw(Text text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
-        draw(text.asOrderedText(), textRenderer, context, x, y, color, shadow);
+    public static void drawText(Text text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
+        drawText(text.asOrderedText(), textRenderer, context, x, y, color, shadow);
     }
 
-    public static void drawClipped(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int maxTextLength, int color) {
+    public static void drawTextClipped(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int maxTextLength, int color) {
         List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
-        draw(lines.get(0), textRenderer, context, pos.x, pos.y, color, true);
+        drawText(lines.get(0), textRenderer, context, pos.x, pos.y, color, true);
     }
 
-    public static Vec2f drawMultiline(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int lineHeight, int maxTextLength, int color) {
+    public static Vec2f drawTextMultiline(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int lineHeight, int maxTextLength, int color) {
         List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
 
         float offsetY = 0;
         for (OrderedText line : lines) {
-            draw(line, textRenderer, context, pos.x, pos.y + offsetY, color, true);
+            drawText(line, textRenderer, context, pos.x, pos.y + offsetY, color, true);
             offsetY += lineHeight;
         }
 

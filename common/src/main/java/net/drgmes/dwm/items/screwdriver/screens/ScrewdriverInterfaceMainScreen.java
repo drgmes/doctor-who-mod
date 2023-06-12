@@ -64,7 +64,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         Vec2f modeTextPos = new Vec2f(modesListPos1.x + modesListPos2.x + padding, modesListPos1.y + padding + 1.5F);
         Text modeText = DWM.TEXTS.SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
 
-        modeTextPos = modeTextPos.add(ScreenHelper.drawMultiline(modeText, mc.textRenderer, context, modeTextPos, (int) lineHeight, (int) maxTextLength, 0xFFFFFF));
+        modeTextPos = modeTextPos.add(ScreenHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, (int) lineHeight, (int) maxTextLength, 0xFFFFFF));
 
         float modeDescriptionScale = 0.75F;
         Vec2f modeDescriptionPos = new Vec2f(modeTextPos.x / modeDescriptionScale, (modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale);
@@ -72,7 +72,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
 
         context.getMatrices().push();
         context.getMatrices().scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
-        ScreenHelper.drawMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, (int) lineHeight, (int) (maxTextLength / modeDescriptionScale), 0xFFFFFF);
+        ScreenHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, (int) lineHeight, (int) (maxTextLength / modeDescriptionScale), 0xFFFFFF);
         context.getMatrices().pop();
     }
 

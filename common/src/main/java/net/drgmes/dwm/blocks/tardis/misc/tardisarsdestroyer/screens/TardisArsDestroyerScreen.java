@@ -88,12 +88,12 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         float textX = (this.getBackgroundSize().x - this.textRenderer.getWidth(text)) / 2;
         float textY = (this.getBackgroundSize().y - this.textRenderer.fontHeight * 3) / 2 - BUTTON_HEIGHT;
         Vec2f textPos = this.getRenderPos(textX, textY);
-        ScreenHelper.draw(text, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
+        ScreenHelper.drawText(text, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
 
         MutableText name = this.tardisArsDestroyerBlockEntity.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
         name.append(Text.literal("?").formatted(Formatting.WHITE));
         float nameX = (this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2;
         Vec2f namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);
-        ScreenHelper.draw(name, this.textRenderer, context, namePos.x, namePos.y, 0xE0E0E0, true);
+        ScreenHelper.drawText(name, this.textRenderer, context, namePos.x, namePos.y, 0xE0E0E0, true);
     }
 }

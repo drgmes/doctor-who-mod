@@ -51,7 +51,7 @@ public interface IBaseScreen {
 
     default void renderTitle(DrawContext context) {
         Vec2f pos = this.getTitleRenderPos();
-        ScreenHelper.draw(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
+        ScreenHelper.drawText(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
     }
 
     default void renderBackgroundImage(DrawContext context) {
@@ -61,12 +61,8 @@ public interface IBaseScreen {
     default void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
     }
 
-    default void drawImage(DrawContext context, int x, int y, int textureWidth, int textureHeight, Identifier image) {
-        context.drawTexture(image, x, y, 0, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight);
-    }
-
     default void drawImage(DrawContext context, Vec2f pos, Vec2f size, Identifier image) {
-        this.drawImage(context, (int) pos.x, (int) pos.y, (int) size.x, (int) size.y, image);
+        context.drawTexture(image, (int) pos.x, (int) pos.y, 0, 0, 0, (int) size.x, (int) size.y, (int) size.x, (int) size.y);
     }
 
     default boolean shouldCloseOnInventoryKey() {

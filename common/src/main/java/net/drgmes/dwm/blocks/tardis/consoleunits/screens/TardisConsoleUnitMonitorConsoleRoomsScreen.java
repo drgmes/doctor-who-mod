@@ -113,7 +113,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         if (selectedConsoleRoom == null) return;
 
         Vec2f titlePos = this.getRenderPos(padding, padding);
-        ScreenHelper.draw(selectedConsoleRoom.getTitle(), this.textRenderer, context, titlePos.x, titlePos.y, 0xE0E0E0, true);
+        ScreenHelper.drawText(selectedConsoleRoom.getTitle(), this.textRenderer, context, titlePos.x, titlePos.y, 0xE0E0E0, true);
 
         Vec2f imagePos = this.getRenderPos(padding, padding + this.getTextRenderer().fontHeight * 1.5F);
         Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + selectedConsoleRoom.name + ".png");

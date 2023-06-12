@@ -74,7 +74,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
             if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
 
             Vec2f pos = new Vec2f(left + padding, top + 2);
-            ScreenHelper.drawClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
+            ScreenHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 
         @Override
