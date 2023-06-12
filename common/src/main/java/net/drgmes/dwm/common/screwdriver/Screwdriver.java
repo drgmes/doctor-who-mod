@@ -93,6 +93,7 @@ public class Screwdriver {
 
     public static void setInteractionMode(ItemStack screwdriverItemStack, EScrewdriverMode mode) {
         if (!checkItemStackIsScrewdriver(screwdriverItemStack)) return;
+        getData(screwdriverItemStack).putString("prevMode", getInteractionMode(screwdriverItemStack).name());
         getData(screwdriverItemStack).putString("mode", mode.name());
     }
 

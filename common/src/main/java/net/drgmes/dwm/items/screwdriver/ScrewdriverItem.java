@@ -15,6 +15,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -71,8 +72,11 @@ public class ScrewdriverItem extends Item {
 
             if (player.isSneaking()) {
                 if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return;
+
+                NbtCompound screwdriverData = Screwdriver.getData(itemStack);
                 List<Screwdriver.EScrewdriverMode> modes = List.of(Screwdriver.EScrewdriverMode.values());
                 Screwdriver.EScrewdriverMode mode = modes.get((Screwdriver.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
+                if (screwdriverData.contains("prevMode")) mode = Screwdriver.EScrewdriverMode.valueOf(screwdriverData.getString("prevMode"));
 
                 Screwdriver.setInteractionMode(itemStack, mode);
                 new ScrewdriverUpdatePacket(itemStack, mainItemStack.equals(itemStack)).sendToServer();

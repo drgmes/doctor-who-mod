@@ -40,7 +40,7 @@ public class ScrewdriverUpdatePacket extends BaseC2SMessage {
 
         if (Screwdriver.checkItemStackIsScrewdriver(player.getStackInHand(this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND))) {
             player.setStackInHand(this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND, this.itemStack);
-            player.getItemCooldownManager().set(itemStack.getItem(), 3);
+            player.getItemCooldownManager().set(itemStack.getItem(), 4);
         }
     }
 }
