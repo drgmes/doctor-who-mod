@@ -79,7 +79,6 @@ public class DimensionHelperImpl {
         if (initialConsumer != null) initialConsumer.accept(world);
         chunkListener.start(new ChunkPos(0, 0));
         ServerChunkManager chunkManager = world.getChunkManager();
-        chunkManager.getLightingProvider().doLightUpdates();
         chunkManager.addRegionTicket(ChunkTicketType.START, new ChunkPos(0, 0), 11, Unit.INSTANCE, false);
 
         return world;
