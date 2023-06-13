@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.room_titanium_large_magenta",
+  "structure": "dwm:tardis/ars/rooms/_/large",
+  "replaces": {
+    "minecraft:blue_concrete": "dwm:titanium_skin",
+    "minecraft:white_concrete": "dwm:carbon_fiber",
+    "minecraft:black_concrete": "dwm:titanium_panel",
+    "minecraft:gray_concrete": "dwm:titanium_panel",
+    "minecraft:brown_concrete": "dwm:titanium_panel",
+    "minecraft:light_gray_concrete": "dwm:titanium_striped_panel_magenta",
+    "minecraft:andesite_stairs": "dwm:titanium_striped_panel_stairs_magenta",
+    "minecraft:diorite_stairs": "dwm:titanium_panel_stairs",
+    "minecraft:stone_stairs": "dwm:titanium_panel_stairs",
+    "minecraft:stone_slab": "dwm:titanium_panel_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:andesite_wall": "dwm:titanium_striped_panel_wall_magenta",
+    "minecraft:diorite_wall": "dwm:titanium_panel_wall"
+  }
+}
