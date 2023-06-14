@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.room_wooden_huge_birch",
+  "structure": "dwm:tardis/ars/rooms/_/huge",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_spruce_wood",
+    "minecraft:white_concrete": "minecraft:stripped_birch_wood",
+    "minecraft:black_concrete": "minecraft:birch_wood",
+    "minecraft:gray_concrete": "minecraft:birch_planks",
+    "minecraft:brown_concrete": "minecraft:birch_planks",
+    "minecraft:light_gray_concrete": "minecraft:birch_log",
+    "minecraft:andesite_stairs": "minecraft:birch_stairs",
+    "minecraft:diorite_stairs": "minecraft:birch_stairs",
+    "minecraft:stone_stairs": "minecraft:birch_stairs",
+    "minecraft:stone_slab": "minecraft:birch_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:birch_fence",
+    "minecraft:diorite_wall": "minecraft:birch_fence"
+  }
+}

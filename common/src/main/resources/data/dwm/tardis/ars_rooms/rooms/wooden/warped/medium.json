@@ -1,0 +1,21 @@
+{
+  "title": "title.dwm.ars.structure.room_wooden_medium_warped",
+  "structure": "dwm:tardis/ars/rooms/_/medium",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:warped_wart_block",
+    "minecraft:white_concrete": "minecraft:stripped_warped_hyphae",
+    "minecraft:black_concrete": "minecraft:warped_hyphae",
+    "minecraft:gray_concrete": "minecraft:warped_planks",
+    "minecraft:brown_concrete": "minecraft:warped_planks",
+    "minecraft:light_gray_concrete": "minecraft:warped_stem",
+    "minecraft:andesite_stairs": "minecraft:warped_stairs",
+    "minecraft:diorite_stairs": "minecraft:warped_stairs",
+    "minecraft:stone_stairs": "minecraft:warped_stairs",
+    "minecraft:stone_slab": "minecraft:warped_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:warped_fence",
+    "minecraft:diorite_wall": "minecraft:warped_fence",
+    "minecraft:redstone_lamp": "minecraft:shroomlight",
+    "minecraft:redstone_block": "minecraft:air"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.room_wooden_huge_mangrove",
+  "structure": "dwm:tardis/ars/rooms/_/huge",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_dark_oak_wood",
+    "minecraft:white_concrete": "minecraft:stripped_mangrove_wood",
+    "minecraft:black_concrete": "minecraft:mangrove_wood",
+    "minecraft:gray_concrete": "minecraft:mangrove_planks",
+    "minecraft:brown_concrete": "minecraft:mangrove_planks",
+    "minecraft:light_gray_concrete": "minecraft:mangrove_log",
+    "minecraft:andesite_stairs": "minecraft:mangrove_stairs",
+    "minecraft:diorite_stairs": "minecraft:mangrove_stairs",
+    "minecraft:stone_stairs": "minecraft:mangrove_stairs",
+    "minecraft:stone_slab": "minecraft:mangrove_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:mangrove_fence",
+    "minecraft:diorite_wall": "minecraft:mangrove_fence"
+  }
+}

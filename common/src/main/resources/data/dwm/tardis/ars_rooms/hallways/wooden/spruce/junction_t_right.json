@@ -1,0 +1,17 @@
+{
+  "title": "title.dwm.ars.structure.hallway_wooden_junction_t_right_spruce",
+  "structure": "dwm:tardis/ars/hallways/_/junction_t_right",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_dark_oak_wood",
+    "minecraft:white_concrete": "minecraft:stripped_spruce_wood",
+    "minecraft:black_concrete": "minecraft:spruce_wood",
+    "minecraft:gray_concrete": "minecraft:spruce_planks",
+    "minecraft:brown_concrete": "minecraft:spruce_planks",
+    "minecraft:light_gray_concrete": "minecraft:spruce_log",
+    "minecraft:andesite_stairs": "minecraft:spruce_stairs",
+    "minecraft:diorite_stairs": "minecraft:spruce_stairs",
+    "minecraft:stone_stairs": "minecraft:spruce_stairs",
+    "minecraft:stone_slab": "minecraft:spruce_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "title": "title.dwm.ars.structure.hallway_wooden_junction_t_bamboo",
+  "structure": "dwm:tardis/ars/hallways/_/junction_t",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_dark_oak_wood",
+    "minecraft:white_concrete": "minecraft:bamboo_mosaic",
+    "minecraft:black_concrete": "minecraft:bamboo_block",
+    "minecraft:gray_concrete": "minecraft:bamboo_block",
+    "minecraft:brown_concrete": "minecraft:bamboo_block",
+    "minecraft:light_gray_concrete": "minecraft:bamboo_block",
+    "minecraft:andesite_stairs": "minecraft:bamboo_stairs",
+    "minecraft:diorite_stairs": "minecraft:bamboo_stairs",
+    "minecraft:stone_stairs": "minecraft:bamboo_stairs",
+    "minecraft:stone_slab": "minecraft:bamboo_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane"
+  }
+}

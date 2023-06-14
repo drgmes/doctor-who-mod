@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.room_wooden_small_acacia",
+  "structure": "dwm:tardis/ars/rooms/_/small",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_dark_oak_wood",
+    "minecraft:white_concrete": "minecraft:stripped_acacia_wood",
+    "minecraft:black_concrete": "minecraft:acacia_wood",
+    "minecraft:gray_concrete": "minecraft:acacia_planks",
+    "minecraft:brown_concrete": "minecraft:acacia_planks",
+    "minecraft:light_gray_concrete": "minecraft:acacia_log",
+    "minecraft:andesite_stairs": "minecraft:acacia_stairs",
+    "minecraft:diorite_stairs": "minecraft:acacia_stairs",
+    "minecraft:stone_stairs": "minecraft:acacia_stairs",
+    "minecraft:stone_slab": "minecraft:acacia_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:acacia_fence",
+    "minecraft:diorite_wall": "minecraft:acacia_fence"
+  }
+}

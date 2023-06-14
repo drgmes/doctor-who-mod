@@ -1,0 +1,17 @@
+{
+  "title": "title.dwm.ars.structure.hallway_wooden_turn_left_long_dark_oak",
+  "structure": "dwm:tardis/ars/hallways/_/turn_left_long",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:cherry_wood",
+    "minecraft:white_concrete": "minecraft:stripped_dark_oak_wood",
+    "minecraft:black_concrete": "minecraft:dark_oak_wood",
+    "minecraft:gray_concrete": "minecraft:dark_oak_planks",
+    "minecraft:brown_concrete": "minecraft:dark_oak_planks",
+    "minecraft:light_gray_concrete": "minecraft:dark_oak_log",
+    "minecraft:andesite_stairs": "minecraft:dark_oak_stairs",
+    "minecraft:diorite_stairs": "minecraft:dark_oak_stairs",
+    "minecraft:stone_stairs": "minecraft:dark_oak_stairs",
+    "minecraft:stone_slab": "minecraft:dark_oak_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane"
+  }
+}

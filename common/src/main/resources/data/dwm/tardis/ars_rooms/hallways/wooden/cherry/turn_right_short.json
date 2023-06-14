@@ -1,0 +1,17 @@
+{
+  "title": "title.dwm.ars.structure.hallway_wooden_turn_right_short_cherry",
+  "structure": "dwm:tardis/ars/hallways/_/turn_right_short",
+  "replaces": {
+    "minecraft:blue_concrete": "minecraft:stripped_spruce_wood",
+    "minecraft:white_concrete": "minecraft:stripped_cherry_wood",
+    "minecraft:black_concrete": "minecraft:cherry_wood",
+    "minecraft:gray_concrete": "minecraft:cherry_planks",
+    "minecraft:brown_concrete": "minecraft:cherry_planks",
+    "minecraft:light_gray_concrete": "minecraft:cherry_log",
+    "minecraft:andesite_stairs": "minecraft:cherry_stairs",
+    "minecraft:diorite_stairs": "minecraft:cherry_stairs",
+    "minecraft:stone_stairs": "minecraft:cherry_stairs",
+    "minecraft:stone_slab": "minecraft:cherry_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane"
+  }
+}
