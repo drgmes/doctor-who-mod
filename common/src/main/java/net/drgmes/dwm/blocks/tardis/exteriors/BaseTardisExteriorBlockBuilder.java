@@ -20,7 +20,7 @@ public abstract class BaseTardisExteriorBlockBuilder extends BlockBuilder {
 
     public static AbstractBlock.Settings getBlockSettings() {
         return AbstractBlock.Settings.copy(Blocks.BEDROCK).luminance((blockState) -> (
-            blockState.get(BaseTardisExteriorBlock.HALF) == DoubleBlockHalf.UPPER && blockState.get(BaseTardisExteriorBlock.LIT) ? 16 : 0
+            blockState.get(BaseTardisExteriorBlock.HALF) == DoubleBlockHalf.UPPER && blockState.get(BaseTardisExteriorBlock.LIT) ? 15 : 0
         ));
     }
 

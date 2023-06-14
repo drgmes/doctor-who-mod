@@ -979,7 +979,7 @@ public class TardisStateManager extends PersistentState {
             }
         }
 
-        new TardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), false)
+        new TardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isLightEnabled(), false)
             .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
     }
 }

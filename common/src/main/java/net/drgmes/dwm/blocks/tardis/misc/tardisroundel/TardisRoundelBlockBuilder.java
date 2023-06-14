@@ -14,7 +14,7 @@ public class TardisRoundelBlockBuilder extends BlockBuilder {
 
     public static AbstractBlock.Settings getBlockSettings() {
         return BlockBuilder.getBlockSettings().nonOpaque().luminance((blockState) -> (
-            blockState.get(TardisRoundelBlock.LIT) ? 16 : 0
+            blockState.get(TardisRoundelBlock.LIT) ? 15 : 0
         ));
     }
 

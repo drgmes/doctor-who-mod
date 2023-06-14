@@ -16,16 +16,18 @@ import net.minecraft.util.math.BlockPos;
 public class TardisExteriorUpdatePacket extends BaseS2CMessage {
     private final BlockPos blockPos;
     private final boolean isDoorsOpened;
+    private final boolean isLightEnabled;
     private final boolean needDemat;
 
-    public TardisExteriorUpdatePacket(BlockPos blockPos, boolean isDoorsOpened, boolean needDemat) {
+    public TardisExteriorUpdatePacket(BlockPos blockPos, boolean isDoorsOpened, boolean isLightEnabled, boolean needDemat) {
         this.blockPos = blockPos;
         this.isDoorsOpened = isDoorsOpened;
+        this.isLightEnabled = isLightEnabled;
         this.needDemat = needDemat;
     }
 
     public static TardisExteriorUpdatePacket create(PacketByteBuf buf) {
-        return new TardisExteriorUpdatePacket(buf.readBlockPos(), buf.readBoolean(), buf.readBoolean());
+        return new TardisExteriorUpdatePacket(buf.readBlockPos(), buf.readBoolean(), buf.readBoolean(), buf.readBoolean());
     }
 
     @Override
@@ -37,6 +39,7 @@ public class TardisExteriorUpdatePacket extends BaseS2CMessage {
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.blockPos);
         buf.writeBoolean(this.isDoorsOpened);
+        buf.writeBoolean(this.isLightEnabled);
         buf.writeBoolean(this.needDemat);
     }
 
@@ -50,8 +53,22 @@ public class TardisExteriorUpdatePacket extends BaseS2CMessage {
             if (this.needDemat) tardisExteriorBlockEntity.demat();
         }
 
-        if (blockState.getBlock() instanceof BaseTardisExteriorBlock<?> && blockState.get(BaseTardisExteriorBlock.OPEN) != this.isDoorsOpened) {
-            mc.world.setBlockState(blockPos, blockState.with(BaseTardisExteriorBlock.OPEN, this.isDoorsOpened), 10);
+        if (blockState.getBlock() instanceof BaseTardisExteriorBlock<?>) {
+            boolean flag = false;
+
+            if (blockState.get(BaseTardisExteriorBlock.OPEN) != this.isDoorsOpened) {
+                blockState = blockState.with(BaseTardisExteriorBlock.OPEN, this.isDoorsOpened);
+                flag = true;
+            }
+
+            if (blockState.get(BaseTardisExteriorBlock.LIT) != this.isLightEnabled) {
+                blockState = blockState.with(BaseTardisExteriorBlock.LIT, this.isLightEnabled);
+                flag = true;
+            }
+
+            if (flag) {
+                mc.world.setBlockState(blockPos, blockState, 10);
+            }
         }
     }
 }
