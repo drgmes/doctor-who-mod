@@ -53,6 +53,7 @@ public class ModResourcePacks {
                 String title = data.has("title") ? data.get("title").getAsString() : consoleRoomsName;
                 JsonArray centerArray = data.has("center") ? data.get("center").getAsJsonArray() : null;
                 JsonArray entranceArray = data.has("entrance") ? data.get("entrance").getAsJsonArray() : null;
+                int spawnChance = data.has("spawnChance") ? data.get("spawnChance").getAsInt() : 1;
 
                 BlockPos center = centerArray != null && centerArray.size() == 3
                     ? new BlockPos(centerArray.get(0).getAsInt(), centerArray.get(1).getAsInt(), centerArray.get(2).getAsInt())
@@ -62,7 +63,7 @@ public class ModResourcePacks {
                     ? new BlockPos(entranceArray.get(0).getAsInt(), entranceArray.get(1).getAsInt(), entranceArray.get(2).getAsInt())
                     : (BlockPos) BlockPos.ZERO;
 
-                TardisConsoleRoomEntry consoleRoom = TardisConsoleRoomEntry.create(consoleRoomsName, title, center, entrance);
+                TardisConsoleRoomEntry consoleRoom = TardisConsoleRoomEntry.create(consoleRoomsName, title, center, entrance, spawnChance);
                 consoleRoom.setHidden(data.has("hidden") && data.get("hidden").getAsBoolean());
                 if (data.has("image")) consoleRoom.setImageUrl(data.get("image").getAsString());
                 if (data.has("repair_to")) consoleRoom.setRepairTo(data.get("repair_to").getAsString());

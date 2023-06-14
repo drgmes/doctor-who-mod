@@ -2,6 +2,7 @@
   "title": "dwm.console_room.aquatic_classic",
   "center": [15, 8, 14],
   "entrance": [15, 7, 1],
+  "spawnChance": 30,
   "teleporter_room": "aquatic_classic",
   "decorator_block": "minecraft:dark_prismarine",
   "image": "https://i.imgur.com/F7lmTJI.png"
