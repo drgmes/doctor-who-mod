@@ -11,7 +11,6 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBl
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
-import net.drgmes.dwm.compat.ModCompats;
 import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
 

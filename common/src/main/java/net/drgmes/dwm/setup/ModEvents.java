@@ -5,7 +5,6 @@ import dev.architectury.event.events.common.*;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.compat.ImmersivePortals;
-import net.drgmes.dwm.compat.ModCompats;
 import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;

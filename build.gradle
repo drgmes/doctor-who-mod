@@ -34,6 +34,11 @@ allprojects {
     repositories {
         maven { url 'https://jitpack.io' }
         maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
+
+        maven {
+            url 'https://modmaven.dev/'
+            content { includeGroup 'appeng' }
+        }
     }
 
     tasks.withType(JavaCompile) {

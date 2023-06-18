@@ -83,9 +83,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
         Pair<BlockPos, RegistryEntry<Biome>> pair = exteriorWorld.locateBiome((entry) -> entry.matchesId(id), exteriorPos, 6400, 32, 64);
         if (pair == null) return false;
 
-        boolean isUnderground = false;
-        if (exteriorWorld.getRegistryKey() == World.NETHER) isUnderground = true;
-
+        boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
         BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
         if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
 
@@ -118,9 +116,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
         Pair<BlockPos, RegistryEntry<Structure>> pair = exteriorWorld.getChunkManager().getChunkGenerator().locateStructure(exteriorWorld, RegistryEntryList.of(structureEntry.get()), exteriorPos, 512, false);
         if (pair == null) return false;
 
-        boolean isUnderground = false;
-        if (exteriorWorld.getRegistryKey() == World.NETHER) isUnderground = true;
-        else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.STRONGHOLDS) isUnderground = true;
+        boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
+        if (structure.getFeatureGenerationStep() == GenerationStep.Feature.STRONGHOLDS) isUnderground = true;
         else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_DECORATION) isUnderground = true;
         else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_STRUCTURES) isUnderground = true;
 

@@ -37,9 +37,9 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisWorld);
         if (tardisHolder.isEmpty()) return ActionResult.FAIL;
 
-        MutableText x = Text.literal("" + blockPos.getX()).formatted(Formatting.YELLOW);
-        MutableText y = Text.literal("" + blockPos.getY()).formatted(Formatting.YELLOW);
-        MutableText z = Text.literal("" + blockPos.getZ()).formatted(Formatting.YELLOW);
+        MutableText x = Text.literal(String.valueOf(blockPos.getX())).formatted(Formatting.YELLOW);
+        MutableText y = Text.literal(String.valueOf(blockPos.getY())).formatted(Formatting.YELLOW);
+        MutableText z = Text.literal(String.valueOf(blockPos.getZ())).formatted(Formatting.YELLOW);
 
         player.sendMessage(Text.translatable("message." + DWM.MODID + ".screwdriver.tardis_relocated", x, y, z), true);
         tardisHolder.get().setDestinationFacing(Direction.fromRotation(player.getHeadYaw()).getOpposite());

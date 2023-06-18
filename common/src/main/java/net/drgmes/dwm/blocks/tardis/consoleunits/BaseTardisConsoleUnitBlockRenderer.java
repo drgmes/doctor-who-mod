@@ -9,7 +9,7 @@ import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlEn
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
-import net.drgmes.dwm.compat.ModCompats;
+import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
