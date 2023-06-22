@@ -1,6 +1,15 @@
 package net.drgmes.dwm.setup;
 
 public class ModCompats {
+    public static boolean immersivePortalsAPI() {
+        try {
+            Class.forName("qouteall.q_misc_util.api.DimensionAPI");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public static boolean immersivePortals() {
         try {
             Class.forName("qouteall.imm_ptl.core.portal.Portal");

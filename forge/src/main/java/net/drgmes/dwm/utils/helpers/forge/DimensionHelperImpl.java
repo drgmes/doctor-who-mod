@@ -38,7 +38,7 @@ public class DimensionHelperImpl {
     public static final Function<MinecraftServer, Executor> BACKGROUND_EXECUTOR_FIELD = getInstanceField(MinecraftServer.class, "workerExecutor");
     public static final Function<MinecraftServer, LevelStorage.Session> ANVIL_CONVERTER_FOR_ANVIL_FILE_FIELD = getInstanceField(MinecraftServer.class, "session");
 
-    public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
+    public static ServerWorld customGetOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
         Identifier worldIdentifier = DWM.getIdentifier(id);
         RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
         ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
@@ -84,7 +84,7 @@ public class DimensionHelperImpl {
         return world;
     }
 
-    public static void removeWorld(String id, MinecraftServer server) {
+    public static void customRemoveWorld(String id, MinecraftServer server) {
         // TODO
         throw new AssertionError();
     }

@@ -1,4 +1,4 @@
-package net.drgmes.dwm.utils.helpers.fabric;
+package net.drgmes.dwm.compat;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -13,7 +13,7 @@ import qouteall.q_misc_util.api.DimensionAPI;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class DimensionHelperImpl {
+public class ImmersivePortalsAPI {
     public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
         Identifier worldIdentifier = DWM.getIdentifier(id);
         RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);

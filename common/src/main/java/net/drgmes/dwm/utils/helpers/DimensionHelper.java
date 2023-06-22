@@ -2,6 +2,8 @@ package net.drgmes.dwm.utils.helpers;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.compat.ImmersivePortalsAPI;
+import net.drgmes.dwm.setup.ModCompats;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.MinecraftServer;
@@ -42,13 +44,23 @@ public class DimensionHelper {
         return getWorld(DWM.getIdentifier(id), server);
     }
 
-    @ExpectPlatform
     public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
+        if (ModCompats.immersivePortalsAPI()) return ImmersivePortalsAPI.getOrCreateWorld(id, server, initialConsumer, dimensionFactory);
+        else return customGetOrCreateWorld(id, server, initialConsumer, dimensionFactory);
+    }
+
+    public static void removeWorld(String id, MinecraftServer server) {
+        if (ModCompats.immersivePortalsAPI()) ImmersivePortalsAPI.removeWorld(id, server);
+        else customRemoveWorld(id, server);
+    }
+
+    @ExpectPlatform
+    public static ServerWorld customGetOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void removeWorld(String id, MinecraftServer server) {
+    public static void customRemoveWorld(String id, MinecraftServer server) {
         throw new AssertionError();
     }
 }
