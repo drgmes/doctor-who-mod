@@ -14,9 +14,11 @@ public interface IBaseScreen {
     int getWidth();
     int getHeight();
 
-    TextRenderer getTextRenderer();
     Identifier getBackground();
     Vec2f getBackgroundSize();
+    Vec2f getBackgroundBorderSize();
+
+    TextRenderer getTextRenderer();
     Text getTitleComponent();
 
     default Vec2f getRenderStartPos() {

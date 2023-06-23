@@ -59,7 +59,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         MinecraftClient mc = MinecraftClient.getInstance();
         int padding = 5;
         float lineHeight = mc.textRenderer.fontHeight;
-        float maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - BACKGROUND_BORDERS * 2;
+        float maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
 
         Vec2f modeTextPos = new Vec2f(modesListPos1.x + modesListPos2.x + padding, modesListPos1.y + padding + 1.5F);
         Text modeText = DWM.TEXTS.SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
@@ -90,11 +90,11 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
     }
 
     private Vec2f getModesListSize() {
-        return new Vec2f(100, (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2);
+        return new Vec2f(100, (int) this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
     }
 
     private Vec2f getModesListPos() {
-        return this.getRenderPos(BACKGROUND_BORDERS, (int) this.getBackgroundSize().y - this.getModesListSize().y - BACKGROUND_BORDERS);
+        return this.getRenderPos(this.getBackgroundBorderSize().x, (int) this.getBackgroundSize().y - this.getModesListSize().y - this.getBackgroundBorderSize().y);
     }
 
     private static class ScrewdriverModesListWidget extends BaseListWidget {

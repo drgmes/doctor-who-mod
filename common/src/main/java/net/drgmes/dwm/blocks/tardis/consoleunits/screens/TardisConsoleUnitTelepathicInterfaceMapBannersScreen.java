@@ -26,11 +26,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
 
     @Override
     protected void init() {
-        int bannersListWidth = (int) this.getBackgroundSize().x - BACKGROUND_BORDERS * 2;
-        int bannersListHeight = (int) this.getBackgroundSize().y - BACKGROUND_BORDERS * 2 - BUTTON_HEIGHT - 3;
-        int bannersListOffset = (int) this.getBackgroundSize().y - bannersListHeight - BACKGROUND_BORDERS - BUTTON_HEIGHT - 2;
+        int bannersListWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2);
+        int bannersListHeight = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2) - BUTTON_HEIGHT - 3;
+        int bannersListOffset = (int) (this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y) - BUTTON_HEIGHT - 2;
 
-        Vec2f bannersListPos = this.getRenderPos(BACKGROUND_BORDERS, bannersListOffset);
+        Vec2f bannersListPos = this.getRenderPos(this.getBackgroundBorderSize().x, bannersListOffset);
         this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
         this.addDrawableChild(this.bannersListWidget);
 
@@ -59,13 +59,13 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         this.selected = selected;
     }
 
+    protected void update() {
+        this.acceptButton.active = this.selected != null;
+    }
+
     protected void setSelected(BannersListWidget.BannerEntry entry) {
         this.selected = entry == this.selected ? null : entry;
         this.update();
-    }
-
-    private void update() {
-        this.acceptButton.active = this.selected != null;
     }
 
     private static class BannersListWidget extends BaseListWidget {

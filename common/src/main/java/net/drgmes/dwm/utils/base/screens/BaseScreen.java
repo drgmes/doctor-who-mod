@@ -5,10 +5,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec2f;
 
 public abstract class BaseScreen extends Screen implements IBaseScreen {
     protected static final int BUTTON_HEIGHT = 20;
-    protected static final int BACKGROUND_BORDERS = 24;
 
     protected BaseScreen(Text title) {
         super(title);
@@ -27,6 +27,11 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     @Override
     public int getHeight() {
         return this.height;
+    }
+
+    @Override
+    public Vec2f getBackgroundBorderSize() {
+        return new Vec2f(24, 24);
     }
 
     @Override

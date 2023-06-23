@@ -45,22 +45,22 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     protected void init() {
         super.init();
 
-        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2 - 1;
-        int buttonOffset = (int) (this.getBackgroundSize().y - BACKGROUND_BORDERS - BUTTON_HEIGHT - 1);
+        int buttonWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2) / 2 - 1;
+        int buttonOffset = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1);
 
-        Vec2f cancelButtonPos = this.getRenderPos(BACKGROUND_BORDERS + 1, buttonOffset);
+        Vec2f cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
         this.cancelButton = ScreenHelper.getButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_BTN_CONSOLE_ROOMS_CANCEL, (b) -> this.close());
 
-        Vec2f acceptButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 2, buttonOffset);
+        Vec2f acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
         this.acceptButton = ScreenHelper.getButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_BTN_CONSOLE_ROOMS_ACCEPT, (b) -> this.apply());
 
-        Vec2f prevButtonPos = this.getRenderPos(BACKGROUND_BORDERS + 1, buttonOffset - BUTTON_HEIGHT - 1);
+        Vec2f prevButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset - BUTTON_HEIGHT - 1);
         this.prevButton = ScreenHelper.getButtonWidget((int) prevButtonPos.x, (int) prevButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_BTN_CONSOLE_ROOMS_PREV, (b) -> {
             this.selectedConsoleRoomIndex = this.selectedConsoleRoomIndex + 1 < this.consoleRooms.size() ? this.selectedConsoleRoomIndex + 1 : 0;
             this.updateAcceptButton();
         });
 
-        Vec2f nextButtonPos = this.getRenderPos(BACKGROUND_BORDERS + buttonWidth + 2, buttonOffset - BUTTON_HEIGHT - 1);
+        Vec2f nextButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset - BUTTON_HEIGHT - 1);
         this.nextButton = ScreenHelper.getButtonWidget((int) nextButtonPos.x, (int) nextButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_BTN_CONSOLE_ROOMS_NEXT, (b) -> {
             this.selectedConsoleRoomIndex = this.selectedConsoleRoomIndex - 1 >= 0 ? this.selectedConsoleRoomIndex - 1 : this.consoleRooms.size() - 1;
             this.updateAcceptButton();
@@ -107,15 +107,16 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     }
 
     private void renderImage(DrawContext context) {
-        float padding = BACKGROUND_BORDERS * 1.25F;
         TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
+        float paddingX = this.getBackgroundBorderSize().x * 1.25F;
+        float paddingY = this.getBackgroundBorderSize().y * 1.25F;
 
         if (selectedConsoleRoom == null) return;
 
-        Vec2f titlePos = this.getRenderPos(padding, padding);
+        Vec2f titlePos = this.getRenderPos(paddingX, paddingY);
         ScreenHelper.drawText(selectedConsoleRoom.getTitle(), this.textRenderer, context, titlePos.x, titlePos.y, 0xE0E0E0, true);
 
-        Vec2f imagePos = this.getRenderPos(padding, padding + this.getTextRenderer().fontHeight * 1.5F);
+        Vec2f imagePos = this.getRenderPos(paddingX, paddingY + this.getTextRenderer().fontHeight * 1.5F);
         Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + selectedConsoleRoom.name + ".png");
 
         if (!selectedConsoleRoom.imageUrl.isEmpty()) {
@@ -134,10 +135,10 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
             }
 
             Identifier remoteConsoleRoomImage = LOADED_CONSOLE_ROOMS_IMAGES.get(selectedConsoleRoom.name);
-            if (remoteConsoleRoomImage != null) this.drawImage(context, imagePos, new Vec2f(this.getBackgroundSize().x - padding * 2, 120), remoteConsoleRoomImage);
+            if (remoteConsoleRoomImage != null) this.drawImage(context, imagePos, new Vec2f(this.getBackgroundSize().x - paddingX * 2, 120), remoteConsoleRoomImage);
             return;
         }
 
-        this.drawImage(context, imagePos, new Vec2f(this.getBackgroundSize().x - padding * 2, 120), localConsoleRoomImage);
+        this.drawImage(context, imagePos, new Vec2f(this.getBackgroundSize().x - paddingX * 2, 120), localConsoleRoomImage);
     }
 }

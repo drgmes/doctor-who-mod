@@ -46,8 +46,8 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         super.init();
 
         int buttonHeight = 20;
-        int buttonWidth = (int) (this.getBackgroundSize().x - BACKGROUND_BORDERS * 2) / 2;
-        int buttonOffset = (int) (this.getBackgroundSize().y / 2 - BACKGROUND_BORDERS / 2 - buttonHeight / 2 + BUTTON_HEIGHT);
+        int buttonWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2) / 2;
+        int buttonOffset = (int) (this.getBackgroundSize().y / 2 - this.getBackgroundBorderSize().y / 2 - buttonHeight / 2 + BUTTON_HEIGHT);
 
         Vec2f cancelButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2F - buttonWidth / 2F, buttonOffset + buttonHeight + 1);
         this.cancelButton = ScreenHelper.getButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());

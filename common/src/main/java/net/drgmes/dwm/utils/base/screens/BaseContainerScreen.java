@@ -29,11 +29,6 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public TextRenderer getTextRenderer() {
-        return this.textRenderer;
-    }
-
-    @Override
     public Identifier getBackground() {
         return null;
     }
@@ -41,6 +36,16 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     @Override
     public Vec2f getBackgroundSize() {
         return new Vec2f(0, 0);
+    }
+
+    @Override
+    public Vec2f getBackgroundBorderSize() {
+        return new Vec2f(24, 24);
+    }
+
+    @Override
+    public TextRenderer getTextRenderer() {
+        return this.textRenderer;
     }
 
     @Override
