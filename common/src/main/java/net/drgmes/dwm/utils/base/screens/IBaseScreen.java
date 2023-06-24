@@ -7,7 +7,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
 public interface IBaseScreen {
@@ -15,44 +15,48 @@ public interface IBaseScreen {
     int getHeight();
 
     Identifier getBackground();
-    Vec2f getBackgroundSize();
-    Vec2f getBackgroundBorderSize();
+    Vector2i getBackgroundSize();
+    Vector2i getBackgroundBorderSize();
 
     TextRenderer getTextRenderer();
     Text getTitleComponent();
 
-    default Vec2f getRenderStartPos() {
-        return new Vec2f(
-            (this.getWidth() - this.getBackgroundSize().x) / 2,
-            (this.getHeight() - this.getBackgroundSize().y) / 2
-        );
+    default Vector2i getRenderStartPos() {
+        return new Vector2i(this.getWidth() - this.getBackgroundSize().x, this.getHeight() - this.getBackgroundSize().y).div(2);
     }
 
-    default Vec2f getRenderPos(float offsetX, float offsetY) {
-        final Vec2f pos = this.getRenderStartPos();
-        return new Vec2f(pos.x + offsetX, pos.y + offsetY);
+    default Vector2i getRenderPos(int offsetX, int offsetY) {
+        return new Vector2i(offsetX, offsetY).add(this.getRenderStartPos());
     }
 
-    default Vec2f getTitleRenderPos() {
+    default Vector2i getTitleRenderPos() {
         return this.getRenderPos(0, 0);
     }
 
-    default void renderElements(DrawContext context, int mouseX, int mouseY, float delta, int color) {
+    default int getTitleBackgroundColor() {
+        return 0xFF4F5664;
+    }
+
+    default void renderElements(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackgroundImage(context);
-        this.renderTitleBackground(context, color);
+        this.renderTitleBackground(context);
         this.renderTitle(context);
         this.renderAdditional(context, mouseX, mouseY, delta);
     }
 
-    default void renderTitleBackground(DrawContext context, int color) {
-        float titleWidth = this.getTextRenderer().getWidth(this.getTitleComponent().getString());
-        Vec2f pos1 = this.getTitleRenderPos().add(new Vec2f(-4, 0));
-        Vec2f pos2 = pos1.add(new Vec2f(titleWidth + 9, this.getTextRenderer().fontHeight + 1));
-        context.fillGradient((int) pos1.x, (int) pos1.y, (int) pos2.x, (int) pos2.y, color, color);
+    default void renderElementsAfter(DrawContext context, int mouseX, int mouseY, float delta) {
+    }
+
+    default void renderTitleBackground(DrawContext context) {
+        int color = this.getTitleBackgroundColor();
+        int titleWidth = this.getTextRenderer().getWidth(this.getTitleComponent().getString());
+        Vector2i pos1 = new Vector2i(-4, 0).add(this.getTitleRenderPos());
+        Vector2i pos2 = new Vector2i(titleWidth + 9, this.getTextRenderer().fontHeight + 1).add(pos1);
+        context.fillGradient(pos1.x, pos1.y, pos2.x, pos2.y, color, color);
     }
 
     default void renderTitle(DrawContext context) {
-        Vec2f pos = this.getTitleRenderPos();
+        Vector2i pos = this.getTitleRenderPos();
         ScreenHelper.drawText(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
     }
 
@@ -63,8 +67,8 @@ public interface IBaseScreen {
     default void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
     }
 
-    default void drawImage(DrawContext context, Vec2f pos, Vec2f size, Identifier image) {
-        context.drawTexture(image, (int) pos.x, (int) pos.y, 0, 0, 0, (int) size.x, (int) size.y, (int) size.x, (int) size.y);
+    default void drawImage(DrawContext context, Vector2i pos, Vector2i size, Identifier image) {
+        context.drawTexture(image, pos.x, pos.y, 0, 0, 0, size.x, size.y, size.x, size.y);
     }
 
     default boolean shouldCloseOnInventoryKey() {

@@ -4,7 +4,7 @@ import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +50,15 @@ public class DWM {
         public static final Text ARS_INTERFACE_BTN_GENERATE = Text.translatable("screen." + DWM.MODID + ".ars_interface.button.generate");
         public static final Text ARS_INTERFACE_BTN_DESTROY = Text.translatable("screen." + DWM.MODID + ".ars_interface.button.destroy");
 
-        public static final Text MONITOR_NAME_CONSOLE_ROOMS = Text.translatable("screen." + DWM.MODID + ".monitor.title.console_rooms");
+        public static final Text MONITOR_TITLE = Text.translatable("screen." + DWM.MODID + ".monitor.title");
+        public static final Text MONITOR_DATA_ID = Text.translatable("screen." + DWM.MODID + ".monitor.data.id");
+        public static final Text MONITOR_DATA_OWNER = Text.translatable("screen." + DWM.MODID + ".monitor.data.owner");
+        public static final Text MONITOR_ACTION_SETTINGS = Text.translatable("screen." + DWM.MODID + ".monitor.action.settings");
+        public static final Text MONITOR_ACTION_WAYPOINTS = Text.translatable("screen." + DWM.MODID + ".monitor.action.waypoints");
+        public static final Text MONITOR_ACTION_RESEARCHER = Text.translatable("screen." + DWM.MODID + ".monitor.action.researcher");
+        public static final Text MONITOR_ACTION_CONSOLE_ROOMS = Text.translatable("screen." + DWM.MODID + ".monitor.action.console_rooms");
+        public static final Text MONITOR_ACTION_EXTERNAL_MONITOR = Text.translatable("screen." + DWM.MODID + ".monitor.action.external_monitor");
+
         public static final Text MONITOR_BTN_CONSOLE_ROOMS_CANCEL = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.cancel");
         public static final Text MONITOR_BTN_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.accept");
         public static final Text MONITOR_BTN_CONSOLE_ROOMS_PREV = Text.translatable("screen." + DWM.MODID + ".monitor.button.console_rooms.prev");
@@ -109,26 +117,31 @@ public class DWM {
     public static class TEXTURES {
         public static class GUI {
             public static class TARDIS {
-                public static final Identifier ARS_INTERFACE = DWM.getIdentifier("textures/gui/tardis/ars/interface.png");
-                public static final Vec2f ARS_INTERFACE_SIZE = new Vec2f(403, 303);
+                public static class ARS {
+                    public static final Identifier CREATOR_INTERFACE = DWM.getIdentifier("textures/gui/tardis/ars/creator_interface.png");
+                    public static final Vector2i CREATOR_INTERFACE_SIZE = new Vector2i(371, 297);
+
+                    public static final Identifier DESTROYER_INTERFACE = DWM.getIdentifier("textures/gui/tardis/ars/destroyer_interface.png");
+                    public static final Vector2i DESTROYER_INTERFACE_SIZE = new Vector2i(403, 303);
+                }
 
                 public static class CONSOLE {
                     public static final Identifier MONITOR = DWM.getIdentifier("textures/gui/tardis/console_unit/monitor.png");
-                    public static final Vec2f MONITOR_SIZE = new Vec2f(403, 303);
+                    public static final Vector2i MONITOR_SIZE = new Vector2i(403, 303);
 
                     public static final Identifier TELEPATHIC_INTERFACE = DWM.getIdentifier("textures/gui/tardis/console_unit/telepathic_interface.png");
-                    public static final Vec2f TELEPATHIC_INTERFACE_SIZE = new Vec2f(403, 303);
+                    public static final Vector2i TELEPATHIC_INTERFACE_SIZE = new Vector2i(403, 303);
                 }
 
                 public static class ENGINE {
                     public static final Identifier SYSTEMS_INTERFACE = DWM.getIdentifier("textures/gui/tardis/engine/systems_interface.png");
-                    public static final Vec2f SYSTEMS_INTERFACE_SIZE = new Vec2f(176, 166);
+                    public static final Vector2i SYSTEMS_INTERFACE_SIZE = new Vector2i(176, 166);
                 }
             }
 
             public static class SCREWDRIVER {
                 public static final Identifier INTERFACE_MAIN = DWM.getIdentifier("textures/gui/screwdriver/interface/main.png");
-                public static final Vec2f INTERFACE_MAIN_SIZE = new Vec2f(403, 303);
+                public static final Vector2i INTERFACE_MAIN_SIZE = new Vector2i(403, 303);
             }
         }
     }

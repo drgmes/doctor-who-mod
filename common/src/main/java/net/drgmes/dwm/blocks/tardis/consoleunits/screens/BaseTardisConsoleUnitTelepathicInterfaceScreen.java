@@ -6,7 +6,7 @@ import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseTardisConsoleUnitTelepathicInterfaceScreen extends BaseTardisConsoleUnitScreen {
     protected static final int LINE_PADDING = 3;
@@ -24,22 +24,22 @@ public abstract class BaseTardisConsoleUnitTelepathicInterfaceScreen extends Bas
     }
 
     @Override
-    public Vec2f getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.multiply(0.795F);
+    public Vector2i getBackgroundSize() {
+        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
     }
 
     @Override
     protected void init() {
         super.init();
 
-        int buttonWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2) / 2 - 1;
-        int buttonOffset = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1);
+        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
+        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
 
-        Vec2f cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
-        this.cancelButton = ScreenHelper.getButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.close());
+        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
+        this.cancelButton = ScreenHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.close());
 
-        Vec2f acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
-        this.acceptButton = ScreenHelper.getButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
+        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
+        this.acceptButton = ScreenHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
 
         this.addDrawableChild(this.cancelButton);
         this.addDrawableChild(this.acceptButton);

@@ -5,7 +5,7 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseScreen extends Screen implements IBaseScreen {
     protected static final int BUTTON_HEIGHT = 20;
@@ -30,8 +30,8 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public Vec2f getBackgroundBorderSize() {
-        return new Vec2f(24, 24);
+    public Vector2i getBackgroundBorderSize() {
+        return new Vector2i(24, 24);
     }
 
     @Override
@@ -86,7 +86,8 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderBackground(context);
-        this.renderElements(context, mouseX, mouseY, delta, 0xFF4F5664);
+        this.renderElements(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
+        this.renderElementsAfter(context, mouseX, mouseY, delta);
     }
 }

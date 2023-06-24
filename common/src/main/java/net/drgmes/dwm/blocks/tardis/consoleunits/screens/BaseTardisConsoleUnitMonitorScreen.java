@@ -4,7 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseTardisConsoleUnitMonitorScreen extends BaseTardisConsoleUnitScreen {
     public BaseTardisConsoleUnitMonitorScreen(Text title, BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
@@ -17,7 +17,7 @@ public abstract class BaseTardisConsoleUnitMonitorScreen extends BaseTardisConso
     }
 
     @Override
-    public Vec2f getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.MONITOR_SIZE.multiply(0.795F);
+    public Vector2i getBackgroundSize() {
+        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.MONITOR_SIZE.div(1 / 0.795F, new Vector2i());
     }
 }

@@ -3,7 +3,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseTardisConsoleUnitScreen extends BaseScreen {
     protected final BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity;
@@ -14,7 +14,7 @@ public abstract class BaseTardisConsoleUnitScreen extends BaseScreen {
     }
 
     @Override
-    public Vec2f getTitleRenderPos() {
+    public Vector2i getTitleRenderPos() {
         return this.getRenderPos(23, 8);
     }
 

@@ -1013,7 +1013,15 @@
   "screen.dwm.ars_interface.button.generate": "Згенерувати кімнату",
   "screen.dwm.ars_interface.button.destroy": "Зруйнувати кімнату",
 
-  "screen.dwm.monitor.title.console_rooms": "Консольні кімнати",
+  "screen.dwm.monitor.title": "Функції ТАРДІС",
+  "screen.dwm.monitor.data.id": "TARDIS ID",
+  "screen.dwm.monitor.data.owner": "Власник",
+  "screen.dwm.monitor.action.settings": "Налаштування",
+  "screen.dwm.monitor.action.waypoints": "Шляхові точки",
+  "screen.dwm.monitor.action.researcher": "Дослідник",
+  "screen.dwm.monitor.action.console_rooms": "Консольні кімнати",
+  "screen.dwm.monitor.action.external_monitor": "Зовнішній монітор",
+
   "screen.dwm.monitor.button.console_rooms.cancel": "Скасувати",
   "screen.dwm.monitor.button.console_rooms.accept": "Оновити кімнату",
   "screen.dwm.monitor.button.console_rooms.prev": "Попередня",

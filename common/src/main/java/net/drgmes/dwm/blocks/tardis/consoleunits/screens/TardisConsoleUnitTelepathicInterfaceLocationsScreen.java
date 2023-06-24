@@ -11,7 +11,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,14 +43,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     @Override
     protected void init() {
-        int locationsListWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2);
-        int locationsListHeight = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2) - 20 - BUTTON_HEIGHT - 3;
-        int locationsListOffset = (int) (this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y) - BUTTON_HEIGHT - 2;
+        int locationsListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int locationsListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
+        int locationsListOffset = this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
 
-        Vec2f searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
-        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
+        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
 
-        Vec2f locationsListPos = this.getRenderPos(this.getBackgroundBorderSize().x, locationsListOffset);
+        Vector2i locationsListPos = this.getRenderPos(this.getBackgroundBorderSize().x, locationsListOffset);
         this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
 
         this.addDrawableChild(this.locationsListWidget);
@@ -96,6 +96,11 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         }
     }
 
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return !this.search.isFocused();
+    }
+
     protected void update() {
         this.lastSearch = this.search.getText();
         this.acceptButton.active = this.selected != null;
@@ -126,8 +131,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     private static class LocationsListWidget extends BaseListWidget {
         private final TardisConsoleUnitTelepathicInterfaceLocationsScreen parent;
 
-        public LocationsListWidget(TardisConsoleUnitTelepathicInterfaceLocationsScreen parent, int width, int height, Vec2f pos) {
-            super(parent.client, parent.textRenderer, width, height, LINE_PADDING, pos);
+        public LocationsListWidget(TardisConsoleUnitTelepathicInterfaceLocationsScreen parent, int width, int height, Vector2i pos) {
+            super(parent.client, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
         }

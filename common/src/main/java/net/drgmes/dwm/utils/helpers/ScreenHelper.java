@@ -7,7 +7,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Language;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.List;
 
@@ -16,10 +16,9 @@ public class ScreenHelper {
         return ButtonWidget.builder(message, onPress).size(width, height).position(x, y).build();
     }
 
-    public static boolean checkMouseInboundPosition(double mouseX, double mouseY, Vec2f pos, Vec2f size) {
-        final float x = pos.x + size.x;
-        final float y = pos.y + size.y;
-
+    public static boolean checkMouseInboundPosition(double mouseX, double mouseY, Vector2i pos, Vector2i size) {
+        int x = pos.x + size.x;
+        int y = pos.y + size.y;
         return (mouseX >= pos.x && mouseX <= x) && (mouseY >= pos.y && mouseY <= y);
     }
 
@@ -31,20 +30,20 @@ public class ScreenHelper {
         drawText(text.asOrderedText(), textRenderer, context, x, y, color, shadow);
     }
 
-    public static void drawTextClipped(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int maxTextLength, int color) {
+    public static void drawTextClipped(Text text, TextRenderer textRenderer, DrawContext context, Vector2i pos, int maxTextLength, int color) {
         List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
         drawText(lines.get(0), textRenderer, context, pos.x, pos.y, color, true);
     }
 
-    public static Vec2f drawTextMultiline(Text text, TextRenderer textRenderer, DrawContext context, Vec2f pos, int lineHeight, int maxTextLength, int color) {
+    public static Vector2i drawTextMultiline(Text text, TextRenderer textRenderer, DrawContext context, Vector2i pos, int lineHeight, int maxTextLength, int color) {
         List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
 
-        float offsetY = 0;
+        int offsetY = 0;
         for (OrderedText line : lines) {
             drawText(line, textRenderer, context, pos.x, pos.y + offsetY, color, true);
             offsetY += lineHeight;
         }
 
-        return new Vec2f(0, offsetY);
+        return new Vector2i(0, offsetY);
     }
 }

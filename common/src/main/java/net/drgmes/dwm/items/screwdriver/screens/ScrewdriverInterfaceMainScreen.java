@@ -10,7 +10,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
 
     @Override
     protected void init() {
-        Vec2f modesListSize = this.getModesListSize();
-        this.modesListWidget = new ScrewdriverModesListWidget(this, (int) modesListSize.x, (int) modesListSize.y, this.getModesListPos());
+        Vector2i modesListSize = this.getModesListSize();
+        this.modesListWidget = new ScrewdriverModesListWidget(this, modesListSize.x, modesListSize.y, this.getModesListPos());
 
         this.addDrawableChild(this.modesListWidget);
         super.init();
@@ -50,29 +50,29 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         super.renderAdditional(context, mouseX, mouseY, delta);
 
         int modesListBackgroundColor = 0x40000000;
-        Vec2f modesListPos1 = this.getModesListPos();
-        Vec2f modesListPos2 = this.getModesListSize();
-        context.fillGradient((int) modesListPos1.x, (int) modesListPos1.y, (int) (modesListPos1.x + modesListPos2.x), (int) (modesListPos1.y + modesListPos2.y), modesListBackgroundColor, modesListBackgroundColor);
+        Vector2i modesListPos1 = this.getModesListPos();
+        Vector2i modesListPos2 = this.getModesListSize();
+        context.fillGradient(modesListPos1.x, modesListPos1.y, modesListPos1.x + modesListPos2.x, modesListPos1.y + modesListPos2.y, modesListBackgroundColor, modesListBackgroundColor);
 
         if (this.selected == null) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
         int padding = 5;
-        float lineHeight = mc.textRenderer.fontHeight;
-        float maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
+        int lineHeight = mc.textRenderer.fontHeight;
+        int maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
 
-        Vec2f modeTextPos = new Vec2f(modesListPos1.x + modesListPos2.x + padding, modesListPos1.y + padding + 1.5F);
+        Vector2i modeTextPos = new Vector2i(modesListPos1.x + modesListPos2.x + padding, (int) Math.floor(modesListPos1.y + padding + 1.5F));
         Text modeText = DWM.TEXTS.SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
 
-        modeTextPos = modeTextPos.add(ScreenHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, (int) lineHeight, (int) maxTextLength, 0xFFFFFF));
+        modeTextPos = modeTextPos.add(ScreenHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextLength, 0xFFFFFF));
 
         float modeDescriptionScale = 0.75F;
-        Vec2f modeDescriptionPos = new Vec2f(modeTextPos.x / modeDescriptionScale, (modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale);
+        Vector2i modeDescriptionPos = new Vector2i((int) Math.floor(modeTextPos.x / modeDescriptionScale), (int) Math.floor((modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale));
         Text modeDescription = this.selected.mode.getDescription();
 
         context.getMatrices().push();
         context.getMatrices().scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
-        ScreenHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, (int) lineHeight, (int) (maxTextLength / modeDescriptionScale), 0xFFFFFF);
+        ScreenHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, lineHeight, (int) Math.floor(maxTextLength / modeDescriptionScale), 0xFFFFFF);
         context.getMatrices().pop();
     }
 
@@ -89,19 +89,19 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         new ScrewdriverUpdatePacket(this.screwdriverItemStack, this.isMainHand).sendToServer();
     }
 
-    private Vec2f getModesListSize() {
-        return new Vec2f(100, (int) this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
+    private Vector2i getModesListSize() {
+        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
     }
 
-    private Vec2f getModesListPos() {
-        return this.getRenderPos(this.getBackgroundBorderSize().x, (int) this.getBackgroundSize().y - this.getModesListSize().y - this.getBackgroundBorderSize().y);
+    private Vector2i getModesListPos() {
+        return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundSize().y - this.getModesListSize().y - this.getBackgroundBorderSize().y);
     }
 
     private static class ScrewdriverModesListWidget extends BaseListWidget {
         private final ScrewdriverInterfaceMainScreen parent;
 
-        public ScrewdriverModesListWidget(ScrewdriverInterfaceMainScreen parent, int width, int height, Vec2f pos) {
-            super(parent.client, parent.textRenderer, width, height, LINE_PADDING, pos);
+        public ScrewdriverModesListWidget(ScrewdriverInterfaceMainScreen parent, int width, int height, Vector2i pos) {
+            super(parent.client, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
         }

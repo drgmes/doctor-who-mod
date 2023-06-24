@@ -1,11 +1,8 @@
 package net.drgmes.dwm.blocks.tardis.consoleunits;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
-import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitTypeEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.*;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
@@ -14,7 +11,6 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.network.client.*;
 import net.drgmes.dwm.network.server.TardisConsoleUnitInitPacket;
-import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -30,24 +26,15 @@ import net.minecraft.item.map.MapBannerMarker;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.structure.Structure;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.Optional;
 
 public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public final TardisStateManager tardisStateManager = new TardisStateManager(null, false);
@@ -168,12 +155,12 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     public void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
-        new TardisConsoleUnitMonitorOpenPacket(this.getPos(), tardis.getId(), tardis.getConsoleRoom().name, createConsoleRoomsList(tardis.getConsoleRoom().name))
+        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardisStateManager.writeNbt(new NbtCompound()))
             .sendTo(player);
     }
 
     public void sendTelepathicInterfaceLocationsOpenPacket(ServerPlayerEntity player) {
-        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), createLocationsListFromRegistry(player.getServerWorld(), DimensionHelper.getWorld(this.tardisStateManager.getDestinationExteriorDimension(), player.server)))
+        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), player.getServerWorld(), DimensionHelper.getWorld(this.tardisStateManager.getDestinationExteriorDimension(), player.server))
             .sendTo(player);
     }
 
@@ -344,89 +331,6 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             tardisHolder.get().applyControlsStorageToData(this.controlsStorage);
             this.displayNotification(tardisHolder.get(), control.role, player);
         }
-    }
-
-    private static NbtCompound createConsoleRoomsList(String consoleRoomId) {
-        List<TardisConsoleRoomEntry> list = TardisConsoleRooms.CONSOLE_ROOMS.values().stream().filter((consoleRoom) -> !consoleRoom.isHidden).toList();
-
-        AtomicInteger i = new AtomicInteger();
-        NbtCompound tag = new NbtCompound();
-        NbtCompound consoleRoomsTag = new NbtCompound();
-        list.forEach((entry) -> consoleRoomsTag.put(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), entry.writeNbt(new NbtCompound())));
-
-        tag.put("consoleRooms", consoleRoomsTag);
-        tag.putInt("selectedConsoleRoomIndex", Math.max(0, Math.min(list.size(), list.indexOf(TardisConsoleRooms.getConsoleRoom(consoleRoomId)))));
-
-        return tag;
-    }
-
-    private static NbtCompound createLocationsListFromRegistry(ServerWorld world, @Nullable ServerWorld destinationWorld) {
-        List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> list = new ArrayList<>();
-
-        List<Identifier> biomeIds;
-        Registry<Structure> structureRegistry;
-
-        if (destinationWorld != null) {
-            Set<RegistryEntry<Biome>> biomeEntries = destinationWorld.getChunkManager().getChunkGenerator().getBiomeSource().getBiomes();
-            biomeIds = biomeEntries.stream().filter((b) -> b.getKey().isPresent()).map((b) -> b.getKey().get().getValue()).toList();
-            structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
-        }
-        else {
-            biomeIds = null;
-            structureRegistry = null;
-        }
-
-        list.addAll(getLocationsForRegistry(
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.BIOME,
-            RegistryKeys.BIOME,
-            world,
-            (entry) -> (
-                !entry.getValue().equals(ModDimensions.ModDimensionTypes.TARDIS.getValue()) && (biomeIds == null || biomeIds.contains(entry.getValue()))
-            )
-        ));
-
-        list.addAll(getLocationsForRegistry(
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.STRUCTURE,
-            RegistryKeys.STRUCTURE,
-            world,
-            (entry) -> {
-                boolean flag = false;
-
-                if (structureRegistry != null) {
-                    Structure structure = structureRegistry.get(entry.getValue());
-                    if (structure != null) {
-                        flag = structure.getValidBiomes().stream().anyMatch((b) -> b.getKey().isPresent() && biomeIds.contains(b.getKey().get().getValue()));
-                    }
-                }
-
-                return flag;
-            }
-        ));
-
-        AtomicInteger i = new AtomicInteger();
-        NbtCompound tag = new NbtCompound();
-        list.forEach((entry) -> {
-            NbtCompound pair = new NbtCompound();
-            pair.putString("id", entry.getKey().toString());
-            pair.putString("type", entry.getValue().name());
-            tag.put(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), pair);
-        });
-
-        return tag;
-    }
-
-    private static <T> List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> getLocationsForRegistry(TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType type, RegistryKey<Registry<T>> registryKey, ServerWorld world, Function<RegistryKey<T>, Boolean> entryChecker) {
-        Registry<T> registry = world.getRegistryManager().get(registryKey);
-
-        List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> list = new ArrayList<>(
-            registry.getKeys().stream().filter(entryChecker::apply).map((res) -> Map.entry(res.getValue(), type)).toList()
-        );
-
-        if (list.size() > 0) {
-            list.sort(Comparator.comparing(a -> a.getKey().getPath()));
-        }
-
-        return list;
     }
 
     private void createControls() {

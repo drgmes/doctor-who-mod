@@ -7,15 +7,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseContainerScreen<C extends ScreenHandler> extends AbstractInventoryScreen<C> implements IBaseScreen {
     public BaseContainerScreen(C menu, PlayerInventory inventory, Text component) {
         super(menu, inventory, component);
 
-        Vec2f backgroundSize = this.getBackgroundSize();
-        this.backgroundWidth = (int) backgroundSize.x;
-        this.backgroundHeight = (int) backgroundSize.y;
+        Vector2i backgroundSize = this.getBackgroundSize();
+        this.backgroundWidth = backgroundSize.x;
+        this.backgroundHeight = backgroundSize.y;
     }
 
     @Override
@@ -34,13 +34,13 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public Vec2f getBackgroundSize() {
-        return new Vec2f(0, 0);
+    public Vector2i getBackgroundSize() {
+        return new Vector2i(0, 0);
     }
 
     @Override
-    public Vec2f getBackgroundBorderSize() {
-        return new Vec2f(24, 24);
+    public Vector2i getBackgroundBorderSize() {
+        return new Vector2i(24, 24);
     }
 
     @Override
@@ -61,8 +61,9 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderBackground(context);
-        this.renderElements(context, mouseX, mouseY, delta, 0xFF4F5664);
+        this.renderElements(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
+        this.renderElementsAfter(context, mouseX, mouseY, delta);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 

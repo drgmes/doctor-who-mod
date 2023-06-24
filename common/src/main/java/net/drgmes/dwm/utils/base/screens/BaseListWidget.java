@@ -13,20 +13,18 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.Collections;
 import java.util.List;
 
 public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
-    private final TextRenderer textRenderer;
-    private final Vec2f pos;
+    private final Vector2i pos;
     private final int padding;
 
-    public BaseListWidget(MinecraftClient mc, TextRenderer textRenderer, int width, int height, int padding, Vec2f pos) {
-        super(mc, width, height, (int) pos.y, (int) pos.y + height, textRenderer.fontHeight + padding * 2);
+    public BaseListWidget(MinecraftClient mc, int width, int height, int padding, Vector2i pos) {
+        super(mc, width, height, pos.y, pos.y + height, mc.textRenderer.fontHeight + padding * 2);
 
-        this.textRenderer = textRenderer;
         this.pos = pos;
         this.padding = padding;
     }
@@ -43,7 +41,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
     public void init() {
         this.refreshList();
-        this.setLeftPos((int) this.pos.x);
+        this.setLeftPos(this.pos.x);
         this.setRenderHorizontalShadows(false);
         this.setRenderBackground(false);
     }
@@ -73,7 +71,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
             MutableText text = this.getText().copy();
             if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
 
-            Vec2f pos = new Vec2f(left + padding, top + 2);
+            Vector2i pos = new Vector2i(left + padding, top + 2);
             ScreenHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 

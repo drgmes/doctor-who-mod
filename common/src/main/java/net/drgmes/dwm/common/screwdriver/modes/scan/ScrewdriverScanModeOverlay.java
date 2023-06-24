@@ -16,7 +16,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Language;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -48,10 +48,10 @@ public class ScrewdriverScanModeOverlay {
         int screenHeight = mc.getWindow().getScaledHeight();
 
         float modeTextScale = 0.5F;
-        float modeTextOffset = player.isCreative() ? 3F : 5F;
+        int modeTextOffset = player.isCreative() ? 3 : 5;
         MutableText modeTitle = Screwdriver.getInteractionMode(screwdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
         MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", modeTitle);
-        Vec2f modePos = new Vec2f(screenWidth - ((screenWidth - 192 + PADDING) / 2F) - mc.textRenderer.getWidth(modeText) * modeTextScale, screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
+        Vector2i modePos = new Vector2i(screenWidth - (screenWidth - 192 + PADDING) / 2 - (int) Math.floor(mc.textRenderer.getWidth(modeText) * modeTextScale), screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
@@ -61,7 +61,7 @@ public class ScrewdriverScanModeOverlay {
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
-        int maxTextLength = Math.round((screenWidth - 192) / 2F - PADDING * 1.5F);
+        int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);
         Text title = Text.Serializer.fromJson(tag.getString("title"));
         List<Text> lines = new ArrayList<>();
         List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
@@ -70,18 +70,18 @@ public class ScrewdriverScanModeOverlay {
         keys.sort(Comparator.comparing((key) -> key));
         keys.forEach((key) -> lines.add(Text.Serializer.fromJson(tag.getCompound("linesTag").getString(key))));
 
-        float titleLineHeight = mc.textRenderer.fontHeight + LINE_MARGIN;
-        float lineHeight = mc.textRenderer.fontHeight * LINE_SCALE + LINE_MARGIN;
-        float height = titleLineHeight * titleLines.size() + lineHeight * lines.size() - LINE_MARGIN * 2;
+        int titleLineHeight = mc.textRenderer.fontHeight + LINE_MARGIN;
+        int lineHeight = (int) Math.floor(mc.textRenderer.fontHeight * LINE_SCALE) + LINE_MARGIN;
+        int height = titleLineHeight * titleLines.size() + lineHeight * lines.size() - LINE_MARGIN * 2;
 
-        Vec2f pos = new Vec2f(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2F - 1);
-        float y = pos.y;
+        Vector2i pos = new Vector2i(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2 - 1);
+        int y = pos.y;
 
 //        int color = 0x05000000;
 //        int bgPadding = PADDING / 2;
-//        Vec2f bgPos1 = new Vec2f(pos.x - bgPadding, pos.y - bgPadding);
-//        Vec2f bgPos2 = new Vec2f(pos.x + maxTextLength + bgPadding, pos.y + height + bgPadding);
-//        this.fillGradient(matrixStack, (int) bgPos1.x, (int) bgPos1.y, (int) bgPos2.x, (int) bgPos2.y, color, color);
+//        Vector2i bgPos1 = new Vector2i(pos.x - bgPadding, pos.y - bgPadding);
+//        Vector2i bgPos2 = new Vector2i(pos.x + maxTextLength + bgPadding, pos.y + height + bgPadding);
+//        this.fillGradient(matrixStack, bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, color, color);
 
         for (OrderedText titleLine : titleLines) {
             ScreenHelper.drawText(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);

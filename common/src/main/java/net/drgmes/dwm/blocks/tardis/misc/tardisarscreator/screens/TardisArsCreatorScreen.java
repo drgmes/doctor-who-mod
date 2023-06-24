@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -53,49 +53,50 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     @Override
     public Identifier getBackground() {
-        return DWM.TEXTURES.GUI.TARDIS.ARS_INTERFACE;
+        return DWM.TEXTURES.GUI.TARDIS.ARS.CREATOR_INTERFACE;
     }
 
     @Override
-    public Vec2f getBackgroundSize() {
+    public Vector2i getBackgroundSize() {
         Window window = MinecraftClient.getInstance().getWindow();
-        return new Vec2f(window.getScaledWidth(), window.getScaledHeight());
+        return new Vector2i(window.getScaledWidth(), window.getScaledHeight());
     }
 
     @Override
-    public Vec2f getBackgroundBorderSize() {
-        Vec2f size = this.getBackgroundSize();
-        Vec2f originSize = DWM.TEXTURES.GUI.TARDIS.ARS_INTERFACE_SIZE.multiply(0.795F);
-        return new Vec2f(24 * (size.x / originSize.x), 24 * (size.y / originSize.y));
+    public Vector2i getBackgroundBorderSize() {
+        Vector2i size = this.getBackgroundSize();
+        Vector2i originBorderSize = super.getBackgroundBorderSize();
+        Vector2i originSize = DWM.TEXTURES.GUI.TARDIS.ARS.CREATOR_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
+        return new Vector2i((int) Math.floor(12 * ((float) size.x / originSize.x)), (int) Math.floor(22 * ((float) size.y / originSize.y)));
     }
 
     @Override
-    public Vec2f getTitleRenderPos() {
-        return this.getRenderPos(23, 8);
+    public Vector2i getTitleRenderPos() {
+        return this.getRenderPos(20, 7);
     }
 
     @Override
     protected void init() {
         super.init();
 
-        int buttonWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2) / 2 - 1;
-        int buttonOffset = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1);
+        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
+        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
 
-        Vec2f cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
-        this.cancelButton = ScreenHelper.getButtonWidget((int) cancelButtonPos.x, (int) cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
+        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x, buttonOffset);
+        this.cancelButton = ScreenHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
 
-        Vec2f acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
-        this.acceptButton = ScreenHelper.getButtonWidget((int) acceptButtonPos.x, (int) acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
+        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 1, buttonOffset);
+        this.acceptButton = ScreenHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
 
-        int listWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2);
-        int listHeight = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2) - 20 - BUTTON_HEIGHT - 3;
-        int listOffset = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y) - BUTTON_HEIGHT - listHeight - 2;
+        int listWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int listHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
+        int listOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - listHeight - 2;
 
-        Vec2f categoriesListPos = this.getRenderPos(this.getBackgroundBorderSize().x, listOffset);
+        Vector2i categoriesListPos = this.getRenderPos(this.getBackgroundBorderSize().x, listOffset);
         this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
 
-        Vec2f searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
-        this.search = new TextFieldWidget(this.textRenderer, (int) searchPos.x, (int) searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_FLD_SEARCH);
+        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 2);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_FLD_SEARCH);
 
         this.addDrawableChild(this.listWidget);
         this.addDrawableChild(this.search);
@@ -132,6 +133,11 @@ public class TardisArsCreatorScreen extends BaseScreen {
             this.reloadCategoriesList();
             this.reloadArsStructuresList();
         }
+    }
+
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return !this.search.isFocused();
     }
 
     protected void apply() {
@@ -221,8 +227,8 @@ public class TardisArsCreatorScreen extends BaseScreen {
     private static class ListWidget extends BaseListWidget {
         public final TardisArsCreatorScreen parent;
 
-        public ListWidget(TardisArsCreatorScreen parent, int width, int height, Vec2f pos) {
-            super(parent.client, parent.textRenderer, width, height, LINE_PADDING, pos);
+        public ListWidget(TardisArsCreatorScreen parent, int width, int height, Vector2i pos) {
+            super(parent.client, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
         }

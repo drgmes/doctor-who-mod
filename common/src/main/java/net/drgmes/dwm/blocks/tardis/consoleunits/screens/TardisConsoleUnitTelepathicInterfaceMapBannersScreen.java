@@ -9,7 +9,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.map.MapBannerMarker;
 import net.minecraft.item.map.MapState;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 import java.util.Collection;
 
@@ -26,11 +26,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
 
     @Override
     protected void init() {
-        int bannersListWidth = (int) (this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2);
-        int bannersListHeight = (int) (this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2) - BUTTON_HEIGHT - 3;
-        int bannersListOffset = (int) (this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y) - BUTTON_HEIGHT - 2;
+        int bannersListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int bannersListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_HEIGHT - 3;
+        int bannersListOffset = this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
 
-        Vec2f bannersListPos = this.getRenderPos(this.getBackgroundBorderSize().x, bannersListOffset);
+        Vector2i bannersListPos = this.getRenderPos(this.getBackgroundBorderSize().x, bannersListOffset);
         this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
         this.addDrawableChild(this.bannersListWidget);
 
@@ -59,6 +59,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         this.selected = selected;
     }
 
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
     protected void update() {
         this.acceptButton.active = this.selected != null;
     }
@@ -71,8 +76,8 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     private static class BannersListWidget extends BaseListWidget {
         private final TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent;
 
-        public BannersListWidget(TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent, int width, int height, Vec2f pos) {
-            super(parent.client, parent.textRenderer, width, height, LINE_PADDING, pos);
+        public BannersListWidget(TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent, int width, int height, Vector2i pos) {
+            super(parent.client, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
         }

@@ -7,7 +7,7 @@ import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec2f;
+import org.joml.Vector2i;
 
 public abstract class BaseScrewdriverInterfaceScreen extends BaseScreen {
     protected static final int LINE_PADDING = 3;
@@ -31,12 +31,12 @@ public abstract class BaseScrewdriverInterfaceScreen extends BaseScreen {
     }
 
     @Override
-    public Vec2f getBackgroundSize() {
-        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN_SIZE.multiply(0.795F);
+    public Vector2i getBackgroundSize() {
+        return DWM.TEXTURES.GUI.SCREWDRIVER.INTERFACE_MAIN_SIZE.div(1 / 0.795F, new Vector2i());
     }
 
     @Override
-    public Vec2f getTitleRenderPos() {
+    public Vector2i getTitleRenderPos() {
         return this.getRenderPos(23, 8);
     }
 

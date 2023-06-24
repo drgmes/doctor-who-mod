@@ -43,19 +43,19 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
         PlayerEntity player = context.getPlayer();
         Text failMessage = Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms.failed");
 
-        if (!TardisConsoleRooms.CONSOLE_ROOMS.containsKey(consoleRoomId)) {
+        if (!TardisConsoleRooms.CONSOLE_ROOMS.containsKey(this.consoleRoomId)) {
             player.sendMessage(failMessage, true);
             return;
         }
 
-        ServerWorld tardisWorld = DimensionHelper.getModWorld(tardisId, player.getServer());
+        ServerWorld tardisWorld = DimensionHelper.getModWorld(this.tardisId, player.getServer());
         if (tardisWorld == null) {
             player.sendMessage(failMessage, true);
             return;
         }
 
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(consoleRoomId, tardis.isBroken());
+            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(this.consoleRoomId, tardis.isBroken());
             boolean isConsoleRoomGenerated = consoleRoom.place(tardis);
 
             if (isConsoleRoomGenerated) {
