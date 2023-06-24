@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.map.MapBannerMarker;
@@ -41,6 +42,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends Ba
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
+
+            if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
+                return;
+            }
 
             MapState mapState = MapState.fromNbt(tag.getCompound("mapState"));
             MapBannerMarker mapBannerMarker = MapBannerMarker.fromNbt(tag.getCompound("mapBannerMarker"));

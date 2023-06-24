@@ -40,9 +40,11 @@ public class DWM {
         public static final Text TARDIS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.locked");
         public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
         public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");
+        public static final Text TARDIS_NOT_ALLOWED = Text.translatable("message." + DWM.MODID + ".tardis.not_allowed");
         public static final Text TARDIS_NOT_ENOUGH_FUEL = Text.translatable("message." + DWM.MODID + ".tardis.fuel.not_enough");
         public static final Text TARDIS_DOORS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.locked");
         public static final Text TARDIS_DOORS_UNLOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
+        public static final Text TARDIS_HANDBRAKE_ACTIVATED = Text.translatable("message." + DWM.MODID + ".tardis.handbrake.activated");
 
         public static final Text ARS_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".ars_interface.title");
         public static final Text ARS_INTERFACE_FLD_SEARCH = Text.translatable("screen." + DWM.MODID + ".ars_interface.field.search");

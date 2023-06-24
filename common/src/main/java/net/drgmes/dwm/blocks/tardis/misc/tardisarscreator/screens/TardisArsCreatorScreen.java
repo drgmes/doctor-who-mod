@@ -58,14 +58,14 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     @Override
     public Vector2i getBackgroundSize() {
+        int padding = 5;
         Window window = MinecraftClient.getInstance().getWindow();
-        return new Vector2i(window.getScaledWidth(), window.getScaledHeight());
+        return new Vector2i(window.getScaledWidth() - padding, window.getScaledHeight() - padding);
     }
 
     @Override
     public Vector2i getBackgroundBorderSize() {
         Vector2i size = this.getBackgroundSize();
-        Vector2i originBorderSize = super.getBackgroundBorderSize();
         Vector2i originSize = DWM.TEXTURES.GUI.TARDIS.ARS.CREATOR_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
         return new Vector2i((int) Math.floor(12 * ((float) size.x / originSize.x)), (int) Math.floor(22 * ((float) size.y / originSize.y)));
     }

@@ -14,6 +14,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.compat.ImmersivePortals;
+import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItem;
 import net.drgmes.dwm.network.client.TardisConsoleUnitUpdatePacket;
 import net.drgmes.dwm.network.client.TardisExteriorUpdatePacket;
@@ -70,6 +71,7 @@ public class TardisStateManager extends PersistentState {
     private Direction destExteriorFacing;
 
     private boolean broken = false;
+    private boolean handbrakeLocked = false;
     private boolean doorsLocked = false;
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
@@ -153,6 +155,7 @@ public class TardisStateManager extends PersistentState {
         if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
 
         tag.putBoolean("broken", this.broken);
+        tag.putBoolean("handbrakeLocked", this.handbrakeLocked);
         tag.putBoolean("doorsLocked", this.doorsLocked);
         tag.putBoolean("doorsOpened", this.doorsOpened);
         tag.putBoolean("lightEnabled", this.lightEnabled);
@@ -205,8 +208,8 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
-
         this.broken = tag.getBoolean("broken");
+        this.handbrakeLocked = tag.getBoolean("handbrakeLocked");
         this.doorsLocked = tag.getBoolean("doorsLocked");
         this.doorsOpened = tag.getBoolean("doorsOpened");
         this.lightEnabled = tag.getBoolean("lightEnabled");
@@ -262,6 +265,21 @@ public class TardisStateManager extends PersistentState {
     public void setOwner(UUID uuid) {
         this.owner = uuid;
         this.markDirty();
+    }
+
+    public boolean checkAccess(PlayerEntity player, boolean deep) {
+        boolean hasBaseAccess = player == null || this.getOwner() == null || player.getUuid().equals(this.getOwner());
+
+        if (!hasBaseAccess && deep) {
+            for (ItemStack itemStack : player.getInventory().main) {
+                if (itemStack.getItem() instanceof TardisKeyItem) {
+                    NbtCompound tag = itemStack.getOrCreateNbt();
+                    if (tag.contains("tardisId") && tag.getString("tardisId").equals(this.getId())) return true;
+                }
+            }
+        }
+
+        return hasBaseAccess;
     }
 
     // //////////////////////// //
@@ -366,12 +384,28 @@ public class TardisStateManager extends PersistentState {
         return true;
     }
 
+    public boolean isHandbrakeLocked() {
+        return this.handbrakeLocked;
+    }
+
+    public boolean setHandbrakeLockState(boolean flag, PlayerEntity player) {
+        if (!this.checkAccess(player, true)) return false;
+        if (this.handbrakeLocked == flag) return false;
+        this.handbrakeLocked = flag;
+
+        if (flag) ModSounds.playTardisHandbrakeOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisHandbrakeOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
     public boolean isDoorsLocked() {
         return this.doorsLocked;
     }
 
     public boolean setDoorsLockState(boolean flag, PlayerEntity player) {
-        if (player != null && (this.getOwner() == null || (this.getOwner() != null && !player.getUuid().equals(this.getOwner())))) return false;
+        if (!this.checkAccess(player, false)) return false;
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
 
@@ -746,11 +780,13 @@ public class TardisStateManager extends PersistentState {
     // /////////////////////////// //
 
     public void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage) {
+        TardisSystemFlight flightSystem = this.getSystem(TardisSystemFlight.class);
+        TardisSystemMaterialization materializationSystem = this.getSystem(TardisSystemMaterialization.class);
         TardisSystemShields shieldsSystem = this.getSystem(TardisSystemShields.class);
 
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, this.getSystem(TardisSystemFlight.class).inProgress());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, this.getSystem(TardisSystemMaterialization.class).isMaterialized());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, this.getSystem(TardisSystemMaterialization.class).safeDirection.ordinal());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, flightSystem.inProgress());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, materializationSystem.isMaterialized());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, shieldsSystem.inProgress());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN, shieldsSystem.isEnabled() && this.isShieldsOxygenEnabled());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, shieldsSystem.isEnabled() && this.isShieldsFireProofEnabled());
@@ -762,6 +798,7 @@ public class TardisStateManager extends PersistentState {
         controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_HARVESTING, this.isEnergyHarvesting());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.LIGHT, this.isLightEnabled());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.DOORS, this.isDoorsOpened());
+        controlsStorage.values.put(ETardisConsoleUnitControlRole.HANDBRAKE, this.isHandbrakeLocked());
         controlsStorage.values.put(ETardisConsoleUnitControlRole.FACING, switch (this.getDestinationExteriorFacing()) {
             default -> 0;
             case EAST -> 1;
@@ -770,20 +807,30 @@ public class TardisStateManager extends PersistentState {
         });
     }
 
-    public void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage) {
-        boolean isInFlight = this.getSystem(TardisSystemFlight.class).inProgress();
-        boolean isMaterialized = this.getSystem(TardisSystemMaterialization.class).isMaterialized();
+    public void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage, PlayerEntity player) {
+        TardisSystemFlight flightSystem = this.getSystem(TardisSystemFlight.class);
+        TardisSystemMaterialization materializationSystem = this.getSystem(TardisSystemMaterialization.class);
+        TardisSystemShields shieldsSystem = this.getSystem(TardisSystemShields.class);
+
+        boolean isInFlight = flightSystem.inProgress();
+        boolean isMaterialized = materializationSystem.isMaterialized();
 
         if (this.destExteriorDimension == null) this.destExteriorDimension = this.currExteriorDimension;
         if (this.destExteriorFacing == null) this.destExteriorFacing = this.currExteriorFacing;
         if (this.destExteriorPosition == null) this.destExteriorPosition = this.currExteriorPosition;
 
+        // Handbrake
+        boolean handbrake = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.HANDBRAKE);
+        if (!this.setHandbrakeLockState(handbrake, player)) {
+            controlsStorage.values.put(ETardisConsoleUnitControlRole.HANDBRAKE, this.isHandbrakeLocked());
+            if (handbrake != this.isHandbrakeLocked()) ModSounds.playTardisBellSound(this.world, this.getMainConsolePosition());
+        }
+
         // Flight
         boolean starter = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.STARTER);
-        boolean handbrake = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.HANDBRAKE);
-        if (this.getSystem(TardisSystemFlight.class).isEnabled()) {
-            this.getSystem(TardisSystemFlight.class).setFlight(!handbrake && starter);
-            isInFlight = this.getSystem(TardisSystemFlight.class).inProgress();
+        if (flightSystem.isEnabled() && !this.isHandbrakeLocked()) {
+            flightSystem.setFlight(starter);
+            isInFlight = flightSystem.inProgress();
         }
         else {
             controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
@@ -793,10 +840,10 @@ public class TardisStateManager extends PersistentState {
 
         // Materialization
         boolean materialization = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.MATERIALIZATION);
-        if (this.getSystem(TardisSystemMaterialization.class).isEnabled()) {
-            this.getSystem(TardisSystemMaterialization.class).setSafeDirection(Math.abs((int) controlsStorage.get(ETardisConsoleUnitControlRole.SAFE_DIRECTION)));
-            this.getSystem(TardisSystemMaterialization.class).setMaterializationState(materialization);
-            isMaterialized = this.getSystem(TardisSystemMaterialization.class).isMaterialized();
+        if (materializationSystem.isEnabled() && !this.isHandbrakeLocked()) {
+            materializationSystem.setSafeDirection(Math.abs((int) controlsStorage.get(ETardisConsoleUnitControlRole.SAFE_DIRECTION)));
+            materializationSystem.setMaterializationState(materialization);
+            isMaterialized = materializationSystem.isMaterialized();
         }
         else {
             controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, isInFlight);
@@ -805,8 +852,8 @@ public class TardisStateManager extends PersistentState {
             else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
         }
 
-        // Only if Tardis is not in flight (and could be when dematerialized)
-        if (!isInFlight) {
+        // Only if Tardis is not in flight
+        if (flightSystem.isEnabled() && !isInFlight) {
             // Facing
             int facing = (int) controlsStorage.get(ETardisConsoleUnitControlRole.FACING);
             this.destExteriorFacing = switch (facing >= 0 ? facing : ETardisConsoleUnitControlRole.FACING.maxIntValue + facing) {
@@ -895,8 +942,8 @@ public class TardisStateManager extends PersistentState {
         if (isMaterialized) {
             // Shields
             boolean shields = (boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS);
-            if (this.getSystem(TardisSystemShields.class).isEnabled()) {
-                this.getSystem(TardisSystemShields.class).setState(shields);
+            if (shieldsSystem.isEnabled()) {
+                shieldsSystem.setState(shields);
 
                 this.setShieldsOxygenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN) && shields);
                 this.setShieldsFireProofState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF) && shields);
@@ -913,7 +960,6 @@ public class TardisStateManager extends PersistentState {
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MINING, false);
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION, false);
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, false);
-                if (shields) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
             }
 
             this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.DOORS));

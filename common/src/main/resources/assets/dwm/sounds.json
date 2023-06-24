@@ -55,6 +55,10 @@
     "subtitle": "subtitle.tardis.tardis_control",
     "sounds": ["dwm:tardis/controls/tardis_control_randomizer"]
   },
+  "tardis_bell": {
+    "subtitle": "subtitle.tardis.tardis_bell",
+    "sounds": ["dwm:tardis/tardis_bell"]
+  },
   "tardis_error": {
     "subtitle": "subtitle.tardis.tardis_error",
     "sounds": ["dwm:tardis/tardis_error"]

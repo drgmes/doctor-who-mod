@@ -7,6 +7,7 @@ import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -58,6 +59,11 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.isValid()) return;
+
+            if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
+                return;
+            }
 
             Text message = null;
             TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType dataType = TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.valueOf(type);

@@ -19,6 +19,7 @@ public class ModSounds {
 
     public static final Supplier<SoundEvent> TARDIS_BROKEN_FLARING = Registration.registerSoundEvent("tardis_broken_flaring");
     public static final Supplier<SoundEvent> TARDIS_ERROR = Registration.registerSoundEvent("tardis_error");
+    public static final Supplier<SoundEvent> TARDIS_BELL = Registration.registerSoundEvent("tardis_bell");
     public static final Supplier<SoundEvent> TARDIS_FLY = Registration.registerSoundEvent("tardis_fly");
     public static final Supplier<SoundEvent> TARDIS_LAND = Registration.registerSoundEvent("tardis_land");
     public static final Supplier<SoundEvent> TARDIS_TAKEOFF = Registration.registerSoundEvent("tardis_takeoff");
@@ -112,6 +113,10 @@ public class ModSounds {
 
     public static void playTardisFailSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, TARDIS_ERROR.get(), 1.0F, 1.0F);
+    }
+
+    public static void playTardisBellSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, TARDIS_BELL.get(), 1.0F, 1.0F);
     }
 
     public static void playScrewdriverMainSound(World world, BlockPos blockPos) {
