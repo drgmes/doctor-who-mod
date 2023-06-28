@@ -8,6 +8,7 @@ import org.joml.Vector2i;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class DWM {
@@ -31,12 +32,19 @@ public class DWM {
     }
 
     public static class TEXTS {
+        public static final BiFunction<String, Formatting, Text> TARDIS_ID = (id, color) -> Text.translatable("title." + DWM.MODID + ".tardis_id", Text.literal(id).formatted(color));
+        public static final BiFunction<String, Formatting, Text> TARDIS_POS = (pos, color) -> Text.translatable("title." + DWM.MODID + ".tardis_pos", Text.literal(pos).formatted(color));
+        public static final BiFunction<String, Formatting, Text> TARDIS_LAST_POS = (pos, color) -> Text.translatable("title." + DWM.MODID + ".tardis_last_pos", Text.literal(pos).formatted(color));
+
         public static final Text DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.dematerialization_circuit.not_installed");
         public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
         public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
         public static final Text SHIELDS_GENERATOR_NOT_ACTIVE = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_active");
 
         public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message." + DWM.MODID + ".tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
+        public static final Function<Float, Text> TARDIS_ARRIVE_IN = (time) -> Text.translatable("message." + DWM.MODID + ".tardis.arrive", Text.literal(String.valueOf(time)).formatted(Formatting.AQUA));
+        public static final Function<String, Text> TARDIS_ARRIVE_FAILED = (pos) -> Text.translatable("message." + DWM.MODID + ".tardis.arrive.failed", Text.literal(pos).formatted(Formatting.GOLD));
+        public static final Text TARDIS_ARRIVE_NO_FUEL = Text.translatable("message." + DWM.MODID + ".tardis.arrive.no_fuel");
         public static final Text TARDIS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.locked");
         public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
         public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");

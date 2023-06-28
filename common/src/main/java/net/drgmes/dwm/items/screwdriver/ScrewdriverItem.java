@@ -88,21 +88,21 @@ public class ScrewdriverItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(Text.empty());
+    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltips, TooltipContext context) {
+        tooltips.add(Text.empty());
 
         MutableText mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
         MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", mode.formatted(Formatting.GOLD));
-        tooltip.add(modeText.formatted(Formatting.GRAY));
+        tooltips.add(modeText.formatted(Formatting.GRAY));
 
         String tardisId = Screwdriver.getTardisId(itemStack);
         if (!tardisId.isEmpty()) {
             MutableText tardis = Text.literal(tardisId.substring(0, 8));
             MutableText tardisText = Text.translatable("title.dwm.tardis_id", tardis.formatted(Formatting.GOLD));
-            tooltip.add(tardisText.formatted(Formatting.GRAY));
+            tooltips.add(tardisText.formatted(Formatting.GRAY));
         }
 
-        super.appendTooltip(itemStack, world, tooltip, context);
+        super.appendTooltip(itemStack, world, tooltips, context);
     }
 
     public TypedActionResult<ItemStack> useScrewdriver(World world, PlayerEntity player, Hand hand, boolean isAlternativeAction) {

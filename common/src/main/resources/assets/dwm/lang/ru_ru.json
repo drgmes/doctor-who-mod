@@ -281,6 +281,8 @@
   "entity.minecraft.villager.dwm.shobogan_engineer": "Инженер",
 
   "title.dwm.tardis_id": "ТАРДИС: %s",
+  "title.dwm.tardis_pos": "Позиция ТАРДИС: %s",
+  "title.dwm.tardis_last_pos": "Последняя известная позиция: %s",
 
   "title.dwm.screwdriver.mode": "Режим: %s",
   "title.dwm.screwdriver.mode.scan": "Сканирование",
@@ -1034,6 +1036,9 @@
   "screen.dwm.telepathic_interface.button.accept": "Найти",
 
   "message.dwm.tardis.removed": "ТАРДИС (%s) удалена",
+  "message.dwm.tardis.arrive": "ТАРДИС прибудет через %s секунд(ы)",
+  "message.dwm.tardis.arrive.failed": "§cТАРДИС не прибыла и приземлилась на %s",
+  "message.dwm.tardis.arrive.no_fuel": "§cТАРДИС не хватает топлива",
   "message.dwm.tardis.locked": "Двери §eзаблокированы§r. Нужен ключ",
   "message.dwm.tardis.broken": "§eТАРДИС§r §cнеисправна§r. Используйте §eремонтный набор§r на блоке двигателя",
   "message.dwm.tardis.repaired": "§eТАРДИС§r §aотремонтирована",

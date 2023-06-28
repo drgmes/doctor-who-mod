@@ -19,9 +19,9 @@ public class TardisSystemItem extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> list, TooltipContext context) {
-        list.add(Text.translatable(this.getTranslationKey() + ".desc").formatted(Formatting.GRAY));
-        super.appendTooltip(itemStack, world, list, context);
+    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltips, TooltipContext context) {
+        tooltips.add(Text.translatable(this.getTranslationKey() + ".desc").formatted(Formatting.GRAY));
+        super.appendTooltip(itemStack, world, tooltips, context);
     }
 
     public Class<? extends ITardisSystem> getSystemType() {

@@ -10,12 +10,17 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TardisSystemFlight implements ITardisSystem {
     public float tickInProgress = 0;
     public float tickInProgressGoal = 0;
     public float destinationDistanceRate = 0;
 
     private final TardisStateManager tardis;
+    private final List<Runnable> failConsumers = new ArrayList<>();
+
     private boolean isInFlight = false;
     private boolean isFlightLaunched = false;
     private boolean isSoundFlyPlayed = false;
@@ -115,13 +120,7 @@ public class TardisSystemFlight implements ITardisSystem {
         return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
             if (!this.isFlightLaunched) return;
 
-            BlockPos currExteriorPosition = this.tardis.getCurrentExteriorPosition();
-            BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
-            RegistryKey<World> currExteriorDimension = this.tardis.getCurrentExteriorDimension();
-            RegistryKey<World> destExteriorDimension = this.tardis.getDestinationExteriorDimension();
-            float distance = Math.max(1, currExteriorPosition.getManhattanDistance(destExteriorPosition) / ModConfig.COMMON.tardisFlightDistanceRate.get());
-            float timeToFly = DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
-
+            float timeToFly = this.getFlightDuration();
             this.isSoundFlyPlayed = false;
             this.isInFlight = true;
             this.tickInProgress = timeToFly;
@@ -139,9 +138,11 @@ public class TardisSystemFlight implements ITardisSystem {
             return false;
         }
 
+        boolean isFailed = false;
         this.isFlightLaunched = false;
 
         if (this.tickInProgress > 1) {
+            isFailed = true;
             BlockPos currExteriorPosition = this.tardis.getCurrentExteriorPosition();
             BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
             Vec3d resultPosition = Vec3d.of(destExteriorPosition.subtract(currExteriorPosition)).multiply(this.getProgressPercent() / 100D);
@@ -155,15 +156,29 @@ public class TardisSystemFlight implements ITardisSystem {
         this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
         this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
         this.tardis.updateConsoleTiles();
+        if (!isFailed) this.failConsumers.clear();
 
         Runnable deferredConsumer = () -> {
             this.isInFlight = false;
-//            this.tardis.getConsoleTiles().forEach((tile) -> tile.controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, false));
             this.tardis.updateConsoleTiles();
+            this.failConsumers.forEach(Runnable::run);
         };
 
         this.tardis.getSystem(TardisSystemMaterialization.class).onFail(deferredConsumer);
         return this.tardis.getSystem(TardisSystemMaterialization.class).remat(deferredConsumer);
+    }
+
+    public void onFail(Runnable consumer) {
+        this.failConsumers.add(consumer);
+    }
+
+    public float getFlightDuration() {
+        BlockPos currExteriorPosition = this.tardis.getCurrentExteriorPosition();
+        BlockPos destExteriorPosition = this.tardis.getDestinationExteriorPosition();
+        RegistryKey<World> currExteriorDimension = this.tardis.getCurrentExteriorDimension();
+        RegistryKey<World> destExteriorDimension = this.tardis.getDestinationExteriorDimension();
+        float distance = Math.max(1, currExteriorPosition.getManhattanDistance(destExteriorPosition) / ModConfig.COMMON.tardisFlightDistanceRate.get());
+        return DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
     }
 
     private void playFlySound() {

@@ -124,6 +124,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                         return;
                     }
 
+                    heldItemTag.putString("tardisPos", tardis.getCurrentExteriorPosition().toShortString());
+
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                         player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
                         world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
