@@ -110,6 +110,8 @@ components.java {
 }
 
 publishing {
+    archivesBaseName = "${rootProject.archivesBaseName}-fabric"
+
     publications {
         mavenFabric(MavenPublication) {
             artifactId = rootProject.mod_id + "-" + project.name
