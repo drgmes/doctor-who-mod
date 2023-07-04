@@ -6,8 +6,8 @@
   "description": "${modDescription}",
   "authors": ["${modAuthors}"],
   "contact": {
-    "homepage": "https://www.curseforge.com/minecraft/mc-mods/doctor-who-mod-fabric",
-    "sources": "https://gitlab.com/drgmes-mc-mods/doctor-who-mod"
+    "homepage": "${modHomepage}",
+    "sources": "${modSource}"
   },
   "license": "${modLicense}",
   "icon": "assets/dwm/icon.png",
