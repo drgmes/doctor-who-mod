@@ -3,14 +3,13 @@ package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.data.client.TextureKey;
 
 public class TardisToyotaSpinnerBlockBuilder extends BlockBuilder {
     public TardisToyotaSpinnerBlockBuilder(String name) {
-        super(name, () -> new TardisToyotaSpinnerBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new TardisToyotaSpinnerBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

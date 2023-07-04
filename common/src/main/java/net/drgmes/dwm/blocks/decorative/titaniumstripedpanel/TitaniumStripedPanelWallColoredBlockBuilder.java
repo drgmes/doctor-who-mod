@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumstripedpanel;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.WallBlock;
@@ -21,7 +20,7 @@ public class TitaniumStripedPanelWallColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
 
     public TitaniumStripedPanelWallColoredBlockBuilder(String name, Item dyeItem) {
-        super(name, () -> new WallBlock(TitaniumStripedPanelColoredBlockBuilder.getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new WallBlock(TitaniumStripedPanelColoredBlockBuilder.getBlockSettings()));
         this.dyeItem = dyeItem;
     }
 

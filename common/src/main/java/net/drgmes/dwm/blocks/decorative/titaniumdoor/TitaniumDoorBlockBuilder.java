@@ -4,7 +4,6 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockLootDataBuilder;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -23,7 +22,7 @@ import java.util.function.Consumer;
 
 public class TitaniumDoorBlockBuilder extends BlockBuilder {
     public TitaniumDoorBlockBuilder(String name) {
-        super(name, () -> new TitaniumDoorBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new TitaniumDoorBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

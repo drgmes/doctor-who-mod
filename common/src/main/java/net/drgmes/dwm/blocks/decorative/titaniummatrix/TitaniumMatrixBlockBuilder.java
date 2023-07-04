@@ -2,7 +2,6 @@ package net.drgmes.dwm.blocks.decorative.titaniummatrix;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
@@ -15,7 +14,7 @@ import java.util.function.Consumer;
 
 public class TitaniumMatrixBlockBuilder extends BlockBuilder {
     public TitaniumMatrixBlockBuilder(String name) {
-        super(name, ModCreativeTabs.DECORATIONS);
+        super(name);
     }
 
     @Override

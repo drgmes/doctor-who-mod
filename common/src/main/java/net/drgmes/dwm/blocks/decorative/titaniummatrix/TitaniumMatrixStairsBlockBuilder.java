@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniummatrix;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.StairsBlock;
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
 
 public class TitaniumMatrixStairsBlockBuilder extends BlockBuilder {
     public TitaniumMatrixStairsBlockBuilder(String name) {
-        super(name, () -> new StairsBlock(ModBlocks.TITANIUM_MATRIX.getBlock().getDefaultState(), TitaniumMatrixBlockBuilder.getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new StairsBlock(ModBlocks.TITANIUM_MATRIX.getBlock().getDefaultState(), TitaniumMatrixBlockBuilder.getBlockSettings()));
     }
 
     @Override

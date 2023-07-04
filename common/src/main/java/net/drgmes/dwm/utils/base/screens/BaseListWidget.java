@@ -3,7 +3,6 @@ package net.drgmes.dwm.utils.base.screens;
 import com.google.common.collect.ImmutableList;
 import net.drgmes.dwm.utils.helpers.ScreenHelper;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;

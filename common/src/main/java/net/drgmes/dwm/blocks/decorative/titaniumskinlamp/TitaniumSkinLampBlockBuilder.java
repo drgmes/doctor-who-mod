@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumskinlamp;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableBlock;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -20,7 +19,7 @@ import java.util.function.Consumer;
 
 public class TitaniumSkinLampBlockBuilder extends BlockBuilder {
     public TitaniumSkinLampBlockBuilder(String name) {
-        super(name, () -> new BaseRotatableBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new BaseRotatableBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

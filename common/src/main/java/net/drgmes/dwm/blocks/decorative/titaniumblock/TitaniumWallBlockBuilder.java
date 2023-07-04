@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumblock;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.WallBlock;
@@ -18,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumWallBlockBuilder extends BlockBuilder {
     public TitaniumWallBlockBuilder(String name) {
-        super(name, () -> new WallBlock(TitaniumBlockBuilder.getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new WallBlock(TitaniumBlockBuilder.getBlockSettings()));
     }
 
     @Override

@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.carbonfiber;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.StairsBlock;
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
 
 public class CarbonFiberStairsBlockBuilder extends BlockBuilder {
     public CarbonFiberStairsBlockBuilder(String name) {
-        super(name, () -> new StairsBlock(ModBlocks.CARBON_FIBER.getBlock().getDefaultState(), CarbonFiberBlockBuilder.getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new StairsBlock(ModBlocks.CARBON_FIBER.getBlock().getDefaultState(), CarbonFiberBlockBuilder.getBlockSettings()));
     }
 
     @Override

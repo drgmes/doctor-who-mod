@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumstripedskin;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.data.client.TextureKey;
@@ -19,7 +18,7 @@ public class TitaniumStripedSkinColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
 
     public TitaniumStripedSkinColoredBlockBuilder(String name, Item dyeItem) {
-        super(name, ModCreativeTabs.DECORATIONS);
+        super(name);
         this.dyeItem = dyeItem;
     }
 

@@ -1,7 +1,6 @@
 package net.drgmes.dwm.blocks.decorative.titaniumglass;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -21,7 +20,7 @@ import java.util.function.Consumer;
 
 public class TitaniumGlassBlockBuilder extends BlockBuilder {
     public TitaniumGlassBlockBuilder(String name) {
-        super(name, () -> new GlassBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new GlassBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

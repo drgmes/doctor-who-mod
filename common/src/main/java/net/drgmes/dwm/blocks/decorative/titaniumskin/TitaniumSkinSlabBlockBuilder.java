@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumskin;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.SlabBlock;
@@ -17,7 +16,7 @@ import java.util.function.Consumer;
 
 public class TitaniumSkinSlabBlockBuilder extends BlockBuilder {
     public TitaniumSkinSlabBlockBuilder(String name) {
-        super(name, () -> new SlabBlock(TitaniumSkinBlockBuilder.getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new SlabBlock(TitaniumSkinBlockBuilder.getBlockSettings()));
     }
 
     @Override

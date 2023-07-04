@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumpanellamp;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableBlock;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -22,7 +21,7 @@ public class TitaniumPanelLampColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
 
     public TitaniumPanelLampColoredBlockBuilder(String name, Item dyeItem) {
-        super(name, () -> new BaseRotatableBlock(getBlockSettings()), ModCreativeTabs.DECORATIONS);
+        super(name, () -> new BaseRotatableBlock(getBlockSettings()));
         this.dyeItem = dyeItem;
     }
 

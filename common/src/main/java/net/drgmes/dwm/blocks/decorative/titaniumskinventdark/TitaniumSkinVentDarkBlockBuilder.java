@@ -2,7 +2,6 @@ package net.drgmes.dwm.blocks.decorative.titaniumskinventdark;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -16,7 +15,7 @@ import java.util.function.Consumer;
 
 public class TitaniumSkinVentDarkBlockBuilder extends BlockBuilder {
     public TitaniumSkinVentDarkBlockBuilder(String name) {
-        super(name, ModCreativeTabs.DECORATIONS);
+        super(name);
     }
 
     @Override

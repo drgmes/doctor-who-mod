@@ -1,7 +1,6 @@
 package net.drgmes.dwm.blocks.decorative.titaniumblock;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
@@ -14,7 +13,7 @@ import java.util.function.Consumer;
 
 public class TitaniumBlockBuilder extends BlockBuilder {
     public TitaniumBlockBuilder(String name) {
-        super(name, ModCreativeTabs.DECORATIONS);
+        super(name);
     }
 
     @Override
