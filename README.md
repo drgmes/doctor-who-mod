@@ -1,10 +1,8 @@
-# Doctor Who Mod
+<img alt="dwm-logo" height="auto" src="https://i.imgur.com/e0tBJqh.png" title="DWM Logo" width="100%"/>
 
-### Immerse yourself in the "Doctor Who" universe - travel, explore and survive!
+### <p align="center" style="text-align: center;">Immerse yourself in the "Doctor Who" universe - travel, explore and survive!</p>
 
-***
-![tardis-interior](https://i.imgur.com/hZ6cm3L.png "TARDIS Exterior")
-***
+&nbsp;
 
 Doctor Who Mod - is a global mod for Fabric Minecraft inspired by the British series "Doctor Who".
 
@@ -14,7 +12,7 @@ of adventure and danger.
 ***
 To get a **TARDIS**, you must first buy a TARDIS key from an engineer who lives in the village,
 or simply put an engineer table to an unemployed villager.
-The next step is to find the **TARDIS** which can be found anywhere, but more often underground.
+The next step is to find the TARDIS anywhere in the world.
 Oh yeah, and don't forget to buy a repair kit, because your new **TARDIS**... isn't exactly new.
 
 The final step is to equip your **TARDIS** with special systems that give you the ability to fly your spacetime machine.
@@ -56,3 +54,7 @@ It is planned to add:
 * New mobs
 * Generated tasks
 * Planets and dimensions
+
+***
+![tardis-interior](https://i.imgur.com/hZ6cm3L.png "TARDIS Exterior")
+***
