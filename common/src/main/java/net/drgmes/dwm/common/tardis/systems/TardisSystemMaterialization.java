@@ -1,6 +1,5 @@
 package net.drgmes.dwm.common.tardis.systems;
 
-import com.google.common.collect.ImmutableSet;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
@@ -317,7 +316,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
                 List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, box, EntityPredicates.VALID_ENTITY);
                 for (Entity entity : entities) {
-                    entity.teleport(tardis.getWorld(), pos.x, pos.y, pos.z, ImmutableSet.of(), yaw, 0);
+                    CommonHelper.teleport(entity, tardis.getWorld(), pos, yaw);
                 }
 
                 this.tardis.updateConsoleTiles();

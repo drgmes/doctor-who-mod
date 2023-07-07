@@ -379,7 +379,7 @@ public class TardisStateManager extends PersistentState {
         if (this.broken == flag) return false;
         this.broken = flag;
 
-        if (!flag) ModSounds.playTardisRepairSound(this.world, this.getEntrancePosition());
+        if (!flag) ModSounds.playTardisRepairSound(this.world, this.getMainConsolePosition());
         this.markDirty();
         return true;
     }

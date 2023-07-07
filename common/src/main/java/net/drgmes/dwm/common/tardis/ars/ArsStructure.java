@@ -27,14 +27,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.*;
 import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ArsStructure {
     private final String name;
@@ -194,16 +192,14 @@ public class ArsStructure {
                     tacBlockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(wallRotation))
                 ), tardis.getConsoleRoom().getDecoratorBlock().getDefaultState());
 
-                BlockPos entrancePosition = tardis.getEntrancePosition();
+                Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
                 BlockBox aabb = template.calculateBoundingBox(placeSettings, blockPos);
                 List<LivingEntity> entities = world.getEntitiesByClass(LivingEntity.class, Box.from(aabb), EntityPredicates.EXCEPT_SPECTATOR);
 
                 for (LivingEntity entity : entities) {
                     ModSounds.playTardisTeleporterSentSound(world, entity.getBlockPos());
-                    entity.setPitch(0);
-                    entity.setYaw(tardis.getEntranceFacing().asRotation());
-                    entity.teleport(entrancePosition.getX() + 0.5, entrancePosition.getY(), entrancePosition.getZ() + 0.5);
-                    ModSounds.playTardisTeleporterReceivedSound(world, entrancePosition);
+                    entity.teleport(world, pos.x, pos.y, pos.z, Set.of(), tardis.getEntranceFacing().asRotation(), 0);
+                    ModSounds.playTardisTeleporterReceivedSound(world, BlockPos.ofFloored(pos));
                 }
 
                 WorldHelper.clearArea(world, aabb);

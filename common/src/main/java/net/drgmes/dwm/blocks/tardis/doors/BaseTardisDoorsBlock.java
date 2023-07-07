@@ -1,12 +1,12 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
-import com.google.common.collect.ImmutableSet;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
 import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.*;
@@ -180,9 +180,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
                 if (!tardis.isValid() || !tardis.isDoorsOpened()) return;
 
                 Vec3d pos = Vec3d.ofBottomCenter(tardis.getCurrentExteriorPosition().offset(tardis.getCurrentExteriorFacing()));
-                float yaw = tardis.getCurrentExteriorFacing().asRotation();
-
-                entity.teleport(DimensionHelper.getWorld(tardis.getCurrentExteriorDimension(), serverWorld.getServer()), pos.x, pos.y, pos.z, ImmutableSet.of(), yaw, 0);
+                CommonHelper.teleport(entity, DimensionHelper.getWorld(tardis.getCurrentExteriorDimension(), serverWorld.getServer()), pos, tardis.getCurrentExteriorFacing().asRotation());
             });
         }
     }
