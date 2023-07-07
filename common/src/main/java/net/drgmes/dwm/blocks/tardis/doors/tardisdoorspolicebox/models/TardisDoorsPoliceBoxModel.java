@@ -62,15 +62,6 @@ public class TardisDoorsPoliceBoxModel extends Model {
         return TexturedModelData.of(modelData, 128, 128);
     }
 
-    public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
-        float doorAngle = 1.75F;
-
-        if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
-            this.door_left.yaw = -doorAngle;
-            this.door_right.yaw = doorAngle;
-        }
-    }
-
     @Override
     public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
@@ -79,5 +70,14 @@ public class TardisDoorsPoliceBoxModel extends Model {
     public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
         door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
+        float doorAngle = 1.75F;
+
+        if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
+            this.door_left.yaw = -doorAngle;
+            this.door_right.yaw = doorAngle;
+        }
     }
 }

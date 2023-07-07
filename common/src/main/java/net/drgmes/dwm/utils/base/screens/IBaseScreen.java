@@ -1,6 +1,6 @@
 package net.drgmes.dwm.utils.base.screens;
 
-import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
@@ -57,7 +57,7 @@ public interface IBaseScreen {
 
     default void renderTitle(DrawContext context) {
         Vector2i pos = this.getTitleRenderPos();
-        ScreenHelper.drawText(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
+        RenderHelper.drawText(this.getTitleComponent(), this.getTextRenderer(), context, pos.x, pos.y, 0xE0E0E0, true);
     }
 
     default void renderBackgroundImage(DrawContext context) {

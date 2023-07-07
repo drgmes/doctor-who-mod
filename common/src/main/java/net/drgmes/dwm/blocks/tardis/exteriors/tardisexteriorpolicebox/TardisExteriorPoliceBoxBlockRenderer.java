@@ -1,8 +1,10 @@
 package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
+import net.drgmes.dwm.setup.ModCompats;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.block.enums.DoubleBlockHalf;
-import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -22,7 +24,7 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         if (half != DoubleBlockHalf.LOWER) return;
 
         TardisExteriorPoliceBoxModel model = new TardisExteriorPoliceBoxModel(this.ctx.getLayerModelPart(TardisExteriorPoliceBoxModel.LAYER_LOCATION));
-        VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(TardisExteriorPoliceBoxModel.LAYER_LOCATION.getId()));
+        RenderLayer modelLayer = model.getLayer(TardisExteriorPoliceBoxModel.LAYER_LOCATION.getId());
         model.setupAnim(tile);
 
         float speed = 0.3F;
@@ -40,12 +42,25 @@ public class TardisExteriorPoliceBoxBlockRenderer implements BlockEntityRenderer
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotateDegrees));
         matrixStack.translate(0, -1.265 * scale, 0);
         matrixStack.scale(scale, scale + 0.15F, scale);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, alphaClamped);
+        model.render(matrixStack, buffer.getBuffer(modelLayer), light, overlay, 1, 1, 1, alphaClamped);
+        this.drawForeground(tile, matrixStack, buffer);
+        model.renderDoors(matrixStack, buffer.getBuffer(modelLayer), light, overlay, 1, 1, 1, alphaClamped);
         matrixStack.pop();
     }
 
     @Override
     public int getRenderDistance() {
         return 256;
+    }
+
+    private void drawForeground(TardisExteriorPoliceBoxBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
+        if (ModCompats.immersivePortals()) return;
+        if (!tile.getCachedState().get(TardisExteriorPoliceBoxBlock.OPEN)) return;
+
+        matrixStack.push();
+        matrixStack.scale(0.95F, 0.75F, 1);
+        matrixStack.translate(-0.5, 0, -0.405);
+        RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), 0, 0, 1, 2, 0xFF000000);
+        matrixStack.pop();
     }
 }

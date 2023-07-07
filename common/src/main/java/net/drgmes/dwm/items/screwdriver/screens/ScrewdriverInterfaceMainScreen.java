@@ -4,7 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.drgmes.dwm.network.server.ScrewdriverUpdatePacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
-import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
@@ -64,7 +64,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
         Vector2i modeTextPos = new Vector2i(modesListPos1.x + modesListPos2.x + padding, (int) Math.floor(modesListPos1.y + padding + 1.5F));
         Text modeText = DWM.TEXTS.SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
 
-        modeTextPos = modeTextPos.add(ScreenHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextLength, 0xFFFFFF));
+        modeTextPos = modeTextPos.add(RenderHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextLength, 0xFFFFFF));
 
         float modeDescriptionScale = 0.75F;
         Vector2i modeDescriptionPos = new Vector2i((int) Math.floor(modeTextPos.x / modeDescriptionScale), (int) Math.floor((modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale));
@@ -72,7 +72,7 @@ public class ScrewdriverInterfaceMainScreen extends BaseScrewdriverInterfaceScre
 
         context.getMatrices().push();
         context.getMatrices().scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
-        ScreenHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, lineHeight, (int) Math.floor(maxTextLength / modeDescriptionScale), 0xFFFFFF);
+        RenderHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, lineHeight, (int) Math.floor(maxTextLength / modeDescriptionScale), 0xFFFFFF);
         context.getMatrices().pop();
     }
 

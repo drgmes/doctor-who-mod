@@ -1,7 +1,7 @@
 package net.drgmes.dwm.utils.base.screens;
 
 import com.google.common.collect.ImmutableList;
-import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
@@ -71,7 +71,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
             if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
 
             Vector2i pos = new Vector2i(left + padding, top + 2);
-            ScreenHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
+            RenderHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 
         @Override

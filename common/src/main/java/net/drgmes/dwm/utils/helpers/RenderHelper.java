@@ -3,15 +3,18 @@ package net.drgmes.dwm.utils.helpers;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Language;
+import org.joml.Matrix4f;
 import org.joml.Vector2i;
 
 import java.util.List;
 
-public class ScreenHelper {
+public class RenderHelper {
     public static ButtonWidget getButtonWidget(int x, int y, int width, int height, Text message, ButtonWidget.PressAction onPress) {
         return ButtonWidget.builder(message, onPress).size(width, height).position(x, y).build();
     }
@@ -45,5 +48,13 @@ public class ScreenHelper {
         }
 
         return new Vector2i(0, offsetY);
+    }
+
+    public static void drawRectangle(MatrixStack matrixStack, VertexConsumer vertexConsumer, int x1, int y1, int x2, int y2, int color) {
+        Matrix4f matrix = matrixStack.peek().getPositionMatrix();
+        vertexConsumer.vertex(matrix, x1, y1, 0).color(color).next();
+        vertexConsumer.vertex(matrix, x1, y2, 0).color(color).next();
+        vertexConsumer.vertex(matrix, x2, y2, 0).color(color).next();
+        vertexConsumer.vertex(matrix, x2, y1, 0).color(color).next();
     }
 }

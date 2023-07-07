@@ -1,7 +1,7 @@
 package net.drgmes.dwm.common.screwdriver.modes.scan;
 
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
-import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -55,7 +55,7 @@ public class ScrewdriverScanModeOverlay {
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
-        ScreenHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
+        RenderHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
         matrixStack.pop();
 
         NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
@@ -84,14 +84,14 @@ public class ScrewdriverScanModeOverlay {
 //        this.fillGradient(matrixStack, bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, color, color);
 
         for (OrderedText titleLine : titleLines) {
-            ScreenHelper.drawText(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
+            RenderHelper.drawText(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
             y += titleLineHeight;
         }
 
         matrixStack.push();
         matrixStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
         for (Text line : lines) {
-            ScreenHelper.drawText(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
+            RenderHelper.drawText(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
             y += lineHeight;
         }
         matrixStack.pop();

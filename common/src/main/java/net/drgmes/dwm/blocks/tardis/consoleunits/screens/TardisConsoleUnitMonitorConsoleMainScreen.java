@@ -3,7 +3,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.utils.helpers.ScreenHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
@@ -85,7 +85,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         Vector2i startButtonPos = this.getRenderPos(startButtonPosX, startButtonPosY);
 
         for (EActions action : EActions.values()) {
-            ButtonWidget button = ScreenHelper.getButtonWidget(
+            ButtonWidget button = RenderHelper.getButtonWidget(
                 startButtonPos.x + (buttonSize + buttonsMargin) * (index % cols),
                 startButtonPos.y - (buttonSize + buttonsMargin) * ((int) Math.ceil((double) ++index / cols) - 1),
                 buttonSize,
@@ -133,7 +133,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         context.getMatrices().scale(scale, scale, scale);
 
         for (Text line : datas) {
-            scaledPos.add(ScreenHelper.drawTextMultiline(line, this.textRenderer, context, scaledPos, this.textRenderer.fontHeight, (int) Math.floor(maxTextLength / scale), 0xE0E0E0));
+            scaledPos.add(RenderHelper.drawTextMultiline(line, this.textRenderer, context, scaledPos, this.textRenderer.fontHeight, (int) Math.floor(maxTextLength / scale), 0xE0E0E0));
             scaledPos.add(0, padding / 2);
         }
 

@@ -124,6 +124,9 @@ public class TardisExteriorPoliceBoxModel extends Model {
     @Override
     public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
         door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
