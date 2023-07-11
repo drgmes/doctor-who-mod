@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.helpers;
 
 import com.google.common.collect.ImmutableList;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.compat.ImmersivePortalsAPI;
 import net.drgmes.dwm.network.client.DimensionAddPacket;
@@ -95,6 +96,7 @@ public class DimensionHelper {
         server.worlds.put(worldKey, world);
         ModDimensions.addWorldToRegistry(server, worldKey);
         new DimensionAddPacket(worldKey).sendToAll(server);
+        setChanged(server);
 
         if (initialConsumer != null) initialConsumer.accept(world);
         chunkListener.start(new ChunkPos(0, 0));
@@ -111,5 +113,10 @@ public class DimensionHelper {
         }
 
         // TODO
+    }
+
+    @ExpectPlatform
+    public static void setChanged(MinecraftServer server) {
+        throw new AssertionError();
     }
 }
