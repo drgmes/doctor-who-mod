@@ -37,6 +37,9 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
 
     protected void animate(C tile, ModelPart modelRoot, float delta) {
         try {
+            this.animateFuelIndicator(tile, modelRoot, delta);
+            this.animateEnergyIndicator(tile, modelRoot, delta);
+
             for (ETardisConsoleUnitControlRole controlRole : ETardisConsoleUnitControlRole.values()) {
                 if (!tile.consoleType.controlEntries.containsKey(controlRole)) continue;
 
@@ -89,6 +92,29 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
 
     protected abstract void activateHandbrake(ModelPart model, ETardisConsoleUnitControlRole controlRole);
     protected abstract void activateStarter(ModelPart model, ETardisConsoleUnitControlRole controlRole);
+
+    protected abstract void animateFuelIndicator(C tile, ModelPart modelRoot, float delta);
+    protected abstract void animateEnergyIndicator(C tile, ModelPart modelRoot, float delta);
+
+    protected ModelPart getModelPart(ModelPart modelRoot, String path) {
+        ModelPart model = modelRoot;
+
+        for (String modelName : path.split("/")) {
+            String prevModelName = "";
+
+            for (String modelNamePart : modelName.split("\\$")) {
+                try {
+                    model = model.getChild(prevModelName + modelNamePart);
+                    prevModelName = prevModelName + modelNamePart;
+                } catch (Exception e) {
+                    DWM.LOGGER.error("Can't find part {} in {}", prevModelName + modelNamePart, prevModelName);
+                    break;
+                }
+            }
+        }
+
+        return model;
+    }
 
     protected void printStringsToScreen(MatrixStack matrixStack, VertexConsumerProvider buffer, String[] lines) {
         TextRenderer textRenderer = this.ctx.getTextRenderer();
@@ -205,19 +231,5 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
 
         String prepend = Text.translatable("title." + DWM.MODID + ".monitor.state." + title).getString() + ": ";
         return prepend + " ".repeat((SCREEN_SIZE - textRenderer.getWidth(prepend + append)) / textRenderer.getWidth(" ")) + append;
-    }
-
-    private ModelPart getModelPart(ModelPart modelRoot, String path) {
-        ModelPart model = modelRoot;
-
-        for (String modelName : path.split("/")) {
-            String prevModelName = "";
-            for (String modelNamePart : modelName.split("\\$")) {
-                prevModelName = prevModelName + modelNamePart;
-                model = model.getChild(prevModelName);
-            }
-        }
-
-        return model;
     }
 }

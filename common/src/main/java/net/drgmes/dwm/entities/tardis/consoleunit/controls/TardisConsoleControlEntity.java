@@ -58,7 +58,6 @@ public class TardisConsoleControlEntity extends Entity {
         if (hand != Hand.OFF_HAND) return ActionResult.PASS;
         if (this.consoleBlockEntity == null) return ActionResult.PASS;
 
-        this.playControlSound();
         this.consoleBlockEntity.useControl(this.controlEntry, hand, player);
         return ActionResult.SUCCESS;
     }
@@ -67,7 +66,6 @@ public class TardisConsoleControlEntity extends Entity {
     public boolean handleAttack(Entity entity) {
         if (this.consoleBlockEntity == null) return false;
 
-        this.playControlSound();
         this.consoleBlockEntity.useControl(this.controlEntry, Hand.MAIN_HAND, entity);
         return true;
     }
@@ -78,10 +76,5 @@ public class TardisConsoleControlEntity extends Entity {
 
     public void setTardisControlEntry(TardisConsoleControlEntry controlEntry) {
         this.controlEntry = controlEntry;
-    }
-
-    private void playControlSound() {
-        Supplier<SoundEvent> soundEventSupplier = this.controlEntry.role.soundEventSupplier;
-        if (!this.getWorld().isClient && soundEventSupplier != null) ModSounds.playSound(this.getWorld(), this.getBlockPos(), soundEventSupplier.get(), 1.0F, 1.0F);
     }
 }

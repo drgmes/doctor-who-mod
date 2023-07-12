@@ -6,6 +6,6 @@ import java.util.Map;
 public class TardisConsoleUnitTypes {
     public static final Map<String, TardisConsoleUnitTypeEntry> CONSOLE_TYPES = new HashMap<>();
 
-    public static final TardisConsoleUnitTypeEntry IMPERIAL = new TardisConsoleUnitTypeEntryImperial("imperial");
-    public static final TardisConsoleUnitTypeEntry TOYOTA = new TardisConsoleUnitTypeEntryToyota("toyota");
+    public static final TardisConsoleUnitTypeEntry IMPERIAL = new TardisConsoleUnitTypeEntryImperial();
+    public static final TardisConsoleUnitTypeEntry TOYOTA = new TardisConsoleUnitTypeEntryToyota();
 }

@@ -16,7 +16,6 @@ public class TardisConsoleUnitTypeEntry {
 
     public TardisConsoleUnitTypeEntry(String name) {
         this.name = name;
-
         TardisConsoleUnitTypes.CONSOLE_TYPES.put(name, this);
     }
 

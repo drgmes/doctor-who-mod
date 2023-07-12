@@ -36,11 +36,6 @@ public class DWM {
         public static final BiFunction<String, Formatting, Text> TARDIS_POS = (pos, color) -> Text.translatable("title." + DWM.MODID + ".tardis_pos", Text.literal(pos).formatted(color));
         public static final BiFunction<String, Formatting, Text> TARDIS_LAST_POS = (pos, color) -> Text.translatable("title." + DWM.MODID + ".tardis_last_pos", Text.literal(pos).formatted(color));
 
-        public static final Text DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.dematerialization_circuit.not_installed");
-        public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
-        public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
-        public static final Text SHIELDS_GENERATOR_NOT_ACTIVE = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_active");
-
         public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message." + DWM.MODID + ".tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
         public static final Function<Float, Text> TARDIS_ARRIVE_IN = (time) -> Text.translatable("message." + DWM.MODID + ".tardis.arrive", Text.literal(String.valueOf(time)).formatted(Formatting.AQUA));
         public static final Function<String, Text> TARDIS_ARRIVE_FAILED = (pos) -> Text.translatable("message." + DWM.MODID + ".tardis.arrive.failed", Text.literal(pos).formatted(Formatting.GOLD));
@@ -49,10 +44,21 @@ public class DWM {
         public static final Text TARDIS_BROKEN = Text.translatable("message." + DWM.MODID + ".tardis.broken");
         public static final Text TARDIS_REPAIRED = Text.translatable("message." + DWM.MODID + ".tardis.repaired");
         public static final Text TARDIS_NOT_ALLOWED = Text.translatable("message." + DWM.MODID + ".tardis.not_allowed");
+        public static final Text TARDIS_MUST_BE_MATERIALIZED = Text.translatable("message." + DWM.MODID + ".tardis.must_be_materialized");
+        public static final Text TARDIS_MUST_BE_LANDED = Text.translatable("message." + DWM.MODID + ".tardis.must_be_landed");
+        public static final Text TARDIS_ALREADY_MATERIALIZED = Text.translatable("message." + DWM.MODID + ".tardis.already_materialized");
+        public static final Text TARDIS_ALREADY_DEMATERIALIZED = Text.translatable("message." + DWM.MODID + ".tardis.already_dematerialized");
+        public static final Text TARDIS_ALREADY_IN_FLIGHT = Text.translatable("message." + DWM.MODID + ".tardis.already_in_flight");
+        public static final Text TARDIS_ALREADY_LANDED = Text.translatable("message." + DWM.MODID + ".tardis.already_landed");
         public static final Text TARDIS_NOT_ENOUGH_FUEL = Text.translatable("message." + DWM.MODID + ".tardis.fuel.not_enough");
+        public static final Text TARDIS_HANDBRAKE_ACTIVATED = Text.translatable("message." + DWM.MODID + ".tardis.handbrake.activated");
         public static final Text TARDIS_DOORS_LOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.locked");
         public static final Text TARDIS_DOORS_UNLOCKED = Text.translatable("message." + DWM.MODID + ".tardis.control.role.doors.unlocked");
-        public static final Text TARDIS_HANDBRAKE_ACTIVATED = Text.translatable("message." + DWM.MODID + ".tardis.handbrake.activated");
+
+        public static final Text DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.dematerialization_circuit.not_installed");
+        public static final Text DIRECTIONAL_UNIT_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.directional_unit.not_installed");
+        public static final Text SHIELDS_GENERATOR_NOT_INSTALLED = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_installed");
+        public static final Text SHIELDS_GENERATOR_NOT_ACTIVE = Text.translatable("message." + DWM.MODID + ".tardis.system.shields_generator.not_active");
 
         public static final Text ARS_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".ars_interface.title");
         public static final Text ARS_INTERFACE_FLD_SEARCH = Text.translatable("screen." + DWM.MODID + ".ars_interface.field.search");

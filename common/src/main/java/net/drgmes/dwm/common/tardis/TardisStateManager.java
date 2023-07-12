@@ -852,6 +852,13 @@ public class TardisStateManager extends PersistentState {
             else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
         }
 
+        // If Tardis has fight system
+        if (flightSystem.isEnabled()) {
+            // XYZ Step
+            int xyzStep = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XYZSTEP);
+            if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
+        }
+
         // Only if Tardis is not in flight
         if (flightSystem.isEnabled() && !isInFlight) {
             // Facing
@@ -874,10 +881,6 @@ public class TardisStateManager extends PersistentState {
             // Z Set
             int zSet = (int) controlsStorage.get(ETardisConsoleUnitControlRole.ZSET);
             if (zSet != 0) this.destExteriorPosition = zSet > 0 ? this.destExteriorPosition.south(this.xyzStep) : this.destExteriorPosition.north(this.xyzStep);
-
-            // XYZ Step
-            int xyzStep = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XYZSTEP);
-            if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
 
             // Randomizer
             if ((int) controlsStorage.get(ETardisConsoleUnitControlRole.RANDOMIZER) != 0) {
@@ -936,6 +939,10 @@ public class TardisStateManager extends PersistentState {
             if (resetToCurr != 0) this.destExteriorDimension = this.getCurrentExteriorDimension();
             if (resetToCurr != 0) this.destExteriorFacing = this.getCurrentExteriorFacing();
             if (resetToCurr != 0) this.destExteriorPosition = this.getCurrentExteriorPosition();
+
+            // Other
+            this.setFuelHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.FUEL_HARVESTING));
+            this.setEnergyHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_HARVESTING));
         }
 
         // Only if Tardis materialized
@@ -962,10 +969,9 @@ public class TardisStateManager extends PersistentState {
                 controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, false);
             }
 
+            // Other
             this.setDoorsOpenState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.DOORS));
             this.setLightState((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.LIGHT));
-            this.setFuelHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.FUEL_HARVESTING));
-            this.setEnergyHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_HARVESTING));
         }
 
         this.updateConsoleTiles();

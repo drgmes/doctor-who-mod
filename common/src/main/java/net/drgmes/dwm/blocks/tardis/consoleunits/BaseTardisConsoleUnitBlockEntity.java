@@ -184,6 +184,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         if (control.role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
             if (this.throwNotifyIfBroken(tardisHolder, player) || tardisHolder.isEmpty()) return;
             this.sendMonitorOpenPacket(player, tardisHolder.get());
+            this.playControlSound(control.role);
             return;
         }
 
@@ -231,6 +232,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             this.sendTelepathicInterfaceLocationsOpenPacket(player);
+            this.playControlSound(control.role);
             return;
         }
 
@@ -282,11 +284,21 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     if (isUpdated && (tardisHolder.isEmpty() || !tardisHolder.get().isHandbrakeLocked())) {
                         ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_3.get(), 1.0F, 1.0F);
                     }
+
+                    if (!isUpdated && tardisHolder.isPresent() && !tardisHolder.get().isHandbrakeLocked()) {
+                        if ((boolean) value) player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_IN_FLIGHT, true);
+                        else player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_LANDED, true);
+                    }
                 }
 
                 case MATERIALIZATION -> {
                     if (isUpdated && (tardisHolder.isEmpty() || !tardisHolder.get().isHandbrakeLocked())) {
                         ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_2.get(), 1.0F, 1.0F);
+                    }
+
+                    if (!isUpdated && tardisHolder.isPresent() && !tardisHolder.get().isHandbrakeLocked()) {
+                        if ((boolean) value) player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_MATERIALIZED, true);
+                        else player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_DEMATERIALIZED, true);
                     }
                 }
 
@@ -301,6 +313,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     if ((int) this.controlsStorage.get(control.role) != 0) {
                         this.monitorPage = (this.monitorPage + 1) % MONITOR_PAGES_LENGTH;
                         this.sendMonitorUpdatePacket(serverWorld);
+                        this.playControlSound(control.role);
                         this.markDirty();
                     }
                 }
@@ -309,6 +322,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     if ((int) this.controlsStorage.get(control.role) != 0) {
                         this.monitorPage = this.monitorPage < 1 ? MONITOR_PAGES_LENGTH - 1 : this.monitorPage - 1;
                         this.sendMonitorUpdatePacket(serverWorld);
+                        this.playControlSound(control.role);
                         this.markDirty();
                     }
                 }
@@ -360,6 +374,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         this.controls.clear();
     }
 
+    private void playControlSound(ETardisConsoleUnitControlRole role) {
+        if (this.getWorld() != null && !this.getWorld().isClient && role.soundEventSupplier != null) ModSounds.playSound(this.getWorld(), this.getPos(), role.soundEventSupplier.get(), 1.0F, 1.0F);
+    }
+
     private boolean throwNotifyIfBroken(Optional<TardisStateManager> tardisHolder, PlayerEntity player) {
         if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return true;
 
@@ -373,39 +391,68 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
     private void displayNotification(TardisStateManager tardis, ETardisConsoleUnitControlRole role, PlayerEntity player) {
         Object value = this.controlsStorage.get(role);
+        String message = role.message == null ? null : "message." + DWM.MODID + ".tardis.control.role." + role.message;
 
         TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
         TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
         TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
 
-        boolean isMaterializationSystemEnabled = materializationSystem.isEnabled();
-        boolean isFlightSystemEnabled = flightSystem.isEnabled();
-        boolean isShieldsSystemEnabled = shieldsSystem.isEnabled();
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_MATERIALIZING_SYSTEM) && !materializationSystem.isEnabled()) {
+            player.sendMessage(DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED, true);
+            return;
+        }
 
-        boolean isMaterialized = materializationSystem.isMaterialized();
-        boolean isInFlight = flightSystem.inProgress();
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_FLIGHT_SYSTEM) && !flightSystem.isEnabled()) {
+            player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
+            return;
+        }
 
-        String message = role.message == null ? null : "message." + DWM.MODID + ".tardis.control.role." + role.message;
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_SHIELDS_SYSTEM) && !shieldsSystem.isEnabled()) {
+            player.sendMessage(DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED, true);
+            return;
+        }
+
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.MUST_BE_MATERIALIZED) && !materializationSystem.isMaterialized()) {
+            player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+            return;
+        }
+
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.MUST_BE_LANDED) && flightSystem.inProgress()) {
+            player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+            return;
+        }
+
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_OWNER) && !tardis.checkAccess(player, true)) {
+            player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
+            return;
+        }
+
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_SHIELDS_ON) && !tardis.isShieldsEnabled()) {
+            player.sendMessage(DWM.TEXTS.SHIELDS_GENERATOR_NOT_ACTIVE, true);
+            return;
+        }
+
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_HANDBRAKE_OFF) && tardis.isHandbrakeLocked()) {
+            player.sendMessage(DWM.TEXTS.TARDIS_HANDBRAKE_ACTIVATED, true);
+            return;
+        }
+
         Text component = switch (role) {
-            case DOORS, LIGHT, FUEL_HARVESTING, ENERGY_HARVESTING -> !isMaterialized ? null : Text.translatable(message + ((boolean) value ? ".active" : ".inactive"));
-            case HANDBRAKE -> !tardis.checkAccess(player, true) ? DWM.TEXTS.TARDIS_NOT_ALLOWED : Text.translatable(message + ((boolean) value ? ".active" : ".inactive"));
-            case SAFE_DIRECTION -> !isMaterializationSystemEnabled ? DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED : Text.translatable(message, Text.translatable(message + "." + value));
-            case FACING -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, Text.translatable(message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2))));
-            case XYZSTEP -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, "§e" + tardis.getXYZStep()));
-            case XSET -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getX()));
-            case YSET -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getY()));
-            case ZSET -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getZ()));
-            case DIM_PREV, DIM_NEXT -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase()));
-            case RANDOMIZER, RESET_TO_PREV, RESET_TO_CURR -> !isFlightSystemEnabled ? DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED : (isInFlight ? null : Text.translatable(message, value));
-            case SHIELDS -> !isMaterialized ? null : (isShieldsSystemEnabled ? Text.translatable(message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED);
-            case SHIELDS_OXYGEN, SHIELDS_FIRE_PROOF, SHIELDS_MEDICAL, SHIELDS_MINING, SHIELDS_GRAVITATION, SHIELDS_SPECIAL -> !isMaterialized ? null : (isShieldsSystemEnabled && tardis.isShieldsEnabled() ? Text.translatable(message + ((boolean) value ? ".active" : ".inactive")) : DWM.TEXTS.SHIELDS_GENERATOR_NOT_ACTIVE);
-            case STARTER -> isMaterializationSystemEnabled ? (isFlightSystemEnabled ? (tardis.getFuelAmount() > 0 || tardis.getEnergyAmount() > 0 ? (tardis.isHandbrakeLocked() ? DWM.TEXTS.TARDIS_HANDBRAKE_ACTIVATED : null) : DWM.TEXTS.TARDIS_NOT_ENOUGH_FUEL) : DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED) : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
-            case MATERIALIZATION -> isMaterializationSystemEnabled ? (tardis.isHandbrakeLocked() ? DWM.TEXTS.TARDIS_HANDBRAKE_ACTIVATED : null) : DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED;
+            case DOORS, LIGHT, SHIELDS, SHIELDS_OXYGEN, SHIELDS_FIRE_PROOF, SHIELDS_MEDICAL, SHIELDS_MINING, SHIELDS_GRAVITATION, SHIELDS_SPECIAL, FUEL_HARVESTING, ENERGY_HARVESTING, HANDBRAKE -> Text.translatable(message + ((boolean) value ? ".active" : ".inactive"));
+            case DIM_PREV, DIM_NEXT -> Text.translatable(message, "§e" + tardis.getDestinationExteriorDimension().getValue().getPath().replace("_", " ").toUpperCase());
+            case FACING -> Text.translatable(message, Text.translatable(message + "." + (tardis.getDestinationExteriorFacing().ordinal() - 2)));
+            case XSET -> Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getX());
+            case YSET -> Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getY());
+            case ZSET -> Text.translatable(message, "§e" + tardis.getDestinationExteriorPosition().getZ());
+            case XYZSTEP -> Text.translatable(message, "§e" + tardis.getXYZStep());
+            case SAFE_DIRECTION -> Text.translatable(message, Text.translatable(message + "." + value));
+            case STARTER -> tardis.getFuelAmount() <= 0 && tardis.getEnergyAmount() <= 0 ? DWM.TEXTS.TARDIS_NOT_ENOUGH_FUEL : null;
 
-            default -> isInFlight || message == null ? null : Text.translatable(message, value);
+            default -> message == null ? null : Text.translatable(message, value);
         };
 
         if (component != null) {
+            this.playControlSound(role);
             player.sendMessage(component, true);
         }
     }
