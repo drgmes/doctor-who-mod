@@ -178,8 +178,6 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setDoorsOpenState(false);
             this.tardis.setLightState(false);
             this.tardis.setShieldsState(false);
-            this.tardis.setFuelHarvesting(false);
-            this.tardis.setEnergyHarvesting(false);
             this.tardis.updateConsoleTiles();
 
             this.updateExterior(exteriorWorld, true, false);
@@ -227,6 +225,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension(), this.tardis.getWorld().getServer());
         if (exteriorWorld == null) return false;
 
+        // Clamping pos in build limit
         BlockPos initialExteriorBlockPos = this.tardis.getCurrentExteriorPosition();
         if (!exteriorWorld.isInBuildLimit(initialExteriorBlockPos)) {
             if (this.safeDirection == ESafeDirection.TOP) initialExteriorBlockPos = initialExteriorBlockPos.withY(exteriorWorld.getTopY() - 2);
@@ -236,6 +235,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setDestinationPosition(initialExteriorBlockPos);
         }
 
+        // Try to land into another TARDIS
         if ((this.safeDirection == ESafeDirection.DIRECT || this.safeDirection == ESafeDirection.NONE) && this.tryLandToForeignTardis(exteriorWorld)) {
             return true;
         }
@@ -395,8 +395,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
             freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, exteriorFacing, checkBottom);
             if (!freeSpaceFound) {
-                for (Direction direction : Direction.values()) {
+                for (Direction direction : Direction.Type.HORIZONTAL) {
                     if (direction == exteriorFacing) continue;
+                    if (direction.getAxis() != Direction.Axis.X && direction.getAxis() != Direction.Axis.Z) continue;
                     freeSpaceFound = this.checkBlockIsSafe(exteriorWorld, exteriorBlockPos, direction, checkBottom);
 
                     if (freeSpaceFound) {

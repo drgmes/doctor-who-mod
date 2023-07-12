@@ -6,12 +6,17 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityStatusEffectS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerAbilitiesS2CPacket;
+import net.minecraft.network.packet.s2c.play.PlayerRespawnS2CPacket;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.WorldProperties;
+import net.minecraft.world.biome.source.BiomeAccess;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,28 +84,36 @@ public class CommonHelper {
         return str.replace(",", ".");
     }
 
-    public static boolean teleport(Entity entity, ServerWorld world, Vec3d pos, float yaw) {
-        if (entity instanceof ServerPlayerEntity) {
-            if (entity.moveToWorld(world) instanceof ServerPlayerEntity player) {
-                player.setServerWorld(world);
-                player.networkHandler.requestTeleport(pos.x, pos.y, pos.z, yaw, 0);
-                player.networkHandler.syncWithPlayerPosition();
-                world.onPlayerChangeDimension(player);
+    public static boolean teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
+        if (entity instanceof ServerPlayerEntity player) {
+            player.inTeleportationState = true;
+            ServerWorld prevWorld = player.getServerWorld();
 
-                world.getServer().getPlayerManager().sendPlayerStatus(player);
-                world.getServer().getPlayerManager().sendWorldInfo(player, world);
-                player.networkHandler.sendPacket(new PlayerAbilitiesS2CPacket(player.getAbilities()));
+            WorldProperties worldProperties = destination.getLevelProperties();
+            player.networkHandler.sendPacket(new PlayerRespawnS2CPacket(destination.getDimensionKey(), destination.getRegistryKey(), BiomeAccess.hashSeed(destination.getSeed()), player.interactionManager.getGameMode(), player.interactionManager.getPreviousGameMode(), destination.isDebugWorld(), destination.isFlat(), (byte) 3, player.getLastDeathPos(), player.getPortalCooldown()));
+            player.networkHandler.sendPacket(new DifficultyS2CPacket(worldProperties.getDifficulty(), worldProperties.isDifficultyLocked()));
 
-                for (StatusEffectInstance statusEffectInstance : player.getStatusEffects()) {
-                    player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), statusEffectInstance));
-                }
+            PlayerManager playerManager = player.server.getPlayerManager();
+            playerManager.sendCommandTree(player);
+            prevWorld.removePlayer(player, Entity.RemovalReason.CHANGED_DIMENSION);
+            player.unsetRemoved();
 
-                return true;
+            player.setServerWorld(destination);
+            player.networkHandler.requestTeleport(pos.x, pos.y, pos.z, yaw, 0);
+            player.networkHandler.syncWithPlayerPosition();
+            destination.onPlayerChangeDimension(player);
+
+            destination.getServer().getPlayerManager().sendPlayerStatus(player);
+            destination.getServer().getPlayerManager().sendWorldInfo(player, destination);
+            player.networkHandler.sendPacket(new PlayerAbilitiesS2CPacket(player.getAbilities()));
+
+            for (StatusEffectInstance statusEffectInstance : player.getStatusEffects()) {
+                player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), statusEffectInstance));
             }
 
-            return false;
+            return true;
         }
 
-        return entity.teleport(world, pos.x, pos.y, pos.z, Set.of(), yaw, 0);
+        return entity.teleport(destination, pos.x, pos.y, pos.z, Set.of(), yaw, 0);
     }
 }

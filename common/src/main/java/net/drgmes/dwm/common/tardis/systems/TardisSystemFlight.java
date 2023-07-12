@@ -120,6 +120,10 @@ public class TardisSystemFlight implements ITardisSystem {
         return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
             if (!this.isFlightLaunched) return;
 
+            this.tardis.setFuelHarvesting(false);
+            this.tardis.setEnergyHarvesting(false);
+            this.tardis.updateConsoleTiles();
+
             float timeToFly = this.getFlightDuration();
             this.isSoundFlyPlayed = false;
             this.isInFlight = true;
