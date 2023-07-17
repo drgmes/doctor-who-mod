@@ -2,7 +2,6 @@ package net.drgmes.dwm.entities.tardis.consoleunit.controls;
 
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlEntry;
-import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,12 +9,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.world.World;
-
-import java.util.function.Supplier;
 
 public class TardisConsoleControlEntity extends Entity {
     private BaseTardisConsoleUnitBlockEntity consoleBlockEntity;

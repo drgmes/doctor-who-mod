@@ -48,7 +48,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends Ba
                 return;
             }
 
-            MapState mapState = MapState.fromNbt(tag.getCompound("mapState"));
+            MapState mapState = MapState.fromNbt(this.tag.getCompound("mapState"));
             MapBannerMarker mapBannerMarker = MapBannerMarker.fromNbt(tag.getCompound("mapBannerMarker"));
 
             String color = "§e" + mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");

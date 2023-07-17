@@ -1,22 +1,30 @@
 package net.drgmes.dwm.common.tardis.ars;
 
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 
 public class ArsCategory {
-    private final String path;
-    private final String tag;
-    private final String title;
-    private final ArsCategory parent;
+    public final String name;
+    public final String title;
+    public final String tag;
+    public final String parent;
 
-    public ArsCategory(String path, String title, String tag, ArsCategory parent) {
-        this.path = path;
-        this.tag = tag;
+    public ArsCategory(String name, String title, String tag, String parent) {
+        this.name = name;
         this.title = title;
+        this.tag = tag;
         this.parent = parent;
     }
 
-    public String getPath() {
-        return this.path;
+    public static void toPacket(PacketByteBuf buf, ArsCategory arsCategory) {
+        buf.writeString(arsCategory.name);
+        buf.writeString(arsCategory.title);
+        buf.writeString(arsCategory.tag);
+        buf.writeString(arsCategory.parent);
+    }
+
+    public static ArsCategory fromPacket(PacketByteBuf buf) {
+        return new ArsCategory(buf.readString(), buf.readString(), buf.readString(), buf.readString());
     }
 
     public Text getTag() {
@@ -25,9 +33,5 @@ public class ArsCategory {
 
     public Text getTitle() {
         return Text.translatable(this.title);
-    }
-
-    public ArsCategory getParent() {
-        return this.parent;
     }
 }

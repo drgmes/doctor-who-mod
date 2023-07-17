@@ -66,14 +66,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
             }
 
             Text message = null;
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType dataType = TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.valueOf(type);
+            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType dataType = TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.valueOf(this.type);
 
             if (dataType == TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.BIOME) {
-                String msg = findBiome(id, tardis) ? "found" : "not_found";
+                String msg = findBiome(this.id, tardis) ? "found" : "not_found";
                 message = Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg);
             }
             else if (dataType == TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.STRUCTURE) {
-                String msg = findStructure(id, tardis) ? "found" : "not_found";
+                String msg = findStructure(this.id, tardis) ? "found" : "not_found";
                 message = Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg);
             }
 

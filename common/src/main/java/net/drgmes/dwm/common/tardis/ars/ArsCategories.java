@@ -6,9 +6,9 @@ import java.util.Map;
 public class ArsCategories {
     public static final Map<String, ArsCategory> CATEGORIES = new HashMap<>();
 
-    public static ArsCategory register(String path, String title, String tag, ArsCategory parent) {
-        ArsCategory category = new ArsCategory(path, title, tag, parent);
-        ArsCategories.CATEGORIES.put(path, category);
-        return category;
+    public static ArsCategory register(String name, String title, String tag, String parent) {
+        ArsCategory arsCategory = new ArsCategory(name, title, tag, parent);
+        ArsCategories.CATEGORIES.put(name, arsCategory);
+        return arsCategory;
     }
 }

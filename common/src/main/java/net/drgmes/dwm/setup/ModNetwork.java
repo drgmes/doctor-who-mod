@@ -9,6 +9,8 @@ import net.drgmes.dwm.network.server.*;
 public class ModNetwork {
     public static SimpleNetworkManager NETWORK_MANAGER = SimpleNetworkManager.create(DWM.MODID);
 
+    public static MessageType ARS_CREATOR_OPEN = Registration.registerS2CMessageType("ars_creator_open", ArsCreatorOpenPacket::create);
+    public static MessageType ARS_DESTROYER_OPEN = Registration.registerS2CMessageType("ars_destroyer_open", ArsDestroyerOpenPacket::create);
     public static MessageType DIMENSION_ADD = Registration.registerS2CMessageType("dimension_add", DimensionAddPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_CONTROLS_STATES_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_controls_states_update", TardisConsoleUnitControlsStatesUpdatePacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_OPEN = Registration.registerS2CMessageType("tardis_console_unit_monitor_open", TardisConsoleUnitMonitorOpenPacket::create);

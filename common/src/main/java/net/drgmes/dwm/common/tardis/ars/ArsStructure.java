@@ -15,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -35,38 +36,41 @@ import java.util.Map;
 import java.util.Set;
 
 public class ArsStructure {
-    private final String name;
-    private final String title;
-    private final String structurePath;
-    private final ArsCategory category;
+    public final String name;
+    public final String path;
+    public final String title;
+    public final String category;
 
-    private Map<String, JsonElement> replaces;
+    private Map<String, JsonElement> replaceables;
 
-    public ArsStructure(String name, String title, String structurePath, ArsCategory category) {
+    public ArsStructure(String name, String path, String title, String category) {
         this.name = name;
+        this.path = path;
         this.title = title;
-        this.structurePath = structurePath;
         this.category = category;
     }
 
-    public String getName() {
-        return this.name;
+    public static void toPacket(PacketByteBuf buf, ArsStructure arsStructure) {
+        buf.writeString(arsStructure.name);
+        buf.writeString(arsStructure.path);
+        buf.writeString(arsStructure.title);
+        buf.writeString(arsStructure.category);
+    }
+
+    public static ArsStructure fromPacket(PacketByteBuf buf) {
+        return new ArsStructure(buf.readString(), buf.readString(), buf.readString(), buf.readString());
     }
 
     public Text getTitle() {
         return Text.translatable(this.title);
     }
 
-    public ArsCategory getCategory() {
-        return this.category;
-    }
-
     public StructureTemplate getTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.structurePath));
+        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.path));
     }
 
-    public ArsStructure setReplaces(Map<String, JsonElement> replaces) {
-        this.replaces = replaces;
+    public ArsStructure setReplaceables(Map<String, JsonElement> replaceables) {
+        this.replaceables = replaceables;
         return this;
     }
 
@@ -103,14 +107,14 @@ public class ArsStructure {
 
                 if (isAreaEmpty && template.place(world, blockPos, BlockPos.ORIGIN, placeSettings, world.random, Block.NOTIFY_ALL)) {
                     // Replace blocks in newly generated structure
-                    if (this.replaces != null) {
+                    if (this.replaceables != null) {
                         WorldHelper.foreachArea(aabb, (bp) -> {
                             try {
                                 BlockState bs = world.getBlockState(bp);
                                 String blockId = Registries.BLOCK.getId(bs.getBlock()).toString();
 
-                                if (this.replaces.containsKey(blockId)) {
-                                    Block replacingBlock = Registries.BLOCK.get(new Identifier(this.replaces.get(blockId).getAsString()));
+                                if (this.replaceables.containsKey(blockId)) {
+                                    Block replacingBlock = Registries.BLOCK.get(new Identifier(this.replaceables.get(blockId).getAsString()));
 
                                     BlockState replacingBlockState = replacingBlock.getDefaultState();
                                     replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.OPEN);
@@ -149,7 +153,7 @@ public class ArsStructure {
 
                     // Update info for ARS Destroyer block
                     if (world.getBlockEntity(blockPos.add(tadOffset)) instanceof TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity) {
-                        tardisArsDestroyerBlockEntity.arsStructure = this;
+                        tardisArsDestroyerBlockEntity.arsStructureName = this.name;
                         tardisArsDestroyerBlockEntity.tacFacing = direction;
                         tardisArsDestroyerBlockEntity.tacBlockPos = tacBlockPos;
                         tardisArsDestroyerBlockEntity.tacIndex = tardisArsCreatorBlockEntity.index;

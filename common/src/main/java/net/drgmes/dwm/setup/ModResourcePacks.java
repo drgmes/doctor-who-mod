@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsCategories;
-import net.drgmes.dwm.common.tardis.ars.ArsCategory;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
@@ -50,6 +49,8 @@ public class ModResourcePacks {
                 InputStreamReader inputStreamReader = new InputStreamReader(stream);
                 JsonObject data = JsonHelper.deserialize(inputStreamReader);
 
+                if (data.has("disable") && data.get("disable").getAsBoolean()) return;
+
                 String title = data.has("title") ? data.get("title").getAsString() : consoleRoomsName;
                 JsonArray centerArray = data.has("center") ? data.get("center").getAsJsonArray() : null;
                 JsonArray entranceArray = data.has("entrance") ? data.get("entrance").getAsJsonArray() : null;
@@ -92,9 +93,9 @@ public class ModResourcePacks {
                 InputStreamReader inputStreamReader = new InputStreamReader(stream);
                 JsonObject data = JsonHelper.deserialize(inputStreamReader);
 
-                if (data.has("hidden") && data.get("hidden").getAsBoolean()) return;
+                if (data.has("disable") && data.get("disable").getAsBoolean()) return;
 
-                ArsCategory parent = data.has("parent") ? ArsCategories.CATEGORIES.getOrDefault(data.get("parent").getAsString(), null) : null;
+                String parent = data.has("parent") ? data.get("parent").getAsString() : "";
                 String title = data.has("title") ? data.get("title").getAsString() : arsCategoryName;
                 String tag = data.has("tag") ? data.get("tag").getAsString() : arsCategoryName;
 
@@ -117,22 +118,21 @@ public class ModResourcePacks {
                 InputStreamReader inputStreamReader = new InputStreamReader(stream);
                 JsonObject data = JsonHelper.deserialize(inputStreamReader);
 
-                if (data.has("hidden") && data.get("hidden").getAsBoolean()) return;
+                if (data.has("disable") && data.get("disable").getAsBoolean()) return;
 
                 String path = id.getPath().replace("tardis/ars_rooms/", "");
                 String[] pathParts = path.split("/");
 
                 String categoryName = String.join("_", Arrays.copyOfRange(pathParts, 0, pathParts.length - 1));
                 String arsRoomName = (!categoryName.equals("") ? categoryName + "_" : "") + pathParts[pathParts.length - 1].replace(".json", "");
-                ArsCategory category = ArsCategories.CATEGORIES.getOrDefault(categoryName, null);
 
                 String title = data.has("title") ? data.get("title").getAsString() : arsRoomName;
-                String structurePath = data.has("structure") ? data.get("structure").getAsString() : null;
-                Map<String, JsonElement> replaces = data.has("replaces") ? data.get("replaces").getAsJsonObject().asMap() : null;
-                if ((!categoryName.equals("") && category == null) || structurePath == null) return;
+                String structure = data.has("structure") ? data.get("structure").getAsString() : null;
+                Map<String, JsonElement> replaceables = data.has("replaces") ? data.get("replaces").getAsJsonObject().asMap() : null;
+                if (structure == null) return;
 
-                ArsStructure arsStructure = ArsStructures.register(arsRoomName, title, structurePath, category);
-                if (replaces != null) arsStructure.setReplaces(replaces);
+                ArsStructure arsStructure = ArsStructures.register(arsRoomName, structure, title, categoryName);
+                if (replaceables != null) arsStructure.setReplaceables(replaceables);
 
                 count.getAndIncrement();
             } catch (Exception e) {

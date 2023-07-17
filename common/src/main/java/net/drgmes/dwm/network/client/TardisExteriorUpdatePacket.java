@@ -49,7 +49,7 @@ public class TardisExteriorUpdatePacket extends BaseS2CMessage {
         final MinecraftClient mc = MinecraftClient.getInstance();
         BlockState blockState = mc.world.getBlockState(this.blockPos);
 
-        if (mc.world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+        if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (this.needDemat) tardisExteriorBlockEntity.demat();
         }
 
@@ -67,7 +67,7 @@ public class TardisExteriorUpdatePacket extends BaseS2CMessage {
             }
 
             if (flag) {
-                mc.world.setBlockState(blockPos, blockState, 10);
+                mc.world.setBlockState(this.blockPos, blockState, 10);
             }
         }
     }

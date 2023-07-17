@@ -1,10 +1,8 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.screens;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsCategory;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
-import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.network.server.ArsCreatorApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
@@ -20,19 +18,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import org.joml.Vector2i;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class TardisArsCreatorScreen extends BaseScreen {
     private static final int LINE_PADDING = 3;
 
     private final BlockPos blockPos;
-    private ArsCategory selectedArsCategory = null;
+    private final Map<String, ArsCategory> arsCategories;
+    private final Map<String, ArsStructure> arsStructures;
 
-    private List<ArsCategory> arsCategories = new ArrayList<>();
-    private List<ArsStructure> arsStructures = new ArrayList<>();
+    private ArsCategory selectedArsCategory = null;
+    private List<ArsCategory> filteredArsCategories = new ArrayList<>();
+    private List<ArsStructure> filteredArsStructures = new ArrayList<>();
 
     private ListWidget listWidget;
     private ListWidget.ListEntry selectedArsStructureEntry = null;
@@ -43,10 +40,13 @@ public class TardisArsCreatorScreen extends BaseScreen {
     private TextFieldWidget search;
     private String lastSearch;
 
-    public TardisArsCreatorScreen(BlockPos blockPos) {
+    public TardisArsCreatorScreen(BlockPos blockPos, Map<String, ArsCategory> arsCategories, Map<String, ArsStructure> arsStructures) {
         super(DWM.TEXTS.ARS_INTERFACE_NAME);
 
         this.blockPos = blockPos;
+        this.arsCategories = arsCategories;
+        this.arsStructures = arsStructures;
+
         this.reloadCategoriesList();
         this.reloadArsStructuresList();
     }
@@ -142,10 +142,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     protected void apply() {
         if (this.selectedArsStructureEntry != null) {
-            ArsStructure structure = this.selectedArsStructureEntry.arsStructure;
-            ArsCategory category = structure.getCategory();
-
-            new ArsCreatorApplyPacket(this.blockPos, category != null ? category.getPath() : "", structure.getName()).sendToServer();
+            new ArsCreatorApplyPacket(this.blockPos, this.selectedArsStructureEntry.arsStructure.name).sendToServer();
         }
 
         this.close();
@@ -157,10 +154,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     protected void setSelectedArsCategory(ListWidget.ListEntry entry) {
-        if (entry.arsCategory != null) this.selectedArsCategory = entry.arsCategory;
-        else if (this.selectedArsCategory != null && this.selectedArsCategory.getParent() != null) this.selectedArsCategory = this.selectedArsCategory.getParent();
-        else this.selectedArsCategory = null;
-
+        this.selectedArsCategory = entry.arsCategory != null ? entry.arsCategory : this.arsCategories.getOrDefault(this.selectedArsCategory.parent, null);
         this.selectedArsStructureEntry = null;
         this.search.setText("");
 
@@ -182,18 +176,18 @@ public class TardisArsCreatorScreen extends BaseScreen {
         if (this.hasSearch()) {
             String search = this.search.getText().toLowerCase();
             this.lastSearch = this.search.getText();
-            list = ArsCategories.CATEGORIES.values().stream().filter((arsCategory) -> arsCategory.getTitle().getString().toLowerCase().contains(search)).toList();
+            list = this.arsCategories.values().stream().filter((arsCategory) -> arsCategory.getTitle().getString().toLowerCase().contains(search)).toList();
         }
         else {
-            list = ArsCategories.CATEGORIES.values().stream().filter((arsCategory) -> arsCategory.getParent() == this.selectedArsCategory).toList();
+            list = this.arsCategories.values().stream().filter((arsCategory) -> arsCategory.parent.equals(this.selectedArsCategory != null ? this.selectedArsCategory.name : "")).toList();
         }
 
         if (list.size() > 0) {
             list = new ArrayList<>(list);
-            list.sort(Comparator.comparing(ArsCategory::getPath));
+            list.sort(Comparator.comparing((arsCategory) -> arsCategory.name));
         }
 
-        this.arsCategories = list;
+        this.filteredArsCategories = list;
     }
 
     protected void reloadArsStructuresList() {
@@ -202,22 +196,18 @@ public class TardisArsCreatorScreen extends BaseScreen {
         if (this.hasSearch()) {
             String search = this.search.getText().toLowerCase();
             this.lastSearch = this.search.getText();
-            list = ArsStructures.getAllStructures().stream().filter((arsStructure) -> arsStructure.getTitle().getString().toLowerCase().contains(search)).toList();
-        }
-        else if (!ArsStructures.STRUCTURES.containsKey(this.selectedArsCategory)) {
-            this.arsStructures = new ArrayList<>();
-            return;
+            list = this.arsStructures.values().stream().filter((arsStructure) -> arsStructure.getTitle().getString().toLowerCase().contains(search)).toList();
         }
         else {
-            list = ArsStructures.STRUCTURES.get(this.selectedArsCategory).values().stream().toList();
+            list = this.arsStructures.values().stream().filter((arsStructure) -> arsStructure.category.equals(this.selectedArsCategory != null ? this.selectedArsCategory.name : "")).toList();
         }
 
         if (list.size() > 0) {
             list = new ArrayList<>(list);
-            list.sort(Comparator.comparing(ArsStructure::getName));
+            list.sort(Comparator.comparing((arsStructure) -> arsStructure.name));
         }
 
-        this.arsStructures = list;
+        this.filteredArsStructures = list;
     }
 
     protected boolean hasSearch() {
@@ -236,8 +226,8 @@ public class TardisArsCreatorScreen extends BaseScreen {
         public void refreshList() {
             super.refreshList();
             if (this.parent.selectedArsCategory != null && !ListWidget.this.parent.hasSearch()) this.addEntry(new ListEntry());
-            this.parent.arsCategories.forEach((arsCategory) -> this.addEntry(new ListEntry(arsCategory)));
-            this.parent.arsStructures.forEach((arsStructure) -> this.addEntry(new ListEntry(arsStructure)));
+            this.parent.filteredArsCategories.forEach((arsCategory) -> this.addEntry(new ListEntry(arsCategory)));
+            this.parent.filteredArsStructures.forEach((arsStructure) -> this.addEntry(new ListEntry(arsStructure)));
         }
 
         public class ListEntry extends BaseListEntry {
@@ -276,7 +266,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
                     if (arsCategory != null) {
                         do {
                             text = arsCategory.getTag().copy().append(" / ").append(text);
-                            arsCategory = arsCategory.getParent();
+                            arsCategory = ListWidget.this.parent.arsCategories.getOrDefault(arsCategory.parent, null);
                         }
                         while (arsCategory != null);
                     }
@@ -284,9 +274,11 @@ public class TardisArsCreatorScreen extends BaseScreen {
                     return text;
                 }
 
-                return this.arsStructure == null
-                    ? Text.empty()
-                    : this.arsStructure.getTitle().copy().formatted(Formatting.AQUA);
+                if (this.arsStructure != null) {
+                    return this.arsStructure.getTitle().copy().formatted(Formatting.AQUA);
+                }
+
+                return Text.empty();
             }
 
             @Override

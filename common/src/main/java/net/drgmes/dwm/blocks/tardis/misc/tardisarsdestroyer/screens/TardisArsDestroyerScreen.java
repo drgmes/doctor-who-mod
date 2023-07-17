@@ -1,8 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.screens;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
-import net.drgmes.dwm.common.tardis.ars.ArsCategory;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.network.server.ArsDestroyerApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
@@ -13,17 +11,21 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.joml.Vector2i;
 
 public class TardisArsDestroyerScreen extends BaseScreen {
-    private final TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity;
+    private final BlockPos blockPos;
+    private final ArsStructure arsStructure;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    public TardisArsDestroyerScreen(TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity) {
+    public TardisArsDestroyerScreen(BlockPos blockPos, ArsStructure arsStructure) {
         super(DWM.TEXTS.ARS_INTERFACE_NAME);
-        this.tardisArsDestroyerBlockEntity = tardisArsDestroyerBlockEntity;
+
+        this.blockPos = blockPos;
+        this.arsStructure = arsStructure;
     }
 
     @Override
@@ -71,18 +73,15 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     protected void apply() {
-        ArsStructure structure = this.tardisArsDestroyerBlockEntity.arsStructure;
-
-        if (structure != null) {
-            ArsCategory category = structure.getCategory();
-            new ArsDestroyerApplyPacket(this.tardisArsDestroyerBlockEntity.getPos(), category != null ? category.getPath() : "", structure.getName()).sendToServer();
+        if (this.arsStructure != null) {
+            new ArsDestroyerApplyPacket(this.blockPos, this.arsStructure.name).sendToServer();
         }
 
         this.close();
     }
 
     protected void renderConfirmationMessage(DrawContext context) {
-        if (this.tardisArsDestroyerBlockEntity == null || this.tardisArsDestroyerBlockEntity.arsStructure == null) return;
+        if (this.blockPos == null || this.arsStructure == null) return;
 
         Text text = Text.translatable("screen." + DWM.MODID + ".ars_interface.message");
         int textX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(text)) / 2F);
@@ -90,7 +89,7 @@ public class TardisArsDestroyerScreen extends BaseScreen {
         Vector2i textPos = this.getRenderPos(textX, textY);
         RenderHelper.drawText(text, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
 
-        MutableText name = this.tardisArsDestroyerBlockEntity.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
+        MutableText name = this.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
         name.append(Text.literal("?").formatted(Formatting.WHITE));
         int nameX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2F);
         Vector2i namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);

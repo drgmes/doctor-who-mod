@@ -5,7 +5,6 @@ import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.setup.ModNetwork;
@@ -18,17 +17,15 @@ import net.minecraft.util.math.BlockPos;
 
 public class ArsCreatorApplyPacket extends BaseC2SMessage {
     private final BlockPos blockPos;
-    private final String arsCategoryName;
     private final String arsStructureName;
 
-    public ArsCreatorApplyPacket(BlockPos blockPos, String arsCategoryName, String arsStructureName) {
+    public ArsCreatorApplyPacket(BlockPos blockPos, String arsStructureName) {
         this.blockPos = blockPos;
-        this.arsCategoryName = arsCategoryName;
         this.arsStructureName = arsStructureName;
     }
 
     public static ArsCreatorApplyPacket create(PacketByteBuf buf) {
-        return new ArsCreatorApplyPacket(buf.readBlockPos(), buf.readString(), buf.readString());
+        return new ArsCreatorApplyPacket(buf.readBlockPos(), buf.readString());
     }
 
     @Override
@@ -39,7 +36,6 @@ public class ArsCreatorApplyPacket extends BaseC2SMessage {
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeBlockPos(this.blockPos);
-        buf.writeString(this.arsCategoryName);
         buf.writeString(this.arsStructureName);
     }
 
@@ -56,9 +52,8 @@ public class ArsCreatorApplyPacket extends BaseC2SMessage {
                 return;
             }
 
-            String arsCategoryName = !this.arsCategoryName.equals("") ? this.arsCategoryName : null;
-            ArsStructure arsStructure = ArsStructures.STRUCTURES.get(ArsCategories.CATEGORIES.get(arsCategoryName)).get(this.arsStructureName);
-            boolean isArsStructureGenerated = arsStructure.place(player, tardis, blockPos);
+            ArsStructure arsStructure = ArsStructures.STRUCTURES.get(this.arsStructureName);
+            boolean isArsStructureGenerated = arsStructure.place(player, tardis, this.blockPos);
 
             player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.generated." + (isArsStructureGenerated ? "success" : "failed")), true);
         });

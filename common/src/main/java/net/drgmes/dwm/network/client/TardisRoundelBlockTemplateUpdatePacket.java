@@ -41,8 +41,8 @@ public class TardisRoundelBlockTemplateUpdatePacket extends BaseS2CMessage {
     public void handle(NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.blockTemplate = blockTemplate;
+        if (mc.world.getBlockEntity(this.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            tardisRoundelBlockEntity.blockTemplate = this.blockTemplate;
             tardisRoundelBlockEntity.markDirty();
         }
     }

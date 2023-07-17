@@ -1,9 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer;
 
-import net.drgmes.dwm.common.tardis.ars.ArsCategories;
-import net.drgmes.dwm.common.tardis.ars.ArsCategory;
-import net.drgmes.dwm.common.tardis.ars.ArsStructure;
-import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -13,11 +9,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
 public class TardisArsDestroyerBlockEntity extends BlockEntity {
-    public ArsStructure arsStructure;
-    public BlockPos tacBlockPos;
-    public Direction tacFacing;
+    public String arsStructureName;
+
     public int tacIndex;
     public boolean tacIsInitial;
+    public BlockPos tacBlockPos;
+    public Direction tacFacing;
 
     public TardisArsDestroyerBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(ModBlockEntities.TARDIS_ARS_DESTROYER.getBlockEntityType(), blockPos, blockState);
@@ -27,9 +24,8 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        if (tag.contains("arsStructureId")) {
-            ArsCategory category = ArsCategories.CATEGORIES.getOrDefault(tag.getString("arsCategoryId"), null);
-            this.arsStructure = ArsStructures.STRUCTURES.get(category).get(tag.getString("arsStructureId"));
+        if (tag.contains("arsStructureName")) {
+            this.arsStructureName = tag.getString("arsStructureName");
         }
 
         if (tag.contains("tacBlockPos")) {
@@ -48,10 +44,8 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
-        if (this.arsStructure != null) {
-            ArsCategory category = this.arsStructure.getCategory();
-            tag.putString("arsStructureId", this.arsStructure.getName());
-            tag.putString("arsCategoryId", category != null ? category.getPath() : "");
+        if (this.arsStructureName != null) {
+            tag.putString("arsStructureName", this.arsStructureName);
         }
 
         if (this.tacBlockPos != null) {

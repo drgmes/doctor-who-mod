@@ -43,9 +43,9 @@ public class TardisRoundelUpdatePacket extends BaseS2CMessage {
     public void handle(NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.uncovered = uncovered;
-            tardisRoundelBlockEntity.lightMode = lightMode;
+        if (mc.world.getBlockEntity(this.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            tardisRoundelBlockEntity.uncovered = this.uncovered;
+            tardisRoundelBlockEntity.lightMode = this.lightMode;
             tardisRoundelBlockEntity.markDirty();
         }
     }
