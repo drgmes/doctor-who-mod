@@ -2,6 +2,7 @@ package net.drgmes.dwm.forge;
 
 import dev.architectury.platform.forge.EventBuses;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.forge.setup.ModBlockEntitiesForge;
 import net.drgmes.dwm.forge.setup.ModCommandsForge;
 import net.drgmes.dwm.forge.setup.ModConfigForge;
 import net.drgmes.dwm.forge.setup.ModRenderersForge;
@@ -26,6 +27,7 @@ public class DWMForge {
         ModCommandsForge.setup();
 
         Registration.setupCommon();
+        ModBlockEntitiesForge.setup();
     }
 
     public static void setupClient(FMLClientSetupEvent event) {

@@ -1,5 +1,6 @@
 package net.drgmes.dwm;
 
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -14,10 +15,6 @@ import java.util.function.Function;
 public class DWM {
     public static final String MODID = "dwm";
     public static final Logger LOGGER = LoggerFactory.getLogger(DWM.MODID);
-
-    public static Identifier getIdentifier(String path) {
-        return new Identifier(DWM.MODID, path);
-    }
 
     public static class COMMON {
         public static final int TARDIS_ROOMS_OFFSET = 1000;
@@ -160,5 +157,14 @@ public class DWM {
                 public static final Vector2i INTERFACE_MAIN_SIZE = new Vector2i(403, 303);
             }
         }
+    }
+
+    public static Identifier getIdentifier(String path) {
+        return new Identifier(DWM.MODID, path);
+    }
+
+    @ExpectPlatform
+    public static boolean hasEnergyApi() {
+        throw new AssertionError();
     }
 }

@@ -9,7 +9,6 @@ import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlEn
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
-import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
@@ -219,7 +218,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
             this.buildScreenParamText("fuel", fuelAmountText + " / " + fuelCapacityText + " AE"),
-            ModCompats.techReborn() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
+            DWM.hasEnergyApi() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
         });
     }
 
