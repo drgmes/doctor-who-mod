@@ -6,6 +6,8 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockE
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
+import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
@@ -20,6 +22,7 @@ import net.minecraft.structure.StructureTemplate;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.math.BlockBox;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -266,6 +269,9 @@ public class TardisConsoleRoomEntry {
         List<ItemEntity> entities = world.getEntitiesByClass(ItemEntity.class, Box.from(aabb), EntityPredicates.EXCEPT_SPECTATOR);
 
         for (ItemEntity entity : entities) {
+            if (entity.getStack().getItem() instanceof TardisKeyItem) continue;
+            if (entity.getStack().getItem() instanceof ScrewdriverItem) continue;
+            if (entity.getStack().getItem().getRarity(entity.getStack()) != Rarity.COMMON) continue;
             entity.kill();
         }
     }
