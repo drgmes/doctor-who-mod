@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.engines;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.items.common.repairkit.RepairKitItem;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.AbstractBlock;
@@ -29,9 +30,9 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
         if (world.isClient) return ActionResult.SUCCESS;
 
         TardisStateManager.get((ServerWorld) world).ifPresent((tardis) -> {
-            ItemStack heldItem = player.getStackInHand(hand);
-
             if (tardis.isBroken()) {
+                ItemStack heldItem = player.getStackInHand(hand);
+
                 if (heldItem.getItem() instanceof RepairKitItem) {
                     tardis.setBrokenState(false);
                     tardis.updateConsoleTiles();
@@ -47,6 +48,12 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
                 }
 
                 player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+                return;
+            }
+
+            if (!tardis.checkAccess(player, true)) {
+                ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
+                player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
                 return;
             }
 

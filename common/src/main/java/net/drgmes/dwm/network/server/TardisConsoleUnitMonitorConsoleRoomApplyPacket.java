@@ -8,6 +8,7 @@ import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -55,6 +56,12 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
         }
 
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
+            if (!tardis.checkAccess(player, false)) {
+                ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
+                player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
+                return;
+            }
+
             TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(this.consoleRoomId, tardis.isBroken());
             boolean isConsoleRoomGenerated = consoleRoom.place(tardis);
 

@@ -123,6 +123,14 @@ public class ModSounds {
         playSound(world, blockPos, SCREWDRIVER_MAIN.get(), 0.25F, 1.0F);
     }
 
+    public static void playScrewdriverPutSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
+    }
+
+    public static void playScrewdriverPickupSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1.0F, 1.0F);
+    }
+
     public static void playTardisArsStructureCreatedSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, SoundEvents.BLOCK_BEACON_ACTIVATE, 1.0F, 1.0F);
     }

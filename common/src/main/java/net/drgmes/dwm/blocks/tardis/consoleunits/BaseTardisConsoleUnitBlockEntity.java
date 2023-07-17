@@ -28,6 +28,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
@@ -248,21 +249,25 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
                 if (Screwdriver.checkItemStackIsScrewdriver(mainHandItem)) {
                     this.screwdriverItemStack = mainHandItem;
+                    ModSounds.playScrewdriverPutSound(player.getWorld(), player.getBlockPos());
                     player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
                     isChanged = true;
                 }
                 else if (Screwdriver.checkItemStackIsScrewdriver(offHandItem)) {
                     this.screwdriverItemStack = offHandItem;
+                    ModSounds.playScrewdriverPutSound(player.getWorld(), player.getBlockPos());
                     player.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
                     isChanged = true;
                 }
             }
             else if (player.getMainHandStack().isEmpty()) {
+                ModSounds.playScrewdriverPickupSound(player.getWorld(), player.getBlockPos());
                 player.setStackInHand(Hand.MAIN_HAND, this.screwdriverItemStack);
                 this.screwdriverItemStack = ItemStack.EMPTY;
                 isChanged = true;
             }
             else if (player.getInventory().insertStack(this.screwdriverItemStack)) {
+                ModSounds.playScrewdriverPickupSound(player.getWorld(), player.getBlockPos());
                 this.screwdriverItemStack = ItemStack.EMPTY;
                 isChanged = true;
             }
@@ -286,6 +291,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     }
 
                     if (!isUpdated && tardisHolder.isPresent() && !tardisHolder.get().isHandbrakeLocked()) {
+                        ModSounds.playSound(tardisHolder.get().getWorld(), tardisHolder.get().getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
                         if ((boolean) value) player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_IN_FLIGHT, true);
                         else player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_LANDED, true);
                     }
@@ -297,6 +303,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     }
 
                     if (!isUpdated && tardisHolder.isPresent() && !tardisHolder.get().isHandbrakeLocked()) {
+                        ModSounds.playSound(tardisHolder.get().getWorld(), tardisHolder.get().getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
                         if ((boolean) value) player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_MATERIALIZED, true);
                         else player.sendMessage(DWM.TEXTS.TARDIS_ALREADY_DEMATERIALIZED, true);
                     }
@@ -398,41 +405,49 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_MATERIALIZING_SYSTEM) && !materializationSystem.isEnabled()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.DEMATERIALIZATION_CIRCUIT_NOT_INSTALLED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_FLIGHT_SYSTEM) && !flightSystem.isEnabled()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.REQUIRED_SHIELDS_SYSTEM) && !shieldsSystem.isEnabled()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.SHIELDS_GENERATOR_NOT_INSTALLED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.MUST_BE_MATERIALIZED) && !materializationSystem.isMaterialized()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.MUST_BE_LANDED) && flightSystem.inProgress()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_OWNER) && !tardis.checkAccess(player, true)) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_SHIELDS_ON) && !tardis.isShieldsEnabled()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.SHIELDS_GENERATOR_NOT_ACTIVE, true);
             return;
         }
 
         if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_HANDBRAKE_OFF) && tardis.isHandbrakeLocked()) {
+            ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.TARDIS_HANDBRAKE_ACTIVATED, true);
             return;
         }

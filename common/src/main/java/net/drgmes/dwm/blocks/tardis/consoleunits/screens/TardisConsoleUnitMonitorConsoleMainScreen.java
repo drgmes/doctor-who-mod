@@ -26,30 +26,36 @@ import java.util.function.Supplier;
 
 public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsoleUnitMonitorScreen {
     private enum EActions {
-        SETTINGS(DWM.TEXTS.MONITOR_ACTION_SETTINGS, ModBlocks.TARDIS_EXTERIOR_POLICE_BOX::getBlock, (screen) -> {
+        SETTINGS(DWM.TEXTS.MONITOR_ACTION_SETTINGS, true, ModBlocks.TARDIS_EXTERIOR_POLICE_BOX::getBlock, (screen) -> {
         }),
 
-        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, () -> Items.COMPASS, (screen) -> {
+        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, () -> Items.COMPASS, (screen) -> {
         }),
 
-        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_RESEARCHER, () -> Items.SPYGLASS, (screen) -> {
+        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_RESEARCHER, true, () -> Items.SPYGLASS, (screen) -> {
         }),
 
         ROOMS(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, ModBlocks.TARDIS_ARS_CREATOR::getBlockItem, (screen) -> {
             screen.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
-        EXTERNAL_MONITOR(DWM.TEXTS.MONITOR_ACTION_EXTERNAL_MONITOR, () -> Blocks.OBSERVER, (screen) -> {
+        EXTERNAL_MONITOR(DWM.TEXTS.MONITOR_ACTION_EXTERNAL_MONITOR, true, () -> Blocks.OBSERVER, (screen) -> {
         });
 
         private final Text title;
+        private final boolean disabled;
         private final Supplier<ItemConvertible> iconSupplier;
         private final Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress;
 
-        EActions(Text title, Supplier<ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+        EActions(Text title, boolean disabled, Supplier<ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
             this.title = title;
+            this.disabled = disabled;
             this.iconSupplier = iconSupplier;
             this.onPress = onPress;
+        }
+
+        EActions(Text title, Supplier<ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+            this(title, false, iconSupplier, onPress);
         }
     }
 
@@ -94,6 +100,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
                 (b) -> action.onPress.accept(this)
             );
 
+            button.active = !action.disabled;
             button.setTooltip(Tooltip.of(action.title));
             this.addDrawableChild(button);
             buttons.put(action, button);
