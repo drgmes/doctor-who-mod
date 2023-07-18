@@ -1,6 +1,6 @@
 package net.drgmes.dwm;
 
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -24,7 +24,7 @@ public class DWM {
         public static final float REMAT = 180;
         public static final float FLIGHT_LOOP = 32;
 
-        public static final int SCREWDRIVER_TIMEOUT = 4;
+        public static final int SONIC_SCREWDRIVER_TIMEOUT = 4;
     }
 
     public static class TEXTS {
@@ -87,15 +87,15 @@ public class DWM {
         public static final Text TELEPATHIC_INTERFACE_BTN_CANCEL = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.button.cancel");
         public static final Text TELEPATHIC_INTERFACE_BTN_ACCEPT = Text.translatable("screen." + DWM.MODID + ".telepathic_interface.button.accept");
 
-        public static final Text SCREWDRIVER_MODE_SCAN = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.scan");
-        public static final Text SCREWDRIVER_MODE_SCAN_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.scan.description");
-        public static final Text SCREWDRIVER_MODE_SETTING = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.setting");
-        public static final Text SCREWDRIVER_MODE_SETTING_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.setting.description");
-        public static final Text SCREWDRIVER_MODE_TARDIS_RELOCATION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation");
-        public static final Text SCREWDRIVER_MODE_TARDIS_RELOCATION_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".screwdriver.mode.tardis_relocation.description");
+        public static final Text SONIC_SCREWDRIVER_MODE_SCAN = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.scan");
+        public static final Text SONIC_SCREWDRIVER_MODE_SCAN_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.scan.description");
+        public static final Text SONIC_SCREWDRIVER_MODE_SETTING = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.setting");
+        public static final Text SONIC_SCREWDRIVER_MODE_SETTING_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.setting.description");
+        public static final Text SONIC_SCREWDRIVER_MODE_TARDIS_RELOCATION = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.tardis_relocation");
+        public static final Text SONIC_SCREWDRIVER_MODE_TARDIS_RELOCATION_DESCRIPTION = Text.translatable("title." + DWM.MODID + ".sonic_screwdriver.mode.tardis_relocation.description");
 
-        public static final Text SCREWDRIVER_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".screwdriver_interface.title");
-        public static final Function<Screwdriver.EScrewdriverMode, Text> SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen." + DWM.MODID + ".screwdriver_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
+        public static final Text SONIC_SCREWDRIVER_INTERFACE_NAME = Text.translatable("screen." + DWM.MODID + ".sonic_screwdriver_interface.title");
+        public static final Function<SonicScrewdriver.EMode, Text> SONIC_SCREWDRIVER_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen." + DWM.MODID + ".sonic_screwdriver_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
     }
 
     public static class LOCS {
@@ -151,8 +151,8 @@ public class DWM {
                 }
             }
 
-            public static class SCREWDRIVER {
-                public static final Identifier INTERFACE_MAIN = DWM.getIdentifier("textures/gui/screwdriver/interface/main.png");
+            public static class SONIC_SCREWDRIVER {
+                public static final Identifier INTERFACE_MAIN = DWM.getIdentifier("textures/gui/sonic_device/interface/main.png");
                 public static final Vector2i INTERFACE_MAIN_SIZE = new Vector2i(403, 303);
             }
         }

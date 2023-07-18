@@ -41,7 +41,7 @@ public class TardisConsoleUnitImperialBlockRenderer extends BaseTardisConsoleUni
         matrixStack.pop();
 
         this.renderScreen(tile, matrixStack, buffer, rotateDegrees);
-        this.renderScrewdriver(tile, matrixStack, buffer, light, overlay, rotateDegrees);
+        this.renderSonicScrewdriver(tile, matrixStack, buffer, light, overlay, rotateDegrees);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class TardisConsoleUnitImperialBlockRenderer extends BaseTardisConsoleUni
         matrixStack.pop();
     }
 
-    private void renderScrewdriver(TardisConsoleUnitImperialBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, float rotateDegrees) {
-        if (tile.screwdriverItemStack != null && !tile.screwdriverItemStack.isEmpty()) {
+    private void renderSonicScrewdriver(TardisConsoleUnitImperialBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay, float rotateDegrees) {
+        if (tile.sonicScrewdriverItemStack != null && !tile.sonicScrewdriverItemStack.isEmpty()) {
             MinecraftClient mc = MinecraftClient.getInstance();
             float scale = 0.25F;
 
@@ -162,7 +162,7 @@ public class TardisConsoleUnitImperialBlockRenderer extends BaseTardisConsoleUni
             matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(15));
             matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90));
             matrixStack.scale(scale, scale, scale);
-            mc.getItemRenderer().renderItem(mc.player, tile.screwdriverItemStack, ModelTransformationMode.NONE, false, matrixStack, buffer, mc.world, light, overlay, 0);
+            mc.getItemRenderer().renderItem(mc.player, tile.sonicScrewdriverItemStack, ModelTransformationMode.NONE, false, matrixStack, buffer, mc.world, light, overlay, 0);
             matrixStack.pop();
         }
     }

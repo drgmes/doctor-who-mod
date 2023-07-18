@@ -9,13 +9,13 @@ import net.minecraft.world.World;
 import java.util.function.Supplier;
 
 public class ModSounds {
-    public static final Supplier<SoundEvent> SCREWDRIVER_MAIN = Registration.registerSoundEvent("screwdriver_main");
+    public static final Supplier<SoundEvent> SONIC_SCREWDRIVER_MAIN = Registration.registerSoundEvent("sonic_screwdriver_main");
 
     public static final Supplier<SoundEvent> TARDIS_DOORS_KNOCK = Registration.registerSoundEvent("tardis_doors_knock");
     public static final Supplier<SoundEvent> TARDIS_DOORS_UNLOCK = Registration.registerSoundEvent("tardis_doors_unlock");
     public static final Supplier<SoundEvent> TARDIS_DOORS_LOCK = Registration.registerSoundEvent("tardis_doors_lock");
     public static final Supplier<SoundEvent> TARDIS_DOORS_CLOSE = Registration.registerSoundEvent("tardis_doors_close");
-    public static final Supplier<SoundEvent> TARDIS_DOORS_WOODEN_CLOSE = Registration.registerSoundEvent("tardis_doors_wooden_close");
+    public static final Supplier<SoundEvent> TARDIS_DOORS_CLOSE_WOODEN = Registration.registerSoundEvent("tardis_doors_close_wooden");
 
     public static final Supplier<SoundEvent> TARDIS_BROKEN_FLARING = Registration.registerSoundEvent("tardis_broken_flaring");
     public static final Supplier<SoundEvent> TARDIS_ERROR = Registration.registerSoundEvent("tardis_error");
@@ -64,7 +64,7 @@ public class ModSounds {
     }
 
     public static void playTardisDoorsCloseSound(World world, BlockPos blockPos, boolean isWooden) {
-        playSound(world, blockPos, isWooden ? TARDIS_DOORS_WOODEN_CLOSE.get() : TARDIS_DOORS_CLOSE.get(), 1.0F, 1.0F);
+        playSound(world, blockPos, isWooden ? TARDIS_DOORS_CLOSE_WOODEN.get() : TARDIS_DOORS_CLOSE.get(), 1.0F, 1.0F);
     }
 
     public static void playTardisLightOnSound(World world, BlockPos blockPos) {
@@ -119,15 +119,15 @@ public class ModSounds {
         playSound(world, blockPos, TARDIS_BELL.get(), 1.0F, 1.0F);
     }
 
-    public static void playScrewdriverMainSound(World world, BlockPos blockPos) {
-        playSound(world, blockPos, SCREWDRIVER_MAIN.get(), 0.25F, 1.0F);
+    public static void playSonicScrewdriverMainSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SONIC_SCREWDRIVER_MAIN.get(), 0.25F, 1.0F);
     }
 
-    public static void playScrewdriverPutSound(World world, BlockPos blockPos) {
+    public static void playSonicScrewdriverPutSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, SoundEvents.ENTITY_ITEM_FRAME_ADD_ITEM, 1.0F, 1.0F);
     }
 
-    public static void playScrewdriverPickupSound(World world, BlockPos blockPos) {
+    public static void playSonicScrewdriverPickupSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, SoundEvents.ENTITY_ITEM_FRAME_REMOVE_ITEM, 1.0F, 1.0F);
     }
 

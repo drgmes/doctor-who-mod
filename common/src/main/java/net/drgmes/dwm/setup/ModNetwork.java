@@ -15,7 +15,7 @@ public class ModNetwork {
     public static MessageType TARDIS_CONSOLE_UNIT_CONTROLS_STATES_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_controls_states_update", TardisConsoleUnitControlsStatesUpdatePacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_OPEN = Registration.registerS2CMessageType("tardis_console_unit_monitor_open", TardisConsoleUnitMonitorOpenPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_PAGE_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_monitor_page_update", TardisConsoleUnitMonitorPageUpdatePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_SCREWDRIVER_SLOT_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_screwdriver_slot_update", TardisConsoleUnitScrewdriverSlotUpdatePacket::create);
+    public static MessageType TARDIS_CONSOLE_UNIT_SONIC_SCREWDRIVER_SLOT_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_sonic_screwdriver_slot_update", TardisConsoleUnitSonicScrewdriverSlotUpdatePacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNERS_OPEN = Registration.registerS2CMessageType("tardis_console_unit_telepathic_interface_map_banners_open", TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATIONS_OPEN = Registration.registerS2CMessageType("tardis_console_unit_telepathic_interface_locations_open", TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_update", TardisConsoleUnitUpdatePacket::create);
@@ -27,8 +27,8 @@ public class ModNetwork {
 
     public static MessageType ARS_CREATOR_APPLY = Registration.registerC2SMessageType("ars_creator_apply", ArsCreatorApplyPacket::create);
     public static MessageType ARS_DESTROYER_APPLY = Registration.registerC2SMessageType("ars_destroyer_apply", ArsDestroyerApplyPacket::create);
-    public static MessageType SCREWDRIVER_UPDATE = Registration.registerC2SMessageType("screwdriver_update", ScrewdriverUpdatePacket::create);
-    public static MessageType SCREWDRIVER_USE = Registration.registerC2SMessageType("screwdriver_use", ScrewdriverUsePacket::create);
+    public static MessageType SONIC_SCREWDRIVER_UPDATE = Registration.registerC2SMessageType("sonic_screwdriver_update", SonicScrewdriverUpdatePacket::create);
+    public static MessageType SONIC_SCREWDRIVER_USE = Registration.registerC2SMessageType("sonic_screwdriver_use", SonicScrewdriverUsePacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_INIT = Registration.registerC2SMessageType("tardis_console_unit_init", TardisConsoleUnitInitPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_SOUND = Registration.registerC2SMessageType("tardis_console_unit_sound", TardisConsoleUnitSoundPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_CONSOLE_ROOM_APPLY = Registration.registerC2SMessageType("tardis_console_unit_monitor_console_room_apply", TardisConsoleUnitMonitorConsoleRoomApplyPacket::create);

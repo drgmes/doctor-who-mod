@@ -2,7 +2,7 @@
   "itemGroup.dwm.general": "Doctor Who",
 
   "key.dwm.categories.main": "Doctor Who",
-  "key.dwm.screwdriver_settings_key": "Настройки звуковой отвёртки",
+  "key.dwm.sonic_screwdriver_settings_key": "Настройки звуковой отвёртки",
 
   "block.dwm.engineer_table": "Стол инженера",
   "block.dwm.titanium_ore": "Титановая руда",
@@ -270,9 +270,9 @@
   "item.dwm.titanium_pickaxe": "Титановая кирка",
   "item.dwm.titanium_hoe": "Титановая мотыга",
 
-  "item.dwm.screwdriver_11": "Звуковая отвёртка 11-го",
-  "item.dwm.screwdriver_12": "Звуковая отвёртка 12-го",
-  "item.dwm.screwdriver_13": "Звуковая отвёртка 13-й",
+  "item.dwm.sonic_screwdriver_11": "Звуковая отвёртка 11-го",
+  "item.dwm.sonic_screwdriver_12": "Звуковая отвёртка 12-го",
+  "item.dwm.sonic_screwdriver_13": "Звуковая отвёртка 13-й",
 
   "item.dwm.tardis_key_1": "Ключ ТАРДИС",
 
@@ -290,13 +290,13 @@
   "title.dwm.tardis_pos": "Позиция ТАРДИС: %s",
   "title.dwm.tardis_last_pos": "Последняя известная позиция: %s",
 
-  "title.dwm.screwdriver.mode": "Режим: %s",
-  "title.dwm.screwdriver.mode.scan": "Сканирование",
-  "title.dwm.screwdriver.mode.scan.description": "Позволяет получить информацию о блоке или сущности.",
-  "title.dwm.screwdriver.mode.setting": "Настройка",
-  "title.dwm.screwdriver.mode.setting.description": "Позволяет изменять состояние различных блоков/механизмов, а также по-особому взаимодействовать с некоторыми сущностями. \n\n§6ВНИМАНИЕ§r: Не работает с деревом или в присутствии некоторых моделей фенов!",
-  "title.dwm.screwdriver.mode.tardis_relocation": "Релокация",
-  "title.dwm.screwdriver.mode.tardis_relocation.description": "Позволяет установить новую локацию назначения для ТАРДИС. Перед использованием необходимо совершить привязку девайса к ТАРДИС.",
+  "title.dwm.sonic_screwdriver.mode": "Режим: %s",
+  "title.dwm.sonic_screwdriver.mode.scan": "Сканирование",
+  "title.dwm.sonic_screwdriver.mode.scan.description": "Позволяет получить информацию о блоке или сущности.",
+  "title.dwm.sonic_screwdriver.mode.setting": "Настройка",
+  "title.dwm.sonic_screwdriver.mode.setting.description": "Позволяет изменять состояние различных блоков/механизмов, а также по-особому взаимодействовать с некоторыми сущностями. \n\n§6ВНИМАНИЕ§r: Не работает с деревом или в присутствии некоторых моделей фенов!",
+  "title.dwm.sonic_screwdriver.mode.tardis_relocation": "Релокация",
+  "title.dwm.sonic_screwdriver.mode.tardis_relocation.description": "Позволяет установить новую локацию назначения для ТАРДИС. Перед использованием необходимо совершить привязку девайса к ТАРДИС.",
 
   "title.dwm.monitor.state.value.on": "Вкл.",
   "title.dwm.monitor.state.value.off": "Выкл.",
@@ -1011,8 +1011,8 @@
   "title.dwm.ars.structure.room_wooden_huge_warped": "Комната из искажённого дерева (огромная)",
   "title.dwm.ars.structure.room_wooden_storage_warped": "Хранилище из искажённого дерева",
 
-  "screen.dwm.screwdriver_interface.title": "Интерфейс настройки звуковой отвёртки",
-  "screen.dwm.screwdriver_interface.button.mode": "Режим: %s",
+  "screen.dwm.sonic_screwdriver_interface.title": "Интерфейс настройки звуковой отвёртки",
+  "screen.dwm.sonic_screwdriver_interface.button.mode": "Режим: %s",
 
   "screen.dwm.ars_interface.title": "Система архитектурной реконфигурации",
   "screen.dwm.ars_interface.message": "Вы уверены, что хотите разрушить",
@@ -1131,21 +1131,24 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Координаты были сброшены на §eтекущую§r позицию",
   "message.dwm.tardis.control.role.randomizer": "Координаты были случайно обновлены",
 
-  "message.dwm.screwdriver.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
+  "message.dwm.sonic_screwdriver.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
 
   "argument.dwm.tardis.invalid": "Неверный идентификатор ТАРДИС",
   "argument.dwm.tardis.player_present": "Вы находитесь внутри",
 
-  "subtitle.screwdriver.screwdriver_main": "Звуковая отвёртка звучит",
-  "subtitle.tardis.tardis_doors_close": "Двери ТАРДИС закрылись",
-  "subtitle.tardis.tardis_doors_lock": "Двери ТАРДИС заблокированы",
-  "subtitle.tardis.tardis_doors_open": "Двери ТАРДИС открылись",
-  "subtitle.tardis.tardis_doors_unlock": "Двери ТАРДИС разблокированы",
-  "subtitle.tardis.tardis_error": "ТАРДИС выдаёт ошибку",
-  "subtitle.tardis.tardis_fly": "Шум полёта ТАРДИС",
-  "subtitle.tardis.tardis_land": "Шум материализации ТАРДИС",
-  "subtitle.tardis.tardis_takeoff": "Шум дематериализации ТАРДИС",
-  "subtitle.tardis.tardis_control": "Активирован элемент управления ТАРДИС",
+  "subtitle.sonic_screwdriver.main": "Звук звуковой отвёртки",
+  "subtitle.tardis.control": "Активирован элемент управления",
+  "subtitle.tardis.bell": "Звук колокола ТАРДИС",
+  "subtitle.tardis.broken_flaring": "Звук поврежденной консоли",
+  "subtitle.tardis.doors_close": "Двери закрылись",
+  "subtitle.tardis.doors_knock": "Стук в двери",
+  "subtitle.tardis.doors_lock": "Двери заблокированы",
+  "subtitle.tardis.doors_unlock": "Двери разблокированы",
+  "subtitle.tardis.doors_open": "Двери открылись",
+  "subtitle.tardis.error": "ТАРДИС выдаёт ошибку",
+  "subtitle.tardis.fly": "Шум полёта ТАРДИС",
+  "subtitle.tardis.land": "Шум материализации ТАРДИС",
+  "subtitle.tardis.takeoff": "Шум дематериализации ТАРДИС",
 
   "dwm.console_room.imperial_abandoned": "Имперская (заброшенная)",
   "dwm.console_room.imperial_classic": "Имперская (классическая)",

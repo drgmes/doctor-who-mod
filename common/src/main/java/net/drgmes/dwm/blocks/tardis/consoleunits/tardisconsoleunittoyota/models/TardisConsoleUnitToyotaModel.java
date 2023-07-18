@@ -13,7 +13,7 @@ public class TardisConsoleUnitToyotaModel extends Model {
 
     private final ModelPart base;
     private final ModelPart controls;
-    private final ModelPart screwdriver_slot;
+    private final ModelPart sonic_screwdriver_slot;
     private final ModelPart rotor_glass;
     private final ModelPart rotor_rods;
 
@@ -22,7 +22,7 @@ public class TardisConsoleUnitToyotaModel extends Model {
 
         this.base = root.getChild("base");
         this.controls = root.getChild("controls");
-        this.screwdriver_slot = root.getChild("screwdriver_slot");
+        this.sonic_screwdriver_slot = root.getChild("sonic_screwdriver_slot");
         this.rotor_glass = root.getChild("rotor_glass");
         this.rotor_rods = root.getChild("rotor_rods");
     }
@@ -490,8 +490,8 @@ public class TardisConsoleUnitToyotaModel extends Model {
         ModelPartData control_telepathic_interface_c_4_r1 = control_telepathic_interface_c.addChild("control_telepathic_interface_c_4_r1", ModelPartBuilder.create().uv(82, 164).cuboid(6.0F, -51.0F, -22.0F, 5.0F, 1.0F, 1.0F).uv(36, 165).cuboid(-12.0F, -51.0F, -22.0F, 5.0F, 1.0F, 1.0F).uv(154, 150).cuboid(0.0F, -51.0F, -21.0F, 11.0F, 1.0F, 3.0F).uv(154, 154).cuboid(-12.0F, -51.0F, -21.0F, 11.0F, 1.0F, 3.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
         ModelPartData control_telepathic_interface_d = control_telepathic_interface.addChild("control_telepathic_interface_d", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
         ModelPartData control_telepathic_interface_d_4_r1 = control_telepathic_interface_d.addChild("control_telepathic_interface_d_4_r1", ModelPartBuilder.create().uv(82, 162).cuboid(3.0F, -51.0F, -13.0F, 5.0F, 1.0F, 1.0F).uv(61, 164).cuboid(-9.0F, -51.0F, -13.0F, 5.0F, 1.0F, 1.0F).uv(109, 175).cuboid(0.0F, -51.0F, -16.0F, 8.0F, 1.0F, 3.0F).uv(0, 180).cuboid(-9.0F, -51.0F, -16.0F, 8.0F, 1.0F, 3.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.2618F, 0.0F, 0.0F));
-        ModelPartData screwdriver_slot = modelPartData.addChild("screwdriver_slot", ModelPartBuilder.create().uv(67, 420).cuboid(0.15F, -1.0F, -2.25F, 3.0F, 1.0F, 3.0F), ModelTransform.of(21.0F, -19.05F, 23.0F, -0.2618F, 1.0472F, 0.0F));
-        ModelPartData screwdriver_slot_borders = screwdriver_slot.addChild("screwdriver_slot_borders", ModelPartBuilder.create().uv(0, 19).cuboid(2.15F, -2.0F, -2.25F, 1.0F, 2.0F, 3.0F).uv(0, 19).cuboid(0.15F, -2.0F, -2.25F, 1.0F, 2.0F, 3.0F).uv(0, 19).cuboid(1.15F, -2.0F, -2.25F, 1.0F, 2.0F, 1.0F).uv(0, 19).cuboid(1.15F, -2.0F, -0.25F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+        ModelPartData sonic_screwdriver_slot = modelPartData.addChild("sonic_screwdriver_slot", ModelPartBuilder.create().uv(67, 420).cuboid(0.15F, -1.0F, -2.25F, 3.0F, 1.0F, 3.0F), ModelTransform.of(21.0F, -19.05F, 23.0F, -0.2618F, 1.0472F, 0.0F));
+        ModelPartData sonic_screwdriver_slot_borders = sonic_screwdriver_slot.addChild("sonic_screwdriver_slot_borders", ModelPartBuilder.create().uv(0, 19).cuboid(2.15F, -2.0F, -2.25F, 1.0F, 2.0F, 3.0F).uv(0, 19).cuboid(0.15F, -2.0F, -2.25F, 1.0F, 2.0F, 3.0F).uv(0, 19).cuboid(1.15F, -2.0F, -2.25F, 1.0F, 2.0F, 1.0F).uv(0, 19).cuboid(1.15F, -2.0F, -0.25F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
         ModelPartData rotor_glass = modelPartData.addChild("rotor_glass", ModelPartBuilder.create().uv(204, 324).cuboid(-6.5F, -58.0F, -11.623F, 13.0F, 81.0F, 1.0F).uv(176, 321).cuboid(-6.5F, -58.0F, 10.623F, 13.0F, 81.0F, 1.0F), ModelTransform.pivot(0.0F, -50.0F, 0.0F));
         ModelPartData rotor_platform_b_6_r2 = rotor_glass.addChild("rotor_platform_b_6_r2", ModelPartBuilder.create().uv(0, 266).cuboid(10.623F, -58.0F, -6.5F, 1.0F, 81.0F, 13.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 0.5236F, 0.0F));
         ModelPartData rotor_platform_b_5_r2 = rotor_glass.addChild("rotor_platform_b_5_r2", ModelPartBuilder.create().uv(28, 266).cuboid(10.623F, -58.0F, -6.5F, 1.0F, 81.0F, 13.0F).uv(56, 266).cuboid(-11.623F, -58.0F, -6.5F, 1.0F, 81.0F, 13.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -0.5236F, 0.0F));
@@ -607,7 +607,7 @@ public class TardisConsoleUnitToyotaModel extends Model {
     public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
         controls.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        screwdriver_slot.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+        sonic_screwdriver_slot.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
         rotor_glass.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha * 0.15F);
         rotor_rods.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }

@@ -1,4 +1,4 @@
-package net.drgmes.dwm.common.screwdriver.modes;
+package net.drgmes.dwm.common.sonicscrewdriver.modes;
 
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlock;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
@@ -16,7 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
-public class BaseScrewdriverMode {
+public class BaseSonicScrewdriverMode {
     public ActionResult interactWithBlock(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult, boolean isAlternativeAction) {
         return ActionResult.CONSUME;
     }

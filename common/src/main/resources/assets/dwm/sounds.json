@@ -1,78 +1,78 @@
 {
-  "screwdriver_main": {
-    "subtitle": "subtitle.screwdriver.screwdriver_main",
-    "sounds": ["dwm:screwdriver/screwdriver_main"]
-  },
-  "tardis_broken_flaring": {
-    "subtitle": "subtitle.tardis.tardis_broken_flaring",
-    "sounds": ["dwm:tardis/tardis_broken_flaring"]
-  },
-  "tardis_doors_knock": {
-    "subtitle": "subtitle.tardis.tardis_doors_knock",
-    "sounds": ["dwm:tardis/tardis_doors_knock"]
-  },
-  "tardis_doors_unlock": {
-    "subtitle": "subtitle.tardis.tardis_doors_unlock",
-    "sounds": ["dwm:tardis/tardis_doors_unlock"]
-  },
-  "tardis_doors_lock": {
-    "subtitle": "subtitle.tardis.tardis_doors_lock",
-    "sounds": ["dwm:tardis/tardis_doors_lock"]
-  },
-  "tardis_doors_close": {
-    "subtitle": "subtitle.tardis.tardis_doors_close",
-    "sounds": ["dwm:tardis/tardis_doors_close"]
-  },
-  "tardis_doors_wooden_close": {
-    "subtitle": "subtitle.tardis.tardis_doors_close",
-    "sounds": ["dwm:tardis/tardis_doors_wooden_close"]
+  "sonic_screwdriver_main": {
+    "subtitle": "subtitle.sonic_screwdriver.main",
+    "sounds": ["dwm:sonic_screwdriver/main"]
   },
   "tardis_control_1": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_1"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/1"]
   },
   "tardis_control_2": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_2"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/2"]
   },
   "tardis_control_3": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_3"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/3"]
   },
   "tardis_control_4": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_4"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/4"]
   },
   "tardis_control_handbrake_on": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_handbrake_on"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/handbrake_on"]
   },
   "tardis_control_handbrake_off": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_handbrake_off"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/handbrake_off"]
   },
   "tardis_control_randomizer": {
-    "subtitle": "subtitle.tardis.tardis_control",
-    "sounds": ["dwm:tardis/controls/tardis_control_randomizer"]
+    "subtitle": "subtitle.tardis.control",
+    "sounds": ["dwm:tardis/controls/randomizer"]
   },
   "tardis_bell": {
-    "subtitle": "subtitle.tardis.tardis_bell",
-    "sounds": ["dwm:tardis/tardis_bell"]
+    "subtitle": "subtitle.tardis.bell",
+    "sounds": ["dwm:tardis/bell"]
+  },
+  "tardis_broken_flaring": {
+    "subtitle": "subtitle.tardis.broken_flaring",
+    "sounds": ["dwm:tardis/broken_flaring"]
+  },
+  "tardis_doors_close": {
+    "subtitle": "subtitle.tardis.doors_close",
+    "sounds": ["dwm:tardis/doors_close"]
+  },
+  "tardis_doors_close_wooden": {
+    "subtitle": "subtitle.tardis.doors_close",
+    "sounds": ["dwm:tardis/doors_close_wooden"]
+  },
+  "tardis_doors_knock": {
+    "subtitle": "subtitle.tardis.doors_knock",
+    "sounds": ["dwm:tardis/doors_knock"]
+  },
+  "tardis_doors_lock": {
+    "subtitle": "subtitle.tardis.doors_lock",
+    "sounds": ["dwm:tardis/doors_lock"]
+  },
+  "tardis_doors_unlock": {
+    "subtitle": "subtitle.tardis.doors_unlock",
+    "sounds": ["dwm:tardis/doors_unlock"]
   },
   "tardis_error": {
-    "subtitle": "subtitle.tardis.tardis_error",
-    "sounds": ["dwm:tardis/tardis_error"]
+    "subtitle": "subtitle.tardis.error",
+    "sounds": ["dwm:tardis/error"]
   },
   "tardis_fly": {
-    "subtitle": "subtitle.tardis.tardis_fly",
-    "sounds": ["dwm:tardis/tardis_fly"]
+    "subtitle": "subtitle.tardis.fly",
+    "sounds": ["dwm:tardis/fly"]
   },
   "tardis_land": {
-    "subtitle": "subtitle.tardis.tardis_land",
-    "sounds": ["dwm:tardis/tardis_land"]
+    "subtitle": "subtitle.tardis.land",
+    "sounds": ["dwm:tardis/land"]
   },
   "tardis_takeoff": {
-    "subtitle": "subtitle.tardis.tardis_takeoff",
-    "sounds": ["dwm:tardis/tardis_takeoff"]
+    "subtitle": "subtitle.tardis.takeoff",
+    "sounds": ["dwm:tardis/takeoff"]
   }
 }

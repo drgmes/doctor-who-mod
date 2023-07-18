@@ -58,7 +58,7 @@ public abstract class BaseTardisConsoleUnitBlock<C extends BaseTardisConsoleUnit
     public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
         if (!blockState.isOf(newBlockState.getBlock())) {
             if (world.getBlockEntity(blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-                ItemScatterer.spawn(world, blockPos, DefaultedList.ofSize(1, tardisConsoleUnitBlockEntity.screwdriverItemStack));
+                ItemScatterer.spawn(world, blockPos, DefaultedList.ofSize(1, tardisConsoleUnitBlockEntity.sonicScrewdriverItemStack));
             }
         }
 

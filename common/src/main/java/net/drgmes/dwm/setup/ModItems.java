@@ -5,7 +5,7 @@ import net.drgmes.dwm.items.common.titaniumingot.TitaniumIngotItemBuilder;
 import net.drgmes.dwm.items.common.titaniumnugget.TitaniumNuggetItemBuilder;
 import net.drgmes.dwm.items.common.titaniumplate.TitaniumPlateItemBuilder;
 import net.drgmes.dwm.items.common.titaniumraw.TitaniumRawItemBuilder;
-import net.drgmes.dwm.items.screwdriver.ScrewdriverItemBuilder;
+import net.drgmes.dwm.items.sonicscrewdriver.SonicScrewdriverItemBuilder;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItemBuilder;
 import net.drgmes.dwm.items.tardis.misc.repairkit.RepairKitItemBuilder;
 import net.drgmes.dwm.items.tardis.systems.dematerializationcircuit.TardisSystemDematerializationCircuitItemBuilder;
@@ -46,10 +46,10 @@ public class ModItems {
     // Tardis Keys
     public static final ItemBuilder TARDIS_KEY_1 = new TardisKeyItemBuilder("tardis_key_1");
 
-    // Screwdrivers
-    public static final ItemBuilder SCREWDRIVER_11 = new ScrewdriverItemBuilder("screwdriver_11");
-    public static final ItemBuilder SCREWDRIVER_12 = new ScrewdriverItemBuilder("screwdriver_12");
-    public static final ItemBuilder SCREWDRIVER_13 = new ScrewdriverItemBuilder("screwdriver_13");
+    // Sonic Screwdrivers
+    public static final ItemBuilder SONIC_SCREWDRIVER_11 = new SonicScrewdriverItemBuilder("sonic_screwdriver_11");
+    public static final ItemBuilder SONIC_SCREWDRIVER_12 = new SonicScrewdriverItemBuilder("sonic_screwdriver_12");
+    public static final ItemBuilder SONIC_SCREWDRIVER_13 = new SonicScrewdriverItemBuilder("sonic_screwdriver_13");
 
     // Tardis Systems
     public static final ItemBuilder TARDIS_SYSTEM_DIRECTIONAL_UNIT = new TardisSystemDirectionalUnitItemBuilder("tardis_system_directional_unit");

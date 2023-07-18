@@ -36,9 +36,9 @@ public class ModVillagerProfessions {
 
             TradeRegistry.registerVillagerTrade(
                 profession, 3,
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SCREWDRIVER_11.getItem()), 1, 60, 1),
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SCREWDRIVER_12.getItem()), 1, 60, 1),
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SCREWDRIVER_13.getItem()), 1, 60, 1)
+                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_11.getItem()), 1, 60, 1),
+                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_12.getItem()), 1, 60, 1),
+                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_13.getItem()), 1, 60, 1)
             );
 
             TradeRegistry.registerVillagerTrade(

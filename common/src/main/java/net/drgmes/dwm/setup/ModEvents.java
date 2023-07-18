@@ -2,13 +2,13 @@ package net.drgmes.dwm.setup;
 
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.*;
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
 import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.compat.ImmersivePortals;
-import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
+import net.drgmes.dwm.items.sonicscrewdriver.SonicScrewdriverItem;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
-import net.drgmes.dwm.network.server.ScrewdriverUsePacket;
+import net.drgmes.dwm.network.server.SonicScrewdriverUsePacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,43 +54,43 @@ public class ModEvents {
             if (entity instanceof ItemEntity itemEntity) {
                 Item item = itemEntity.getStack().getItem();
 
-                if (item instanceof ScrewdriverItem) itemEntity.setNeverDespawn();
+                if (item instanceof SonicScrewdriverItem) itemEntity.setNeverDespawn();
                 else if (item instanceof TardisKeyItem) itemEntity.setNeverDespawn();
             }
 
             return EventResult.pass();
         });
 
-        // ////////////////// //
-        // Screwdriver Events //
-        // ////////////////// //
+        // //////////////////////// //
+        // Sonic Screwdriver Events //
+        // //////////////////////// //
 
         InteractionEvent.RIGHT_CLICK_BLOCK.register((player, hand, blockPos, direction) -> (
-            applyScrewdriver(player, hand, false)
+            applySonicScrewdriver(player, hand, false)
         ));
 
         InteractionEvent.LEFT_CLICK_BLOCK.register((player, hand, blockPos, direction) -> (
-            applyScrewdriver(player, hand, true)
+            applySonicScrewdriver(player, hand, true)
         ));
 
         InteractionEvent.INTERACT_ENTITY.register((player, entity, hand) -> (
-            applyScrewdriver(player, hand, false)
+            applySonicScrewdriver(player, hand, false)
         ));
 
         PlayerEvent.ATTACK_ENTITY.register((player, world, entity, hand, entityHitResult) -> (
-            applyScrewdriver(player, hand, true)
+            applySonicScrewdriver(player, hand, true)
         ));
     }
 
-    public static EventResult applyScrewdriver(PlayerEntity player, Hand hand, boolean isAlternativeAction) {
-        ItemStack screwdriverItemStack = player.getStackInHand(hand);
+    public static EventResult applySonicScrewdriver(PlayerEntity player, Hand hand, boolean isAlternativeAction) {
+        ItemStack sonicScrewdriverItemStack = player.getStackInHand(hand);
 
-        if (Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) {
+        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(sonicScrewdriverItemStack)) {
             if (!player.getWorld().isClient) return EventResult.interruptFalse();
-            ActionResult result = ((ScrewdriverItem) screwdriverItemStack.getItem()).useScrewdriver(player.getWorld(), player, hand, isAlternativeAction).getResult();
+            ActionResult result = ((SonicScrewdriverItem) sonicScrewdriverItemStack.getItem()).useSonicScrewdriver(player.getWorld(), player, hand, isAlternativeAction).getResult();
 
             if (result.shouldSwingHand()) {
-                new ScrewdriverUsePacket(screwdriverItemStack, hand == Hand.MAIN_HAND, isAlternativeAction).sendToServer();
+                new SonicScrewdriverUsePacket(sonicScrewdriverItemStack, hand == Hand.MAIN_HAND, isAlternativeAction).sendToServer();
                 return EventResult.interruptTrue();
             }
 

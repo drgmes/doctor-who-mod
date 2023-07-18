@@ -1,6 +1,6 @@
-package net.drgmes.dwm.common.screwdriver.modes.setting;
+package net.drgmes.dwm.common.sonicscrewdriver.modes.setting;
 
-import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
+import net.drgmes.dwm.common.sonicscrewdriver.modes.BaseSonicScrewdriverMode;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.JukeboxBlockEntity;
@@ -36,8 +36,8 @@ import net.minecraft.world.event.GameEvent;
 
 import java.lang.reflect.Method;
 
-public class ScrewdriverSettingMode extends BaseScrewdriverMode {
-    public static final ScrewdriverSettingMode INSTANCE = new ScrewdriverSettingMode();
+public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
+    public static final SonicScrewdriverSettingMode INSTANCE = new SonicScrewdriverSettingMode();
 
     @Override
     public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {

@@ -1,8 +1,8 @@
-package net.drgmes.dwm.common.screwdriver.modes.tardis;
+package net.drgmes.dwm.common.sonicscrewdriver.modes.tardis;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
-import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.common.sonicscrewdriver.modes.BaseSonicScrewdriverMode;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -21,8 +21,8 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public class ScrewdriverTardisMode extends BaseScrewdriverMode {
-    public static final ScrewdriverTardisMode INSTANCE = new ScrewdriverTardisMode();
+public class SonicScrewdriverTardisMode extends BaseSonicScrewdriverMode {
+    public static final SonicScrewdriverTardisMode INSTANCE = new SonicScrewdriverTardisMode();
 
     @Override
     public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
@@ -30,7 +30,7 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         if (TardisHelper.isTardisDimension(world)) return ActionResult.SUCCESS;
 
         BlockPos blockPos = hitResult.getBlockPos().up();
-        String tardisId = Screwdriver.getTardisId(player.getStackInHand(hand));
+        String tardisId = SonicScrewdriver.getTardisId(player.getStackInHand(hand));
         ServerWorld tardisWorld = DimensionHelper.getModWorld(tardisId, world.getServer());
         if (tardisWorld == null || tardisWorld == world) return ActionResult.FAIL;
 
@@ -41,7 +41,7 @@ public class ScrewdriverTardisMode extends BaseScrewdriverMode {
         MutableText y = Text.literal(String.valueOf(blockPos.getY())).formatted(Formatting.YELLOW);
         MutableText z = Text.literal(String.valueOf(blockPos.getZ())).formatted(Formatting.YELLOW);
 
-        player.sendMessage(Text.translatable("message." + DWM.MODID + ".screwdriver.tardis_relocated", x, y, z), true);
+        player.sendMessage(Text.translatable("message." + DWM.MODID + ".sonic_screwdriver.tardis_relocated", x, y, z), true);
         tardisHolder.get().setDestinationFacing(Direction.fromRotation(player.getHeadYaw()).getOpposite());
         tardisHolder.get().setDestinationDimension(world.getRegistryKey());
         tardisHolder.get().setDestinationPosition(blockPos);

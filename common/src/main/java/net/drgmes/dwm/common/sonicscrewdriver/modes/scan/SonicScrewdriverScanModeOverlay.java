@@ -1,6 +1,6 @@
-package net.drgmes.dwm.common.screwdriver.modes.scan;
+package net.drgmes.dwm.common.sonicscrewdriver.modes.scan;
 
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -23,8 +23,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class ScrewdriverScanModeOverlay {
-    public static final ScrewdriverScanModeOverlay INSTANCE = new ScrewdriverScanModeOverlay();
+public class SonicScrewdriverScanModeOverlay {
+    public static final SonicScrewdriverScanModeOverlay INSTANCE = new SonicScrewdriverScanModeOverlay();
 
     private static final int PADDING = 10;
     private static final int LINE_MARGIN = 1;
@@ -36,21 +36,21 @@ public class ScrewdriverScanModeOverlay {
         ClientPlayerEntity player = mc.player;
         if (player == null || mc.world == null) return;
 
-        ItemStack screwdriverItemStack = null;
+        ItemStack sonicScrewdriverItemStack = null;
         ItemStack mainItemStack = player.getMainHandStack();
         ItemStack offItemStack = player.getOffHandStack();
 
-        if (Screwdriver.checkItemStackIsScrewdriver(mainItemStack)) screwdriverItemStack = mainItemStack;
-        if (Screwdriver.checkItemStackIsScrewdriver(offItemStack)) screwdriverItemStack = offItemStack;
-        if (screwdriverItemStack == null) return;
+        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(mainItemStack)) sonicScrewdriverItemStack = mainItemStack;
+        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(offItemStack)) sonicScrewdriverItemStack = offItemStack;
+        if (sonicScrewdriverItemStack == null) return;
 
         int screenWidth = mc.getWindow().getScaledWidth();
         int screenHeight = mc.getWindow().getScaledHeight();
 
         float modeTextScale = 0.5F;
         int modeTextOffset = player.isCreative() ? 3 : 5;
-        MutableText modeTitle = Screwdriver.getInteractionMode(screwdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
-        MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", modeTitle);
+        MutableText modeTitle = SonicScrewdriver.getInteractionMode(sonicScrewdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
+        MutableText modeText = Text.translatable("title.dwm.sonic_screwdriver.mode", modeTitle);
         Vector2i modePos = new Vector2i(screenWidth - (screenWidth - 192 + PADDING) / 2 - (int) Math.floor(mc.textRenderer.getWidth(modeText) * modeTextScale), screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
 
         matrixStack.push();
@@ -58,7 +58,7 @@ public class ScrewdriverScanModeOverlay {
         RenderHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
         matrixStack.pop();
 
-        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
+        NbtCompound tag = SonicScrewdriver.getData(sonicScrewdriverItemStack);
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
         int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);

@@ -10,7 +10,7 @@ public enum ETardisConsoleUnitControlRole {
     NONE(ETardisConsoleUnitControlRoleType.NONE),
     MONITOR(ETardisConsoleUnitControlRoleType.NONE),
     TELEPATHIC_INTERFACE(ETardisConsoleUnitControlRoleType.NONE),
-    SCREWDRIVER_SLOT(ETardisConsoleUnitControlRoleType.NONE),
+    SONIC_SCREWDRIVER_SLOT(ETardisConsoleUnitControlRoleType.NONE),
     DOORS(ETardisConsoleUnitControlRoleType.BOOLEAN, "doors", 0, ModSounds.TARDIS_CONTROL_3, Set.of(ETardisConsoleUnitControlRoleFlags.MUST_BE_MATERIALIZED)),
     SHIELDS(ETardisConsoleUnitControlRoleType.BOOLEAN, "shields", 0, ModSounds.TARDIS_CONTROL_3, Set.of(ETardisConsoleUnitControlRoleFlags.REQUIRED_SHIELDS_SYSTEM, ETardisConsoleUnitControlRoleFlags.MUST_BE_MATERIALIZED)),
     SHIELDS_OXYGEN(ETardisConsoleUnitControlRoleType.BOOLEAN, "shields_oxygen", 0, ModSounds.TARDIS_CONTROL_2, Set.of(ETardisConsoleUnitControlRoleFlags.REQUIRED_SHIELDS_SYSTEM, ETardisConsoleUnitControlRoleFlags.MUST_BE_MATERIALIZED, ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_SHIELDS_ON)),

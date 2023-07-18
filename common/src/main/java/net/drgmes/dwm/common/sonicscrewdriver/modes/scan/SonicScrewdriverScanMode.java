@@ -1,7 +1,7 @@
-package net.drgmes.dwm.common.screwdriver.modes.scan;
+package net.drgmes.dwm.common.sonicscrewdriver.modes.scan;
 
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
-import net.drgmes.dwm.common.screwdriver.modes.BaseScrewdriverMode;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.common.sonicscrewdriver.modes.BaseSonicScrewdriverMode;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ScrewdriverScanMode extends BaseScrewdriverMode {
-    public static final ScrewdriverScanMode INSTANCE = new ScrewdriverScanMode();
+public class SonicScrewdriverScanMode extends BaseSonicScrewdriverMode {
+    public static final SonicScrewdriverScanMode INSTANCE = new SonicScrewdriverScanMode();
 
     @Override
     public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
@@ -91,7 +91,7 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
             lines.add(Text.literal("Can Summon: " + (blockState.get(Properties.CAN_SUMMON) ? "Yes" : "No")));
         }
 
-        updateScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
+        updateSonicScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
         return ActionResult.SUCCESS;
     }
 
@@ -122,15 +122,15 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
             if (armor > 0) lines.add(Text.literal("Armor: " + armor));
         }
 
-        updateScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
+        updateSonicScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
         return ActionResult.SUCCESS;
     }
 
-    private void updateScrewdriverData(ServerPlayerEntity player, Hand hand, Text title, List<Text> lines) {
-        ItemStack screwdriverItemStack = player.getStackInHand(hand);
-        if (!Screwdriver.checkItemStackIsScrewdriver(screwdriverItemStack)) return;
+    private void updateSonicScrewdriverData(ServerPlayerEntity player, Hand hand, Text title, List<Text> lines) {
+        ItemStack sonicScrewdriverItemStack = player.getStackInHand(hand);
+        if (!SonicScrewdriver.checkItemStackIsSonicScrewdriver(sonicScrewdriverItemStack)) return;
 
-        NbtCompound tag = Screwdriver.getData(screwdriverItemStack);
+        NbtCompound tag = SonicScrewdriver.getData(sonicScrewdriverItemStack);
         tag.putString("title", Text.Serializer.toJson(title));
         tag.putLong("time", player.getServerWorld().getTime());
 
@@ -139,6 +139,6 @@ public class ScrewdriverScanMode extends BaseScrewdriverMode {
         for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
         tag.put("linesTag", linesTag);
 
-        player.setStackInHand(hand, screwdriverItemStack);
+        player.setStackInHand(hand, sonicScrewdriverItemStack);
     }
 }

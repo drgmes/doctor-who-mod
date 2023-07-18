@@ -2,7 +2,7 @@
   "credit": "ranafangirl",
   "texture_size": [32, 32],
   "textures": {
-    "particle": "dwm:item/screwdrivers/screwdriver_11"
+    "particle": "dwm:item/sonic_devices/sonic_screwdriver_11"
   },
   "elements": [
     {

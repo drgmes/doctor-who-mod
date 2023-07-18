@@ -1,8 +1,8 @@
-package net.drgmes.dwm.items.screwdriver;
+package net.drgmes.dwm.items.sonicscrewdriver;
 
-import net.drgmes.dwm.common.screwdriver.Screwdriver;
-import net.drgmes.dwm.items.screwdriver.screens.ScrewdriverInterfaceMainScreen;
-import net.drgmes.dwm.network.server.ScrewdriverUpdatePacket;
+import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.items.sonicscrewdriver.screens.SonicScrewdriverInterfaceMainScreen;
+import net.drgmes.dwm.network.server.SonicScrewdriverUpdatePacket;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
 import net.fabricmc.api.EnvType;
@@ -29,8 +29,8 @@ import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
 
-public class ScrewdriverItem extends Item {
-    public ScrewdriverItem(Settings props) {
+public class SonicScrewdriverItem extends Item {
+    public SonicScrewdriverItem(Settings props) {
         super(props);
     }
 
@@ -51,7 +51,7 @@ public class ScrewdriverItem extends Item {
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        return this.useScrewdriver(world, player, hand, false);
+        return this.useSonicScrewdriver(world, player, hand, false);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class ScrewdriverItem extends Item {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
-        if (ModKeys.SCREWDRIVER_SETTINGS.isPressed()) {
+        if (ModKeys.SONIC_SCREWDRIVER_SETTINGS.isPressed()) {
             ItemStack mainItemStack = player.getStackInHand(Hand.MAIN_HAND);
             ItemStack offItemStack = player.getStackInHand(Hand.OFF_HAND);
 
@@ -73,17 +73,17 @@ public class ScrewdriverItem extends Item {
             if (player.isSneaking()) {
                 if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return;
 
-                NbtCompound screwdriverData = Screwdriver.getData(itemStack);
-                List<Screwdriver.EScrewdriverMode> modes = List.of(Screwdriver.EScrewdriverMode.values());
-                Screwdriver.EScrewdriverMode mode = modes.get((Screwdriver.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
-                if (screwdriverData.contains("prevMode")) mode = Screwdriver.EScrewdriverMode.valueOf(screwdriverData.getString("prevMode"));
+                NbtCompound tag = SonicScrewdriver.getData(itemStack);
+                List<SonicScrewdriver.EMode> modes = List.of(SonicScrewdriver.EMode.values());
+                SonicScrewdriver.EMode mode = modes.get((SonicScrewdriver.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
+                if (tag.contains("prevMode")) mode = SonicScrewdriver.EMode.valueOf(tag.getString("prevMode"));
 
-                Screwdriver.setInteractionMode(itemStack, mode);
-                new ScrewdriverUpdatePacket(itemStack, mainItemStack.equals(itemStack)).sendToServer();
+                SonicScrewdriver.setInteractionMode(itemStack, mode);
+                new SonicScrewdriverUpdatePacket(itemStack, mainItemStack.equals(itemStack)).sendToServer();
                 return;
             }
 
-            mc.setScreen(new ScrewdriverInterfaceMainScreen(itemStack, mainItemStack.equals(itemStack)));
+            mc.setScreen(new SonicScrewdriverInterfaceMainScreen(itemStack, mainItemStack.equals(itemStack)));
         }
     }
 
@@ -91,11 +91,11 @@ public class ScrewdriverItem extends Item {
     public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltips, TooltipContext context) {
         tooltips.add(Text.empty());
 
-        MutableText mode = Screwdriver.getInteractionMode(itemStack).getTitle().copy();
-        MutableText modeText = Text.translatable("title.dwm.screwdriver.mode", mode.formatted(Formatting.GOLD));
+        MutableText mode = SonicScrewdriver.getInteractionMode(itemStack).getTitle().copy();
+        MutableText modeText = Text.translatable("title.dwm.sonic_screwdriver.mode", mode.formatted(Formatting.GOLD));
         tooltips.add(modeText.formatted(Formatting.GRAY));
 
-        String tardisId = Screwdriver.getTardisId(itemStack);
+        String tardisId = SonicScrewdriver.getTardisId(itemStack);
         if (!tardisId.isEmpty()) {
             MutableText tardis = Text.literal(tardisId.substring(0, 8));
             MutableText tardisText = Text.translatable("title.dwm.tardis_id", tardis.formatted(Formatting.GOLD));
@@ -105,13 +105,13 @@ public class ScrewdriverItem extends Item {
         super.appendTooltip(itemStack, world, tooltips, context);
     }
 
-    public TypedActionResult<ItemStack> useScrewdriver(World world, PlayerEntity player, Hand hand, boolean isAlternativeAction) {
+    public TypedActionResult<ItemStack> useSonicScrewdriver(World world, PlayerEntity player, Hand hand, boolean isAlternativeAction) {
         ItemStack itemStack = player.getStackInHand(hand);
-        ActionResult result = Screwdriver.interact(world, player, hand, isAlternativeAction);
+        ActionResult result = SonicScrewdriver.interact(world, player, hand, isAlternativeAction);
 
         if (result.shouldSwingHand()) {
             world.emitGameEvent(player, GameEvent.ITEM_INTERACT_FINISH, player.getBlockPos());
-            if (!world.isClient) ModSounds.playScrewdriverMainSound(world, player.getBlockPos());
+            if (!world.isClient) ModSounds.playSonicScrewdriverMainSound(world, player.getBlockPos());
         }
 
         return new TypedActionResult<>(result, itemStack);

@@ -12,22 +12,22 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisConsoleUnitScrewdriverSlotUpdatePacket extends BaseS2CMessage {
+public class TardisConsoleUnitSonicScrewdriverSlotUpdatePacket extends BaseS2CMessage {
     private final BlockPos blockPos;
     private final ItemStack itemStack;
 
-    public TardisConsoleUnitScrewdriverSlotUpdatePacket(BlockPos blockPos, ItemStack itemStack) {
+    public TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(BlockPos blockPos, ItemStack itemStack) {
         this.blockPos = blockPos;
         this.itemStack = itemStack;
     }
 
-    public static TardisConsoleUnitScrewdriverSlotUpdatePacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitScrewdriverSlotUpdatePacket(buf.readBlockPos(), buf.readItemStack());
+    public static TardisConsoleUnitSonicScrewdriverSlotUpdatePacket create(PacketByteBuf buf) {
+        return new TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(buf.readBlockPos(), buf.readItemStack());
     }
 
     @Override
     public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_SCREWDRIVER_SLOT_UPDATE;
+        return ModNetwork.TARDIS_CONSOLE_UNIT_SONIC_SCREWDRIVER_SLOT_UPDATE;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class TardisConsoleUnitScrewdriverSlotUpdatePacket extends BaseS2CMessage
         final MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            tardisConsoleUnitBlockEntity.screwdriverItemStack = this.itemStack;
+            tardisConsoleUnitBlockEntity.sonicScrewdriverItemStack = this.itemStack;
             tardisConsoleUnitBlockEntity.markDirty();
         }
     }

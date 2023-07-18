@@ -2,7 +2,7 @@
   "itemGroup.dwm.general": "Doctor Who",
 
   "key.dwm.categories.main": "Doctor Who",
-  "key.dwm.screwdriver_settings_key": "Screwdriver Settings",
+  "key.dwm.sonic_screwdriver_settings_key": "Sonic Screwdriver Settings",
 
   "block.dwm.engineer_table": "Engineer Table",
   "block.dwm.titanium_ore": "Titanium Ore",
@@ -270,9 +270,9 @@
   "item.dwm.titanium_pickaxe": "Titanium Pickaxe",
   "item.dwm.titanium_hoe": "Titanium Hoe",
 
-  "item.dwm.screwdriver_11": "11th Doctor's Sonic Screwdriver",
-  "item.dwm.screwdriver_12": "12th Doctor's Sonic Screwdriver",
-  "item.dwm.screwdriver_13": "13th Doctor's Sonic Screwdriver",
+  "item.dwm.sonic_screwdriver_11": "11th Doctor's Sonic Screwdriver",
+  "item.dwm.sonic_screwdriver_12": "12th Doctor's Sonic Screwdriver",
+  "item.dwm.sonic_screwdriver_13": "13th Doctor's Sonic Screwdriver",
 
   "item.dwm.tardis_key_1": "TARDIS Key",
 
@@ -290,13 +290,13 @@
   "title.dwm.tardis_pos": "TARDIS Position: %s",
   "title.dwm.tardis_last_pos": "Last known position: %s",
 
-  "title.dwm.screwdriver.mode": "Mode: %s",
-  "title.dwm.screwdriver.mode.scan": "Scan",
-  "title.dwm.screwdriver.mode.scan.description": "Allows you to get information about a block or entity.",
-  "title.dwm.screwdriver.mode.setting": "Setting",
-  "title.dwm.screwdriver.mode.setting.description": "Allows you to change the state of various blocks/mechanisms, as well as interact in a special way with some entities. \n\n§6WARNING§r: Does not work with wood or some hair dryers!",
-  "title.dwm.screwdriver.mode.tardis_relocation": "Relocation",
-  "title.dwm.screwdriver.mode.tardis_relocation.description": "Allows you to set a new destination location for the TARDIS. Before use, you must bind the device to the TARDIS.",
+  "title.dwm.sonic_screwdriver.mode": "Mode: %s",
+  "title.dwm.sonic_screwdriver.mode.scan": "Scan",
+  "title.dwm.sonic_screwdriver.mode.scan.description": "Allows you to get information about a block or entity.",
+  "title.dwm.sonic_screwdriver.mode.setting": "Setting",
+  "title.dwm.sonic_screwdriver.mode.setting.description": "Allows you to change the state of various blocks/mechanisms, as well as interact in a special way with some entities. \n\n§6WARNING§r: Does not work with wood or some hair dryers!",
+  "title.dwm.sonic_screwdriver.mode.tardis_relocation": "Relocation",
+  "title.dwm.sonic_screwdriver.mode.tardis_relocation.description": "Allows you to set a new destination location for the TARDIS. Before use, you must bind the device to the TARDIS.",
 
   "title.dwm.monitor.state.value.on": "On",
   "title.dwm.monitor.state.value.off": "Off",
@@ -1011,8 +1011,8 @@
   "title.dwm.ars.structure.room_wooden_huge_warped": "Warped Room Huge",
   "title.dwm.ars.structure.room_wooden_storage_warped": "Warped Storage",
 
-  "screen.dwm.screwdriver_interface.title": "Screwdriver Settings Interface",
-  "screen.dwm.screwdriver_interface.button.mode": "Mode: %s",
+  "screen.dwm.sonic_screwdriver_interface.title": "Sonic Screwdriver Settings Interface",
+  "screen.dwm.sonic_screwdriver_interface.button.mode": "Mode: %s",
 
   "screen.dwm.ars_interface.title": "Architectural Reconfiguration System",
   "screen.dwm.ars_interface.message": "Are you sure to destroy",
@@ -1131,21 +1131,24 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Coords have been reset to the §eCurrent§r position",
   "message.dwm.tardis.control.role.randomizer": "Coords were randomly updated",
 
-  "message.dwm.screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
+  "message.dwm.sonic_screwdriver.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
   "argument.dwm.tardis.invalid": "Invalid TARDIS ID",
   "argument.dwm.tardis.player_present": "You are inside",
 
-  "subtitle.screwdriver.screwdriver_main": "Sonic Screwdriver sounds",
-  "subtitle.tardis.tardis_doors_close": "TARDIS Doors closed",
-  "subtitle.tardis.tardis_doors_lock": "TARDIS Doors locked",
-  "subtitle.tardis.tardis_doors_open": "TARDIS Doors opened",
-  "subtitle.tardis.tardis_doors_unlock": "TARDIS Doors unlocked",
-  "subtitle.tardis.tardis_error": "TARDIS emits failure",
-  "subtitle.tardis.tardis_fly": "TARDIS flight noise",
-  "subtitle.tardis.tardis_land": "TARDIS landing noise",
-  "subtitle.tardis.tardis_takeoff": "TARDIS takeoff noise",
-  "subtitle.tardis.tardis_control": "TARDIS Control pressed",
+  "subtitle.sonic_screwdriver.main": "Sonic Screwdriver sounds",
+  "subtitle.tardis.control": "Control pressed",
+  "subtitle.tardis.bell": "TARDIS Bell sounds",
+  "subtitle.tardis.broken_flaring": "Damaged console sounds",
+  "subtitle.tardis.doors_close": "Doors closed",
+  "subtitle.tardis.doors_knock": "Knocking at the door",
+  "subtitle.tardis.doors_lock": "Doors locked",
+  "subtitle.tardis.doors_unlock": "Doors unlocked",
+  "subtitle.tardis.doors_open": "Doors opened",
+  "subtitle.tardis.error": "TARDIS emits failure",
+  "subtitle.tardis.fly": "TARDIS flight noise",
+  "subtitle.tardis.land": "TARDIS landing noise",
+  "subtitle.tardis.takeoff": "TARDIS takeoff noise",
 
   "dwm.console_room.imperial_abandoned": "Imperial Abandoned",
   "dwm.console_room.imperial_classic": "Imperial Classic",

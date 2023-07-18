@@ -11,7 +11,7 @@ public class TardisConsoleUnitTypeEntryToyota extends TardisConsoleUnitTypeEntry
 
         this.addControlEntry(ETardisConsoleUnitControlRole.MONITOR, ETardisConsoleUnitControlEntry.OTHER, new Vec3d(-0.4F, 0.5F, -0.7F), "controls/control_monitor", ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_MEDIUM);
         this.addControlEntry(ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE, ETardisConsoleUnitControlEntry.OTHER, new Vec3d(0.45F, 0.4F, -0.75F), "controls/control_telepathic_interface", ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_LARGE);
-        this.addControlEntry(ETardisConsoleUnitControlRole.SCREWDRIVER_SLOT, ETardisConsoleUnitControlEntry.OTHER, new Vec3d(0.535F, 0.55F, 0.5425F), "screwdriver_slot");
+        this.addControlEntry(ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT, ETardisConsoleUnitControlEntry.OTHER, new Vec3d(0.535F, 0.55F, 0.5425F), "sonic_screwdriver_slot");
 
         this.addControlEntry(ETardisConsoleUnitControlRole.MATERIALIZATION, ETardisConsoleUnitControlEntry.SLIDER, new Vec3d(0.855F, 0.575F, -0.0775F), "controls/control_sliders_v/control_slider_v_3$_handle", ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_SMALL);
         this.addControlEntry(ETardisConsoleUnitControlRole.MONITOR_PAGE_PREV, ETardisConsoleUnitControlEntry.BUTTON, new Vec3d(-0.1315F, 0.6F, -0.735F), "controls/control_buttons/control_button_7$_r1", ModEntities.TARDIS_CONSOLE_UNIT_CONTROL_SMALL);
