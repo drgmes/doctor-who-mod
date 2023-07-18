@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.common.repairkit;
+package net.drgmes.dwm.items.tardis.misc.repairkit;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;

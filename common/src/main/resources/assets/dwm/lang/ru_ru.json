@@ -259,6 +259,17 @@
   "item.dwm.titanium_nugget": "Кусочек титана",
   "item.dwm.titanium_plate": "Титановая пластина",
 
+  "item.dwm.titanium_helmet": "Титановый шлем",
+  "item.dwm.titanium_chestplate": "Титановый нагрудник",
+  "item.dwm.titanium_leggings": "Титановые поножи",
+  "item.dwm.titanium_boots": "Титановые ботинки",
+
+  "item.dwm.titanium_sword": "Титановый меч",
+  "item.dwm.titanium_axe": "Титановый топор",
+  "item.dwm.titanium_shovel": "Титановая лопата",
+  "item.dwm.titanium_pickaxe": "Титановая кирка",
+  "item.dwm.titanium_hoe": "Титановая мотыга",
+
   "item.dwm.screwdriver_11": "Звуковая отвёртка 11-го",
   "item.dwm.screwdriver_12": "Звуковая отвёртка 12-го",
   "item.dwm.screwdriver_13": "Звуковая отвёртка 13-й",

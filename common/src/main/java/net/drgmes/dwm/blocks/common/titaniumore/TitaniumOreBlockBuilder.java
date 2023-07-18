@@ -5,17 +5,23 @@ import net.drgmes.dwm.datagen.BlockLootDataBuilder;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.ExperienceDroppingBlock;
+import net.minecraft.block.MapColor;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public class TitaniumOreBlockBuilder extends BlockBuilder {
     public TitaniumOreBlockBuilder(String name) {
-        super(name);
+        super(name, () -> new ExperienceDroppingBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
-        return AbstractBlock.Settings.create().sounds(BlockSoundGroup.STONE).strength(3.0F, 3.0F).requiresTool();
+        return AbstractBlock.Settings.create()
+            .mapColor(MapColor.STONE_GRAY)
+            .sounds(BlockSoundGroup.STONE)
+            .strength(3.5F, 3.0F)
+            .requiresTool();
     }
 
     @Override

@@ -7,6 +7,7 @@ public class ItemModelDataBuilder {
     public enum ItemType {
         PARENTED,
         GENERATED,
+        HANDHELD,
     }
 
     public final Item item;

@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.engines;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.common.repairkit.RepairKitItem;
+import net.drgmes.dwm.items.tardis.misc.repairkit.RepairKitItem;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;

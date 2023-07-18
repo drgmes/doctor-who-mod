@@ -73,6 +73,7 @@ public class ModModelProvider extends FabricModelProvider {
         switch (itemModelDataBuilder.itemType) {
             case PARENTED -> itemModelGenerator.register(itemModelDataBuilder.item, new Model(Optional.of(itemModelDataBuilder.texture), Optional.empty()));
             case GENERATED -> Models.GENERATED.upload(itemModelDataBuilder.modelId, TextureMap.layer0(itemModelDataBuilder.texture), itemModelGenerator.writer);
+            case HANDHELD -> Models.HANDHELD.upload(itemModelDataBuilder.modelId, TextureMap.layer0(itemModelDataBuilder.texture), itemModelGenerator.writer);
         }
     }
 }

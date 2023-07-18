@@ -5,19 +5,22 @@ import net.drgmes.dwm.datagen.BlockLootDataBuilder;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.ExperienceDroppingBlock;
+import net.minecraft.block.MapColor;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public class TitaniumOreDeepslateBlockBuilder extends BlockBuilder {
     public TitaniumOreDeepslateBlockBuilder(String name) {
-        super(name);
+        super(name, () -> new ExperienceDroppingBlock(getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
         return TitaniumOreBlockBuilder.getBlockSettings()
+            .mapColor(MapColor.DEEPSLATE_GRAY)
             .sounds(BlockSoundGroup.DEEPSLATE)
-            .strength(4.5F, 3.0F);
+            .strength(5.0F, 3.0F);
     }
 
     @Override
