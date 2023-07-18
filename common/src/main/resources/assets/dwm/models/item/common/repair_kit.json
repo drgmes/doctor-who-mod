@@ -245,7 +245,7 @@
       "scale": [0.75, 0.75, 0.75]
     },
     "ground": {
-      "translation": [0, 8.5, 0],
+      "translation": [0, 3.5, 0],
       "scale": [0.65, 0.65, 0.65]
     },
     "gui": {

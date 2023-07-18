@@ -28,7 +28,7 @@
       "scale": [0.2, 0.2, 0.2]
     },
     "ground": {
-      "translation": [0, 3, 0],
+      "translation": [0, 2.25, 0],
       "scale": [0.2, 0.2, 0.2]
     },
     "gui": {

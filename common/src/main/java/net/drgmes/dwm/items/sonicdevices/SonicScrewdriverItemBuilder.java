@@ -1,4 +1,4 @@
-package net.drgmes.dwm.items.sonicscrewdriver;
+package net.drgmes.dwm.items.sonicdevices;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;

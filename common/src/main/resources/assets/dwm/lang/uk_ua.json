@@ -2,7 +2,8 @@
   "itemGroup.dwm.general": "Doctor Who",
 
   "key.dwm.categories.main": "Doctor Who",
-  "key.dwm.sonic_screwdriver_settings_key": "Налаштування звукової викрутки",
+  "key.dwm.sonic_device_settings_key": "Налаштування звукового пристрою",
+  "key.dwm.sonic_sunglasses_usage_key": "Використання звукових окулярів",
 
   "block.dwm.engineer_table": "Стіл інженера",
   "block.dwm.titanium_ore": "Титанова руда",
@@ -273,6 +274,7 @@
   "item.dwm.sonic_screwdriver_11": "Звукова викрутка 11-го",
   "item.dwm.sonic_screwdriver_12": "Звукова викрутка 12-го",
   "item.dwm.sonic_screwdriver_13": "Звукова викрутка 13-ї",
+  "item.dwm.sonic_sunglasses": "Звукові окуляри",
 
   "item.dwm.tardis_key_1": "Ключ ТАРДІС",
 
@@ -290,13 +292,13 @@
   "title.dwm.tardis_pos": "Позиція ТАРДІС: %s",
   "title.dwm.tardis_last_pos": "Остання відома позиція: %s",
 
-  "title.dwm.sonic_screwdriver.mode": "Режим: %s",
-  "title.dwm.sonic_screwdriver.mode.scan": "Сканування",
-  "title.dwm.sonic_screwdriver.mode.scan.description": "Дозволяє отримати інформацію про блок або сутність.",
-  "title.dwm.sonic_screwdriver.mode.setting": "Налаштування",
-  "title.dwm.sonic_screwdriver.mode.setting.description": "Дозволяє змінювати стан різних блоків/механізмів, а також по-особливому взаємодіяти з деякими сутностями. \n\n§6УВАГА§r: Не працює з деревом або в присутності деяких моделей фенів!",
-  "title.dwm.sonic_screwdriver.mode.tardis_relocation": "Релокація",
-  "title.dwm.sonic_screwdriver.mode.tardis_relocation.description": "Дозволяє встановити нову локацію призначення для ТАРДІС. Перед використанням необхідно здійснити прив'язку девайса до ТАРДІС.",
+  "title.dwm.sonic_device.mode": "Режим: %s",
+  "title.dwm.sonic_device.mode.scan": "Сканування",
+  "title.dwm.sonic_device.mode.scan.description": "Дозволяє отримати інформацію про блок або сутність.",
+  "title.dwm.sonic_device.mode.setting": "Налаштування",
+  "title.dwm.sonic_device.mode.setting.description": "Дозволяє змінювати стан різних блоків/механізмів, а також по-особливому взаємодіяти з деякими сутностями. \n\n§6УВАГА§r: Не працює з деревом або в присутності деяких моделей фенів!",
+  "title.dwm.sonic_device.mode.tardis_relocation": "Релокація",
+  "title.dwm.sonic_device.mode.tardis_relocation.description": "Дозволяє встановити нову локацію призначення для ТАРДІС. Перед використанням необхідно здійснити прив'язку девайса до ТАРДІС.",
 
   "title.dwm.monitor.state.value.on": "Вкл.",
   "title.dwm.monitor.state.value.off": "Вимк.",
@@ -1011,8 +1013,8 @@
   "title.dwm.ars.structure.room_wooden_huge_warped": "Кімната з химерного дерева (величезна)",
   "title.dwm.ars.structure.room_wooden_storage_warped": "Сховище з химерного дерева",
 
-  "screen.dwm.sonic_screwdriver_interface.title": "Інтерфейс налаштування звукової викрутки",
-  "screen.dwm.sonic_screwdriver_interface.button.mode": "Режим: %s",
+  "screen.dwm.sonic_device_interface.title": "Інтерфейс налаштування звукового пристрою",
+  "screen.dwm.sonic_device_interface.button.mode": "Режим: %s",
 
   "screen.dwm.ars_interface.title": "Система архітектурної реконфігурації",
   "screen.dwm.ars_interface.message": "Ви впевнені, що хочете зруйнувати",
@@ -1131,12 +1133,13 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Координати були скинуті на §eпоточну§r позицію",
   "message.dwm.tardis.control.role.randomizer": "Координати були випадково оновлені",
 
-  "message.dwm.sonic_screwdriver.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
+  "message.dwm.sonic_device.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
 
   "argument.dwm.tardis.invalid": "Невірний ідентифікатор ТАРДІС",
   "argument.dwm.tardis.player_present": "Ви знаходитесь всередині",
 
   "subtitle.sonic_screwdriver.main": "Звук звукової викрутки",
+  "subtitle.sonic_sunglasses.main": "Звук звукових окулярів",
   "subtitle.tardis.control": "Активовано елемент керування",
   "subtitle.tardis.bell": "Звук дзвону ТАРДІС",
   "subtitle.tardis.broken_flaring": "Звук пошкодженої консолі",

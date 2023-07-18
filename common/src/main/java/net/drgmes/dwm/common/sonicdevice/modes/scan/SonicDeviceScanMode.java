@@ -1,13 +1,14 @@
-package net.drgmes.dwm.common.sonicscrewdriver.modes.scan;
+package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
-import net.drgmes.dwm.common.sonicscrewdriver.modes.BaseSonicScrewdriverMode;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
+import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.JukeboxBlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -21,7 +22,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class SonicScrewdriverScanMode extends BaseSonicScrewdriverMode {
-    public static final SonicScrewdriverScanMode INSTANCE = new SonicScrewdriverScanMode();
+public class SonicDeviceScanMode extends BaseSonicDeviceMode {
+    public static final SonicDeviceScanMode INSTANCE = new SonicDeviceScanMode();
 
     @Override
-    public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
+    public ActionResult interactWithBlockNative(World world, PlayerEntity player, EquipmentSlot slot, BlockHitResult hitResult) {
+        if (!checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
         BlockPos blockPos = hitResult.getBlockPos();
@@ -91,13 +91,13 @@ public class SonicScrewdriverScanMode extends BaseSonicScrewdriverMode {
             lines.add(Text.literal("Can Summon: " + (blockState.get(Properties.CAN_SUMMON) ? "Yes" : "No")));
         }
 
-        updateSonicScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
+        updateSonicDeviceData((ServerPlayerEntity) player, slot, title, lines);
         return ActionResult.SUCCESS;
     }
 
     @Override
-    public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
+    public ActionResult interactWithEntityNative(World world, PlayerEntity player, EquipmentSlot slot, EntityHitResult hitResult) {
+        if (!checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
         Entity entity = hitResult.getEntity();
@@ -122,15 +122,15 @@ public class SonicScrewdriverScanMode extends BaseSonicScrewdriverMode {
             if (armor > 0) lines.add(Text.literal("Armor: " + armor));
         }
 
-        updateSonicScrewdriverData((ServerPlayerEntity) player, hand, title, lines);
+        updateSonicDeviceData((ServerPlayerEntity) player, slot, title, lines);
         return ActionResult.SUCCESS;
     }
 
-    private void updateSonicScrewdriverData(ServerPlayerEntity player, Hand hand, Text title, List<Text> lines) {
-        ItemStack sonicScrewdriverItemStack = player.getStackInHand(hand);
-        if (!SonicScrewdriver.checkItemStackIsSonicScrewdriver(sonicScrewdriverItemStack)) return;
+    private void updateSonicDeviceData(ServerPlayerEntity player, EquipmentSlot slot, Text title, List<Text> lines) {
+        ItemStack sonicDeviceItemStack = player.getEquippedStack(slot);
+        if (!SonicDevice.checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
 
-        NbtCompound tag = SonicScrewdriver.getData(sonicScrewdriverItemStack);
+        NbtCompound tag = SonicDevice.getData(sonicDeviceItemStack);
         tag.putString("title", Text.Serializer.toJson(title));
         tag.putLong("time", player.getServerWorld().getTime());
 
@@ -139,6 +139,6 @@ public class SonicScrewdriverScanMode extends BaseSonicScrewdriverMode {
         for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
         tag.put("linesTag", linesTag);
 
-        player.setStackInHand(hand, sonicScrewdriverItemStack);
+        player.equipStack(slot, sonicDeviceItemStack);
     }
 }

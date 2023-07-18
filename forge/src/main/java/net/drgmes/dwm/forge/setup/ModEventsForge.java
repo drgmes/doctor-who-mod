@@ -1,7 +1,7 @@
 package net.drgmes.dwm.forge.setup;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.sonicscrewdriver.modes.scan.SonicScrewdriverScanModeOverlay;
+import net.drgmes.dwm.common.sonicdevice.modes.scan.SonicDeviceScanModeOverlay;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.event.server.ServerStartedEvent;
@@ -17,6 +17,6 @@ public class ModEventsForge {
 
     @SubscribeEvent
     public static void onRenderGuiOverlay(RenderGuiOverlayEvent event) {
-        SonicScrewdriverScanModeOverlay.INSTANCE.render(event.getGuiGraphics());
+        SonicDeviceScanModeOverlay.INSTANCE.render(event.getGuiGraphics());
     }
 }

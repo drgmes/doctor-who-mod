@@ -1,6 +1,6 @@
-package net.drgmes.dwm.common.sonicscrewdriver.modes.scan;
+package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,6 +8,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.MutableText;
@@ -23,8 +24,8 @@ import java.util.Comparator;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class SonicScrewdriverScanModeOverlay {
-    public static final SonicScrewdriverScanModeOverlay INSTANCE = new SonicScrewdriverScanModeOverlay();
+public class SonicDeviceScanModeOverlay {
+    public static final SonicDeviceScanModeOverlay INSTANCE = new SonicDeviceScanModeOverlay();
 
     private static final int PADDING = 10;
     private static final int LINE_MARGIN = 1;
@@ -36,21 +37,23 @@ public class SonicScrewdriverScanModeOverlay {
         ClientPlayerEntity player = mc.player;
         if (player == null || mc.world == null) return;
 
-        ItemStack sonicScrewdriverItemStack = null;
+        ItemStack sonicDeviceItemStack = null;
         ItemStack mainItemStack = player.getMainHandStack();
         ItemStack offItemStack = player.getOffHandStack();
+        ItemStack helmetItemStack = player.getEquippedStack(EquipmentSlot.HEAD);
 
-        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(mainItemStack)) sonicScrewdriverItemStack = mainItemStack;
-        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(offItemStack)) sonicScrewdriverItemStack = offItemStack;
-        if (sonicScrewdriverItemStack == null) return;
+        if (SonicDevice.checkItemStackIsSonicDevice(mainItemStack)) sonicDeviceItemStack = mainItemStack;
+        else if (SonicDevice.checkItemStackIsSonicDevice(offItemStack)) sonicDeviceItemStack = offItemStack;
+        else if (SonicDevice.checkItemStackIsSonicDevice(helmetItemStack)) sonicDeviceItemStack = helmetItemStack;
+        else return;
 
         int screenWidth = mc.getWindow().getScaledWidth();
         int screenHeight = mc.getWindow().getScaledHeight();
 
         float modeTextScale = 0.5F;
         int modeTextOffset = player.isCreative() ? 3 : 5;
-        MutableText modeTitle = SonicScrewdriver.getInteractionMode(sonicScrewdriverItemStack).getTitle().copy().formatted(Formatting.GOLD);
-        MutableText modeText = Text.translatable("title.dwm.sonic_screwdriver.mode", modeTitle);
+        MutableText modeTitle = SonicDevice.getInteractionMode(sonicDeviceItemStack).getTitle().copy().formatted(Formatting.GOLD);
+        MutableText modeText = Text.translatable("title.dwm.sonic_device.mode", modeTitle);
         Vector2i modePos = new Vector2i(screenWidth - (screenWidth - 192 + PADDING) / 2 - (int) Math.floor(mc.textRenderer.getWidth(modeText) * modeTextScale), screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
 
         matrixStack.push();
@@ -58,7 +61,7 @@ public class SonicScrewdriverScanModeOverlay {
         RenderHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
         matrixStack.pop();
 
-        NbtCompound tag = SonicScrewdriver.getData(sonicScrewdriverItemStack);
+        NbtCompound tag = SonicDevice.getData(sonicDeviceItemStack);
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
         int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);

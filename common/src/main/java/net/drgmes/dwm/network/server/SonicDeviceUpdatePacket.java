@@ -3,43 +3,43 @@ package net.drgmes.dwm.network.server;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.setup.ModNetwork;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Hand;
 
-public class SonicScrewdriverUpdatePacket extends BaseC2SMessage {
+public class SonicDeviceUpdatePacket extends BaseC2SMessage {
     private final ItemStack itemStack;
-    private final boolean isMainHand;
+    private final String slot;
 
-    public SonicScrewdriverUpdatePacket(ItemStack itemStack, boolean isMainHand) {
+    public SonicDeviceUpdatePacket(ItemStack itemStack, String slot) {
         this.itemStack = itemStack;
-        this.isMainHand = isMainHand;
+        this.slot = slot;
     }
 
-    public static SonicScrewdriverUpdatePacket create(PacketByteBuf buf) {
-        return new SonicScrewdriverUpdatePacket(buf.readItemStack(), buf.readBoolean());
+    public static SonicDeviceUpdatePacket create(PacketByteBuf buf) {
+        return new SonicDeviceUpdatePacket(buf.readItemStack(), buf.readString());
     }
 
     @Override
     public MessageType getType() {
-        return ModNetwork.SONIC_SCREWDRIVER_UPDATE;
+        return ModNetwork.SONIC_DEVICE_UPDATE;
     }
 
     @Override
     public void write(PacketByteBuf buf) {
         buf.writeItemStack(this.itemStack);
-        buf.writeBoolean(this.isMainHand);
+        buf.writeString(this.slot);
     }
 
     @Override
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(player.getStackInHand(this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND))) {
-            player.setStackInHand(this.isMainHand ? Hand.MAIN_HAND : Hand.OFF_HAND, this.itemStack);
+        if (SonicDevice.checkItemStackIsSonicDevice(player.getEquippedStack(EquipmentSlot.byName(this.slot)))) {
+            player.equipStack(EquipmentSlot.byName(this.slot), this.itemStack);
             player.getItemCooldownManager().set(this.itemStack.getItem(), 4);
         }
     }

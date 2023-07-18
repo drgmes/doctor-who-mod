@@ -1,7 +1,11 @@
 {
   "sonic_screwdriver_main": {
     "subtitle": "subtitle.sonic_screwdriver.main",
-    "sounds": ["dwm:sonic_screwdriver/main"]
+    "sounds": ["dwm:sonic_device/screwdriver_main"]
+  },
+  "sonic_sunglasses_main": {
+    "subtitle": "subtitle.sonic_sunglasses.main",
+    "sounds": ["dwm:sonic_device/sunglasses_main"]
   },
   "tardis_control_1": {
     "subtitle": "subtitle.tardis.control",

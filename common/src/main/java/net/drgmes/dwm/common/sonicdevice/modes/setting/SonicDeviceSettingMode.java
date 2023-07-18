@@ -1,6 +1,6 @@
-package net.drgmes.dwm.common.sonicscrewdriver.modes.setting;
+package net.drgmes.dwm.common.sonicdevice.modes.setting;
 
-import net.drgmes.dwm.common.sonicscrewdriver.modes.BaseSonicScrewdriverMode;
+import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.JukeboxBlockEntity;
@@ -36,12 +36,12 @@ import net.minecraft.world.event.GameEvent;
 
 import java.lang.reflect.Method;
 
-public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
-    public static final SonicScrewdriverSettingMode INSTANCE = new SonicScrewdriverSettingMode();
+public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
+    public static final SonicDeviceSettingMode INSTANCE = new SonicDeviceSettingMode();
 
     @Override
-    public ActionResult interactWithBlockNative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
+    public ActionResult interactWithBlockNative(World world, PlayerEntity player, EquipmentSlot slot, BlockHitResult hitResult) {
+        if (!checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
 
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
@@ -116,12 +116,12 @@ public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
             return ActionResult.FAIL;
         }
 
-        return interactWithBlockProperty(world, player, blockPos);
+        return interactWithBlockProperty(world, blockPos);
     }
 
     @Override
-    public ActionResult interactWithBlockAlternative(World world, PlayerEntity player, Hand hand, BlockHitResult hitResult) {
-        if (!this.checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
+    public ActionResult interactWithBlockAlternative(World world, PlayerEntity player, EquipmentSlot slot, BlockHitResult hitResult) {
+        if (!checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
 
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
@@ -154,7 +154,7 @@ public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
 
         // Jukebox
         if (block instanceof JukeboxBlock jukeboxBlock) {
-            jukeboxBlock.onUse(blockState, world, blockPos, player, hand, hitResult);
+            jukeboxBlock.onUse(blockState, world, blockPos, player, Hand.MAIN_HAND, hitResult);
             return ActionResult.SUCCESS;
         }
 
@@ -173,8 +173,8 @@ public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
     }
 
     @Override
-    public ActionResult interactWithEntityNative(World world, PlayerEntity player, Hand hand, EntityHitResult hitResult) {
-        if (!this.checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
+    public ActionResult interactWithEntityNative(World world, PlayerEntity player, EquipmentSlot slot, EntityHitResult hitResult) {
+        if (!checkIsValidHitEntity(hitResult.getEntity())) return ActionResult.PASS;
 
         Entity entity = hitResult.getEntity();
 
@@ -242,7 +242,7 @@ public class SonicScrewdriverSettingMode extends BaseSonicScrewdriverMode {
         return ActionResult.CONSUME;
     }
 
-    private ActionResult interactWithBlockProperty(World world, PlayerEntity player, BlockPos blockPos) {
+    private ActionResult interactWithBlockProperty(World world, BlockPos blockPos) {
         BlockState blockState = world.getBlockState(blockPos);
         Property<?>[] props = new Property<?>[]{
             Properties.POWER,

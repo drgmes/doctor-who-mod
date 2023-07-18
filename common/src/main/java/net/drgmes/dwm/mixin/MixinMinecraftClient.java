@@ -1,12 +1,11 @@
 package net.drgmes.dwm.mixin;
 
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
-import net.drgmes.dwm.items.sonicscrewdriver.SonicScrewdriverItem;
-import net.drgmes.dwm.network.server.SonicScrewdriverUsePacket;
+import net.drgmes.dwm.items.sonicdevices.SonicScrewdriverItem;
+import net.drgmes.dwm.network.server.SonicDeviceUsePacket;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.HitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,9 +26,9 @@ public class MixinMinecraftClient {
         if (this.crosshairTarget.getType() == HitResult.Type.MISS) {
             ItemStack sonicScrewdriverItemStack = this.player.getMainHandStack();
 
-            if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(sonicScrewdriverItemStack)) {
-                if (((SonicScrewdriverItem) sonicScrewdriverItemStack.getItem()).useSonicScrewdriver(this.player.getWorld(), this.player, Hand.MAIN_HAND, true).getResult().shouldSwingHand()) {
-                    new SonicScrewdriverUsePacket(sonicScrewdriverItemStack, true, true).sendToServer();
+            if (sonicScrewdriverItemStack.getItem() instanceof SonicScrewdriverItem screwdriverItem) {
+                if (screwdriverItem.useSonicDevice(this.player.getWorld(), this.player, EquipmentSlot.MAINHAND, true).getResult().shouldSwingHand()) {
+                    new SonicDeviceUsePacket(sonicScrewdriverItemStack, EquipmentSlot.MAINHAND.getName(), true).sendToServer();
                 }
             }
         }

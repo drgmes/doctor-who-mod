@@ -5,8 +5,8 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.items.sonicscrewdriver.SonicScrewdriverItem;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -269,8 +269,8 @@ public class TardisConsoleRoomEntry {
         List<ItemEntity> entities = world.getEntitiesByClass(ItemEntity.class, Box.from(aabb), EntityPredicates.EXCEPT_SPECTATOR);
 
         for (ItemEntity entity : entities) {
+            if (SonicDevice.checkItemStackIsSonicDevice(entity.getStack())) continue;
             if (entity.getStack().getItem() instanceof TardisKeyItem) continue;
-            if (entity.getStack().getItem() instanceof SonicScrewdriverItem) continue;
             if (entity.getStack().getItem().getRarity(entity.getStack()) != Rarity.COMMON) continue;
             entity.kill();
         }

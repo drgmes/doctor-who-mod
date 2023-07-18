@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 
 public class ModSounds {
     public static final Supplier<SoundEvent> SONIC_SCREWDRIVER_MAIN = Registration.registerSoundEvent("sonic_screwdriver_main");
+    public static final Supplier<SoundEvent> SONIC_SUNGLASSES_MAIN = Registration.registerSoundEvent("sonic_sunglasses_main");
 
     public static final Supplier<SoundEvent> TARDIS_DOORS_KNOCK = Registration.registerSoundEvent("tardis_doors_knock");
     public static final Supplier<SoundEvent> TARDIS_DOORS_UNLOCK = Registration.registerSoundEvent("tardis_doors_unlock");
@@ -117,6 +118,10 @@ public class ModSounds {
 
     public static void playTardisBellSound(World world, BlockPos blockPos) {
         playSound(world, blockPos, TARDIS_BELL.get(), 1.0F, 1.0F);
+    }
+
+    public static void playSonicSunglassesMainSound(World world, BlockPos blockPos) {
+        playSound(world, blockPos, SONIC_SUNGLASSES_MAIN.get(), 0.25F, 1.0F);
     }
 
     public static void playSonicScrewdriverMainSound(World world, BlockPos blockPos) {

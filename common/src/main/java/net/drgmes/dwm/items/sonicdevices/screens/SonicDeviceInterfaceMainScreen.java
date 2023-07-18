@@ -1,8 +1,8 @@
-package net.drgmes.dwm.items.sonicscrewdriver.screens;
+package net.drgmes.dwm.items.sonicdevices.screens;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
-import net.drgmes.dwm.network.server.SonicScrewdriverUpdatePacket;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
+import net.drgmes.dwm.network.server.SonicDeviceUpdatePacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.client.MinecraftClient;
@@ -14,21 +14,21 @@ import org.joml.Vector2i;
 
 import java.util.List;
 
-public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInterfaceScreen {
-    private final List<SonicScrewdriver.EMode> modes;
+public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScreen {
+    private final List<SonicDevice.EMode> modes;
 
-    private SonicScrewdriverModesListWidget modesListWidget;
-    private SonicScrewdriverModesListWidget.SonicScrewdriverModeEntry selected = null;
+    private SonicDeviceModesListWidget modesListWidget;
+    private SonicDeviceModesListWidget.SonicDeviceModeEntry selected = null;
 
-    public SonicScrewdriverInterfaceMainScreen(ItemStack sonicScrewdriverItemStack, boolean isMainHand) {
-        super(DWM.TEXTS.SONIC_SCREWDRIVER_INTERFACE_NAME, sonicScrewdriverItemStack, isMainHand);
-        this.modes = List.of(SonicScrewdriver.EMode.values());
+    public SonicDeviceInterfaceMainScreen(ItemStack sonicDeviceItemStack, String slot) {
+        super(DWM.TEXTS.SONIC_DEVICE_INTERFACE_NAME, sonicDeviceItemStack, slot);
+        this.modes = List.of(SonicDevice.EMode.values());
     }
 
     @Override
     protected void init() {
         Vector2i modesListSize = this.getModesListSize();
-        this.modesListWidget = new SonicScrewdriverModesListWidget(this, modesListSize.x, modesListSize.y, this.getModesListPos());
+        this.modesListWidget = new SonicDeviceModesListWidget(this, modesListSize.x, modesListSize.y, this.getModesListPos());
 
         this.addDrawableChild(this.modesListWidget);
         super.init();
@@ -62,7 +62,7 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
         int maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
 
         Vector2i modeTextPos = new Vector2i(modesListPos1.x + modesListPos2.x + padding, (int) Math.floor(modesListPos1.y + padding + 1.5F));
-        Text modeText = DWM.TEXTS.SONIC_SCREWDRIVER_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
+        Text modeText = DWM.TEXTS.SONIC_DEVICE_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
 
         modeTextPos = modeTextPos.add(RenderHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextLength, 0xFFFFFF));
 
@@ -76,7 +76,7 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
         context.getMatrices().pop();
     }
 
-    protected void setSelected(SonicScrewdriverModesListWidget.SonicScrewdriverModeEntry entry) {
+    protected void setSelected(SonicDeviceModesListWidget.SonicDeviceModeEntry entry) {
         this.selected = entry;
         this.apply();
     }
@@ -85,8 +85,8 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
         if (this.selected == null) return;
 
         this.mode = this.selected.mode;
-        SonicScrewdriver.setInteractionMode(this.sonicScrewdriverItemStack, this.selected.mode);
-        new SonicScrewdriverUpdatePacket(this.sonicScrewdriverItemStack, this.isMainHand).sendToServer();
+        SonicDevice.setInteractionMode(this.sonicDeviceItemStack, this.selected.mode);
+        new SonicDeviceUpdatePacket(this.sonicDeviceItemStack, this.slot).sendToServer();
     }
 
     private Vector2i getModesListSize() {
@@ -97,10 +97,10 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
         return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundSize().y - this.getModesListSize().y - this.getBackgroundBorderSize().y);
     }
 
-    private static class SonicScrewdriverModesListWidget extends BaseListWidget {
-        private final SonicScrewdriverInterfaceMainScreen parent;
+    private static class SonicDeviceModesListWidget extends BaseListWidget {
+        private final SonicDeviceInterfaceMainScreen parent;
 
-        public SonicScrewdriverModesListWidget(SonicScrewdriverInterfaceMainScreen parent, int width, int height, Vector2i pos) {
+        public SonicDeviceModesListWidget(SonicDeviceInterfaceMainScreen parent, int width, int height, Vector2i pos) {
             super(parent.client, width, height, LINE_PADDING, pos);
             this.parent = parent;
             this.init();
@@ -110,7 +110,7 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
             super.refreshList();
 
             this.parent.modes.forEach((mode) -> {
-                SonicScrewdriverModeEntry entry = new SonicScrewdriverModeEntry(mode);
+                SonicDeviceModeEntry entry = new SonicDeviceModeEntry(mode);
                 this.addEntry(entry);
 
                 if (mode == this.parent.mode) {
@@ -120,10 +120,10 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
             });
         }
 
-        private class SonicScrewdriverModeEntry extends BaseListEntry {
-            private final SonicScrewdriver.EMode mode;
+        private class SonicDeviceModeEntry extends BaseListEntry {
+            private final SonicDevice.EMode mode;
 
-            public SonicScrewdriverModeEntry(SonicScrewdriver.EMode mode) {
+            public SonicDeviceModeEntry(SonicDevice.EMode mode) {
                 super(Formatting.WHITE, Formatting.GOLD);
                 this.mode = mode;
             }
@@ -135,7 +135,7 @@ public class SonicScrewdriverInterfaceMainScreen extends BaseSonicScrewdriverInt
 
             @Override
             public boolean mouseClicked(double mouseX, double mouseY, int delta) {
-                SonicScrewdriverModesListWidget.this.parent.setSelected(this);
+                SonicDeviceModesListWidget.this.parent.setSelected(this);
                 return super.mouseClicked(mouseX, mouseY, delta);
             }
         }

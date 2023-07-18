@@ -1,6 +1,6 @@
 package net.drgmes.dwm.mixin;
 
-import net.drgmes.dwm.common.sonicscrewdriver.modes.scan.SonicScrewdriverScanModeOverlay;
+import net.drgmes.dwm.common.sonicdevice.modes.scan.SonicDeviceScanModeOverlay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
@@ -20,6 +20,6 @@ public class MixinInGameHud {
     @Inject(method = "render", at = @At("TAIL"))
     private void render(DrawContext context, float tickDelta, CallbackInfo ci) {
         if (this.client.currentScreen != null) return;
-        SonicScrewdriverScanModeOverlay.INSTANCE.render(context);
+        SonicDeviceScanModeOverlay.INSTANCE.render(context);
     }
 }

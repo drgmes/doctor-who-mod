@@ -27,8 +27,8 @@ public class ModNetwork {
 
     public static MessageType ARS_CREATOR_APPLY = Registration.registerC2SMessageType("ars_creator_apply", ArsCreatorApplyPacket::create);
     public static MessageType ARS_DESTROYER_APPLY = Registration.registerC2SMessageType("ars_destroyer_apply", ArsDestroyerApplyPacket::create);
-    public static MessageType SONIC_SCREWDRIVER_UPDATE = Registration.registerC2SMessageType("sonic_screwdriver_update", SonicScrewdriverUpdatePacket::create);
-    public static MessageType SONIC_SCREWDRIVER_USE = Registration.registerC2SMessageType("sonic_screwdriver_use", SonicScrewdriverUsePacket::create);
+    public static MessageType SONIC_DEVICE_UPDATE = Registration.registerC2SMessageType("sonic_device_update", SonicDeviceUpdatePacket::create);
+    public static MessageType SONIC_DEVICE_USE = Registration.registerC2SMessageType("sonic_device_use", SonicDeviceUsePacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_INIT = Registration.registerC2SMessageType("tardis_console_unit_init", TardisConsoleUnitInitPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_SOUND = Registration.registerC2SMessageType("tardis_console_unit_sound", TardisConsoleUnitSoundPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_CONSOLE_ROOM_APPLY = Registration.registerC2SMessageType("tardis_console_unit_monitor_console_room_apply", TardisConsoleUnitMonitorConsoleRoomApplyPacket::create);

@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.consoleunits;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.sonicscrewdriver.SonicScrewdriver;
+import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitTypeEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.*;
@@ -9,6 +9,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntity;
+import net.drgmes.dwm.items.sonicdevices.SonicScrewdriverItem;
 import net.drgmes.dwm.network.client.*;
 import net.drgmes.dwm.network.server.TardisConsoleUnitInitPacket;
 import net.drgmes.dwm.setup.ModSounds;
@@ -239,7 +240,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
         // Sonic Screwdriver Slot
         if (control.role == ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT && hand == Hand.OFF_HAND) {
-            SonicScrewdriver.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
+            SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
 
             boolean isChanged = false;
 
@@ -247,13 +248,13 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 ItemStack mainHandItem = player.getMainHandStack();
                 ItemStack offHandItem = player.getOffHandStack();
 
-                if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(mainHandItem)) {
+                if (mainHandItem.getItem() instanceof SonicScrewdriverItem) {
                     this.sonicScrewdriverItemStack = mainHandItem;
                     ModSounds.playSonicScrewdriverPutSound(player.getWorld(), player.getBlockPos());
                     player.setStackInHand(Hand.MAIN_HAND, ItemStack.EMPTY);
                     isChanged = true;
                 }
-                else if (SonicScrewdriver.checkItemStackIsSonicScrewdriver(offHandItem)) {
+                else if (offHandItem.getItem() instanceof SonicScrewdriverItem) {
                     this.sonicScrewdriverItemStack = offHandItem;
                     ModSounds.playSonicScrewdriverPutSound(player.getWorld(), player.getBlockPos());
                     player.setStackInHand(Hand.OFF_HAND, ItemStack.EMPTY);
@@ -273,7 +274,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             if (isChanged) {
-                SonicScrewdriver.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
+                SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
                 this.sendSonicScrewdriverSlotUpdatePacket(serverWorld);
                 this.markDirty();
             }
