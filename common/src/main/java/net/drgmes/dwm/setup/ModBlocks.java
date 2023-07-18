@@ -93,17 +93,13 @@ public class ModBlocks {
     public static final BlockBuilder TARDIS_ENGINE_TOYOTA = new TardisEngineToyotaBlockBuilder("tardis_engine_toyota");
 
     // Tardis Misc
+    public static final BlockBuilder TARDIS_ROUNDEL = new TardisRoundelBlockBuilder("tardis_roundel");
     public static final BlockBuilder TARDIS_ARS_CREATOR = new TardisArsCreatorBlockBuilder("tardis_ars_creator");
     public static final BlockBuilder TARDIS_ARS_DESTROYER = new TardisArsDestroyerBlockBuilder("tardis_ars_destroyer");
     public static final BlockBuilder TARDIS_TELEPORTER = new TardisTeleporterBlockBuilder("tardis_teleporter");
-    public static final BlockBuilder TARDIS_ROUNDEL = new TardisRoundelBlockBuilder("tardis_roundel");
 
     // Tardis Decorations
     public static final BlockBuilder TARDIS_TOYOTA_SPINNER = new TardisToyotaSpinnerBlockBuilder("tardis_toyota_spinner");
-//    public static final BlockBuilder TARDIS_ROUNDEL_ATTACHMENT_DARK = new TardisRoundelAttachmentBlockBuilder("tardis_roundel_attachment_dark");
-//    public static final BlockBuilder TARDIS_ROUNDEL_ATTACHMENT_LIGHT = new TardisRoundelAttachmentBlockBuilder("tardis_roundel_attachment_light");
-//    public static final BlockBuilder TARDIS_ROUNDEL_ATTACHMENT_DARK_LAMP = new TardisRoundelAttachmentBlockBuilder("tardis_roundel_attachment_dark_lamp", true);
-//    public static final BlockBuilder TARDIS_ROUNDEL_ATTACHMENT_LIGHT_LAMP = new TardisRoundelAttachmentBlockBuilder("tardis_roundel_attachment_light_lamp", true);
 
     // Simple Decorative blocks
     public static final BlockBuilder TITANIUM_BLOCK = new TitaniumBlockBuilder("titanium_block");

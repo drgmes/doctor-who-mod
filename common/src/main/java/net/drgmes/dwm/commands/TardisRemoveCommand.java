@@ -7,9 +7,9 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.commands.types.TardisDimensionArgumentType;
+import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.compat.ImmersivePortals;
-import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.server.command.ServerCommandSource;
@@ -53,9 +53,10 @@ public class TardisRemoveCommand {
 
         tardis.setOwner(null);
         tardis.setDoorsLockState(true, null);
+
+        TardisEnergyManager.remove(tardisId);
         DimensionHelper.removeWorld(tardisId, context.getSource().getServer());
         if (ModCompats.immersivePortals()) ImmersivePortals.removeTardisPortalsState(tardisId);
-        if (ModCompats.techReborn()) TechReborn.removeTardisEnergyStorage(tardisId);
 
         if (player != null) player.sendMessage(DWM.TEXTS.TARDIS_REMOVED.apply(tardisId), false);
         else DWM.LOGGER.info(DWM.TEXTS.TARDIS_REMOVED.apply(tardisId).getString());

@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisroundel;
 
+import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
@@ -34,7 +35,7 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new TardisRoundelBlockEntity(blockPos, blockState);
+        return ModBlockEntities.TARDIS_ROUNDEL.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @NonnullDefault

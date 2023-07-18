@@ -31,12 +31,6 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 
-//    include modApi("com.github.iPortalTeam.ImmersivePortalsModForForge:q_misc_util:v${rootProject.imm_ptl_version}") {
-//    include modApi("com.github.iPortalTeam.ImmersivePortalsModForForge:q_misc_util:v2.5.4-mc1.19.3") {
-//        exclude(group: "net.fabricmc.fabric-api")
-//        transitive(false)
-//    }
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
@@ -70,17 +64,17 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set null
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier.set "dev"
 }
 
 sourcesJar {
@@ -103,10 +97,5 @@ publishing {
             artifactId = rootProject.mod_id + "-" + project.name
             from components.java
         }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
     }
 }

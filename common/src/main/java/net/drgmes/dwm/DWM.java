@@ -1,6 +1,5 @@
 package net.drgmes.dwm;
 
-import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -161,10 +160,5 @@ public class DWM {
 
     public static Identifier getIdentifier(String path) {
         return new Identifier(DWM.MODID, path);
-    }
-
-    @ExpectPlatform
-    public static boolean hasEnergyApi() {
-        throw new AssertionError();
     }
 }

@@ -56,6 +56,12 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     }
 
     @Override
+    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
+        if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
+        return this.blockEntityBuilderSupplier.get().getBlockEntityType().instantiate(blockPos, blockState);
+    }
+
+    @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return blockEntityType != this.blockEntityBuilderSupplier.get().getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
             ((BaseTardisDoorsBlockEntity) blockEntity).tick();

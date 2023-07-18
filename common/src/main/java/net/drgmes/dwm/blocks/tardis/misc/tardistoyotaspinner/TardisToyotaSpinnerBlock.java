@@ -17,7 +17,7 @@ public class TardisToyotaSpinnerBlock extends BaseRotatableWaterloggedBlockWithE
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new TardisToyotaSpinnerBlockEntity(blockPos, blockState);
+        return ModBlockEntities.TARDIS_TOYOTA_SPINNER.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @Override

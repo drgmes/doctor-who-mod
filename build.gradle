@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.1-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.2-SNAPSHOT" apply false
 }
 
 architectury {
@@ -10,14 +10,8 @@ architectury {
 subprojects {
     apply plugin: "dev.architectury.loom"
 
-    loom {
-        silentMojangMappingsLicense()
-    }
-
     dependencies {
         minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-
-//        mappings loom.officialMojangMappings()
         mappings "net.fabricmc:yarn:${rootProject.minecraft_version}+${rootProject.yarn_mappings_version}:v2"
     }
 }

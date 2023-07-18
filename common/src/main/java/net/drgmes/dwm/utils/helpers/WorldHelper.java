@@ -43,7 +43,6 @@ public class WorldHelper {
         return (
             !checkBlockIsSolid(blockState)
             || blockState.contains(Properties.WATERLOGGED)
-            || !blockState.hasSidedTransparency()
             || !blockState.isOpaque()
         );
     }

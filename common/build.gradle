@@ -14,7 +14,7 @@ dependencies {
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") { transitive(false) }
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") { transitive false }
     modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") { transitive false }
-    // modCompileOnlyApi("appeng:appliedenergistics2-fabric:${rootProject.ae2_api_version}:api") { transitive false }
+    modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") { transitive false }
 }
 
 publishing {

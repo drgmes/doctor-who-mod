@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisteleporter;
 
+import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
@@ -31,7 +32,7 @@ public class TardisTeleporterBlock extends Block implements Waterloggable, Block
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new TardisTeleporterBlockEntity(blockPos, blockState);
+        return ModBlockEntities.TARDIS_TELEPORTER.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @Override

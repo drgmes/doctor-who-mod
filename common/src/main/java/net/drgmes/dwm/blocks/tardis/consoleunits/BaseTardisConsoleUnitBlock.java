@@ -27,6 +27,11 @@ public abstract class BaseTardisConsoleUnitBlock<C extends BaseTardisConsoleUnit
     }
 
     @Override
+    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
+        return this.blockEntityBuilderSupplier.get().getBlockEntityType().instantiate(blockPos, blockState);
+    }
+
+    @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return blockEntityType != this.blockEntityBuilderSupplier.get().getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
             ((BaseTardisConsoleUnitBlockEntity) blockEntity).tick();

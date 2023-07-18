@@ -6,6 +6,7 @@ import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 import team.reborn.energy.api.EnergyStorage;
 import team.reborn.energy.api.base.SimpleEnergyStorage;
 
@@ -14,39 +15,37 @@ import java.util.Map;
 import java.util.Optional;
 
 public class TechReborn {
-    private static final Map<String, EnergyStorage> energyStorages = new HashMap<>();
+    private static final Map<String, EnergyStorage> ENERGY_STORAGES = new HashMap<>();
 
-    public static void registerExternalTardisEnergyStorage(BlockEntityType<?> blockEntityType) {
+    public static void registerTardisEnergyStorage(BlockEntityType<?> blockEntityType) {
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> {
-            if (!(blockEntity instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity)) return null;
-            ServerWorld tardisWorld = tardisExteriorBlockEntity.getTardisWorld(true);
-            return TechReborn.getOrCreateTardisEnergyStorage(tardisWorld);
+            World world = blockEntity.getWorld();
+
+            if (blockEntity instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                world = tardisExteriorBlockEntity.getTardisWorld(true);
+            }
+
+            return TechReborn.getOrCreateTardisEnergyStorage(world);
         }, blockEntityType);
     }
 
-    public static void registerInternalTardisEnergyStorage(BlockEntityType<?> blockEntityType) {
-        EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> {
-            if (!(blockEntity.getWorld() instanceof ServerWorld serverWorld)) return null;
-            return TechReborn.getOrCreateTardisEnergyStorage(serverWorld);
-        }, blockEntityType);
-    }
+    public static EnergyStorage getOrCreateTardisEnergyStorage(World world) {
+        if (!(world instanceof ServerWorld serverWorld)) return null;
 
-    public static EnergyStorage getOrCreateTardisEnergyStorage(ServerWorld world) {
-        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(world);
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
+        String tardisId = DimensionHelper.getWorldId(serverWorld);
         if (tardisHolder.isEmpty()) return null;
 
-        String tardisId = DimensionHelper.getWorldId(world);
-        if (!energyStorages.containsKey(tardisId)) energyStorages.put(tardisId, new TardisEnergyStorage(tardisHolder.get()));
-        return energyStorages.get(tardisId);
+        if (!ENERGY_STORAGES.containsKey(tardisId)) ENERGY_STORAGES.put(tardisId, new TardisEnergyStorage(tardisHolder.get()));
+        return ENERGY_STORAGES.get(tardisId);
     }
 
     public static void removeTardisEnergyStorage(String tardisId) {
-        if (!energyStorages.containsKey(tardisId)) return;
-        energyStorages.remove(tardisId);
+        ENERGY_STORAGES.remove(tardisId);
     }
 
-    public static void clearTardisEnergyStorage() {
-        energyStorages.clear();
+    public static void clearTardisEnergyStorages() {
+        ENERGY_STORAGES.clear();
     }
 
     private static class TardisEnergyStorage extends SimpleEnergyStorage {
@@ -60,16 +59,27 @@ public class TechReborn {
         }
 
         @Override
+        public boolean supportsInsertion() {
+            return super.supportsInsertion() && this.tardis.isEnergyHarvesting();
+        }
+
+        @Override
         @SuppressWarnings("UnstableApiUsage")
         public long insert(long maxAmount, TransactionContext transaction) {
-            return this.tardis.isEnergyHarvesting() ? super.insert(maxAmount, transaction) : 0;
+            return this.supportsInsertion() ? super.insert(maxAmount, transaction) : 0;
+        }
+
+        @Override
+        @SuppressWarnings("UnstableApiUsage")
+        public long extract(long maxAmount, TransactionContext transaction) {
+            return this.supportsExtraction() ? super.extract(maxAmount, transaction) : 0;
         }
 
         @Override
         @SuppressWarnings("UnstableApiUsage")
         protected void onFinalCommit() {
-            tardis.setEnergyAmount((int) this.amount);
-            tardis.updateConsoleTiles();
+            this.tardis.setEnergyAmount((int) this.amount);
+            this.tardis.updateConsoleTiles();
         }
     }
 }

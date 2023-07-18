@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.consoleunits;
 
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
@@ -218,7 +219,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
             this.buildScreenParamText("fuel", fuelAmountText + " / " + fuelCapacityText + " AE"),
-            DWM.hasEnergyApi() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
+            TardisEnergyManager.hasEnergyApi() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
         });
     }
 

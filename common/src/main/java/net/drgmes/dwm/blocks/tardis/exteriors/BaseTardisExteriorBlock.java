@@ -53,6 +53,12 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     }
 
     @Override
+    public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
+        if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
+        return this.blockEntityBuilderSupplier.get().getBlockEntityType().instantiate(blockPos, blockState);
+    }
+
+    @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
         return blockEntityType != this.blockEntityBuilderSupplier.get().getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
             ((BaseTardisExteriorBlockEntity) blockEntity).tick();

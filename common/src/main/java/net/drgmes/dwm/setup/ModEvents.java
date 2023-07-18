@@ -3,9 +3,9 @@ package net.drgmes.dwm.setup;
 import dev.architectury.event.EventResult;
 import dev.architectury.event.events.common.*;
 import net.drgmes.dwm.common.screwdriver.Screwdriver;
+import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.compat.ImmersivePortals;
-import net.drgmes.dwm.compat.TechReborn;
 import net.drgmes.dwm.items.screwdriver.ScrewdriverItem;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.network.server.ScrewdriverUsePacket;
@@ -24,15 +24,15 @@ public class ModEvents {
         // //////////// //
 
         LifecycleEvent.SERVER_STARTED.register((world) -> {
+            TardisEnergyManager.clear();
             if (ModCompats.immersivePortals()) ImmersivePortals.clearTardisPortalsState();
-            if (ModCompats.techReborn()) TechReborn.clearTardisEnergyStorage();
         });
 
         LifecycleEvent.SERVER_LEVEL_LOAD.register((world) -> {
             if (TardisHelper.isTardisDimension(world)) {
                 TardisStateManager.get(world).ifPresent((tardis) -> {
+                    TardisEnergyManager.remove(tardis.getId());
                     if (ModCompats.immersivePortals()) ImmersivePortals.removeTardisPortalsState(tardis.getId());
-                    if (ModCompats.techReborn()) TechReborn.removeTardisEnergyStorage(tardis.getId());
 
                     tardis.updateEntrancePortals();
                     tardis.updateRoomEntrancePortals();

@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer;
 
 import net.drgmes.dwm.network.client.ArsDestroyerOpenPacket;
+import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.AbstractBlock;
@@ -21,7 +22,7 @@ public class TardisArsDestroyerBlock extends BaseRotatableWaterloggedBlockWithEn
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new TardisArsDestroyerBlockEntity(blockPos, blockState);
+        return ModBlockEntities.TARDIS_ARS_DESTROYER.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @Override

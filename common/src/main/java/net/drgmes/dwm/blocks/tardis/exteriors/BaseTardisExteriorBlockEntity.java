@@ -97,7 +97,7 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
         return this.tardisId;
     }
 
-    public ServerWorld getTardisWorld(boolean mustBeBroken) {
-        return TardisHelper.getOrCreateTardisWorld(this, mustBeBroken);
+    public ServerWorld getTardisWorld(boolean mustBeBrokenInitially) {
+        return TardisHelper.getOrCreateTardisWorld(this, mustBeBrokenInitially);
     }
 }

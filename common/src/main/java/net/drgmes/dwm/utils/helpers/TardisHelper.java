@@ -39,7 +39,7 @@ public class TardisHelper {
         return tardisWorld;
     }
 
-    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile, boolean mustBeBroken) {
+    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile, boolean mustBeBrokenInitially) {
         return tile.getWorld() == null || tile.getWorld().isClient ? null : TardisHelper.getOrCreateTardisWorld(
             tile.getTardisId(),
             tile.getWorld().getRegistryKey(),
@@ -47,7 +47,7 @@ public class TardisHelper {
             tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
             tile.getWorld().getServer(),
             (tardisWorld) -> {
-                TardisStateManager.get(tardisWorld, mustBeBroken).ifPresent((tardis) -> {
+                TardisStateManager.get(tardisWorld, mustBeBrokenInitially).ifPresent((tardis) -> {
                     tardis.getConsoleRoom().place(tardis);
                     tardis.updateConsoleTiles();
                 });

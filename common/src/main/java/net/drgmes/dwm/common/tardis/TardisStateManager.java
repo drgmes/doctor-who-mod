@@ -93,9 +93,9 @@ public class TardisStateManager extends PersistentState {
 
     private TardisConsoleRoomEntry consoleRoom;
 
-    public TardisStateManager(ServerWorld world, boolean mustBeBroken) {
-        this.broken = mustBeBroken;
-        this.doorsLocked = mustBeBroken;
+    public TardisStateManager(ServerWorld world, boolean mustBeBrokenInitially) {
+        this.broken = mustBeBrokenInitially;
+        this.doorsLocked = mustBeBrokenInitially;
 
         this.setWorld(world);
         this.addSystem(new TardisSystemMaterialization(this));
@@ -103,12 +103,12 @@ public class TardisStateManager extends PersistentState {
         this.addSystem(new TardisSystemShields(this));
     }
 
-    public static Optional<TardisStateManager> get(ServerWorld world, boolean mustBeBroken) {
+    public static Optional<TardisStateManager> get(ServerWorld world, boolean mustBeBrokenInitially) {
         if (world == null) return Optional.empty();
 
         TardisStateManager tardisStateManager = world.getPersistentStateManager().getOrCreate(
             (tag) -> TardisStateManager.createFromNbt(world, tag),
-            () -> new TardisStateManager(world, mustBeBroken),
+            () -> new TardisStateManager(world, mustBeBrokenInitially),
             DWM.LOCS.TARDIS.getPath()
         );
 
@@ -859,7 +859,7 @@ public class TardisStateManager extends PersistentState {
             if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
         }
 
-        // Only if Tardis is not in flight
+        // If Tardis has fight system and it is not in flight
         if (flightSystem.isEnabled() && !isInFlight) {
             // Facing
             int facing = (int) controlsStorage.get(ETardisConsoleUnitControlRole.FACING);
@@ -939,8 +939,10 @@ public class TardisStateManager extends PersistentState {
             if (resetToCurr != 0) this.destExteriorDimension = this.getCurrentExteriorDimension();
             if (resetToCurr != 0) this.destExteriorFacing = this.getCurrentExteriorFacing();
             if (resetToCurr != 0) this.destExteriorPosition = this.getCurrentExteriorPosition();
+        }
 
-            // Other
+        // Only if Tardis is not in flight
+        if (!isInFlight) {
             this.setFuelHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.FUEL_HARVESTING));
             this.setEnergyHarvesting((boolean) controlsStorage.get(ETardisConsoleUnitControlRole.ENERGY_HARVESTING));
         }
