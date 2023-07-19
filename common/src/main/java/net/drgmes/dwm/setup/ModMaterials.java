@@ -72,7 +72,7 @@ public class ModMaterials {
     public enum ARMOR implements ArmorMaterial {
         TITANIUM(
             "titanium",
-            25,
+            27,
             9,
             0.0f,
             0.1f,
