@@ -26,7 +26,6 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.gen.GeneratorOptions;
 import net.minecraft.world.level.UnmodifiableLevelProperties;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class DimensionHelper {
@@ -40,6 +39,10 @@ public class DimensionHelper {
 
     public static RegistryKey<World> getWorldKey(String id) {
         return getWorldKey(new Identifier(id));
+    }
+
+    public static RegistryKey<World> getWorldKey(World world) {
+        return getWorldKey(getWorldId(world));
     }
 
     public static ServerWorld getWorld(RegistryKey<World> worldKey, MinecraftServer server) {
@@ -58,16 +61,15 @@ public class DimensionHelper {
         return getWorld(DWM.getIdentifier(id), server);
     }
 
-    public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
-        if (ModCompats.immersivePortalsAPI()) {
-            return ImmersivePortalsAPI.getOrCreateWorld(id, server, initialConsumer, dimensionFactory);
-        }
-
-        Identifier worldIdentifier = DWM.getIdentifier(id);
-        RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
-        ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
+    public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
+        ServerWorld world = getModWorld(id, server);
         if (world != null) return world;
 
+        if (ModCompats.immersivePortalsAPI()) {
+            return ImmersivePortalsAPI.createWorld(id, server, dimensionFactory);
+        }
+
+        RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
         DimensionOptions dimension = dimensionFactory.apply(server);
         WorldGenerationProgressListener chunkListener = server.worldGenerationProgressListenerFactory.create(11);
 
@@ -98,7 +100,6 @@ public class DimensionHelper {
         new DimensionAddPacket(worldKey).sendToAll(server);
         setChanged(server);
 
-        if (initialConsumer != null) initialConsumer.accept(world);
         chunkListener.start(new ChunkPos(0, 0));
         ServerChunkManager chunkManager = world.getChunkManager();
         chunkManager.addTicket(ChunkTicketType.START, new ChunkPos(0, 0), 11, Unit.INSTANCE);

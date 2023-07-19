@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -97,7 +98,16 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
         return this.tardisId;
     }
 
-    public ServerWorld getTardisWorld(boolean mustBeBrokenInitially) {
-        return TardisHelper.getOrCreateTardisWorld(this, mustBeBrokenInitially);
+    public ServerWorld getTardisWorld() {
+        if (this.tardisId == null || this.tardisId.equals("")) return null;
+        if (!(this.getWorld() instanceof ServerWorld serverWorld)) return null;
+        return DimensionHelper.getModWorld(this.getTardisId(), serverWorld.getServer());
+    }
+
+    public ServerWorld getOrCreateTardisWorld() {
+        return TardisHelper.getOrCreateTardisWorld(this);
+    }
+
+    protected void update() {
     }
 }

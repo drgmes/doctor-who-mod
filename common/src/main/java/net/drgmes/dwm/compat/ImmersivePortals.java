@@ -81,7 +81,7 @@ public class ImmersivePortals {
                     this.tardis.getEntranceFacing(),
                     this.tardis.getCurrentExteriorFacing(),
                     this.tardis.getEntrancePosition().up(),
-                    this.tardis.getCurrentExteriorRelativePosition().up(),
+                    this.tardis.getCurrentExteriorPosition().offset(this.tardis.getCurrentExteriorFacing()).up(),
                     this.tardis.getCurrentExteriorDimension(),
                     -0.5 + 0.0275, -0.5, 0,
                     1, 2

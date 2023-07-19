@@ -58,8 +58,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
         PlayerEntity player = context.getPlayer();
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
-            if (!tardis.isValid()) return;
-
             if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
                 player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
                 return;

@@ -50,8 +50,6 @@ public class TardisKeyItem extends Item {
 
             if (tardisWorld != null) {
                 TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-                    if (!tardis.isValid()) return;
-
                     BlockPos blockPos = tardis.getCurrentExteriorPosition();
                     tag.putString("tardisPos", tardis.getCurrentExteriorPosition().toShortString());
 

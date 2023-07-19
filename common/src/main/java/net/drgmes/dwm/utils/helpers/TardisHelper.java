@@ -15,8 +15,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 
-import java.util.function.Consumer;
-
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
 
@@ -28,8 +26,8 @@ public class TardisHelper {
         return world != null && world.getDimensionKey().equals(ModDimensionTypes.TARDIS);
     }
 
-    public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server, Consumer<ServerWorld> tardisSetup) {
-        ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, server, tardisSetup, TardisHelper::tardisDimensionBuilder);
+    public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {
+        ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, server, TardisHelper::tardisDimensionBuilder);
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
             tardis.setDimension(dimension, false);
             tardis.setFacing(direction, false);
@@ -39,20 +37,16 @@ public class TardisHelper {
         return tardisWorld;
     }
 
-    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile, boolean mustBeBrokenInitially) {
-        return tile.getWorld() == null || tile.getWorld().isClient ? null : TardisHelper.getOrCreateTardisWorld(
-            tile.getTardisId(),
-            tile.getWorld().getRegistryKey(),
-            tile.getPos(),
-            tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
-            tile.getWorld().getServer(),
-            (tardisWorld) -> {
-                TardisStateManager.get(tardisWorld, mustBeBrokenInitially).ifPresent((tardis) -> {
-                    tardis.getConsoleRoom().place(tardis);
-                    tardis.updateConsoleTiles();
-                });
-            }
-        );
+    public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile) {
+        return tile.getWorld() == null || tile.getWorld().isClient
+            ? null
+            : TardisHelper.getOrCreateTardisWorld(
+                tile.getTardisId(),
+                tile.getWorld().getRegistryKey(),
+                tile.getPos(),
+                tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
+                tile.getWorld().getServer()
+            );
     }
 
     public static DimensionOptions tardisDimensionBuilder(MinecraftServer server) {

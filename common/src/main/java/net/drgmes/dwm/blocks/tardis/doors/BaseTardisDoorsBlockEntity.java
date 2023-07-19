@@ -34,8 +34,6 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
     public void markRemoved() {
         if (this.world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(this.world)) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (!tardis.isValid()) return;
-
                 tardis.getInteriorDoorTiles().remove(this);
                 tardis.updateEntrancePortals();
                 tardis.updateConsoleTiles();
@@ -58,9 +56,7 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
 
             if (this.world instanceof ServerWorld serverWorld) {
                 TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                    if (!tardis.isValid()) return;
                     if (tardis.getInteriorDoorTiles().contains(this)) return;
-
                     tardis.getInteriorDoorTiles().add(this);
                     tardis.updateEntrancePortals();
                     tardis.updateDoorsTiles();

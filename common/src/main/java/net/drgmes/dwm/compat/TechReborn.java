@@ -22,7 +22,7 @@ public class TechReborn {
             World world = blockEntity.getWorld();
 
             if (blockEntity instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                world = tardisExteriorBlockEntity.getTardisWorld(true);
+                world = tardisExteriorBlockEntity.getOrCreateTardisWorld();
             }
 
             return TechReborn.getOrCreateTardisEnergyStorage(world);

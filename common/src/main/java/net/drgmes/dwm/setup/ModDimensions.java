@@ -65,7 +65,7 @@ public class ModDimensions {
             for (JsonElement worldId : json) {
                 DWM.LOGGER.error("Loaded " + worldId);
                 WORLDS.add(RegistryKey.of(RegistryKeys.WORLD, DWM.getIdentifier(worldId.getAsString())));
-                DimensionHelper.getOrCreateWorld(worldId.getAsString(), server, null, TardisHelper::tardisDimensionBuilder);
+                DimensionHelper.getOrCreateWorld(worldId.getAsString(), server, TardisHelper::tardisDimensionBuilder);
             }
         } catch (Exception e) {
             DWM.LOGGER.error("Error in loading worlds registry (" + e.getMessage() + ")");

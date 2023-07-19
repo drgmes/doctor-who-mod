@@ -129,8 +129,6 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
 
         if (world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(world)) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (!tardis.isValid()) return;
-
                 String tardisId = tardis.getId();
                 ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
                 NbtCompound heldItemTag = heldItem.getOrCreateNbt();
@@ -183,7 +181,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
 
         if (world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(world)) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (!tardis.isValid() || !tardis.isDoorsOpened()) return;
+                if (!tardis.isDoorsOpened()) return;
 
                 Vec3d pos = Vec3d.ofBottomCenter(tardis.getCurrentExteriorPosition().offset(tardis.getCurrentExteriorFacing()));
                 CommonHelper.teleport(entity, DimensionHelper.getWorld(tardis.getCurrentExteriorDimension(), serverWorld.getServer()), pos, tardis.getCurrentExteriorFacing().asRotation());

@@ -70,9 +70,9 @@ public class TardisStateManager extends PersistentState {
     private Direction currExteriorFacing;
     private Direction destExteriorFacing;
 
-    private boolean broken = false;
-    private boolean handbrakeLocked = false;
-    private boolean doorsLocked = false;
+    private boolean isInited = false;
+    private boolean broken = true;
+    private boolean doorsLocked = true;
     private boolean doorsOpened = false;
     private boolean lightEnabled = false;
     private boolean shieldsEnabled = false;
@@ -82,6 +82,7 @@ public class TardisStateManager extends PersistentState {
     private boolean shieldsMiningEnabled = false;
     private boolean shieldsGravitationEnabled = false;
     private boolean shieldsSpecialEnabled = false;
+    private boolean handbrakeLocked = false;
     private boolean fuelHarvesting = false;
     private boolean energyHarvesting = false;
 
@@ -93,22 +94,19 @@ public class TardisStateManager extends PersistentState {
 
     private TardisConsoleRoomEntry consoleRoom;
 
-    public TardisStateManager(ServerWorld world, boolean mustBeBrokenInitially) {
-        this.broken = mustBeBrokenInitially;
-        this.doorsLocked = mustBeBrokenInitially;
-
+    public TardisStateManager(ServerWorld world) {
         this.setWorld(world);
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));
     }
 
-    public static Optional<TardisStateManager> get(ServerWorld world, boolean mustBeBrokenInitially) {
+    public static Optional<TardisStateManager> get(ServerWorld world) {
         if (world == null) return Optional.empty();
 
         TardisStateManager tardisStateManager = world.getPersistentStateManager().getOrCreate(
             (tag) -> TardisStateManager.createFromNbt(world, tag),
-            () -> new TardisStateManager(world, mustBeBrokenInitially),
+            () -> new TardisStateManager(world),
             DWM.LOCS.TARDIS.getPath()
         );
 
@@ -116,12 +114,8 @@ public class TardisStateManager extends PersistentState {
         return Optional.ofNullable(tardisStateManager);
     }
 
-    public static Optional<TardisStateManager> get(ServerWorld world) {
-        return get(world, true);
-    }
-
     public static TardisStateManager createFromNbt(ServerWorld world, NbtCompound tag) {
-        TardisStateManager tardisStateManager = new TardisStateManager(world, false);
+        TardisStateManager tardisStateManager = new TardisStateManager(world);
         tardisStateManager.readNbt(tag);
         return tardisStateManager;
     }
@@ -154,8 +148,8 @@ public class TardisStateManager extends PersistentState {
         if (this.currExteriorPosition != null) tag.putLong("currExteriorPosition", this.currExteriorPosition.asLong());
         if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
 
+        tag.putBoolean("isInited", this.isInited);
         tag.putBoolean("broken", this.broken);
-        tag.putBoolean("handbrakeLocked", this.handbrakeLocked);
         tag.putBoolean("doorsLocked", this.doorsLocked);
         tag.putBoolean("doorsOpened", this.doorsOpened);
         tag.putBoolean("lightEnabled", this.lightEnabled);
@@ -166,6 +160,7 @@ public class TardisStateManager extends PersistentState {
         tag.putBoolean("shieldsMiningEnabled", this.shieldsMiningEnabled);
         tag.putBoolean("shieldsGravitationEnabled", this.shieldsGravitationEnabled);
         tag.putBoolean("shieldsSpecialEnabled", this.shieldsSpecialEnabled);
+        tag.putBoolean("handbrakeLocked", this.handbrakeLocked);
         tag.putBoolean("fuelHarvesting", this.fuelHarvesting);
         tag.putBoolean("energyHarvesting", this.energyHarvesting);
 
@@ -208,8 +203,8 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
+        this.isInited = tag.getBoolean("isInited");
         this.broken = tag.getBoolean("broken");
-        this.handbrakeLocked = tag.getBoolean("handbrakeLocked");
         this.doorsLocked = tag.getBoolean("doorsLocked");
         this.doorsOpened = tag.getBoolean("doorsOpened");
         this.lightEnabled = tag.getBoolean("lightEnabled");
@@ -220,6 +215,7 @@ public class TardisStateManager extends PersistentState {
         this.shieldsMiningEnabled = tag.getBoolean("shieldsMiningEnabled");
         this.shieldsGravitationEnabled = tag.getBoolean("shieldsGravitationEnabled");
         this.shieldsSpecialEnabled = tag.getBoolean("shieldsSpecialEnabled");
+        this.handbrakeLocked = tag.getBoolean("handbrakeLocked");
         this.fuelHarvesting = tag.getBoolean("fuelHarvesting");
         this.energyHarvesting = tag.getBoolean("energyHarvesting");
 
@@ -238,8 +234,11 @@ public class TardisStateManager extends PersistentState {
         });
     }
 
-    public boolean isValid() {
-        return this.currExteriorDimension != null && this.currExteriorPosition != null && this.currExteriorFacing != null;
+    public void init() {
+        if (this.isInited) return;
+        this.getConsoleRoom().place(this);
+        this.updateConsoleTiles();
+        this.isInited = true;
     }
 
     // /////////////////////////// //
@@ -267,8 +266,11 @@ public class TardisStateManager extends PersistentState {
         this.markDirty();
     }
 
-    public boolean checkAccess(PlayerEntity player, boolean deep) {
-        boolean hasBaseAccess = player == null || this.getOwner() == null || player.getUuid().equals(this.getOwner());
+    public boolean checkAccess(PlayerEntity player, boolean deep, boolean owningRequired) {
+        boolean hasBaseAccess = player == null || (owningRequired ?
+            (this.getOwner() != null && player.getUuid().equals(this.getOwner())) :
+            (this.getOwner() == null || player.getUuid().equals(this.getOwner()))
+        );
 
         if (!hasBaseAccess && deep) {
             for (ItemStack itemStack : player.getInventory().main) {
@@ -291,7 +293,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public RegistryKey<World> getCurrentExteriorDimension() {
-        return this.currExteriorDimension;
+        return this.currExteriorDimension != null ? this.currExteriorDimension : World.OVERWORLD;
     }
 
     public RegistryKey<World> getDestinationExteriorDimension() {
@@ -318,11 +320,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public BlockPos getCurrentExteriorPosition() {
-        return this.currExteriorPosition.toImmutable();
-    }
-
-    public BlockPos getCurrentExteriorRelativePosition() {
-        return this.currExteriorPosition.offset(this.currExteriorFacing).toImmutable();
+        return this.currExteriorPosition != null ? this.currExteriorPosition.toImmutable() : BlockPos.ORIGIN.toImmutable();
     }
 
     public BlockPos getDestinationExteriorPosition() {
@@ -349,7 +347,7 @@ public class TardisStateManager extends PersistentState {
     }
 
     public Direction getCurrentExteriorFacing() {
-        return this.currExteriorFacing;
+        return this.currExteriorFacing != null ? this.currExteriorFacing : Direction.NORTH;
     }
 
     public Direction getDestinationExteriorFacing() {
@@ -384,28 +382,12 @@ public class TardisStateManager extends PersistentState {
         return true;
     }
 
-    public boolean isHandbrakeLocked() {
-        return this.handbrakeLocked;
-    }
-
-    public boolean setHandbrakeLockState(boolean flag, PlayerEntity player) {
-        if (!this.checkAccess(player, true)) return false;
-        if (this.handbrakeLocked == flag) return false;
-        this.handbrakeLocked = flag;
-
-        if (flag) ModSounds.playTardisHandbrakeOnSound(this.world, this.getMainConsolePosition());
-        else ModSounds.playTardisHandbrakeOffSound(this.world, this.getMainConsolePosition());
-
-        this.markDirty();
-        return true;
-    }
-
     public boolean isDoorsLocked() {
         return this.doorsLocked;
     }
 
     public boolean setDoorsLockState(boolean flag, PlayerEntity player) {
-        if (!this.checkAccess(player, false)) return false;
+        if (!this.checkAccess(player, false, true)) return false;
         if (this.doorsLocked == flag) return false;
         this.doorsLocked = flag;
 
@@ -571,6 +553,22 @@ public class TardisStateManager extends PersistentState {
 
         if (flag) ModSounds.playTardisShieldsOnSound(this.world, this.getMainConsolePosition());
         else ModSounds.playTardisShieldsOffSound(this.world, this.getMainConsolePosition());
+
+        this.markDirty();
+        return true;
+    }
+
+    public boolean isHandbrakeLocked() {
+        return this.handbrakeLocked;
+    }
+
+    public boolean setHandbrakeLockState(boolean flag, PlayerEntity player) {
+        if (!this.checkAccess(player, true, true)) return false;
+        if (this.handbrakeLocked == flag) return false;
+        this.handbrakeLocked = flag;
+
+        if (flag) ModSounds.playTardisHandbrakeOnSound(this.world, this.getMainConsolePosition());
+        else ModSounds.playTardisHandbrakeOffSound(this.world, this.getMainConsolePosition());
 
         this.markDirty();
         return true;
@@ -1003,8 +1001,6 @@ public class TardisStateManager extends PersistentState {
     }
 
     private void updateExterior() {
-        if (!this.isValid()) return;
-
         ServerWorld exteriorWorld = DimensionHelper.getWorld(this.getCurrentExteriorDimension(), this.getWorld().getServer());
         if (exteriorWorld == null) return;
 

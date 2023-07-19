@@ -215,7 +215,6 @@ public class TardisSystemMaterialization implements ITardisSystem {
     public boolean remat() {
         if (!this.isEnabled()) return false;
         if (this.inProgress()) return false;
-        if (!this.tardis.isValid()) return this.setupFail();
 
         if (this.isMaterialized) {
             this.runRematConsumers();
@@ -332,13 +331,13 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     private boolean tryLandToForeignTardis(ServerWorld exteriorWorld) {
         if (exteriorWorld.getBlockEntity(this.tardis.getCurrentExteriorPosition()) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            ServerWorld foreignTardisWorld = tardisExteriorBlockEntity.getTardisWorld(true);
+            ServerWorld foreignTardisWorld = tardisExteriorBlockEntity.getOrCreateTardisWorld();
 
             if (foreignTardisWorld != null) {
                 Optional<TardisStateManager> tardisHolder = TardisStateManager.get(foreignTardisWorld);
-                if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return false;
-                if (tardisHolder.get().getSystem(TardisSystemShields.class).inProgress()) return false;
+                if (tardisHolder.isEmpty() || tardisHolder.get().getSystem(TardisSystemShields.class).inProgress()) return false;
 
+                tardisHolder.get().init();
                 this.tardis.setDimension(tardisHolder.get().getWorld().getRegistryKey(), false);
                 this.tardis.setFacing(tardisHolder.get().getEntranceFacing(), false);
                 this.tardis.setPosition(tardisHolder.get().getEntrancePosition().offset(tardisHolder.get().getEntranceFacing()), false);

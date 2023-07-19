@@ -34,7 +34,12 @@ public class TardisExteriorPoliceBoxBlockEntityForge extends TardisExteriorPolic
     @Override
     public void onLoad() {
         super.onLoad();
-        this.energyStorage.refreshTardisStateManager(this.getTardisWorld(true));
+        this.energyStorage.refreshTardisStateManager(this.getTardisWorld());
         this.energyCapability = LazyOptional.of(() -> this.energyStorage);
+    }
+
+    @Override
+    protected void update() {
+        this.energyStorage.refreshTardisStateManager(this.getTardisWorld());
     }
 }

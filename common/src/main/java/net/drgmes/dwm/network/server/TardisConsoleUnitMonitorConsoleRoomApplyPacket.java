@@ -56,7 +56,7 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
         }
 
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-            if (!tardis.checkAccess(player, false)) {
+            if (!tardis.checkAccess(player, false, true)) {
                 ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
                 player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
                 return;

@@ -10,31 +10,24 @@ import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 import qouteall.q_misc_util.api.DimensionAPI;
 
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class ImmersivePortalsAPI {
-    public static ServerWorld getOrCreateWorld(String id, MinecraftServer server, Consumer<ServerWorld> initialConsumer, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
+    public static ServerWorld createWorld(String id, MinecraftServer server, Function<MinecraftServer, DimensionOptions> dimensionFactory) {
         Identifier worldIdentifier = DWM.getIdentifier(id);
         RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
-        ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
-        if (world != null) return world;
 
         DimensionAPI.addDimensionDynamically(worldIdentifier, dimensionFactory.apply(server));
         DimensionAPI.saveDimensionConfiguration(worldKey);
 
-        world = DimensionHelper.getWorld(worldKey, server);
-        if (initialConsumer != null) initialConsumer.accept(world);
-        return world;
+        return DimensionHelper.getWorld(worldKey, server);
     }
 
     public static void removeWorld(String id, MinecraftServer server) {
-        Identifier worldIdentifier = DWM.getIdentifier(id);
-        RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
-        ServerWorld world = server.getWorldRegistryKeys().contains(worldKey) ? server.getWorld(worldKey) : null;
+        ServerWorld world = DimensionHelper.getModWorld(id, server);
         if (world == null) return;
 
         DimensionAPI.removeDimensionDynamically(world);
-        DimensionAPI.deleteDimensionConfiguration(worldKey);
+        DimensionAPI.deleteDimensionConfiguration(DimensionHelper.getWorldKey(DWM.getIdentifier(id)));
     }
 }

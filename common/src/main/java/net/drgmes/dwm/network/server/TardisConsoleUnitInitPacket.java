@@ -40,8 +40,6 @@ public class TardisConsoleUnitInitPacket extends BaseC2SMessage {
 
         if (player.getWorld().getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
-                if (!tardis.isValid()) return;
-
                 NbtCompound tardisData = tardisConsoleUnitBlockEntity.createNbt();
 
                 tardis.applyDataToControlsStorage(tardisConsoleUnitBlockEntity.controlsStorage);

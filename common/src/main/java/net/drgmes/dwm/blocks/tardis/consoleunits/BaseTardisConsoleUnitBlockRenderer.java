@@ -136,7 +136,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
     }
 
     protected void renderScreen(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
-        if (!tile.tardisStateManager.isValid() || tile.tardisStateManager.isBroken()) return;
+        if (tile.tardisStateManager.isBroken()) return;
 
         switch (tile.monitorPage) {
             case 1 -> this.renderScreenPage2(tile, matrixStack, buffer, tile.tardisStateManager);

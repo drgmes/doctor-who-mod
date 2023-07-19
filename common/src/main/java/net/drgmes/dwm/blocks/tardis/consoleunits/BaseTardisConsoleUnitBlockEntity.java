@@ -42,7 +42,7 @@ import java.util.Optional;
 public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public static final int MONITOR_PAGES_LENGTH = 2;
 
-    public final TardisStateManager tardisStateManager = new TardisStateManager(null, false);
+    public final TardisStateManager tardisStateManager = new TardisStateManager(null);
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public ItemStack sonicScrewdriverItemStack = ItemStack.EMPTY;
     public TardisConsoleUnitTypeEntry consoleType;
@@ -99,7 +99,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public void markRemoved() {
         if (this.world instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (tardis.isValid()) tardis.getConsoleTiles().remove(this);
+                tardis.getConsoleTiles().remove(this);
             });
         }
 
@@ -113,9 +113,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         if (TardisHelper.isTardisDimension(this.world)) {
             if (this.world instanceof ServerWorld serverWorld) {
                 TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                    if (!tardis.isValid()) return;
                     if (tardis.getConsoleTiles().contains(this)) return;
-
                     tardis.getConsoleTiles().add(this);
                     tardis.updateConsoleTiles();
                 });
@@ -336,7 +334,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 }
             }
 
-            if (tardisHolder.isEmpty() || !tardisHolder.get().isValid() || this.throwNotifyIfBroken(tardisHolder, player)) {
+            if (tardisHolder.isEmpty() || this.throwNotifyIfBroken(tardisHolder, player)) {
                 this.sendControlsUpdatePacket(serverWorld);
                 return;
             }
@@ -387,7 +385,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     private boolean throwNotifyIfBroken(Optional<TardisStateManager> tardisHolder, PlayerEntity player) {
-        if (tardisHolder.isEmpty() || !tardisHolder.get().isValid()) return true;
+        if (tardisHolder.isEmpty()) return true;
 
         if (tardisHolder.get().isBroken()) {
             player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
@@ -435,7 +433,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             return;
         }
 
-        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_OWNER) && !tardis.checkAccess(player, true)) {
+        if (role.flags.contains(ETardisConsoleUnitControlRoleFlags.DEPENDS_ON_OWNER) && !tardis.checkAccess(player, true, false)) {
             ModSounds.playSound(tardis.getWorld(), tardis.getMainConsolePosition(), SoundEvents.BLOCK_WOOD_PLACE, 1.0F, 1.0F);
             player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
             return;

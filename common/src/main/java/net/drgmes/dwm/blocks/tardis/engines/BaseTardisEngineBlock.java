@@ -51,7 +51,7 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
                 return;
             }
 
-            if (!tardis.checkAccess(player, true)) {
+            if (!tardis.checkAccess(player, true, false)) {
                 ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
                 player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
                 return;

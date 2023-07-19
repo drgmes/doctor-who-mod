@@ -115,9 +115,11 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 return ActionResult.success(world.isClient);
             }
 
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(true)).ifPresent((tardis) -> {
-                if (!tardis.isValid()) return;
+            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
                 String tardisId = tardis.getId();
+
+                tardis.init();
+                tardisExteriorBlockEntity.update();
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {
@@ -174,9 +176,8 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (!entity.canUsePortals()) return;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(true)).ifPresent((tardis) -> {
-                if (!tardis.isValid() || !tardis.isDoorsOpened()) return;
-
+            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
+                if (!tardis.isDoorsOpened()) return;
                 Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
                 CommonHelper.teleport(entity, tardis.getWorld(), pos, tardis.getEntranceFacing().asRotation());
             });
@@ -188,12 +189,26 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             tardisExteriorBlockEntity.remat();
 
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld(false)).ifPresent((tardis) -> {
+            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
                 tardis.setOwner(entity.getUuid());
+                tardis.setBrokenState(false);
+                tardis.setDoorsLockState(false, null);
             });
         }
 
         super.onPlaced(world, blockPos, blockState, entity, itemStack);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
+        if (!blockState.isOf(newBlockState.getBlock()) && world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
+                tardis.setDoorsOpenState(false);
+            });
+        }
+
+        super.onStateReplaced(blockState, world, blockPos, newBlockState, moved);
     }
 
     public boolean isWooden() {
