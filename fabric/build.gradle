@@ -44,6 +44,21 @@ dependencies {
         transitive(false)
     }
 
+    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 }
