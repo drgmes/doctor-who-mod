@@ -47,7 +47,7 @@ public class ModConfig {
                 {
                     dimensionsBlacklist = builder
                         .comment("List of Dimensions that will not be displayed in the TARDIS Dimensions List", "Example: minecraft:the_end")
-                        .translation("config.dwm.tardis.dimensionsBlacklist")
+                        .translation("text.autoconfig.dwm.option.dimensionsBlacklist.@Tooltip")
                         .defineList("dimensionsBlacklist", Lists.newArrayList(
                             "immersive_portals:alternate1",
                             "immersive_portals:alternate2",
@@ -58,37 +58,37 @@ public class ModConfig {
 
                     hideTheEndConditionally = builder
                         .comment("Hide The End from the TARDIS Dimensions List until the Dragon is defeated")
-                        .translation("config.dwm.tardis.hideTheEndConditionally")
+                        .translation("text.autoconfig.dwm.option.hideTheEndConditionally.@Tooltip")
                         .define("hideTheEndConditionally", true);
 
                     tardisRecallOperatorOnly = builder
                         .comment("Allow only operators to recall the TARDIS by key")
-                        .translation("config.dwm.tardis.tardisRecallOperatorOnly")
+                        .translation("text.autoconfig.dwm.option.tardisRecallOperatorOnly.@Tooltip")
                         .define("tardisRecallOperatorOnly", true);
 
                     tardisFlightDistanceRate = builder
                         .comment("Time ratio divider in ticks per distance traveled (aka TARDIS speed)")
-                        .translation("config.dwm.tardis.tardisFlightDistanceRate")
+                        .translation("text.autoconfig.dwm.option.tardisFlightDistanceRate.@Tooltip")
                         .defineInRange("tardisFlightDistanceRate", 1000, 1, Integer.MAX_VALUE);
 
                     tardisMaxFlightTime = builder
                         .comment("Max flight time in ticks for TARDIS")
-                        .translation("config.dwm.tardis.tardisMaxFlightTime")
+                        .translation("text.autoconfig.dwm.option.tardisMaxFlightTime.@Tooltip")
                         .defineInRange("tardisMaxFlightTime", 4000, 1, Integer.MAX_VALUE);
 
                     tardisFuelRefillTiming = builder
                         .comment("Frequency of restoration of 1 unit of fuel")
-                        .translation("config.dwm.tardis.tardisFuelRefillTiming")
+                        .translation("text.autoconfig.dwm.option.tardisFuelRefillTiming.@Tooltip")
                         .defineInRange("tardisFuelRefillTiming", 40, 1, Integer.MAX_VALUE);
 
                     tardisFuelConsumeTiming = builder
                         .comment("Frequency of consumption of 1 unit of fuel")
-                        .translation("config.dwm.tardis.tardisFuelConsumeTiming")
+                        .translation("text.autoconfig.dwm.option.tardisFuelConsumeTiming.@Tooltip")
                         .defineInRange("tardisFuelConsumeTiming", 20, 1, Integer.MAX_VALUE);
 
                     tardisFuelToEnergyRating = builder
                         .comment("Price of energy per flight tick when fuel is over")
-                        .translation("config.dwm.tardis.tardisFuelToEnergyRating")
+                        .translation("text.autoconfig.dwm.option.tardisFuelToEnergyRating.@Tooltip")
                         .defineInRange("tardisFuelToEnergyRating", 5000, 1, Integer.MAX_VALUE);
                 }
                 builder.pop();

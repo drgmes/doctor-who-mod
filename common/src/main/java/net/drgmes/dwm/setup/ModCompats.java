@@ -1,6 +1,24 @@
 package net.drgmes.dwm.setup;
 
 public class ModCompats {
+    public static boolean clothConfig() {
+        try {
+            Class.forName("me.shedaniel.autoconfig.AutoConfig");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static boolean modMenu() {
+        try {
+            Class.forName("com.terraformersmc.modmenu.api.ModMenuApi");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public static boolean immersivePortalsAPI() {
         try {
             Class.forName("qouteall.q_misc_util.api.DimensionAPI");

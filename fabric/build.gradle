@@ -44,6 +44,16 @@ dependencies {
         transitive(false)
     }
 
+    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
+    modCompileOnlyApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+
     modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)

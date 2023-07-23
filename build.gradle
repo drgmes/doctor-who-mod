@@ -27,6 +27,7 @@ allprojects {
 
     repositories {
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.terraformersmc.com/releases/' }
         maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
 
         maven {

@@ -10,6 +10,7 @@ import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.compat.ClothConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.option.KeyBinding;
@@ -71,6 +72,7 @@ public class Registration {
         ModEvents.setup();
         ModCommands.setup();
         ModBlockEntities.setup();
+        if (ModCompats.clothConfig()) ClothConfig.setup();
     }
 
     public static void setupClient() {
