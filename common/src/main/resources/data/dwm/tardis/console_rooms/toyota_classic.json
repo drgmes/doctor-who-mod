@@ -3,7 +3,8 @@
   "center": [14, 6, 18],
   "entrance": [14, 7, 6],
   "spawnChance": 5,
-  "teleporter_room": "toyota_classic",
   "decorator_block": "minecraft:gray_terracotta",
+  "structure": "dwm:tardis/console_rooms/toyota_classic",
+  "teleporter_room": "dwm:tardis/teleporter_rooms/toyota_classic",
   "image": "https://i.imgur.com/Rw5hJQK.png"
 }

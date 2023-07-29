@@ -3,7 +3,8 @@
   "center": [15, 8, 14],
   "entrance": [15, 7, 1],
   "spawnChance": 30,
-  "teleporter_room": "aquatic_classic",
   "decorator_block": "minecraft:dark_prismarine",
+  "structure": "dwm:tardis/console_rooms/aquatic_classic",
+  "teleporter_room": "dwm:tardis/teleporter_rooms/aquatic_classic",
   "image": "https://i.imgur.com/F7lmTJI.png"
 }

@@ -3,8 +3,9 @@
   "center": [7, 1, 7],
   "entrance": [7, 1, 1],
   "spawnChance": 100,
-  "teleporter_room": "imperial_classic",
   "decorator_block": "minecraft:chiseled_quartz_block",
-  "repair_to": "imperial_classic",
+  "structure": "dwm:tardis/console_rooms/imperial_abandoned",
+  "repair_to": "dwm:tardis/console_rooms/imperial_classic",
+  "teleporter_room": "dwm:tardis/teleporter_rooms/imperial_classic",
   "hidden": true
 }

@@ -1,6 +1,5 @@
 package net.drgmes.dwm.common.tardis.consolerooms;
 
-import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
@@ -34,8 +33,9 @@ import java.util.function.BiConsumer;
 public class TardisConsoleRoomEntry {
     public final String name;
     public final String title;
-    public final BlockPos center;
+    public final String structure;
     public final BlockPos entrance;
+    public final BlockPos center;
     public final int spawnChance;
 
     public String imageUrl = "";
@@ -45,16 +45,17 @@ public class TardisConsoleRoomEntry {
     private String teleporterRoom;
     private String decoratorBlock;
 
-    protected TardisConsoleRoomEntry(String name, String title, BlockPos center, BlockPos entrance, int spawnChance) {
+    protected TardisConsoleRoomEntry(String name, String title, String structure, BlockPos center, BlockPos entrance, int spawnChance) {
         this.name = name;
         this.title = title;
+        this.structure = structure;
         this.spawnChance = spawnChance;
         this.center = center.toImmutable();
         this.entrance = entrance.toImmutable();
     }
 
-    public static TardisConsoleRoomEntry create(String name, String title, BlockPos center, BlockPos entrance, int spawnChance) {
-        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, center, entrance, spawnChance);
+    public static TardisConsoleRoomEntry create(String name, String title, String structure, BlockPos center, BlockPos entrance, int spawnChance) {
+        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, structure, center, entrance, spawnChance);
         TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
         return consoleRoom;
     }
@@ -62,11 +63,12 @@ public class TardisConsoleRoomEntry {
     public static TardisConsoleRoomEntry create(NbtCompound tag, boolean saveToRegistry) {
         String name = tag.getString("name");
         String title = tag.getString("title");
+        String structure = tag.getString("structure");
         BlockPos center = BlockPos.fromLong(tag.getLong("center"));
         BlockPos entrance = BlockPos.fromLong(tag.getLong("entrance"));
         int spawnChance = tag.getInt("spawnChance");
 
-        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, center, entrance, spawnChance);
+        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, structure, center, entrance, spawnChance);
         if (saveToRegistry) TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
         consoleRoom.setTeleporterRoom(tag.getString("teleporterRoom"));
         consoleRoom.setDecoratorBlock(tag.getString("decoratorBlock"));
@@ -82,6 +84,7 @@ public class TardisConsoleRoomEntry {
 
         tag.putString("name", this.name);
         tag.putString("title", this.title);
+        tag.putString("structure", this.structure);
         tag.putString("teleporterRoom", this.teleporterRoom);
         tag.putString("decoratorBlock", this.decoratorBlock);
         tag.putString("imageUrl", this.imageUrl);
@@ -94,11 +97,11 @@ public class TardisConsoleRoomEntry {
     }
 
     public StructureTemplate getTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("tardis/console_rooms/" + this.name));
+        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.structure));
     }
 
     public StructureTemplate getTeleporterRoomTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(DWM.getIdentifier("tardis/teleporter_rooms/" + this.teleporterRoom));
+        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.teleporterRoom));
     }
 
     public Text getTitle() {

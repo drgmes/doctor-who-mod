@@ -10,6 +10,7 @@ public class TardisConsoleRooms {
     public static final TardisConsoleRoomEntry DEFAULT = new TardisConsoleRoomEntry(
         "imperial_classic",
         "dwm.console_room.imperial_classic",
+        "dwm:tardis/console_rooms/imperial_classic",
         new BlockPos(7, 1, 7),
         new BlockPos(7, 1, 1),
         100
@@ -21,6 +22,7 @@ public class TardisConsoleRooms {
     public static final TardisConsoleRoomEntry DEFAULT_ABANDONED = new TardisConsoleRoomEntry(
         "imperial_abandoned",
         "dwm.console_room.imperial_abandoned",
+        "dwm:tardis/console_rooms/imperial_abandoned",
         new BlockPos(7, 1, 7),
         new BlockPos(7, 1, 1),
         100
