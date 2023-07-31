@@ -59,7 +59,6 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
         matrixStack.scale(1, 0.85F, 1);
         matrixStack.translate(-0.5, 0, -0.125);
         RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getGui()), 0, 0, 1, 2, 0XFF01102A);
-        ((VertexConsumerProvider.Immediate) buffer).draw(RenderLayer.getGui());
         matrixStack.pop();
 
         if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
@@ -68,7 +67,6 @@ public class TardisDoorsPoliceBoxBlockRenderer implements BlockEntityRenderer<Ta
             matrixStack.translate(0.5, 0, -0.05);
             matrixStack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
             RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), 0, 0, 1, 2, 0xFF000000);
-            ((VertexConsumerProvider.Immediate) buffer).draw(RenderLayer.getEndPortal());
             matrixStack.pop();
         }
     }
