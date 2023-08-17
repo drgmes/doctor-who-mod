@@ -1,5 +1,8 @@
 plugins {
+    // https://github.com/architectury/architectury-plugin
     id "architectury-plugin" version "3.4-SNAPSHOT"
+
+    // https://github.com/architectury/architectury-loom
     id "dev.architectury.loom" version "1.2-SNAPSHOT" apply false
 }
 

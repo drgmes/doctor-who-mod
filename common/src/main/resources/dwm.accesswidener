@@ -9,4 +9,7 @@ accessible field net/minecraft/server/MinecraftServer session Lnet/minecraft/wor
 accessible field net/minecraft/server/MinecraftServer worldGenerationProgressListenerFactory Lnet/minecraft/server/WorldGenerationProgressListenerFactory;
 
 accessible field net/minecraft/server/network/ServerPlayerEntity inTeleportationState Z
+accessible field net/minecraft/server/network/ServerPlayerEntity syncedExperience I
+accessible field net/minecraft/server/network/ServerPlayerEntity syncedFoodLevel I
+accessible field net/minecraft/server/network/ServerPlayerEntity syncedHealth F
 accessible method net/minecraft/entity/Entity unsetRemoved ()V
