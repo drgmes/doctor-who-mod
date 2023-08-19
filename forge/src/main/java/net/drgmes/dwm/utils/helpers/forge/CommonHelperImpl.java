@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.helpers.forge;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
@@ -32,6 +33,11 @@ public class CommonHelperImpl {
         @Override
         public TeleportTarget getPortalInfo(Entity entity, ServerWorld destWorld, Function<ServerWorld, TeleportTarget> defaultPortalInfo) {
             return new TeleportTarget(this.pos, Vec3d.ZERO, this.yaw, this.pitch);
+        }
+
+        @Override
+        public boolean playTeleportSound(ServerPlayerEntity player, ServerWorld origin, ServerWorld destination) {
+            return false;
         }
     }
 }
