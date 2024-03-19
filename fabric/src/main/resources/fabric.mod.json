@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "dwm",
+  "id": "${modId}",
   "version": "${modVersion}",
   "name": "${modName}",
   "description": "${modDescription}",
@@ -10,7 +10,7 @@
     "sources": "${modSource}"
   },
   "license": "${modLicense}",
-  "icon": "assets/dwm/icon.png",
+  "icon": "assets/${modId}/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [

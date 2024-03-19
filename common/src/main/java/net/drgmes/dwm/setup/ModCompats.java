@@ -19,9 +19,9 @@ public class ModCompats {
         }
     }
 
-    public static boolean immersivePortalsAPI() {
+    public static boolean dimLib() {
         try {
-            Class.forName("qouteall.q_misc_util.api.DimensionAPI");
+            Class.forName("qouteall.dimlib.api.DimensionAPI");
             return true;
         } catch (ClassNotFoundException e) {
             return false;

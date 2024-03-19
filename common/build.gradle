@@ -9,14 +9,34 @@ loom {
 dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "dev.architectury:architectury:${rootProject.architectury_version}"
-    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
 
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") { transitive(false) }
-    modCompileOnlyApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive(false) }
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") { transitive(false) }
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") { transitive false }
-    modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") { transitive false }
-    modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") { transitive false }
+    if (rootProject.hasProperty("forge_config_api_port_version")) {
+        modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+    }
+
+    if (rootProject.hasProperty("dim_lib_version")) {
+        modCompileOnlyApi("com.github.iPortalTeam:DimLib:v${rootProject.dim_lib_version}-mc${rootProject.minecraft_version}") { transitive(false) }
+    }
+
+    if (rootProject.hasProperty("imm_ptl_version")) {
+        modCompileOnlyApi("com.github.iPortalTeam:ImmersivePortalsMod:v${rootProject.imm_ptl_version}-mc${rootProject.minecraft_version}") { transitive false }
+    }
+
+    if (rootProject.hasProperty("cloth_config_version")) {
+        modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") { transitive(false) }
+    }
+
+    if (rootProject.hasProperty("mod_menu_version")) {
+        modCompileOnlyApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") { transitive(false) }
+    }
+
+    if (rootProject.hasProperty("teamreborn_energy_api_version")) {
+        modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") { transitive false }
+    }
+
+    if (rootProject.hasProperty("ae2_api_version")) {
+        modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") { transitive false }
+    }
 }
 
 publishing {

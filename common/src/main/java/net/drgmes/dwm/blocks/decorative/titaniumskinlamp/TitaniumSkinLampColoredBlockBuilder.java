@@ -9,14 +9,12 @@ import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
@@ -46,7 +44,7 @@ public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         BlockBuilder stripedBuilder = ModBlocks.TITANIUM_STRIPED_SKINS.get(this.dyeItem);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())

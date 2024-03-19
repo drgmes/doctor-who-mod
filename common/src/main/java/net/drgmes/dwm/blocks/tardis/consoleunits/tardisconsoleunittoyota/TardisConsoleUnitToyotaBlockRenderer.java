@@ -116,16 +116,16 @@ public class TardisConsoleUnitToyotaBlockRenderer extends BaseTardisConsoleUnitB
 
     @Override
     protected void animateFuelIndicator(TardisConsoleUnitToyotaBlockEntity tile, ModelPart modelRoot, float delta) {
-        if (tile.tardisStateManager.getFuelAmount() <= 0) return;
+        if (tile.tardis.getFuelAmount() <= 0) return;
         ModelPart model = this.getModelPart(modelRoot, "controls/control_indicators/control_indicator_1$_arrow_r1");
-        model.yaw += tile.tardisStateManager.getFuelAmount() / (float) tile.tardisStateManager.getFuelCapacity() * 2.075F;
+        model.yaw += tile.tardis.getFuelAmount() / (float) tile.tardis.getFuelCapacity() * 2.075F;
     }
 
     @Override
     protected void animateEnergyIndicator(TardisConsoleUnitToyotaBlockEntity tile, ModelPart modelRoot, float delta) {
-        if (tile.tardisStateManager.getEnergyAmount() <= 0) return;
+        if (tile.tardis.getEnergyAmount() <= 0) return;
         ModelPart model = this.getModelPart(modelRoot, "controls/control_indicators/control_indicator_2$_arrow_r1");
-        model.yaw += tile.tardisStateManager.getEnergyAmount() / (float) tile.tardisStateManager.getEnergyCapacity() * 2.075F;
+        model.yaw += tile.tardis.getEnergyAmount() / (float) tile.tardis.getEnergyCapacity() * 2.075F;
     }
 
     @Override

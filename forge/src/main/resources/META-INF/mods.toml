@@ -1,30 +1,30 @@
 modLoader = "javafml"
-loaderVersion = "[45,)"
+loaderVersion = "[49,)"
 license = "${modLicense}"
 
 [[mods]]
-modId = "dwm"
+modId = "${modId}"
 version = "${modVersion}"
 displayName = "${modName}"
 authors = "${modAuthors}"
 description = "${modDescription}"
-logoFile = "assets/dwm/icon.png"
+logoFile = "assets/${modId}/icon.png"
 
-[[dependencies.dwm]]
+[[dependencies.${modId}]]
 modId = "forge"
 mandatory = true
-versionRange = "[45,)"
+versionRange = "[49,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.dwm]]
+[[dependencies.${modId}]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[${minecraftVersion},)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.dwm]]
+[[dependencies.${modId}]]
 modId = "architectury"
 mandatory = true
 versionRange = "[${architecturyVersion},)"

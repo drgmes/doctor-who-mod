@@ -49,7 +49,7 @@ public class ImmersivePortals {
         dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), originFacing.asRotation()));
         dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), destinationFacing.asRotation()));
 
-        Portal portal = Portal.entityType.create(world);
+        Portal portal = Portal.ENTITY_TYPE.create(world);
         portal.setOriginPos(originPos);
         portal.setRotation(dQuaternion);
         portal.setDestination(destinationPos);
@@ -175,7 +175,7 @@ public class ImmersivePortals {
         }
 
         public boolean isRoomEntrancePortalsValid() {
-            if (this.portalsToRooms.size() == 0) return false;
+            if (this.portalsToRooms.isEmpty()) return false;
 
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
                 if (portalsToRoom.getKey() == null || portalsToRoom.getValue() == null) return false;

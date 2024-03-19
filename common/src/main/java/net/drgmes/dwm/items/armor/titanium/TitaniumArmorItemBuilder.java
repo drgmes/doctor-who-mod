@@ -5,13 +5,11 @@ import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.ModMaterials;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumArmorItemBuilder extends ItemBuilder {
     public TitaniumArmorItemBuilder(String name, ArmorItem.Type type) {
@@ -24,7 +22,7 @@ public class TitaniumArmorItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         switch (((ArmorItem) this.getItem()).getType()) {
             case HELMET -> ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, this.getItem())
                 .input('#', ModItems.TITANIUM_INGOT.getItem())

@@ -1,5 +1,6 @@
 package net.drgmes.dwm.utils.base.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,6 +22,11 @@ public class BaseRotatableBlock extends HorizontalFacingBlock {
     @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         return this.getDefaultBlockState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return null;
     }
 
     @Override

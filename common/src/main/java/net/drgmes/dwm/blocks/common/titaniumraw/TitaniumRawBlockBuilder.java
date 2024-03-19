@@ -4,12 +4,10 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumRawBlockBuilder extends BlockBuilder {
     public TitaniumRawBlockBuilder(String name) {
@@ -22,7 +20,7 @@ public class TitaniumRawBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, this.getBlock())
             .input('#', ModItems.TITANIUM_RAW.getItem())
             .pattern("###")

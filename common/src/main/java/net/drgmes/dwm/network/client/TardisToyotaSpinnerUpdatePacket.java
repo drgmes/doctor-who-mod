@@ -42,7 +42,6 @@ public class TardisToyotaSpinnerUpdatePacket extends BaseS2CMessage {
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof TardisToyotaSpinnerBlockEntity tardisToyotaSpinnerBlockEntity) {
             tardisToyotaSpinnerBlockEntity.inProgress = this.inProgress;
-            tardisToyotaSpinnerBlockEntity.markDirty();
         }
     }
 }

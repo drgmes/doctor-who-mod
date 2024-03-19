@@ -108,7 +108,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     @Override
     public void tick() {
-        this.search.tick();
         this.listWidget.setSelected(this.selectedArsStructureEntry);
 
         if (!this.search.getText().equals(lastSearch)) {

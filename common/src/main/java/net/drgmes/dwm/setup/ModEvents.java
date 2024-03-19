@@ -25,8 +25,9 @@ public class ModEvents {
         // Level Events //
         // //////////// //
 
-        LifecycleEvent.SERVER_STARTED.register((world) -> {
+        LifecycleEvent.SERVER_STARTED.register((server) -> {
             TardisEnergyManager.clear();
+            if (!ModCompats.dimLib()) ModDimensions.loadWorldsRegistry(server);
             if (ModCompats.immersivePortals()) ImmersivePortals.clearTardisPortalsState();
         });
 

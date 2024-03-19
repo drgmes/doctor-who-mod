@@ -3,7 +3,7 @@ plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
 
     // https://github.com/architectury/architectury-loom
-    id "dev.architectury.loom" version "1.2-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
 }
 
 architectury {
@@ -30,6 +30,7 @@ allprojects {
 
     repositories {
         maven { url 'https://jitpack.io' }
+        maven { url 'https://maven.shedaniel.me' }
         maven { url 'https://maven.terraformersmc.com/releases/' }
         maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
 

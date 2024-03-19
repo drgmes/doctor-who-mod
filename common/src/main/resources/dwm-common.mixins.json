@@ -2,14 +2,13 @@
   "required": true,
   "package": "net.drgmes.dwm.mixin",
   "compatibilityLevel": "JAVA_17",
+  "minVersion": "0.8",
   "client": [
     "MixinInGameHud",
     "MixinMinecraftClient"
   ],
   "mixins": [
-    "MixinLivingEntity",
-    "fabric.MixinPortal",
-    "fabric.MixinServerTeleportationManager"
+    "MixinLivingEntity"
   ],
   "injectors": {
     "defaultRequire": 1

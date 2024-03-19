@@ -28,6 +28,7 @@ public class TardisHelper {
 
     public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {
         ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, server, TardisHelper::tardisDimensionBuilder);
+
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
             tardis.setDimension(dimension, false);
             tardis.setFacing(direction, false);
@@ -38,20 +39,20 @@ public class TardisHelper {
     }
 
     public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile) {
-        return tile.getWorld() == null || tile.getWorld().isClient
-            ? null
-            : TardisHelper.getOrCreateTardisWorld(
-                tile.getTardisId(),
-                tile.getWorld().getRegistryKey(),
-                tile.getPos(),
-                tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
-                tile.getWorld().getServer()
-            );
+        if (tile.getWorld() == null || tile.getWorld().isClient) return null;
+
+        return TardisHelper.getOrCreateTardisWorld(
+            tile.getTardisId(),
+            tile.getWorld().getRegistryKey(),
+            tile.getPos(),
+            tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
+            tile.getWorld().getServer()
+        );
     }
 
     public static DimensionOptions tardisDimensionBuilder(MinecraftServer server) {
         return new DimensionOptions(
-            server.getRegistryManager().getOptional(RegistryKeys.DIMENSION_TYPE).orElseThrow().getEntry(ModDimensionTypes.TARDIS).orElseThrow(),
+            server.getRegistryManager().get(RegistryKeys.DIMENSION_TYPE).getEntry(ModDimensionTypes.TARDIS).orElseThrow(),
             new TardisChunkGenerator(server)
         );
     }

@@ -116,35 +116,16 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         return model;
     }
 
-    protected void printStringsToScreen(MatrixStack matrixStack, VertexConsumerProvider buffer, String[] lines) {
-        TextRenderer textRenderer = this.ctx.getTextRenderer();
-
-        for (int i = 0; i < lines.length; i++) {
-            textRenderer.draw(
-                lines[i],
-                0,
-                i * textRenderer.fontHeight,
-                0xFFFFFF,
-                true,
-                matrixStack.peek().getPositionMatrix(),
-                buffer,
-                TextRenderer.TextLayerType.NORMAL,
-                0,
-                240
-            );
-        }
-    }
-
     protected void renderScreen(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
-        if (tile.tardisStateManager.isBroken()) return;
+        if (tile.tardis.isBroken()) return;
 
         switch (tile.monitorPage) {
-            case 1 -> this.renderScreenPage2(tile, matrixStack, buffer, tile.tardisStateManager);
-            default -> this.renderScreenPage1(tile, matrixStack, buffer, tile.tardisStateManager);
+            case 1 -> this.renderScreenPage2(matrixStack, buffer, tile.tardis);
+            default -> this.renderScreenPage1(matrixStack, buffer, tile.tardis);
         }
     }
 
-    private void renderScreenPage1(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
+    private void renderScreenPage1(MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
         String NONE = "-";
 
         String flight = DWM.TEXTS.MONITOR_STATE_NO.getString();
@@ -187,7 +168,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         });
     }
 
-    private void renderScreenPage2(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
+    private void renderScreenPage2(MatrixStack matrixStack, VertexConsumerProvider buffer, TardisStateManager tardis) {
         String NONE = "-";
 
         boolean isShieldsEnabled = tardis.getSystem(TardisSystemShields.class).isEnabled();
@@ -231,5 +212,24 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
 
         String prepend = Text.translatable("title." + DWM.MODID + ".monitor.state." + title).getString() + ": ";
         return prepend + " ".repeat((SCREEN_SIZE - textRenderer.getWidth(prepend + append)) / textRenderer.getWidth(" ")) + append;
+    }
+
+    protected void printStringsToScreen(MatrixStack matrixStack, VertexConsumerProvider buffer, String[] lines) {
+        TextRenderer textRenderer = this.ctx.getTextRenderer();
+
+        for (int i = 0; i < lines.length; i++) {
+            textRenderer.draw(
+                lines[i],
+                0,
+                i * textRenderer.fontHeight,
+                0xFFFFFF,
+                true,
+                matrixStack.peek().getPositionMatrix(),
+                buffer,
+                TextRenderer.TextLayerType.NORMAL,
+                0,
+                240
+            );
+        }
     }
 }

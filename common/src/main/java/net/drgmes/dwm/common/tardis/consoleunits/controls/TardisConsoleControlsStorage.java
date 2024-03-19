@@ -1,5 +1,9 @@
 package net.drgmes.dwm.common.tardis.consoleunits.controls;
 
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Hand;
 
@@ -85,6 +89,34 @@ public class TardisConsoleControlsStorage {
 
         this.values.put(controlRole, value);
         return true;
+    }
+
+    public void applyDataToControlsStorage(TardisStateManager tardis) {
+        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+        TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+        TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
+
+        this.values.put(ETardisConsoleUnitControlRole.STARTER, flightSystem.inProgress());
+        this.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, materializationSystem.isMaterialized());
+        this.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS, shieldsSystem.inProgress());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN, shieldsSystem.isEnabled() && tardis.isShieldsOxygenEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, shieldsSystem.isEnabled() && tardis.isShieldsFireProofEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_MEDICAL, shieldsSystem.isEnabled() && tardis.isShieldsMedicalEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_MINING, shieldsSystem.isEnabled() && tardis.isShieldsMiningEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION, shieldsSystem.isEnabled() && tardis.isShieldsGravitationEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, shieldsSystem.isEnabled() && tardis.isShieldsSpecialEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.FUEL_HARVESTING, tardis.isFuelHarvesting());
+        this.values.put(ETardisConsoleUnitControlRole.ENERGY_HARVESTING, tardis.isEnergyHarvesting());
+        this.values.put(ETardisConsoleUnitControlRole.LIGHT, tardis.isLightEnabled());
+        this.values.put(ETardisConsoleUnitControlRole.DOORS, tardis.isDoorsOpened());
+        this.values.put(ETardisConsoleUnitControlRole.HANDBRAKE, tardis.isHandbrakeLocked());
+        this.values.put(ETardisConsoleUnitControlRole.FACING, switch (tardis.getDestinationExteriorFacing()) {
+            default -> 0;
+            case EAST -> 1;
+            case SOUTH -> 2;
+            case WEST -> 3;
+        });
     }
 
     private boolean getUpdatedBoolean(ETardisConsoleUnitControlRole controlRole, Hand hand) {

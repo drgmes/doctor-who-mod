@@ -11,7 +11,7 @@ import net.minecraft.world.event.GameEvent;
 
 public class TitaniumDoorBlock extends DoorBlock {
     public TitaniumDoorBlock(AbstractBlock.Settings settings) {
-        super(settings, BlockSetType.IRON);
+        super(BlockSetType.IRON, settings);
     }
 
     @Override

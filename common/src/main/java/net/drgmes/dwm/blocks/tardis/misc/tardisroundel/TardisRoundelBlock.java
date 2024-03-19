@@ -71,7 +71,7 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
         if (!world.isClient && !player.isCreative()) {
             if (world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
                 if (tardisRoundelBlockEntity.blockTemplate != null) {
@@ -81,7 +81,7 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
             }
         }
 
-        super.onBreak(world, blockPos, blockState, player);
+        return super.onBreak(world, blockPos, blockState, player);
     }
 
     @Override

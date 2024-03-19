@@ -22,7 +22,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     private final int padding;
 
     public BaseListWidget(MinecraftClient mc, int width, int height, int padding, Vector2i pos) {
-        super(mc, width, height, pos.y, pos.y + height, mc.textRenderer.fontHeight + padding * 2);
+        super(mc, width, height, pos.y, mc.textRenderer.fontHeight + padding * 2);
 
         this.pos = pos;
         this.padding = padding;
@@ -40,8 +40,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
     public void init() {
         this.refreshList();
-        this.setLeftPos(this.pos.x);
-        this.setRenderHorizontalShadows(false);
+        this.setX(this.pos.x);
         this.setRenderBackground(false);
     }
 

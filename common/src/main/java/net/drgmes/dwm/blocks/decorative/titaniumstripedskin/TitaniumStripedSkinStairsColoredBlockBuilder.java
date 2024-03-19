@@ -7,13 +7,11 @@ import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.StairsBlock;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumStripedSkinStairsColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
@@ -35,7 +33,7 @@ public class TitaniumStripedSkinStairsColoredBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock(), 4)
             .input('#', ModBlocks.TITANIUM_STRIPED_SKINS.blockBuilders.get(this.dyeItem).getBlock())
             .pattern("#  ")

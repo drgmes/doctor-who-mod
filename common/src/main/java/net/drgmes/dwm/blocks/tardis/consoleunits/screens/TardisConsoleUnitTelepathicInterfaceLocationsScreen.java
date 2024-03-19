@@ -71,7 +71,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     @Override
     public void tick() {
-        this.search.tick();
         this.locationsListWidget.setSelected(this.selected);
 
         if (!this.search.getText().equals(lastSearch)) {

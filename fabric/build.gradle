@@ -37,36 +37,51 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     modApi "net.fabricmc.fabric-api:fabric-api:${rootProject.fabric_api_version}+${rootProject.minecraft_version}"
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
-    modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${forge_config_api_port_version}"
 
-    include modApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("forge_config_api_port_version")) {
+        modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
     }
 
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("dim_lib_version")) {
+        modCompileOnlyApi("com.github.iPortalTeam:DimLib:v${rootProject.dim_lib_version}-mc${rootProject.minecraft_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
     }
 
-    modCompileOnlyApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("imm_ptl_version")) {
+        modCompileOnlyApi("com.github.iPortalTeam:ImmersivePortalsMod:v${rootProject.imm_ptl_version}-mc${rootProject.minecraft_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
     }
 
-    modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("cloth_config_version")) {
+        modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
     }
 
-    modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("mod_menu_version")) {
+        modCompileOnlyApi("com.terraformersmc:modmenu:${rootProject.mod_menu_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
     }
 
-    modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") {
-        exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
+    if (rootProject.hasProperty("teamreborn_energy_api_version")) {
+        modCompileOnlyApi("teamreborn:energy:${rootProject.teamreborn_energy_api_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+    }
+
+    if (rootProject.hasProperty("ae2_api_version")) {
+        modCompileOnlyApi("appeng:appliedenergistics2-forge:${rootProject.ae2_api_version}:api") {
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
     }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
@@ -77,6 +92,7 @@ processResources {
     inputs.property "minecraftVersion", rootProject.minecraft_version
     inputs.property "architecturyVersion", rootProject.architectury_version
     inputs.property "forgeConfigApiPortVersion", rootProject.forge_config_api_port_version
+    inputs.property "modId", rootProject.mod_id
     inputs.property "modVersion", rootProject.mod_version
     inputs.property "modName", rootProject.mod_name
     inputs.property "modDescription", rootProject.mod_description
@@ -89,6 +105,7 @@ processResources {
         expand "minecraftVersion": project.minecraft_version,
                 "architecturyVersion": project.architectury_version,
                 "forgeConfigApiPortVersion": project.forge_config_api_port_version,
+                "modId": project.mod_id,
                 "modVersion": project.mod_version,
                 "modName": rootProject.mod_name,
                 "modDescription": rootProject.mod_description,
@@ -110,11 +127,6 @@ remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set null
-}
-
-jar {
-    archiveClassifier.set "dev"
 }
 
 sourcesJar {

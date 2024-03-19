@@ -7,14 +7,12 @@ import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.WallBlock;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumStripedSkinWallColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
@@ -39,7 +37,7 @@ public class TitaniumStripedSkinWallColoredBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         BlockBuilder stripedBuilder = ModBlocks.TITANIUM_STRIPED_SKINS.get(this.dyeItem);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock(), 6)

@@ -9,13 +9,11 @@ import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumSkinLampBlockBuilder extends BlockBuilder {
     public TitaniumSkinLampBlockBuilder(String name) {
@@ -42,7 +40,7 @@ public class TitaniumSkinLampBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
             .input('#', ModBlocks.TITANIUM_SKIN.getBlock())
             .input('0', Blocks.GLASS)

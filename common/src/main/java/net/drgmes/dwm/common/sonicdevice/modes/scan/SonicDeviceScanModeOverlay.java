@@ -65,13 +65,13 @@ public class SonicDeviceScanModeOverlay {
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
         int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);
-        Text title = Text.Serializer.fromJson(tag.getString("title"));
+        Text title = Text.Serialization.fromJson(tag.getString("title"));
         List<Text> lines = new ArrayList<>();
         List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
         List<OrderedText> titleLines = Language.getInstance().reorder(mc.textRenderer.getTextHandler().wrapLines(title, maxTextLength, Style.EMPTY));
 
         keys.sort(Comparator.comparing((key) -> key));
-        keys.forEach((key) -> lines.add(Text.Serializer.fromJson(tag.getCompound("linesTag").getString(key))));
+        keys.forEach((key) -> lines.add(Text.Serialization.fromJson(tag.getCompound("linesTag").getString(key))));
 
         int titleLineHeight = mc.textRenderer.fontHeight + LINE_MARGIN;
         int lineHeight = (int) Math.floor(mc.textRenderer.fontHeight * LINE_SCALE) + LINE_MARGIN;
@@ -80,6 +80,7 @@ public class SonicDeviceScanModeOverlay {
         Vector2i pos = new Vector2i(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2 - 1);
         int y = pos.y;
 
+        // TODO
 //        int color = 0x05000000;
 //        int bgPadding = PADDING / 2;
 //        Vector2i bgPos1 = new Vector2i(pos.x - bgPadding, pos.y - bgPadding);

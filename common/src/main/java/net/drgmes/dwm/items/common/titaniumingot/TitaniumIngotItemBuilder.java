@@ -6,14 +6,12 @@ import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.data.server.recipe.CookingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumIngotItemBuilder extends ItemBuilder {
     public TitaniumIngotItemBuilder(String name) {
@@ -26,7 +24,7 @@ public class TitaniumIngotItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, this.getItem())
             .input('#', ModItems.TITANIUM_NUGGET.getItem())
             .pattern("###")

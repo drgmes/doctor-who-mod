@@ -26,6 +26,7 @@ import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
@@ -70,7 +71,7 @@ public class TardisStateManager extends PersistentState {
     private Direction currExteriorFacing;
     private Direction destExteriorFacing;
 
-    private boolean isInited = false;
+    private boolean inited = false;
     private boolean broken = true;
     private boolean doorsLocked = true;
     private boolean doorsOpened = false;
@@ -94,28 +95,30 @@ public class TardisStateManager extends PersistentState {
 
     private TardisConsoleRoomEntry consoleRoom;
 
-    public TardisStateManager(ServerWorld world) {
-        this.setWorld(world);
+    public TardisStateManager() {
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));
     }
 
+    public static PersistentState.Type<TardisStateManager> getPersistentStateType() {
+        return new PersistentState.Type<>(TardisStateManager::new, TardisStateManager::createFromNbt, DataFixTypes.SAVED_DATA_MAP_INDEX);
+    }
+
     public static Optional<TardisStateManager> get(ServerWorld world) {
         if (world == null) return Optional.empty();
 
-        TardisStateManager tardisStateManager = world.getPersistentStateManager().getOrCreate(
-            (tag) -> TardisStateManager.createFromNbt(world, tag),
-            () -> new TardisStateManager(world),
+        TardisStateManager tardis = world.getPersistentStateManager().getOrCreate(
+            TardisStateManager.getPersistentStateType(),
             DWM.LOCS.TARDIS.getPath()
         );
 
-        if (tardisStateManager != null) tardisStateManager.setWorld(world);
-        return Optional.ofNullable(tardisStateManager);
+        if (tardis != null) tardis.setWorld(world);
+        return Optional.ofNullable(tardis);
     }
 
-    public static TardisStateManager createFromNbt(ServerWorld world, NbtCompound tag) {
-        TardisStateManager tardisStateManager = new TardisStateManager(world);
+    public static TardisStateManager createFromNbt(NbtCompound tag) {
+        TardisStateManager tardisStateManager = new TardisStateManager();
         tardisStateManager.readNbt(tag);
         return tardisStateManager;
     }
@@ -148,7 +151,7 @@ public class TardisStateManager extends PersistentState {
         if (this.currExteriorPosition != null) tag.putLong("currExteriorPosition", this.currExteriorPosition.asLong());
         if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
 
-        tag.putBoolean("isInited", this.isInited);
+        tag.putBoolean("inited", this.inited);
         tag.putBoolean("broken", this.broken);
         tag.putBoolean("doorsLocked", this.doorsLocked);
         tag.putBoolean("doorsOpened", this.doorsOpened);
@@ -203,7 +206,7 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
 
-        this.isInited = tag.getBoolean("isInited");
+        this.inited = tag.getBoolean("inited");
         this.broken = tag.getBoolean("broken");
         this.doorsLocked = tag.getBoolean("doorsLocked");
         this.doorsOpened = tag.getBoolean("doorsOpened");
@@ -235,10 +238,10 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void init() {
-        if (this.isInited) return;
+        if (this.inited) return;
         this.getConsoleRoom().place(this);
         this.updateConsoleTiles();
-        this.isInited = true;
+        this.inited = true;
     }
 
     // /////////////////////////// //
@@ -757,53 +760,26 @@ public class TardisStateManager extends PersistentState {
     public void updateConsoleTiles() {
         this.consoleTiles.forEach((tile) -> {
             if (!this.isBroken()) {
-                this.applyDataToControlsStorage(tile.controlsStorage);
+                tile.controlsStorage.applyDataToControlsStorage(this);
                 tile.sendControlsUpdatePacket(this.world);
             }
 
             NbtCompound tardisStateManagerTag = new NbtCompound();
             this.writeNbt(tardisStateManagerTag);
-            tile.tardisStateManager.readNbt(tardisStateManagerTag);
+            tile.tardis.readNbt(tardisStateManagerTag);
 
             NbtCompound tag = tile.createNbt();
             this.writeNbt(tag);
 
             new TardisConsoleUnitUpdatePacket(tile.getPos(), tag)
-                .sendToChunkListeners(this.world.getWorldChunk(tile.getPos()));
+                // .sendToChunkListeners(this.world.getWorldChunk(tile.getPos()));
+                .sendToLevel(this.world);
         });
     }
 
     // /////////////////////////// //
     // Tardis Storage Data methods //
     // /////////////////////////// //
-
-    public void applyDataToControlsStorage(TardisConsoleControlsStorage controlsStorage) {
-        TardisSystemFlight flightSystem = this.getSystem(TardisSystemFlight.class);
-        TardisSystemMaterialization materializationSystem = this.getSystem(TardisSystemMaterialization.class);
-        TardisSystemShields shieldsSystem = this.getSystem(TardisSystemShields.class);
-
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.STARTER, flightSystem.inProgress());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.MATERIALIZATION, materializationSystem.isMaterialized());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SAFE_DIRECTION, materializationSystem.safeDirection.ordinal());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS, shieldsSystem.inProgress());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_OXYGEN, shieldsSystem.isEnabled() && this.isShieldsOxygenEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, shieldsSystem.isEnabled() && this.isShieldsFireProofEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MEDICAL, shieldsSystem.isEnabled() && this.isShieldsMedicalEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_MINING, shieldsSystem.isEnabled() && this.isShieldsMiningEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_GRAVITATION, shieldsSystem.isEnabled() && this.isShieldsGravitationEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.SHIELDS_SPECIAL, shieldsSystem.isEnabled() && this.isShieldsSpecialEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.FUEL_HARVESTING, this.isFuelHarvesting());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.ENERGY_HARVESTING, this.isEnergyHarvesting());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.LIGHT, this.isLightEnabled());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.DOORS, this.isDoorsOpened());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.HANDBRAKE, this.isHandbrakeLocked());
-        controlsStorage.values.put(ETardisConsoleUnitControlRole.FACING, switch (this.getDestinationExteriorFacing()) {
-            default -> 0;
-            case EAST -> 1;
-            case SOUTH -> 2;
-            case WEST -> 3;
-        });
-    }
 
     public void applyControlsStorageToData(TardisConsoleControlsStorage controlsStorage, PlayerEntity player) {
         TardisSystemFlight flightSystem = this.getSystem(TardisSystemFlight.class);
@@ -850,14 +826,14 @@ public class TardisStateManager extends PersistentState {
             else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
         }
 
-        // If Tardis has fight system
+        // If Tardis has a fight system
         if (flightSystem.isEnabled()) {
             // XYZ Step
             int xyzStep = (int) controlsStorage.get(ETardisConsoleUnitControlRole.XYZSTEP);
             if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
         }
 
-        // If Tardis has fight system and it is not in flight
+        // If Tardis has a fight system and it is not in flight
         if (flightSystem.isEnabled() && !isInFlight) {
             // Facing
             int facing = (int) controlsStorage.get(ETardisConsoleUnitControlRole.FACING);
@@ -916,7 +892,7 @@ public class TardisStateManager extends PersistentState {
                     worldKeys.add(world.getRegistryKey());
                 });
 
-                if (worldKeys.size() > 0) {
+                if (!worldKeys.isEmpty()) {
                     int index = worldKeys.contains(this.destExteriorDimension) ? worldKeys.indexOf(this.destExteriorDimension) : 0;
                     index = index + (dimPrev != 0 ? -1 : 1);
                     index %= worldKeys.size();
@@ -1030,6 +1006,8 @@ public class TardisStateManager extends PersistentState {
         }
 
         new TardisExteriorUpdatePacket(exteriorBlockPos, this.isDoorsOpened(), this.isLightEnabled(), false)
-            .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            .sendToLevel(exteriorWorld);
     }
 }

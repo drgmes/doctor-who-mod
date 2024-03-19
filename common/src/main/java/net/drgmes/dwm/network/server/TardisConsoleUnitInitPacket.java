@@ -42,14 +42,16 @@ public class TardisConsoleUnitInitPacket extends BaseC2SMessage {
             TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
                 NbtCompound tardisData = tardisConsoleUnitBlockEntity.createNbt();
 
-                tardis.applyDataToControlsStorage(tardisConsoleUnitBlockEntity.controlsStorage);
+                tardisConsoleUnitBlockEntity.controlsStorage.applyDataToControlsStorage(tardis);
                 tardisConsoleUnitBlockEntity.controlsStorage.save(tardisData);
                 tardis.writeNbt(tardisData);
 
                 tardisConsoleUnitBlockEntity.readNbt(tardisData);
-                tardisConsoleUnitBlockEntity.markDirty();
 
-                new TardisConsoleUnitUpdatePacket(this.blockPos, tardisData).sendToChunkListeners(player.getWorld().getWorldChunk(this.blockPos));
+                new TardisConsoleUnitUpdatePacket(this.blockPos, tardisData)
+                    // TODO uncomment method when this will work properly
+                    // .sendToChunkListeners(player.getWorld().getWorldChunk(this.blockPos));
+                    .sendToLevel((ServerWorld) player.getWorld());
             });
         }
     }

@@ -65,6 +65,18 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context, mouseX, mouseY, delta);
+        this.renderElements(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
+        this.renderElementsAfter(context, mouseX, mouseY, delta);
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int frame) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
         return super.mouseClicked(mouseX, mouseY, frame);
@@ -81,13 +93,5 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
         }
 
         return true;
-    }
-
-    @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context);
-        this.renderElements(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
-        this.renderElementsAfter(context, mouseX, mouseY, delta);
     }
 }

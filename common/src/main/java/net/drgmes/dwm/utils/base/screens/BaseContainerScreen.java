@@ -59,20 +59,24 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context);
-        this.renderElements(context, mouseX, mouseY, delta);
-        super.render(context, mouseX, mouseY, delta);
-        this.renderElementsAfter(context, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(context, mouseX, mouseY);
-    }
-
-    @Override
     protected void drawForeground(DrawContext context, int mouseX, int mouseY) {
     }
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+    }
+
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+    }
+
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderBackground(context, mouseX, mouseY, delta);
+        this.renderElements(context, mouseX, mouseY, delta);
+        super.render(context, mouseX, mouseY, delta);
+        this.renderElementsAfter(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override

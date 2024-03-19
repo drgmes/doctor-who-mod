@@ -131,12 +131,12 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
         if (!SonicDevice.checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
 
         NbtCompound tag = SonicDevice.getData(sonicDeviceItemStack);
-        tag.putString("title", Text.Serializer.toJson(title));
+        tag.putString("title", Text.Serialization.toJsonString(title));
         tag.putLong("time", player.getServerWorld().getTime());
 
         AtomicInteger i = new AtomicInteger();
         NbtCompound linesTag = new NbtCompound();
-        for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
+        for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serialization.toJsonString(line));
         tag.put("linesTag", linesTag);
 
         player.equipStack(slot, sonicDeviceItemStack);

@@ -42,7 +42,6 @@ public class TardisConsoleUnitMonitorPageUpdatePacket extends BaseS2CMessage {
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             tardisConsoleUnitBlockEntity.monitorPage = this.monitorPage;
-            tardisConsoleUnitBlockEntity.markDirty();
         }
     }
 }

@@ -43,11 +43,7 @@ public class TardisConsoleUnitControlsStatesUpdatePacket extends BaseS2CMessage 
         final MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
-            controlsStorage.load(this.tag);
-
-            tardisConsoleUnitBlockEntity.controlsStorage = controlsStorage;
-            tardisConsoleUnitBlockEntity.markDirty();
+            tardisConsoleUnitBlockEntity.controlsStorage.load(this.tag);
         }
     }
 }

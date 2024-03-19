@@ -6,7 +6,7 @@ import net.drgmes.dwm.datagen.ItemModelDataBuilder;
 import net.drgmes.dwm.setup.ModCreativeTabs;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.Registration;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.registry.tag.TagKey;
@@ -14,7 +14,6 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ItemBuilder {
@@ -67,7 +66,7 @@ public class ItemBuilder {
         return new ItemModelDataBuilder(this.getItem(), this.getId(), this.getTexture(), ItemModelDataBuilder.ItemType.GENERATED);
     }
 
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
     }
 
     public void registerTags() {

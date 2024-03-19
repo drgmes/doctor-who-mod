@@ -4,12 +4,10 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumNuggetItemBuilder extends ItemBuilder {
     public TitaniumNuggetItemBuilder(String name) {
@@ -22,7 +20,7 @@ public class TitaniumNuggetItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, this.getItem(), 9)
             .input(ModItems.TITANIUM_INGOT.getItem())
             .criterion("has_item", RecipeHelper.conditionsFromItem(ModItems.TITANIUM_INGOT.getItem()))

@@ -6,14 +6,12 @@ import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.ModMaterials;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumAxeItemBuilder extends ItemBuilder {
     public TitaniumAxeItemBuilder(String name) {
@@ -31,7 +29,7 @@ public class TitaniumAxeItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this.getItem())
             .input('#', ModItems.TITANIUM_INGOT.getItem())
             .input('0', Items.STICK)

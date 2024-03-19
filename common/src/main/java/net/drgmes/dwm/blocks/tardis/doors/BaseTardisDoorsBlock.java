@@ -105,7 +105,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
             BlockPos tmpBlockPos;
             BlockState tmpBlockState;
@@ -118,7 +118,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
             }
         }
 
-        super.onBreak(world, blockPos, blockState, player);
+        return super.onBreak(world, blockPos, blockState, player);
     }
 
     @Override

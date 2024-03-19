@@ -76,7 +76,7 @@ public class CommonHelper {
     }
 
     @ExpectPlatform
-    public static boolean teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
         throw new AssertionError();
     }
 }
