@@ -178,24 +178,24 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             .sendTo(player);
     }
 
-    public void useControl(TardisConsoleControlEntry control, Hand hand, Entity entity) {
+    public void useControl(ETardisConsoleUnitControlRole role, Hand hand, Entity entity) {
         if (!(this.world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) return;
-        Object value = this.controlsStorage.get(control.role);
+        Object value = this.controlsStorage.get(role);
 
         Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.getWorld())
             ? TardisStateManager.get(serverWorld)
             : Optional.empty();
 
         // Monitor
-        if (control.role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
             if (this.throwNotifyIfBroken(tardisHolder, player) || tardisHolder.isEmpty()) return;
             this.sendMonitorOpenPacket(player, tardisHolder.get());
-            this.playControlSound(control.role);
+            this.playControlSound(role);
             return;
         }
 
         // Telepathic Interface
-        if (control.role == ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
             if (this.throwNotifyIfBroken(tardisHolder, player) || tardisHolder.isEmpty()) return;
 
             ItemStack mainHandItemStack = player.getMainHandStack();
@@ -238,12 +238,12 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             this.sendTelepathicInterfaceLocationsOpenPacket(player);
-            this.playControlSound(control.role);
+            this.playControlSound(role);
             return;
         }
 
         // Sonic Screwdriver Slot
-        if (control.role == ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT && hand == Hand.OFF_HAND) {
             SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
 
             boolean isChanged = false;
@@ -286,10 +286,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             return;
         }
 
-        if (this.controlsStorage.update(control.role, hand)) {
-            boolean isUpdated = !Objects.equals(value, this.controlsStorage.get(control.role));
+        if (this.controlsStorage.update(role, hand)) {
+            boolean isUpdated = !Objects.equals(value, this.controlsStorage.get(role));
 
-            switch (control.role) {
+            switch (role) {
                 case STARTER -> {
                     if (isUpdated && (tardisHolder.isEmpty() || !tardisHolder.get().isHandbrakeLocked())) {
                         ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_3.get(), 1.0F, 1.0F);
@@ -316,25 +316,25 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
                 case HANDBRAKE -> {
                     if (isUpdated && tardisHolder.isEmpty()) {
-                        if ((boolean) this.controlsStorage.get(control.role)) ModSounds.playTardisHandbrakeOnSound(this.world, player.getBlockPos());
+                        if ((boolean) this.controlsStorage.get(role)) ModSounds.playTardisHandbrakeOnSound(this.world, player.getBlockPos());
                         else ModSounds.playTardisHandbrakeOffSound(this.world, player.getBlockPos());
                     }
                 }
 
                 case MONITOR_PAGE_NEXT -> {
-                    if ((int) this.controlsStorage.get(control.role) != 0) {
+                    if ((int) this.controlsStorage.get(role) != 0) {
                         this.monitorPage = (this.monitorPage + 1) % MONITOR_PAGES_LENGTH;
                         this.sendMonitorUpdatePacket(serverWorld);
-                        this.playControlSound(control.role);
+                        this.playControlSound(role);
                         this.markDirty();
                     }
                 }
 
                 case MONITOR_PAGE_PREV -> {
-                    if ((int) this.controlsStorage.get(control.role) != 0) {
+                    if ((int) this.controlsStorage.get(role) != 0) {
                         this.monitorPage = this.monitorPage < 1 ? MONITOR_PAGES_LENGTH - 1 : this.monitorPage - 1;
                         this.sendMonitorUpdatePacket(serverWorld);
-                        this.playControlSound(control.role);
+                        this.playControlSound(role);
                         this.markDirty();
                     }
                 }
@@ -346,7 +346,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             tardisHolder.get().applyControlsStorageToData(this.controlsStorage, player);
-            this.displayNotification(tardisHolder.get(), control.role, player);
+            this.displayNotification(tardisHolder.get(), role, player);
         }
     }
 

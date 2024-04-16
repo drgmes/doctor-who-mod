@@ -50,7 +50,7 @@ public class RenderHelper {
         return new Vector2i(0, offsetY);
     }
 
-    public static void drawRectangle(MatrixStack matrixStack, VertexConsumer vertexConsumer, int x1, int y1, int x2, int y2, int color) {
+    public static void drawRectangle(MatrixStack matrixStack, VertexConsumer vertexConsumer, float x1, float y1, float x2, float y2, int color) {
         Matrix4f matrix = matrixStack.peek().getPositionMatrix();
         vertexConsumer.vertex(matrix, x1, y1, 0).color(color).next();
         vertexConsumer.vertex(matrix, x1, y2, 0).color(color).next();

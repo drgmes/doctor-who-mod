@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlock;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.models.TardisConsoleUnitImperialModel;
+import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitTypes;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRoleType;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +17,7 @@ import net.minecraft.util.math.RotationAxis;
 
 public class TardisConsoleUnitImperialBlockRenderer extends BaseTardisConsoleUnitBlockRenderer<TardisConsoleUnitImperialBlockEntity> {
     public TardisConsoleUnitImperialBlockRenderer(BlockEntityRendererFactory.Context context) {
-        super(context);
+        super(context, TardisConsoleUnitTypes.IMPERIAL);
     }
 
     @Override

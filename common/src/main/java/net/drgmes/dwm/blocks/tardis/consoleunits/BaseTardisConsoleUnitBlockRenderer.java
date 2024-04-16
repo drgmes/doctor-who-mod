@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitTypeEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRoleType;
@@ -22,12 +23,14 @@ import net.minecraft.util.math.BlockPos;
 
 public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisConsoleUnitBlockEntity> implements BlockEntityRenderer<C> {
     protected final BlockEntityRendererFactory.Context ctx;
+    protected final TardisConsoleUnitTypeEntry consoleType;
 
     protected int SCREEN_SIZE = 239;
     protected int SCREEN_PARAM_SUBSTRING = 16;
 
-    public BaseTardisConsoleUnitBlockRenderer(BlockEntityRendererFactory.Context context) {
+    public BaseTardisConsoleUnitBlockRenderer(BlockEntityRendererFactory.Context context, TardisConsoleUnitTypeEntry consoleType) {
         this.ctx = context;
+        this.consoleType = consoleType;
     }
 
     @Override
@@ -100,14 +103,14 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         ModelPart model = modelRoot;
 
         for (String modelName : path.split("/")) {
-            String prevModelName = "";
+            StringBuilder prevModelName = new StringBuilder();
 
             for (String modelNamePart : modelName.split("\\$")) {
                 try {
                     model = model.getChild(prevModelName + modelNamePart);
-                    prevModelName = prevModelName + modelNamePart;
+                    prevModelName.append(modelNamePart);
                 } catch (Exception e) {
-                    DWM.LOGGER.error("Can't find part {} in {}", prevModelName + modelNamePart, prevModelName);
+                    DWM.LOGGER.error("Can't find part {} in {}", prevModelName + modelNamePart, prevModelName.toString());
                     break;
                 }
             }

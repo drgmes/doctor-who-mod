@@ -17,12 +17,12 @@ public class TardisConsoleControlEntry {
     public final ETardisConsoleUnitControlEntry type;
     public final TardisConsoleControlEntityBuilder builder;
 
-    public TardisConsoleControlEntry(ETardisConsoleUnitControlRole controlRole, ETardisConsoleUnitControlEntry controlType, Vec3d position, String modelPath, TardisConsoleControlEntityBuilder builder) {
+    public TardisConsoleControlEntry(ETardisConsoleUnitControlRole role, ETardisConsoleUnitControlEntry type, Vec3d position, String modelPath, TardisConsoleControlEntityBuilder builder) {
+        this.role = role;
+        this.type = type;
+        this.position = position;
         this.modelPath = modelPath;
         this.builder = builder;
-        this.position = position;
-        this.role = controlRole;
-        this.type = controlType;
     }
 
     public EntityType<TardisConsoleControlEntity> getEntityType() {
@@ -36,8 +36,8 @@ public class TardisConsoleControlEntry {
 
         assert entity != null;
         entity.setPosition(pos);
-        entity.setTardisConsole(tile);
-        entity.setTardisControlEntry(this);
+        entity.setTardisControlRole(this.role);
+        entity.setTardisConsolePos(tile);
 
         world.spawnEntity(entity);
         return entity;
