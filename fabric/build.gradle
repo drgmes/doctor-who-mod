@@ -89,30 +89,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "minecraftVersion", rootProject.minecraft_version
-    inputs.property "architecturyVersion", rootProject.architectury_version
-    inputs.property "forgeConfigApiPortVersion", rootProject.forge_config_api_port_version
-    inputs.property "modId", rootProject.mod_id
-    inputs.property "modVersion", rootProject.mod_version
-    inputs.property "modName", rootProject.mod_name
-    inputs.property "modDescription", rootProject.mod_description
-    inputs.property "modHomepage", rootProject.mod_homepage
-    inputs.property "modSource", rootProject.mod_source
-    inputs.property "modAuthors", rootProject.mod_authors
-    inputs.property "modLicense", rootProject.mod_license
+    inputs.properties(rootProject.ext.attrs)
 
     filesMatching("fabric.mod.json") {
-        expand "minecraftVersion": project.minecraft_version,
-                "architecturyVersion": project.architectury_version,
-                "forgeConfigApiPortVersion": project.forge_config_api_port_version,
-                "modId": project.mod_id,
-                "modVersion": project.mod_version,
-                "modName": rootProject.mod_name,
-                "modDescription": rootProject.mod_description,
-                "modHomepage": rootProject.mod_homepage,
-                "modSource": rootProject.mod_source,
-                "modAuthors": rootProject.mod_authors,
-                "modLicense": rootProject.mod_license
+        expand(rootProject.ext.attrs)
     }
 }
 
@@ -132,6 +112,7 @@ remapJar {
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from commonSources.archiveFile.map { zipTree(it) }
 }
 

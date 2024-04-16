@@ -14,13 +14,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "client": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "server": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "fabric-datagen": [
       "net.drgmes.dwm.fabric.datagen.DataGenerators"

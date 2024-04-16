@@ -28,9 +28,24 @@ allprojects {
     version = rootProject.mod_version
     group = rootProject.maven_group
 
+    rootProject.ext.attrs = [
+        "modId"                    : rootProject.mod_id,
+        "modVersion"               : rootProject.mod_version,
+        "modLicense"               : rootProject.mod_license,
+        "modAuthors"               : rootProject.mod_authors,
+        "modName"                  : rootProject.mod_name,
+        "modDescription"           : rootProject.mod_description,
+        "modHomepage"              : rootProject.mod_homepage,
+        "modSource"                : rootProject.mod_source,
+        "minecraftVersion"         : rootProject.minecraft_version,
+        "architecturyVersion"      : rootProject.architectury_version,
+        "forgeConfigApiPortVersion": rootProject.forge_config_api_port_version,
+    ]
+
     repositories {
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.shedaniel.me' }
+        maven { url 'https://maven.neoforged.net/releases/' }
         maven { url 'https://maven.terraformersmc.com/releases/' }
         maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
 

@@ -1,6 +1,11 @@
-package net.drgmes.dwm.setup.forge;
+package net.drgmes.dwm.setup.neoforge;
 
-import net.drgmes.dwm.forge.blockentities.*;
+import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.TardisConsoleUnitImperialBlockEntity;
+import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
+import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
