@@ -10,6 +10,10 @@ architectury {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
+    mixin {
+        add sourceSets.main, 'dwm.refmap.json'
+    }
+
     runs {
         datagen {
             inherit client
@@ -39,7 +43,7 @@ dependencies {
     modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version}"
 
     if (rootProject.hasProperty("forge_config_api_port_version")) {
-        modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}"
+        modApi("fuzs.forgeconfigapiport:forgeconfigapiport-fabric:${rootProject.forge_config_api_port_version}")
     }
 
     if (rootProject.hasProperty("dim_lib_version")) {

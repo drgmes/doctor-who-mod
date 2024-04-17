@@ -43,7 +43,7 @@ public class MixinPortal implements IMixinPortal {
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void tick(CallbackInfo ci) {
+    public void tick(CallbackInfo ci) {
         Portal $this = (Portal) (Object) this;
         if ($this.getWorld().isClient || $this.isRemoved()) return;
 
@@ -79,14 +79,14 @@ public class MixinPortal implements IMixinPortal {
     }
 
     @Inject(method = "readCustomDataFromNbt", at = @At("HEAD"))
-    private void readCustomDataFromNbt(NbtCompound tag, CallbackInfo ci) {
+    public void readCustomDataFromNbt(NbtCompound tag, CallbackInfo ci) {
         if (tag.contains("tardisId")) this.tardisId = tag.getString("tardisId");
         this.isTardisEntrance = tag.getBoolean("isTardisEntrance");
         this.isTardisRoomsEntrance = tag.getBoolean("isTardisRoomsEntrance");
     }
 
     @Inject(method = "writeCustomDataToNbt", at = @At("HEAD"))
-    private void writeCustomDataToNbt(NbtCompound tag, CallbackInfo ci) {
+    public void writeCustomDataToNbt(NbtCompound tag, CallbackInfo ci) {
         if (this.tardisId != null) tag.putString("tardisId", this.tardisId);
         tag.putBoolean("isTardisEntrance", this.isTardisEntrance);
         tag.putBoolean("isTardisRoomsEntrance", this.isTardisRoomsEntrance);

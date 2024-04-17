@@ -10,6 +10,10 @@ architectury {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
+    mixin {
+        add sourceSets.main, 'dwm.refmap.json'
+    }
+
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name

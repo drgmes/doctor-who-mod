@@ -10,23 +10,23 @@ authors = "${modAuthors}"
 description = "${modDescription}"
 logoFile = "assets/${modId}/icon.png"
 
-#[[dependencies.${modId}]]
-#modId = "forge"
-#mandatory = true
-#versionRange = "[49,)"
-#ordering = "NONE"
-#side = "BOTH"
+[[dependencies.${modId}]]
+modId = "forge"
+mandatory = true
+versionRange = "[49,)"
+ordering = "NONE"
+side = "BOTH"
 
-#[[dependencies.${modId}]]
-#modId = "minecraft"
-#mandatory = true
-#versionRange = "[${minecraftVersion}]"
-#ordering = "NONE"
-#side = "BOTH"
+[[dependencies.${modId}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[${minecraftVersion}]"
+ordering = "NONE"
+side = "BOTH"
 
-#[[dependencies.${modId}]]
-#modId = "architectury"
-#mandatory = true
-#versionRange = "[${architecturyVersion},)"
-#ordering = "AFTER"
-#side = "BOTH"
+[[dependencies.${modId}]]
+modId = "architectury"
+mandatory = true
+versionRange = "[${architecturyVersion},)"
+ordering = "AFTER"
+side = "BOTH"

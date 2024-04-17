@@ -24,7 +24,7 @@ dependencies {
     modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
 
     if (rootProject.hasProperty("forge_config_api_port_version")) {
-        modApi "fuzs.forgeconfigapiport:forgeconfigapiport-neoforge:${rootProject.forge_config_api_port_version}"
+        modApi("fuzs.forgeconfigapiport:forgeconfigapiport-neoforge:${rootProject.forge_config_api_port_version}")
     }
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
