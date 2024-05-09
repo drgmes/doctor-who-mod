@@ -41,7 +41,7 @@ public abstract class BaseTardisConsoleUnitBlock<C extends BaseTardisConsoleUnit
     @Override
     public void randomDisplayTick(BlockState blockState, World world, BlockPos blockPos, Random random) {
         if (world.getBlockEntity(blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            if (tardisConsoleUnitBlockEntity.tardisStateManager.isBroken() && random.nextDouble() < 0.1) {
+            if (tardisConsoleUnitBlockEntity.tardis.isBroken() && random.nextDouble() < 0.1) {
                 new TardisConsoleUnitSoundPacket(blockPos).sendToServer();
 
                 for (int i = 0; i < 3; i++) {

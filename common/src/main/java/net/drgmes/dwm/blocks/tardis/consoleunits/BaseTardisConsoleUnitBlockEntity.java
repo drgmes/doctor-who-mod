@@ -42,7 +42,7 @@ import java.util.Optional;
 public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public static final int MONITOR_PAGES_LENGTH = 2;
 
-    public final TardisStateManager tardisStateManager = new TardisStateManager(null);
+    public final TardisStateManager tardis = new TardisStateManager();
     public TardisConsoleControlsStorage controlsStorage = new TardisConsoleControlsStorage();
     public ItemStack sonicScrewdriverItemStack = ItemStack.EMPTY;
     public TardisConsoleUnitTypeEntry consoleType;
@@ -63,9 +63,9 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        this.tardisStateManager.readNbt(tag);
+        this.tardis.readNbt(tag);
         this.controlsStorage.load(tag);
-        this.monitorPage = tag.getInt("monitorPage");
+        this.monitorPage = tag.getInt("monitorPage") % MONITOR_PAGES_LENGTH;
 
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
         if (tag.contains("Items", 9)) {
@@ -78,10 +78,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
-        this.tardisStateManager.writeNbt(tag);
+        this.tardis.writeNbt(tag);
         this.controlsStorage.save(tag);
 
-        tag.putInt("monitorPage", this.monitorPage);
+        tag.putInt("monitorPage", this.monitorPage % MONITOR_PAGES_LENGTH);
         Inventories.writeNbt(tag, DefaultedList.ofSize(1, this.sonicScrewdriverItemStack), true);
     }
 
@@ -130,13 +130,13 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             if (this.timeToInit == 0) this.init();
         }
         else if (this.timeToInit < 0) {
-            if (this.world instanceof ServerWorld serverWorld) this.tardisStateManager.setWorld(serverWorld);
+            if (this.world instanceof ServerWorld serverWorld) this.tardis.setWorld(serverWorld);
             this.timeToInit = 10;
         }
 
         this.animateControls();
 
-        if (this.tardisStateManager.getSystem(TardisSystemFlight.class).inProgress() || this.tardisStateManager.getSystem(TardisSystemMaterialization.class).inProgress()) {
+        if (this.tardis.getSystem(TardisSystemFlight.class).inProgress() || this.tardis.getSystem(TardisSystemMaterialization.class).inProgress()) {
             this.tickInProgress++;
             this.tickInProgress %= 60;
         }
@@ -144,26 +144,32 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
     public void sendMonitorUpdatePacket(ServerWorld world) {
         new TardisConsoleUnitMonitorPageUpdatePacket(this.getPos(), this.monitorPage)
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            .sendToLevel(world);
     }
 
     public void sendControlsUpdatePacket(ServerWorld world) {
         new TardisConsoleUnitControlsStatesUpdatePacket(this.getPos(), this.controlsStorage.save(new NbtCompound()))
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            .sendToLevel(world);
     }
 
     public void sendSonicScrewdriverSlotUpdatePacket(ServerWorld world) {
         new TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(this.getPos(), this.sonicScrewdriverItemStack)
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            .sendToLevel(world);
     }
 
     public void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
-        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardisStateManager.writeNbt(new NbtCompound()))
+        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardis.writeNbt(new NbtCompound()))
             .sendTo(player);
     }
 
     public void sendTelepathicInterfaceLocationsOpenPacket(ServerPlayerEntity player) {
-        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), player.getServerWorld(), DimensionHelper.getWorld(this.tardisStateManager.getDestinationExteriorDimension(), player.server))
+        new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(this.getPos(), player.getServerWorld(), DimensionHelper.getWorld(this.tardis.getDestinationExteriorDimension(), player.server))
             .sendTo(player);
     }
 
@@ -172,24 +178,24 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             .sendTo(player);
     }
 
-    public void useControl(TardisConsoleControlEntry control, Hand hand, Entity entity) {
+    public void useControl(ETardisConsoleUnitControlRole role, Hand hand, Entity entity) {
         if (!(this.world instanceof ServerWorld serverWorld) || !(entity instanceof ServerPlayerEntity player)) return;
-        Object value = this.controlsStorage.get(control.role);
+        Object value = this.controlsStorage.get(role);
 
         Optional<TardisStateManager> tardisHolder = TardisHelper.isTardisDimension(entity.getWorld())
             ? TardisStateManager.get(serverWorld)
             : Optional.empty();
 
         // Monitor
-        if (control.role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.MONITOR && hand == Hand.OFF_HAND) {
             if (this.throwNotifyIfBroken(tardisHolder, player) || tardisHolder.isEmpty()) return;
             this.sendMonitorOpenPacket(player, tardisHolder.get());
-            this.playControlSound(control.role);
+            this.playControlSound(role);
             return;
         }
 
         // Telepathic Interface
-        if (control.role == ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.TELEPATHIC_INTERFACE && hand == Hand.OFF_HAND) {
             if (this.throwNotifyIfBroken(tardisHolder, player) || tardisHolder.isEmpty()) return;
 
             ItemStack mainHandItemStack = player.getMainHandStack();
@@ -232,12 +238,12 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             this.sendTelepathicInterfaceLocationsOpenPacket(player);
-            this.playControlSound(control.role);
+            this.playControlSound(role);
             return;
         }
 
         // Sonic Screwdriver Slot
-        if (control.role == ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT && hand == Hand.OFF_HAND) {
+        if (role == ETardisConsoleUnitControlRole.SONIC_SCREWDRIVER_SLOT && hand == Hand.OFF_HAND) {
             SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
 
             boolean isChanged = false;
@@ -280,10 +286,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             return;
         }
 
-        if (this.controlsStorage.update(control.role, hand)) {
-            boolean isUpdated = !Objects.equals(value, this.controlsStorage.get(control.role));
+        if (this.controlsStorage.update(role, hand)) {
+            boolean isUpdated = !Objects.equals(value, this.controlsStorage.get(role));
 
-            switch (control.role) {
+            switch (role) {
                 case STARTER -> {
                     if (isUpdated && (tardisHolder.isEmpty() || !tardisHolder.get().isHandbrakeLocked())) {
                         ModSounds.playSound(serverWorld, this.getPos(), ModSounds.TARDIS_CONTROL_3.get(), 1.0F, 1.0F);
@@ -310,25 +316,25 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
                 case HANDBRAKE -> {
                     if (isUpdated && tardisHolder.isEmpty()) {
-                        if ((boolean) this.controlsStorage.get(control.role)) ModSounds.playTardisHandbrakeOnSound(this.world, player.getBlockPos());
+                        if ((boolean) this.controlsStorage.get(role)) ModSounds.playTardisHandbrakeOnSound(this.world, player.getBlockPos());
                         else ModSounds.playTardisHandbrakeOffSound(this.world, player.getBlockPos());
                     }
                 }
 
                 case MONITOR_PAGE_NEXT -> {
-                    if ((int) this.controlsStorage.get(control.role) != 0) {
+                    if ((int) this.controlsStorage.get(role) != 0) {
                         this.monitorPage = (this.monitorPage + 1) % MONITOR_PAGES_LENGTH;
                         this.sendMonitorUpdatePacket(serverWorld);
-                        this.playControlSound(control.role);
+                        this.playControlSound(role);
                         this.markDirty();
                     }
                 }
 
                 case MONITOR_PAGE_PREV -> {
-                    if ((int) this.controlsStorage.get(control.role) != 0) {
+                    if ((int) this.controlsStorage.get(role) != 0) {
                         this.monitorPage = this.monitorPage < 1 ? MONITOR_PAGES_LENGTH - 1 : this.monitorPage - 1;
                         this.sendMonitorUpdatePacket(serverWorld);
-                        this.playControlSound(control.role);
+                        this.playControlSound(role);
                         this.markDirty();
                     }
                 }
@@ -340,7 +346,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             }
 
             tardisHolder.get().applyControlsStorageToData(this.controlsStorage, player);
-            this.displayNotification(tardisHolder.get(), control.role, player);
+            this.displayNotification(tardisHolder.get(), role, player);
         }
     }
 
@@ -352,8 +358,6 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         for (TardisConsoleControlEntry controlEntry : this.consoleType.controlEntries.values()) {
             this.controls.add(controlEntry.createEntity(this, serverWorld, this.getPos()));
         }
-
-        this.markDirty();
     }
 
     private void animateControls() {

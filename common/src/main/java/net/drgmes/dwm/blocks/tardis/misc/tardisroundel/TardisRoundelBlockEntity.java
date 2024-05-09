@@ -62,15 +62,21 @@ public class TardisRoundelBlockEntity extends BlockEntity {
         if (!(this.world instanceof ServerWorld serverWorld)) return;
 
         new TardisRoundelUpdatePacket(this.getPos(), this.uncovered, this.lightMode)
-            .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+            .sendToLevel(serverWorld);
 
         if (this.blockTemplate != null) {
             new TardisRoundelBlockTemplateUpdatePacket(this.getPos(), this.blockTemplate)
-                .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                // TODO uncomment method when this will work properly
+                // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                .sendToLevel(serverWorld);
         }
         else {
             new TardisRoundelBlockTemplateClearPacket(this.getPos())
-                .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                // TODO uncomment method when this will work properly
+                // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                .sendToLevel(serverWorld);
         }
     }
 }

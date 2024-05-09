@@ -24,6 +24,5 @@ public class ModRecipeProvider extends FabricRecipeProvider {
         for (ItemBuilder itemBuilder : ModItems.ITEM_BUILDERS) {
             itemBuilder.registerRecipe(exporter);
         }
-
     }
 }

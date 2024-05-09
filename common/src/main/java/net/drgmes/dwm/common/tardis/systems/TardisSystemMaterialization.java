@@ -440,7 +440,9 @@ public class TardisSystemMaterialization implements ITardisSystem {
         if (!demat) return;
 
         new TardisExteriorUpdatePacket(exteriorBlockPos, this.tardis.isDoorsOpened(), this.tardis.isLightEnabled(), true)
-            .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            // TODO uncomment method when this will work properly
+            // .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            .sendToLevel(exteriorWorld);
     }
 
     private boolean setupFail() {

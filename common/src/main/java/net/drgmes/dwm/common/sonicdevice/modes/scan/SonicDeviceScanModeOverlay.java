@@ -80,6 +80,7 @@ public class SonicDeviceScanModeOverlay {
         Vector2i pos = new Vector2i(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2 - 1);
         int y = pos.y;
 
+        // TODO
 //        int color = 0x05000000;
 //        int bgPadding = PADDING / 2;
 //        Vector2i bgPos1 = new Vector2i(pos.x - bgPadding, pos.y - bgPadding);

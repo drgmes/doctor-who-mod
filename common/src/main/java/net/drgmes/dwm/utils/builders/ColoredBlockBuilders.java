@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.builders;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 
@@ -20,7 +21,7 @@ public class ColoredBlockBuilders {
 
     public <T extends BlockBuilder> ColoredBlockBuilders(String baseName, BiFunction<String, Item, BlockBuilder> blockBuilderSupplier) {
         for (Item dye : dyes) {
-            String color = dye.toString().replace("_dye", "");
+            String color = ((DyeItem) dye).getColor().getName();
             blockBuilders.put(dye, blockBuilderSupplier.apply(baseName + "_" + color, dye));
         }
     }

@@ -43,7 +43,6 @@ public class TardisRoundelBlockTemplateUpdatePacket extends BaseS2CMessage {
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
             tardisRoundelBlockEntity.blockTemplate = this.blockTemplate;
-            tardisRoundelBlockEntity.markDirty();
         }
     }
 }

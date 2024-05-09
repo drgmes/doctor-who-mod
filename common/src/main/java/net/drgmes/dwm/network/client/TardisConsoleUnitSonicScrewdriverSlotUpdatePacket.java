@@ -43,7 +43,6 @@ public class TardisConsoleUnitSonicScrewdriverSlotUpdatePacket extends BaseS2CMe
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             tardisConsoleUnitBlockEntity.sonicScrewdriverItemStack = this.itemStack;
-            tardisConsoleUnitBlockEntity.markDirty();
         }
     }
 }

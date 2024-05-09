@@ -7,11 +7,17 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
 import net.minecraftforge.common.util.ITeleporter;
 
+import java.util.Set;
 import java.util.function.Function;
 
 public class CommonHelperImpl {
-    public static boolean teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
-        return entity.changeDimension(destination, new DWMTeleporter(pos, yaw, 0)) != null;
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
+        if (entity instanceof ServerPlayerEntity player) {
+            return player.changeDimension(destination, new DWMTeleporter(pos, yaw, 0));
+        }
+
+        entity.teleport(destination, pos.x, pos.y, pos.z, Set.of(), yaw, 0);
+        return entity;
     }
 
     private static class DWMTeleporter implements ITeleporter {

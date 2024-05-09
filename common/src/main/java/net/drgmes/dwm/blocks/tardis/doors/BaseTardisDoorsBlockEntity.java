@@ -13,11 +13,20 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
+    public final double entranceWidth;
+    public final double entranceHeight;
     public String tardisId;
     private boolean isInited;
 
-    public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+    public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState, double entranceWidth, double entranceHeight) {
         super(type, blockPos, blockState);
+
+        this.entranceWidth = entranceWidth;
+        this.entranceHeight = entranceHeight;
+    }
+
+    public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
+        this(type, blockPos, blockState, 1, 2);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package net.drgmes.dwm.forge.blockentities;
 
-import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.TardisConsoleUnitImperialBlockEntity;
 import net.drgmes.dwm.forge.common.TardisEnergyStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -11,11 +10,11 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
-public class TardisConsoleUnitImperialBlockEntityForge extends TardisConsoleUnitImperialBlockEntity {
+public class TardisConsoleUnitToyotaBlockEntity extends net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockEntity {
     private final TardisEnergyStorage energyStorage = new TardisEnergyStorage(8192, 8192);
     private LazyOptional<IEnergyStorage> energyCapability = LazyOptional.empty();
 
-    public TardisConsoleUnitImperialBlockEntityForge(BlockPos blockPos, BlockState blockState) {
+    public TardisConsoleUnitToyotaBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(blockPos, blockState);
     }
 

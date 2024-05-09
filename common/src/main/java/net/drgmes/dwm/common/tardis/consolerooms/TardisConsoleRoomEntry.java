@@ -228,7 +228,7 @@ public class TardisConsoleRoomEntry {
                 BlockRotation wallRotation = WorldHelper.getBlockRotation(direction);
 
                 // Update coords for Teleporter block
-                if (tpBlockInfos.size() > 0) {
+                if (!tpBlockInfos.isEmpty()) {
                     BlockPos templateBlockPos = tacBlockPos.offset(direction).subtract(templateOffset.rotate(wallRotation)).toImmutable();
                     BlockPos farTemplateBlockPos = TardisHelper.getTardisFarPos(index + 1).north().subtract(templateOffset.rotate(BlockRotation.CLOCKWISE_180).withY(0)).toImmutable();
                     BlockPos tpBlockPos = templateBlockPos.add(tpBlockInfos.get(0).pos().rotate(wallRotation)).toImmutable();
@@ -238,7 +238,7 @@ public class TardisConsoleRoomEntry {
                     this.updateRoomTeleporter(world, farTpBlockPos, tacBlockPos.down().offset(direction.getOpposite()), direction.getOpposite());
                 }
 
-                // If room was built then destroy the builder wall
+                // If room was built, then destroy the builder wall
                 if (world.getBlockEntity(farTadBlockPos) instanceof TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity) {
                     WorldHelper.clearArea(world, BlockBox.create(
                         tacBlockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(wallRotation)),

@@ -43,7 +43,6 @@ public class TardisConsoleUnitUpdatePacket extends BaseS2CMessage {
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             tardisConsoleUnitBlockEntity.readNbt(this.tag);
-            tardisConsoleUnitBlockEntity.markDirty();
         }
     }
 }

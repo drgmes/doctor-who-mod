@@ -1,5 +1,6 @@
 package net.drgmes.dwm.compat;
 
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.setup.ModBlocks;
@@ -41,7 +42,7 @@ public class ImmersivePortals {
         tardisPortalsStates.clear();
     }
 
-    public static Map.Entry<Portal, Portal> createPortals(ServerWorld world, Direction originFacing, Direction destinationFacing, BlockPos originBlockPos, BlockPos destinationBlockPos, RegistryKey<World> destinationWorldKey, double originFacingOffset, double destinationFacingOffset, double blockOffset, int width, int height) {
+    public static Map.Entry<Portal, Portal> createPortals(ServerWorld world, Direction originFacing, Direction destinationFacing, BlockPos originBlockPos, BlockPos destinationBlockPos, RegistryKey<World> destinationWorldKey, double originFacingOffset, double destinationFacingOffset, double blockOffset, double innerWidth, double innerHeight, double outerWidth, double outerHeight) {
         Vec3d originPos = Vec3d.ofCenter(originBlockPos, blockOffset).offset(originFacing, originFacingOffset);
         Vec3d destinationPos = Vec3d.ofCenter(destinationBlockPos, blockOffset).offset(destinationFacing, destinationFacingOffset);
 
@@ -54,10 +55,12 @@ public class ImmersivePortals {
         portal.setRotation(dQuaternion);
         portal.setDestination(destinationPos);
         portal.setDestinationDimension(destinationWorldKey);
-        portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), width, height);
+        portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), innerWidth, innerHeight);
         PortalManipulation.rotatePortalBody(portal, DQuaternion.fromMcQuaternion(DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), originFacing.asRotation()).toMcQuaternion()));
 
         Portal portalReversed = PortalAPI.createReversePortal(portal);
+        portalReversed.setWidth(outerWidth);
+        portalReversed.setHeight(outerHeight);
         return Map.entry(portal, portalReversed);
     }
 
@@ -75,6 +78,10 @@ public class ImmersivePortals {
         public void createEntrancePortals() {
             if (this.tardis.getWorld() == null) return;
 
+            BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
+            double entranceWidth = doorTile == null ? 1 : doorTile.entranceWidth;
+            double entranceHeight = doorTile == null ? 2 : doorTile.entranceHeight;
+
             try {
                 Map.Entry<Portal, Portal> portals = createPortals(
                     this.tardis.getWorld(),
@@ -84,7 +91,7 @@ public class ImmersivePortals {
                     this.tardis.getCurrentExteriorPosition().offset(this.tardis.getCurrentExteriorFacing()).up(),
                     this.tardis.getCurrentExteriorDimension(),
                     -0.5 + 0.0275, -0.5, 0,
-                    1, 2
+                    entranceWidth, entranceHeight, 1, 2
                 );
 
                 this.portalFromTardis = portals.getKey();
@@ -125,7 +132,7 @@ public class ImmersivePortals {
                         TardisHelper.getTardisFarPos(index + 1).up(3),
                         tardisWorld.getRegistryKey(),
                         -0.50, -0.50, -0.5,
-                        3, 3
+                        3, 3, 3, 3
                     );
 
                     ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
@@ -175,7 +182,7 @@ public class ImmersivePortals {
         }
 
         public boolean isRoomEntrancePortalsValid() {
-            if (this.portalsToRooms.size() == 0) return false;
+            if (this.portalsToRooms.isEmpty()) return false;
 
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
                 if (portalsToRoom.getKey() == null || portalsToRoom.getValue() == null) return false;

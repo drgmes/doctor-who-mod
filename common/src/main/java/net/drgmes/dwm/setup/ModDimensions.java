@@ -37,6 +37,12 @@ public class ModDimensions {
         saveWorldsRegistry(server);
     }
 
+    public static void removeWorldFromRegistry(MinecraftServer server, RegistryKey<World> worldKey) {
+        if (!WORLDS.contains(worldKey)) return;
+        WORLDS.remove(worldKey);
+        saveWorldsRegistry(server);
+    }
+
     public static File getWorldsRegistryFile(MinecraftServer server) {
         return new File(server.getSavePath(WorldSavePath.ROOT).toFile(), DWM.MODID + "_worlds.json");
     }
@@ -45,7 +51,7 @@ public class ModDimensions {
         JsonArray json = new JsonArray();
         for (RegistryKey<World> world : WORLDS) {
             json.add(world.getValue().getPath());
-            DWM.LOGGER.error("Saved " + world.getValue().getPath());
+            DWM.LOGGER.info("Saved " + world.getValue().getPath());
         }
 
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(getWorldsRegistryFile(server)))) {
@@ -63,7 +69,7 @@ public class ModDimensions {
             JsonArray json = JsonParser.parseString(content).getAsJsonArray();
 
             for (JsonElement worldId : json) {
-                DWM.LOGGER.error("Loaded " + worldId);
+                DWM.LOGGER.info("Loaded " + worldId);
                 WORLDS.add(RegistryKey.of(RegistryKeys.WORLD, DWM.getIdentifier(worldId.getAsString())));
                 DimensionHelper.getOrCreateWorld(worldId.getAsString(), server, TardisHelper::tardisDimensionBuilder);
             }

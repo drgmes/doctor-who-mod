@@ -25,8 +25,6 @@ import net.drgmes.dwm.utils.builders.BlockBuilder;
 public class ModRenderers {
     public static void setup() {
         setupRenderTypes();
-//        setupEntityModelLayers();
-//        setupEntityRenderers();
         setupBlockEntityRenderers();
     }
 

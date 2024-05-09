@@ -5,7 +5,7 @@ import net.drgmes.dwm.commands.types.TardisDimensionArgumentType;
 import net.fabricmc.fabric.api.command.v2.ArgumentTypeRegistry;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 
-public class ModCommandsFabric {
+public class ModCommands {
     public static void setup() {
         ArgumentTypeRegistry.registerArgumentType(DWM.getIdentifier("tardis_dimension"), TardisDimensionArgumentType.class, ConstantArgumentSerializer.of(TardisDimensionArgumentType::new));
     }

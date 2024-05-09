@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "dwm",
+  "id": "${modId}",
   "version": "${modVersion}",
   "name": "${modName}",
   "description": "${modDescription}",
@@ -10,17 +10,17 @@
     "sources": "${modSource}"
   },
   "license": "${modLicense}",
-  "icon": "assets/dwm/icon.png",
+  "icon": "assets/${modId}/icon.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "client": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "server": [
-      "net.drgmes.dwm.fabric.DWMFabric"
+      "net.drgmes.dwm.fabric.DWM"
     ],
     "fabric-datagen": [
       "net.drgmes.dwm.fabric.datagen.DataGenerators"

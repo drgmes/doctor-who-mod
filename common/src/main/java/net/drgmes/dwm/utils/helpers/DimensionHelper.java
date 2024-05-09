@@ -113,7 +113,10 @@ public class DimensionHelper {
             return;
         }
 
-        // TODO
+        // TODO ...
+
+        RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
+        ModDimensions.removeWorldFromRegistry(server, worldKey);
     }
 
     @ExpectPlatform

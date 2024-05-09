@@ -1,29 +1,59 @@
 package net.drgmes.dwm.entities.tardis.consoleunit.controls;
 
+import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.joml.Matrix4f;
 
-public class TardisConsoleControlEntityRenderer extends EntityRenderer<Entity> {
+public class TardisConsoleControlEntityRenderer extends EntityRenderer<TardisConsoleControlEntity> {
     public TardisConsoleControlEntityRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
 
     @Override
-    protected boolean hasLabel(Entity entity) {
-        return true;
+    protected boolean hasLabel(TardisConsoleControlEntity entity) {
+        ETardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
+        return controlRole != null && controlRole.name != null && !controlRole.name.isEmpty() && entity == this.dispatcher.targetedEntity;
     }
 
     @Override
-    public Identifier getTexture(Entity entity) {
+    public Identifier getTexture(TardisConsoleControlEntity entity) {
         return null;
     }
 
     @Override
-    protected void renderLabelIfPresent(Entity entity, Text text, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+    protected void renderLabelIfPresent(TardisConsoleControlEntity entity, Text text, MatrixStack matrixStack, VertexConsumerProvider buffer, int light) {
+        if (this.dispatcher.getSquaredDistanceToCamera(entity) > 6) return;
+
+        ETardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
+        if (controlRole.name == null) return;
+
+        Text name = Text.translatable("title." + DWM.MODID + ".tardis.control.role." + controlRole.name + ".name");
+
+        float scale = 0.0055F;
+        float backgroundOpacity = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F);
+        int backgroundColor = (int) (backgroundOpacity * 255.0F) << 24;
+
+        matrixStack.push();
+        matrixStack.translate(0, entity.getNameLabelHeight() * 0.425F, 0);
+        matrixStack.multiply(this.dispatcher.getRotation());
+        matrixStack.scale(-scale, -scale, scale);
+
+        Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
+        TextRenderer textRenderer = this.getTextRenderer();
+        float textWidth = textRenderer.getWidth(name);
+        float x = textWidth / -2F;
+
+        textRenderer.draw(name, x, 0, 553648127, false, matrix4f, buffer, TextRenderer.TextLayerType.SEE_THROUGH, backgroundColor, light);
+        textRenderer.draw(name, x, 0, -1, false, matrix4f, buffer, TextRenderer.TextLayerType.NORMAL, 0, light);
+
+        matrixStack.pop();
     }
 }

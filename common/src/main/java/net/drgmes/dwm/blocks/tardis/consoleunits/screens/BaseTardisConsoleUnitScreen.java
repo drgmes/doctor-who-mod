@@ -18,12 +18,6 @@ public abstract class BaseTardisConsoleUnitScreen extends BaseScreen {
         return this.getRenderPos(23, 8);
     }
 
-    @Override
-    public void close() {
-        this.tardisConsoleUnitBlockEntity.markDirty();
-        super.close();
-    }
-
     protected void apply() {
         this.close();
     }

@@ -10,6 +10,10 @@ architectury {
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
+    mixin {
+        add sourceSets.main, 'dwm.refmap.json'
+    }
+
     forge {
         convertAccessWideners = true
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
@@ -36,26 +40,10 @@ dependencies {
 }
 
 processResources {
-    inputs.property "minecraftVersion", rootProject.minecraft_version
-    inputs.property "architecturyVersion", rootProject.architectury_version
-    inputs.property "modVersion", rootProject.mod_version
-    inputs.property "modName", rootProject.mod_name
-    inputs.property "modDescription", rootProject.mod_description
-    inputs.property "modHomepage", rootProject.mod_homepage
-    inputs.property "modSource", rootProject.mod_source
-    inputs.property "modAuthors", rootProject.mod_authors
-    inputs.property "modLicense", rootProject.mod_license
+    inputs.properties(rootProject.ext.attrs)
 
     filesMatching("META-INF/mods.toml") {
-        expand "minecraftVersion": project.minecraft_version,
-                "architecturyVersion": project.architectury_version,
-                "modVersion": project.mod_version,
-                "modName": rootProject.mod_name,
-                "modDescription": rootProject.mod_description,
-                "modHomepage": rootProject.mod_homepage,
-                "modSource": rootProject.mod_source,
-                "modAuthors": rootProject.mod_authors,
-                "modLicense": rootProject.mod_license
+        expand(rootProject.ext.attrs)
     }
 }
 
@@ -70,16 +58,12 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier.set null
-}
-
-jar {
-    archiveClassifier.set "dev"
 }
 
 sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     from commonSources.archiveFile.map { zipTree(it) }
 }
 
