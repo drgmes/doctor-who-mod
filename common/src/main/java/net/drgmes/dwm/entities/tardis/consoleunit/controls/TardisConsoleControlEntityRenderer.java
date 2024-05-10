@@ -1,6 +1,5 @@
 package net.drgmes.dwm.entities.tardis.consoleunit.controls;
 
-import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -18,12 +17,6 @@ public class TardisConsoleControlEntityRenderer extends EntityRenderer<TardisCon
     }
 
     @Override
-    protected boolean hasLabel(TardisConsoleControlEntity entity) {
-        ETardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
-        return controlRole != null && controlRole.name != null && !controlRole.name.isEmpty() && entity == this.dispatcher.targetedEntity;
-    }
-
-    @Override
     public Identifier getTexture(TardisConsoleControlEntity entity) {
         return null;
     }
@@ -34,8 +27,6 @@ public class TardisConsoleControlEntityRenderer extends EntityRenderer<TardisCon
 
         ETardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
         if (controlRole.name == null) return;
-
-        Text name = Text.translatable("title." + DWM.MODID + ".tardis.control.role." + controlRole.name + ".name");
 
         float scale = 0.0055F;
         float backgroundOpacity = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F);
@@ -48,11 +39,11 @@ public class TardisConsoleControlEntityRenderer extends EntityRenderer<TardisCon
 
         Matrix4f matrix4f = matrixStack.peek().getPositionMatrix();
         TextRenderer textRenderer = this.getTextRenderer();
-        float textWidth = textRenderer.getWidth(name);
+        float textWidth = textRenderer.getWidth(text);
         float x = textWidth / -2F;
 
-        textRenderer.draw(name, x, 0, 553648127, false, matrix4f, buffer, TextRenderer.TextLayerType.SEE_THROUGH, backgroundColor, light);
-        textRenderer.draw(name, x, 0, -1, false, matrix4f, buffer, TextRenderer.TextLayerType.NORMAL, 0, light);
+        textRenderer.draw(text, x, 0, 553648127, false, matrix4f, buffer, TextRenderer.TextLayerType.SEE_THROUGH, backgroundColor, light);
+        textRenderer.draw(text, x, 0, -1, false, matrix4f, buffer, TextRenderer.TextLayerType.NORMAL, 0, light);
 
         matrixStack.pop();
     }

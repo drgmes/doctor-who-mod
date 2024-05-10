@@ -1,10 +1,12 @@
 package net.drgmes.dwm.common.tardis.consoleunits.controls;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntity;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntityBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.state.property.Properties;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -38,6 +40,10 @@ public class TardisConsoleControlEntry {
         entity.setPosition(pos);
         entity.setTardisControlRole(this.role);
         entity.setTardisConsolePos(tile.getPos(), tile);
+
+        String name = this.role.name;
+        if (name == null || name.isEmpty()) name = this.role.name().toLowerCase();
+        entity.setCustomName(Text.translatable("title." + DWM.MODID + ".tardis.control.role." + name + ".name"));
 
         world.spawnEntity(entity);
         return entity;
