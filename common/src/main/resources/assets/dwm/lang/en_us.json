@@ -300,6 +300,7 @@
   "title.dwm.tardis_pos": "TARDIS Position: %s",
   "title.dwm.tardis_last_pos": "Last known position: %s",
 
+  "title.dwm.tardis.control.role.monitor.name": "Monitor",
   "title.dwm.tardis.control.role.telepathic_interface.name": "Telepathic interface",
   "title.dwm.tardis.control.role.sonic_screwdriver_slot.name": "Sonic screwdriver slot",
   "title.dwm.tardis.control.role.doors.name": "Doors",

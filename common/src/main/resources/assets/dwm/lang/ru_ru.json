@@ -300,6 +300,7 @@
   "title.dwm.tardis_pos": "Позиция ТАРДИС: %s",
   "title.dwm.tardis_last_pos": "Последняя известная позиция: %s",
 
+  "title.dwm.tardis.control.role.monitor.name": "Монитор",
   "title.dwm.tardis.control.role.telepathic_interface.name": "Телепатический интерфейс",
   "title.dwm.tardis.control.role.sonic_screwdriver_slot.name": "Слот для звуковой отвёртки",
   "title.dwm.tardis.control.role.doors.name": "Двери",
