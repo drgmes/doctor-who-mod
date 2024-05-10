@@ -9,13 +9,11 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class TardisConsoleControlEntity extends Entity {
     private static final TrackedData<String> CONTROL_ROLE = DataTracker.registerData(
@@ -35,13 +33,44 @@ public class TardisConsoleControlEntity extends Entity {
     }
 
     @Override
-    public boolean canHit() {
-        return true;
+    public void initDataTracker() {
+        this.dataTracker.startTracking(CONTROL_ROLE, ETardisConsoleUnitControlRole.NONE.name());
+        this.dataTracker.startTracking(CONSOLE_UNIT_POS, BlockPos.ORIGIN);
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> createSpawnPacket() {
-        return new EntitySpawnS2CPacket(this);
+    public void readCustomDataFromNbt(NbtCompound tag) {
+        if (tag.contains("controlRole")) {
+            this.setTardisControlRole(ETardisConsoleUnitControlRole.valueOf(tag.getString("controlRole")));
+        }
+
+        if (tag.contains("consoleUnitPosX") && tag.contains("consoleUnitPosY") && tag.contains("consoleUnitPosZ")) {
+            this.setTardisConsolePos(new BlockPos(
+                tag.getInt("consoleUnitPosX"),
+                tag.getInt("consoleUnitPosY"),
+                tag.getInt("consoleUnitPosZ")
+            ));
+        }
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound tag) {
+        ETardisConsoleUnitControlRole controlRole = this.getTardisControlRole();
+        if (controlRole != null) {
+            tag.putString("controlRole", controlRole.name());
+        }
+
+        BlockPos consoleUnitPos = this.getTardisConsolePos();
+        if (consoleUnitPos != null) {
+            tag.putInt("consoleUnitPosX", consoleUnitPos.getX());
+            tag.putInt("consoleUnitPosY", consoleUnitPos.getY());
+            tag.putInt("consoleUnitPosZ", consoleUnitPos.getZ());
+        }
+    }
+
+    @Override
+    public boolean canHit() {
+        return true;
     }
 
     @Override
@@ -67,42 +96,6 @@ public class TardisConsoleControlEntity extends Entity {
         return true;
     }
 
-    @Override
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(CONTROL_ROLE, ETardisConsoleUnitControlRole.NONE.name());
-        this.dataTracker.startTracking(CONSOLE_UNIT_POS, BlockPos.ORIGIN);
-    }
-
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound tag) {
-        if (tag.contains("controlRole")) {
-            this.setTardisControlRole(ETardisConsoleUnitControlRole.valueOf(tag.getString("controlRole")));
-        }
-
-        if (tag.contains("consoleUnitPosX") && tag.contains("consoleUnitPosY") && tag.contains("consoleUnitPosZ")) {
-            this.setTardisConsolePos(new BlockPos(
-                tag.getInt("consoleUnitPosX"),
-                tag.getInt("consoleUnitPosY"),
-                tag.getInt("consoleUnitPosZ")
-            ));
-        }
-    }
-
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound tag) {
-        ETardisConsoleUnitControlRole controlRole = this.getTardisControlRole();
-        if (controlRole != null) {
-            tag.putString("controlRole", controlRole.name());
-        }
-
-        BlockPos consoleUnitPos = this.getTardisConsolePos();
-        if (consoleUnitPos != null) {
-            tag.putInt("consoleUnitPosX", consoleUnitPos.getX());
-            tag.putInt("consoleUnitPosY", consoleUnitPos.getY());
-            tag.putInt("consoleUnitPosZ", consoleUnitPos.getZ());
-        }
-    }
-
     public ETardisConsoleUnitControlRole getTardisControlRole() {
         return ETardisConsoleUnitControlRole.valueOf(this.dataTracker.get(CONTROL_ROLE));
     }
@@ -115,17 +108,17 @@ public class TardisConsoleControlEntity extends Entity {
         return this.dataTracker.get(CONSOLE_UNIT_POS);
     }
 
-    public void setTardisConsolePos(BaseTardisConsoleUnitBlockEntity blockEntity) {
-        this.dataTracker.set(CONSOLE_UNIT_POS, blockEntity.getPos());
-        this.consoleUnit = blockEntity;
+    public void setTardisConsolePos(BlockPos blockPos, @Nullable BaseTardisConsoleUnitBlockEntity blockEntity) {
+        this.dataTracker.set(CONSOLE_UNIT_POS, blockPos);
+        if (blockEntity != null) this.consoleUnit = blockEntity;
     }
 
     public void setTardisConsolePos(BlockPos blockPos) {
         if (this.getWorld().getBlockEntity(blockPos) instanceof BaseTardisConsoleUnitBlockEntity blockEntity) {
-            this.setTardisConsolePos(blockEntity);
+            this.setTardisConsolePos(blockPos, blockEntity);
             return;
         }
 
-        this.setTardisConsolePos(blockPos);
+        this.setTardisConsolePos(blockPos, null);
     }
 }

@@ -37,7 +37,7 @@ public class TardisConsoleControlEntry {
         assert entity != null;
         entity.setPosition(pos);
         entity.setTardisControlRole(this.role);
-        entity.setTardisConsolePos(tile);
+        entity.setTardisConsolePos(tile.getPos(), tile);
 
         world.spawnEntity(entity);
         return entity;
