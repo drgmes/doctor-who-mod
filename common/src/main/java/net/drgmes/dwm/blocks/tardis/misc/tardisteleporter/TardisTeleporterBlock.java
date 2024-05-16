@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisteleporter;
 
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -17,10 +18,9 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.Set;
 
 public class TardisTeleporterBlock extends Block implements Waterloggable, BlockEntityProvider {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -60,9 +60,14 @@ public class TardisTeleporterBlock extends Block implements Waterloggable, Block
         if (world.isClient) return;
 
         if (world.getBlockEntity(blockPos) instanceof TardisTeleporterBlockEntity tardisTeleporterBlockEntity) {
+            if (tardisTeleporterBlockEntity.destinationBlockPos == null) return;
+
             Vec3d pos = Vec3d.ofBottomCenter(tardisTeleporterBlockEntity.destinationBlockPos);
+            Direction facing = tardisTeleporterBlockEntity.destinationFacing;
+            if (facing == null) facing = Direction.NORTH;
+
             ModSounds.playTardisTeleporterSentSound(world, blockPos);
-            entity.teleport((ServerWorld) world, pos.x, pos.y, pos.z, Set.of(), tardisTeleporterBlockEntity.destinationFacing.asRotation(), 0);
+            CommonHelper.teleport(entity, (ServerWorld) world, pos, facing.asRotation());
             ModSounds.playTardisTeleporterReceivedSound(world, BlockPos.ofFloored(pos));
         }
     }

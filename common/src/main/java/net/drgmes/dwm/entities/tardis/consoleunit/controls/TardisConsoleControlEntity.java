@@ -44,12 +44,8 @@ public class TardisConsoleControlEntity extends Entity {
             this.setTardisControlRole(ETardisConsoleUnitControlRole.valueOf(tag.getString("controlRole")));
         }
 
-        if (tag.contains("consoleUnitPosX") && tag.contains("consoleUnitPosY") && tag.contains("consoleUnitPosZ")) {
-            this.setTardisConsolePos(new BlockPos(
-                tag.getInt("consoleUnitPosX"),
-                tag.getInt("consoleUnitPosY"),
-                tag.getInt("consoleUnitPosZ")
-            ));
+        if (tag.contains("consoleUnitPos")) {
+            this.setTardisConsolePos(BlockPos.fromLong(tag.getLong("consoleUnitPos")));
         }
     }
 
@@ -62,9 +58,7 @@ public class TardisConsoleControlEntity extends Entity {
 
         BlockPos consoleUnitPos = this.getTardisConsolePos();
         if (consoleUnitPos != null) {
-            tag.putInt("consoleUnitPosX", consoleUnitPos.getX());
-            tag.putInt("consoleUnitPosY", consoleUnitPos.getY());
-            tag.putInt("consoleUnitPosZ", consoleUnitPos.getZ());
+            tag.putLong("consoleUnitPos", consoleUnitPos.asLong());
         }
     }
 

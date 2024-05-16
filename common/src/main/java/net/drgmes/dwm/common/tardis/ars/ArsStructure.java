@@ -9,6 +9,7 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBl
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
@@ -33,7 +34,6 @@ import org.apache.commons.lang3.function.TriFunction;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ArsStructure {
     public final String name;
@@ -202,7 +202,7 @@ public class ArsStructure {
 
                 for (LivingEntity entity : entities) {
                     ModSounds.playTardisTeleporterSentSound(world, entity.getBlockPos());
-                    entity.teleport(world, pos.x, pos.y, pos.z, Set.of(), tardis.getEntranceFacing().asRotation(), 0);
+                    CommonHelper.teleport(entity, world, pos, tardis.getEntranceFacing().asRotation());
                     ModSounds.playTardisTeleporterReceivedSound(world, BlockPos.ofFloored(pos));
                 }
 

@@ -1,6 +1,7 @@
 package net.drgmes.dwm.mixin;
 
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -11,8 +12,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.Set;
 
 @Mixin(LivingEntity.class)
 public class MixinLivingEntity {
@@ -25,7 +24,7 @@ public class MixinLivingEntity {
             if (source.isOf(DamageTypes.OUT_OF_WORLD) && amount != Float.MAX_VALUE) {
                 TardisStateManager.get((ServerWorld) $this.getWorld()).ifPresent((tardis) -> {
                     Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
-                    $this.teleport(tardis.getWorld(), pos.x, pos.y, pos.z, Set.of(), tardis.getEntranceFacing().asRotation(), 0);
+                    CommonHelper.teleport($this, tardis.getWorld(), pos, tardis.getEntranceFacing().asRotation());
                 });
 
                 cir.setReturnValue(false);
