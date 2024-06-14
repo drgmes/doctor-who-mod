@@ -11,12 +11,12 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class CommonHelperImpl {
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw, float pitch) {
         if (entity instanceof ServerPlayerEntity player) {
-            return player.changeDimension(destination, new DWMTeleporter(pos, yaw, 0));
+            return player.changeDimension(destination, new DWMTeleporter(pos, yaw, (int) pitch));
         }
 
-        entity.teleport(destination, pos.x, pos.y, pos.z, Set.of(), yaw, 0);
+        entity.teleport(destination, pos.x, pos.y, pos.z, Set.of(), yaw, pitch);
         return entity;
     }
 
