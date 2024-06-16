@@ -23,6 +23,11 @@ public class TardisRoundelBlockRenderer implements BlockEntityRenderer<TardisRou
     }
 
     @Override
+    public int getRenderDistance() {
+        return 256;
+    }
+
+    @Override
     public void render(TardisRoundelBlockEntity tile, float delta, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay) {
         boolean isLit = tile.getCachedState().get(TardisRoundelBlock.LIT);
         EntityModelLayer modelLayer = tile.lightMode ? TardisRoundelModel.LAYER_LOCATION_LIGHT : TardisRoundelModel.LAYER_LOCATION_DARK;
@@ -46,10 +51,5 @@ public class TardisRoundelBlockRenderer implements BlockEntityRenderer<TardisRou
             ctx.getRenderManager().renderBlock(blockState, tile.getPos(), tile.getWorld(), matrixStack, buffer.getBuffer(RenderLayer.getTranslucent()), true, tile.getWorld().random);
             matrixStack.pop();
         }
-    }
-
-    @Override
-    public int getRenderDistance() {
-        return 256;
     }
 }

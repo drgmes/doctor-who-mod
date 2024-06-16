@@ -15,6 +15,8 @@ public class TardisExteriorPoliceBoxModel extends Model {
     private final ModelPart base;
     private final ModelPart door_left;
     private final ModelPart door_right;
+    private final ModelPart lamp;
+    private final ModelPart boti;
 
     public TardisExteriorPoliceBoxModel(ModelPart root) {
         super(RenderLayer::getEntityTranslucentCull);
@@ -22,6 +24,8 @@ public class TardisExteriorPoliceBoxModel extends Model {
         this.base = root.getChild("base");
         this.door_left = root.getChild("door_left");
         this.door_right = root.getChild("door_right");
+        this.lamp = root.getChild("lamp");
+        this.boti = root.getChild("boti");
     }
 
     @SuppressWarnings("unused")
@@ -29,96 +33,256 @@ public class TardisExteriorPoliceBoxModel extends Model {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
 
-        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(0, 0).cuboid(-9.0F, -1.0F, -9.0F, 18.0F, 1.0F, 18.0F), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
-        ModelPartData platform_beams = base.addChild("platform_beams", ModelPartBuilder.create().uv(48, 76).cuboid(-8.0F, -27.0F, 6.0F, 2.0F, 26.0F, 2.0F).uv(40, 76).cuboid(6.0F, -27.0F, 6.0F, 2.0F, 26.0F, 2.0F).uv(22, 72).cuboid(-8.0F, -27.0F, -8.0F, 2.0F, 26.0F, 2.0F).uv(32, 62).cuboid(6.0F, -27.0F, -8.0F, 2.0F, 26.0F, 2.0F).uv(64, 84).cuboid(-7.3F, -27.5F, 6.3F, 1.0F, 26.0F, 1.0F).uv(60, 84).cuboid(-7.3F, -27.5F, -7.3F, 1.0F, 26.0F, 1.0F).uv(56, 84).cuboid(6.3F, -27.5F, -7.3F, 1.0F, 26.0F, 1.0F).uv(83, 83).cuboid(6.3F, -27.5F, 6.3F, 1.0F, 26.0F, 1.0F), ModelTransform.pivot(0.0F, 0.5F, 0.0F));
-        ModelPartData labels = base.addChild("labels", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -1.0F, 0.0F));
-        ModelPartData label_front = labels.addChild("label_front", ModelPartBuilder.create().uv(75, 19).cuboid(-7.0F, -25.0F, -8.4F, 14.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_front_corners_left = label_front.addChild("label_front_corners_left", ModelPartBuilder.create().uv(113, 107).cuboid(-7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(112, 54).cuboid(-6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_front_corners_right = label_front.addChild("label_front_corners_right", ModelPartBuilder.create().uv(112, 56).cuboid(7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(34, 112).cuboid(6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_front_corners_top = label_front.addChild("label_front_corners_top", ModelPartBuilder.create().uv(54, 82).cuboid(-7.0F, -25.0F, -8.6F, 14.0F, 0.0F, 2.0F).uv(82, 11).cuboid(-7.0F, -24.9F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_front_corners_bottom = label_front.addChild("label_front_corners_bottom", ModelPartBuilder.create().uv(82, 32).cuboid(-7.0F, -23.0001F, -8.6F, 14.0F, 0.0F, 2.0F).uv(79, 6).cuboid(-7.0F, -23.1F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_back = labels.addChild("label_back", ModelPartBuilder.create().uv(72, 15).cuboid(-7.0F, -25.0F, -8.4F, 14.0F, 2.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
-        ModelPartData label_back_corners_left = label_back.addChild("label_back_corners_left", ModelPartBuilder.create().uv(30, 112).cuboid(-7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(16, 112).cuboid(-6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_back_corners_right = label_back.addChild("label_back_corners_right", ModelPartBuilder.create().uv(12, 112).cuboid(7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(112, 10).cuboid(6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_back_corners_top = label_back.addChild("label_back_corners_top", ModelPartBuilder.create().uv(79, 4).cuboid(-7.0F, -25.0F, -8.6F, 14.0F, 0.0F, 2.0F).uv(79, 2).cuboid(-7.0F, -24.9F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_back_corners_bottom = label_back.addChild("label_back_corners_bottom", ModelPartBuilder.create().uv(79, 0).cuboid(-7.0F, -23.0001F, -8.6F, 14.0F, 0.0F, 2.0F).uv(74, 47).cuboid(-7.0F, -23.1F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_left = labels.addChild("label_left", ModelPartBuilder.create().uv(54, 33).cuboid(-7.0F, -25.0F, -8.4F, 14.0F, 2.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
-        ModelPartData label_left_corners_left = label_left.addChild("label_left_corners_left", ModelPartBuilder.create().uv(112, 8).cuboid(-7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(8, 112).cuboid(-6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_left_corners_right = label_left.addChild("label_left_corners_right", ModelPartBuilder.create().uv(108, 56).cuboid(7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(108, 54).cuboid(6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_left_corners_top = label_left.addChild("label_left_corners_top", ModelPartBuilder.create().uv(74, 45).cuboid(-7.0F, -25.0F, -8.6F, 14.0F, 0.0F, 2.0F).uv(74, 43).cuboid(-7.0F, -24.9F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_left_corners_bottom = label_left.addChild("label_left_corners_bottom", ModelPartBuilder.create().uv(74, 41).cuboid(-7.0F, -23.0001F, -8.6F, 14.0F, 0.0F, 2.0F).uv(74, 39).cuboid(-7.0F, -23.1F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_right = labels.addChild("label_right", ModelPartBuilder.create().uv(54, 11).cuboid(-7.0F, -25.0F, -8.4F, 14.0F, 2.0F, 2.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
-        ModelPartData label_right_corners_left = label_right.addChild("label_right_corners_left", ModelPartBuilder.create().uv(46, 74).cuboid(-7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(26, 65).cuboid(-6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_right_corners_right = label_right.addChild("label_right_corners_right", ModelPartBuilder.create().uv(49, 33).cuboid(7.0F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F).uv(9, 40).cuboid(6.9F, -25.0F, -8.6F, 0.0F, 2.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_right_corners_top = label_right.addChild("label_right_corners_top", ModelPartBuilder.create().uv(74, 37).cuboid(-7.0F, -25.0F, -8.6F, 14.0F, 0.0F, 2.0F).uv(73, 27).cuboid(-7.0F, -24.9F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData label_right_corners_bottom = label_right.addChild("label_right_corners_bottom", ModelPartBuilder.create().uv(73, 25).cuboid(-7.0F, -23.0001F, -8.6F, 14.0F, 0.0F, 2.0F).uv(73, 23).cuboid(-7.0F, -23.1F, -8.6F, 14.0F, 0.0F, 2.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData roof = base.addChild("roof", ModelPartBuilder.create().uv(0, 19).cuboid(-7.1F, -27.0F, -6.9F, 14.0F, 2.0F, 14.0F).uv(0, 35).cuboid(-6.6F, -27.2F, -6.4F, 13.0F, 2.0F, 13.0F).uv(40, 38).cuboid(-6.1F, -27.4F, -5.9F, 12.0F, 2.0F, 12.0F).uv(42, 19).cuboid(-5.6F, -27.6F, -5.4F, 11.0F, 2.0F, 11.0F).uv(0, 50).cuboid(-5.1F, -27.8F, -4.9F, 10.0F, 2.0F, 10.0F).uv(54, 0).cuboid(-4.6F, -28.0F, -4.4F, 9.0F, 2.0F, 9.0F).uv(0, 62).cuboid(-4.1F, -28.2F, -3.9F, 8.0F, 2.0F, 8.0F), ModelTransform.pivot(0.1F, -1.0F, -0.1F));
-        ModelPartData lantern = roof.addChild("lantern", ModelPartBuilder.create().uv(39, 42).cuboid(-1.0F, -31.0F, -1.0F, 2.0F, 3.0F, 2.0F).uv(0, 42).cuboid(-1.5F, -28.3F, -1.5F, 3.0F, 1.0F, 3.0F), ModelTransform.pivot(-0.1F, 0.0F, 0.1F));
-        ModelPartData lantern_plate_1 = lantern.addChild("lantern_plate_1", ModelPartBuilder.create().uv(0, 15).cuboid(-1.5F, -30.0F, -1.5F, 3.0F, 0.0F, 3.0F).uv(7, 12).cuboid(-1.5F, -30.1F, -1.5F, 3.0F, 0.0F, 3.0F), ModelTransform.pivot(0.0F, -0.8F, 0.0F));
-        ModelPartData lantern_plate_2 = lantern.addChild("lantern_plate_2", ModelPartBuilder.create().uv(7, 9).cuboid(-1.5F, -30.0F, -1.5F, 3.0F, 0.0F, 3.0F).uv(7, 6).cuboid(-1.5F, -30.1F, -1.5F, 3.0F, 0.0F, 3.0F), ModelTransform.pivot(0.0F, -0.4F, 0.0F));
-        ModelPartData lantern_plate_3 = lantern.addChild("lantern_plate_3", ModelPartBuilder.create().uv(7, 3).cuboid(-1.5F, -30.0F, -1.5F, 3.0F, 0.0F, 3.0F).uv(7, 0).cuboid(-1.5F, -30.1F, -1.5F, 3.0F, 0.0F, 3.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData walls = base.addChild("walls", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left = walls.addChild("wall_left", ModelPartBuilder.create().uv(66, 67).cuboid(-5.0F, -16.0F, -6.5F, 10.0F, 14.0F, 1.0F).uv(88, 49).cuboid(-1.0F, -24.0F, -7.1F, 2.0F, 23.0F, 1.0F).uv(24, 100).cuboid(-0.5F, -24.0F, -7.3F, 1.0F, 23.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
-        ModelPartData wall_left_windows = wall_left.addChild("wall_left_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_window_left = wall_left_windows.addChild("wall_left_window_left", ModelPartBuilder.create().uv(42, 19).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_window_left_borders = wall_left_window_left.addChild("wall_left_window_left_borders", ModelPartBuilder.create().uv(105, 109).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(80, 109).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(107, 21).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(105, 105).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_window_left_border_middle = wall_left_window_left_borders.addChild("wall_left_window_left_border_middle", ModelPartBuilder.create().uv(53, 6).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(53, 5).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_left_window_left_border_y_a = wall_left_window_left_borders.addChild("wall_left_window_left_border_y_a", ModelPartBuilder.create().uv(84, 109).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(28, 105).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_left_window_left_border_y_b = wall_left_window_left_borders.addChild("wall_left_window_left_border_y_b", ModelPartBuilder.create().uv(91, 104).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(80, 101).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_left_window_right = wall_left_windows.addChild("wall_left_window_right", ModelPartBuilder.create().uv(39, 35).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(6.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_window_right_borders = wall_left_window_right.addChild("wall_left_window_right_borders", ModelPartBuilder.create().uv(109, 0).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(87, 105).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(105, 93).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(105, 91).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_window_right_border_middle = wall_left_window_right_borders.addChild("wall_left_window_right_border_middle", ModelPartBuilder.create().uv(53, 4).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(49, 32).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_left_window_right_border_y_a = wall_left_window_right_borders.addChild("wall_left_window_right_border_y_a", ModelPartBuilder.create().uv(28, 99).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(80, 95).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_left_window_right_border_y_b = wall_left_window_right_borders.addChild("wall_left_window_right_border_y_b", ModelPartBuilder.create().uv(94, 60).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(94, 54).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_left_corners = wall_left.addChild("wall_left_corners", ModelPartBuilder.create().uv(86, 29).cuboid(-6.0F, -24.7F, -7.3F, 12.0F, 1.0F, 1.0F).uv(101, 73).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(100, 49).cuboid(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(0, 87).cuboid(-6.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F).uv(76, 84).cuboid(5.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_left_separators = wall_left.addChild("wall_left_separators", ModelPartBuilder.create().uv(105, 79).cuboid(-5.0F, -2.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 77).cuboid(-5.0F, -7.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 75).cuboid(-5.0F, -12.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 19).cuboid(-5.0F, -17.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(104, 96).cuboid(-5.0F, -24.0F, -7.0F, 10.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right = walls.addChild("wall_right", ModelPartBuilder.create().uv(66, 52).cuboid(-5.0F, -16.0F, -6.5F, 10.0F, 14.0F, 1.0F).uv(87, 81).cuboid(-1.0F, -24.0F, -7.1F, 2.0F, 23.0F, 1.0F).uv(97, 73).cuboid(-0.5F, -24.0F, -7.3F, 1.0F, 23.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
-        ModelPartData wall_right_windows = wall_right.addChild("wall_right_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_window_left = wall_right_windows.addChild("wall_right_window_left", ModelPartBuilder.create().uv(0, 35).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_window_left_borders = wall_right_window_left.addChild("wall_right_window_left_borders", ModelPartBuilder.create().uv(88, 73).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(4, 62).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(56, 80).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(56, 78).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_window_left_border_middle = wall_right_window_left_borders.addChild("wall_right_window_left_border_middle", ModelPartBuilder.create().uv(48, 37).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(38, 47).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_right_window_left_border_y_a = wall_right_window_left_borders.addChild("wall_right_window_left_border_y_a", ModelPartBuilder.create().uv(94, 48).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(20, 92).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_right_window_left_border_y_b = wall_right_window_left_borders.addChild("wall_right_window_left_border_y_b", ModelPartBuilder.create().uv(80, 89).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(20, 86).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_right_window_right = wall_right_windows.addChild("wall_right_window_right", ModelPartBuilder.create().uv(0, 26).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(6.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_window_right_borders = wall_right_window_right.addChild("wall_right_window_right_borders", ModelPartBuilder.create().uv(0, 62).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(48, 41).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(54, 76).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(64, 15).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_window_right_border_middle = wall_right_window_right_borders.addChild("wall_right_window_right_border_middle", ModelPartBuilder.create().uv(41, 32).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(8, 17).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_right_window_right_border_y_a = wall_right_window_right_borders.addChild("wall_right_window_right_border_y_a", ModelPartBuilder.create().uv(80, 83).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(30, 83).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_right_window_right_border_y_b = wall_right_window_right_borders.addChild("wall_right_window_right_border_y_b", ModelPartBuilder.create().uv(30, 77).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(30, 71).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_right_corners = wall_right.addChild("wall_right_corners", ModelPartBuilder.create().uv(86, 13).cuboid(-6.0F, -24.7F, -7.3F, 12.0F, 1.0F, 1.0F).uv(20, 100).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(97, 97).cuboid(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(72, 84).cuboid(-6.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F).uv(68, 84).cuboid(5.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_right_separators = wall_right.addChild("wall_right_separators", ModelPartBuilder.create().uv(104, 17).cuboid(-5.0F, -2.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(103, 27).cuboid(-5.0F, -7.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(103, 25).cuboid(-5.0F, -12.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(103, 23).cuboid(-5.0F, -17.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(102, 15).cuboid(-5.0F, -24.0F, -7.0F, 10.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back = walls.addChild("wall_back", ModelPartBuilder.create().uv(0, 72).cuboid(-5.0F, -16.0F, -6.5F, 10.0F, 14.0F, 1.0F).uv(30, 90).cuboid(-1.0F, -24.0F, -7.1F, 2.0F, 23.0F, 1.0F).uv(101, 97).cuboid(-0.5F, -24.0F, -7.3F, 1.0F, 23.0F, 1.0F), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
-        ModelPartData wall_back_windows = wall_back.addChild("wall_back_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_window_left = wall_back_windows.addChild("wall_back_window_left", ModelPartBuilder.create().uv(30, 50).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_window_left_borders = wall_back_window_left.addChild("wall_back_window_left_borders", ModelPartBuilder.create().uv(64, 111).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(60, 111).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(108, 40).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(108, 38).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_window_left_border_middle = wall_back_window_left_borders.addChild("wall_back_window_left_border_middle", ModelPartBuilder.create().uv(56, 37).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(53, 17).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_back_window_left_border_y_a = wall_back_window_left_borders.addChild("wall_back_window_left_border_y_a", ModelPartBuilder.create().uv(0, 113).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(112, 28).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_back_window_left_border_y_b = wall_back_window_left_borders.addChild("wall_back_window_left_border_y_b", ModelPartBuilder.create().uv(88, 111).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(86, 111).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_back_window_right = wall_back_windows.addChild("wall_back_window_right", ModelPartBuilder.create().uv(0, 50).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(6.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_window_right_borders = wall_back_window_right.addChild("wall_back_window_right_borders", ModelPartBuilder.create().uv(56, 111).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(109, 109).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(108, 36).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(105, 107).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_window_right_border_middle = wall_back_window_right_borders.addChild("wall_back_window_right_border_middle", ModelPartBuilder.create().uv(53, 8).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(53, 7).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData wall_back_window_right_border_y_a = wall_back_window_right_borders.addChild("wall_back_window_right_border_y_a", ModelPartBuilder.create().uv(28, 111).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(91, 110).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData wall_back_window_right_border_y_b = wall_back_window_right_borders.addChild("wall_back_window_right_border_y_b", ModelPartBuilder.create().uv(78, 110).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(76, 110).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData wall_back_corners = wall_back.addChild("wall_back_corners", ModelPartBuilder.create().uv(86, 34).cuboid(-6.0F, -24.7F, -7.3F, 12.0F, 1.0F, 1.0F).uv(40, 104).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(104, 36).cuboid(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(8, 87).cuboid(-6.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F).uv(4, 87).cuboid(5.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData wall_back_separators = wall_back.addChild("wall_back_separators", ModelPartBuilder.create().uv(105, 89).cuboid(-5.0F, -2.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 87).cuboid(-5.0F, -7.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 85).cuboid(-5.0F, -12.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 83).cuboid(-5.0F, -17.0F, -7.0F, 10.0F, 1.0F, 1.0F).uv(105, 81).cuboid(-5.0F, -24.0F, -7.0F, 10.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData door_corners = base.addChild("door_corners", ModelPartBuilder.create().uv(16, 87).cuboid(-6.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F).uv(12, 87).cuboid(5.7F, -27.0F, -7.3F, 1.0F, 26.0F, 1.0F).uv(90, 8).cuboid(-6.0F, -24.7F, -7.3F, 12.0F, 1.0F, 1.0F).uv(48, 104).cuboid(5.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData door_left = modelPartData.addChild("door_left", ModelPartBuilder.create().uv(44, 104).cuboid(5.05F, -11.625F, -0.9F, 1.0F, 23.0F, 1.0F).uv(105, 60).cuboid(0.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F).uv(54, 0).cuboid(1.05F, -3.125F, -0.2F, 3.0F, 3.0F, 1.0F).uv(113, 34).cuboid(4.85F, -2.125F, -0.8F, 1.0F, 1.0F, 1.0F), ModelTransform.pivot(-5.55F, 11.625F, -6.4F));
-        ModelPartData door_left_separators = door_left.addChild("door_left_separators", ModelPartBuilder.create().uv(108, 54).cuboid(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(108, 52).cuboid(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(108, 50).cuboid(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(108, 48).cuboid(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(108, 46).cuboid(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
-        ModelPartData door_left_corners = door_left.addChild("door_left_corners", ModelPartBuilder.create().uv(52, 104).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(93, 96).cuboid(-1.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
-        ModelPartData door_left_window = door_left.addChild("door_left_window", ModelPartBuilder.create().uv(105, 98).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(5.55F, 12.375F, 6.4F));
-        ModelPartData door_left_window_borders = door_left_window.addChild("door_left_window_borders", ModelPartBuilder.create().uv(72, 111).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(68, 111).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(108, 44).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(108, 42).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData door_left_window_border_middle = door_left_window_borders.addChild("door_left_window_border_middle", ModelPartBuilder.create().uv(0, 59).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(57, 32).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData door_left_window_border_y_a = door_left_window_borders.addChild("door_left_window_border_y_a", ModelPartBuilder.create().uv(6, 113).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(4, 113).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData door_left_window_border_y_b = door_left_window_borders.addChild("door_left_window_border_y_b", ModelPartBuilder.create().uv(113, 0).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(2, 113).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
-        ModelPartData door_right = modelPartData.addChild("door_right", ModelPartBuilder.create().uv(36, 90).cuboid(-6.05F, -11.625F, -0.9F, 1.0F, 23.0F, 1.0F).uv(0, 0).cuboid(-4.55F, -3.625F, -0.1F, 4.0F, 14.0F, 1.0F).uv(26, 64).cuboid(-3.55F, -2.625F, -0.11F, 2.0F, 2.0F, 1.0F).uv(113, 111).cuboid(-5.85F, -2.625F, -0.8F, 1.0F, 2.0F, 1.0F), ModelTransform.pivot(5.55F, 11.625F, -6.4F));
-        ModelPartData door_right_separators = door_right.addChild("door_right_separators", ModelPartBuilder.create().uv(24, 62).cuboid(-5.0F, -2.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(30, 57).cuboid(-5.0F, -7.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(0, 57).cuboid(-5.0F, -12.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(54, 15).cuboid(-5.0F, -17.0F, -7.0F, 4.0F, 1.0F, 1.0F).uv(0, 46).cuboid(-5.0F, -24.0F, -7.0F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
-        ModelPartData door_right_corners = door_right.addChild("door_right_corners", ModelPartBuilder.create().uv(96, 49).cuboid(-6.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F).uv(93, 72).cuboid(-1.0F, -24.0F, -7.0F, 1.0F, 23.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
-        ModelPartData door_right_window = door_right.addChild("door_right_window", ModelPartBuilder.create().uv(0, 19).cuboid(-5.0F, -23.2F, -6.4F, 4.0F, 6.0F, 1.0F), ModelTransform.pivot(0.45F, 12.375F, 6.4F));
-        ModelPartData door_right_window_borders = door_right_window.addChild("door_right_window_borders", ModelPartBuilder.create().uv(10, 26).cuboid(-5.8F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(10, 19).cuboid(-1.2F, -23.0F, -6.5F, 1.0F, 6.0F, 1.0F).uv(42, 28).cuboid(-5.2F, -23.8F, -6.5F, 4.0F, 1.0F, 1.0F).uv(42, 26).cuboid(-5.2F, -17.2F, -6.5F, 4.0F, 1.0F, 1.0F), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
-        ModelPartData door_right_window_border_middle = door_right_window_borders.addChild("door_right_window_border_middle", ModelPartBuilder.create().uv(8, 16).cuboid(-5.2F, -1.0F, -6.5F, 4.0F, 0.0F, 1.0F).uv(8, 15).cuboid(-5.2F, -1.1F, -6.5F, 4.0F, 0.0F, 1.0F), ModelTransform.pivot(0.0F, -18.9F, 0.0F));
-        ModelPartData door_right_window_border_y_a = door_right_window_borders.addChild("door_right_window_border_y_a", ModelPartBuilder.create().uv(24, 63).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(10, 34).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(0.1F, -18.9F, 0.0F));
-        ModelPartData door_right_window_border_y_b = door_right_window_borders.addChild("door_right_window_border_y_b", ModelPartBuilder.create().uv(16, 6).cuboid(-3.7F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F).uv(16, 0).cuboid(-3.8F, -4.1F, -6.5F, 0.0F, 6.0F, 1.0F), ModelTransform.pivot(1.4F, -18.9F, 0.0F));
+        ModelPartData base = modelPartData.addChild("base", ModelPartBuilder.create().uv(0, 0).cuboid(-25.0F, -2.0F, -25.0F, 50.0F, 2.0F, 50.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 
-        return TexturedModelData.of(modelData, 128, 128);
+        ModelPartData corners = base.addChild("corners", ModelPartBuilder.create().uv(72, 248).cuboid(-23.0F, -74.0F, -23.0F, 6.0F, 72.0F, 6.0F, new Dilation(0.0F))
+            .uv(48, 248).cuboid(-23.0F, -74.0F, 17.0F, 6.0F, 72.0F, 6.0F, new Dilation(0.0F))
+            .uv(24, 248).cuboid(17.0F, -74.0F, 17.0F, 6.0F, 72.0F, 6.0F, new Dilation(0.0F))
+            .uv(0, 248).cuboid(17.0F, -74.0F, -23.0F, 6.0F, 72.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData walls = base.addChild("walls", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_back = walls.addChild("wall_back", ModelPartBuilder.create().uv(144, 244).cuboid(-14.0F, -62.0F, 19.0F, 28.0F, 58.0F, 1.0F, new Dilation(0.0F))
+            .uv(272, 178).cuboid(-2.0F, -64.0F, 17.5F, 4.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(314, 143).cuboid(-16.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(204, 311).cuboid(14.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(262, 299).cuboid(-17.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(250, 298).cuboid(16.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(274, 304).cuboid(2.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(184, 303).cuboid(-3.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(228, 158).cuboid(-17.0F, -73.0F, 17.5F, 34.0F, 9.0F, 5.0F, new Dilation(0.0F))
+            .uv(317, 73).cuboid(-14.0F, -4.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(317, 68).cuboid(-14.0F, -17.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(317, 63).cuboid(-14.0F, -30.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(246, 25).cuboid(-14.0F, -43.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(246, 20).cuboid(-14.0F, -64.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_back_windows = wall_back.addChild("wall_back_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_back_window_right = wall_back_windows.addChild("wall_back_window_right", ModelPartBuilder.create().uv(320, 98).cuboid(-14.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(318, 271).cuboid(-14.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(318, 291).cuboid(-14.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(288, 48).cuboid(-14.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(324, 202).cuboid(-14.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(324, 183).cuboid(-4.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(324, 164).cuboid(-9.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 56).cuboid(-13.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 53).cuboid(-13.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_back_window_left = wall_back_windows.addChild("wall_back_window_left", ModelPartBuilder.create().uv(320, 78).cuboid(3.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(270, 83).cuboid(3.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(288, 45).cuboid(3.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(286, 42).cuboid(3.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(324, 145).cuboid(3.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 34).cuboid(13.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 15).cuboid(8.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 12).cuboid(4.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 9).cuboid(4.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_right = walls.addChild("wall_right", ModelPartBuilder.create().uv(214, 239).cuboid(-14.0F, -62.0F, 19.0F, 28.0F, 58.0F, 1.0F, new Dilation(0.0F))
+            .uv(114, 248).cuboid(-2.0F, -64.0F, 17.5F, 4.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(310, 78).cuboid(-16.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(308, 237).cuboid(14.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(238, 298).cuboid(-17.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(226, 298).cuboid(16.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(174, 303).cuboid(2.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(164, 303).cuboid(-3.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(228, 144).cuboid(-17.0F, -73.0F, 17.5F, 34.0F, 9.0F, 5.0F, new Dilation(0.0F))
+            .uv(246, 15).cuboid(-14.0F, -4.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(246, 10).cuboid(-14.0F, -17.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(246, 5).cuboid(-14.0F, -30.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(246, 0).cuboid(-14.0F, -43.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(238, 34).cuboid(-14.0F, -64.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        ModelPartData wall_right_windows = wall_right.addChild("wall_right_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_right_window_right = wall_right_windows.addChild("wall_right_window_right", ModelPartBuilder.create().uv(133, 150).cuboid(-14.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(109, 150).cuboid(-14.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(286, 39).cuboid(-14.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(278, 30).cuboid(-14.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(308, 19).cuboid(-14.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(308, 0).cuboid(-4.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(306, 142).cuboid(-9.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 6).cuboid(-13.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 3).cuboid(-13.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_right_window_left = wall_right_windows.addChild("wall_right_window_left", ModelPartBuilder.create().uv(150, 0).cuboid(3.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 150).cuboid(3.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(264, 103).cuboid(3.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(262, 40).cuboid(3.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(300, 78).cuboid(3.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(294, 83).cuboid(13.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(174, 0).cuboid(8.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(323, 0).cuboid(4.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 321).cuboid(4.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_left = walls.addChild("wall_left", ModelPartBuilder.create().uv(214, 180).cuboid(-14.0F, -62.0F, 19.0F, 28.0F, 58.0F, 1.0F, new Dilation(0.0F))
+            .uv(96, 248).cuboid(-2.0F, -64.0F, 17.5F, 4.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(194, 308).cuboid(-16.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(304, 304).cuboid(14.0F, -64.0F, 18.5F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(214, 298).cuboid(-17.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(296, 237).cuboid(16.0F, -64.0F, 17.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(154, 303).cuboid(2.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(144, 303).cuboid(-3.0F, -64.0F, 18.0F, 1.0F, 62.0F, 4.0F, new Dilation(0.0F))
+            .uv(228, 120).cuboid(-17.0F, -73.0F, 17.5F, 34.0F, 9.0F, 5.0F, new Dilation(0.0F))
+            .uv(235, 78).cuboid(-14.0F, -4.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(37, 180).cuboid(-14.0F, -17.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(37, 175).cuboid(-14.0F, -30.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(37, 170).cuboid(-14.0F, -43.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F))
+            .uv(37, 165).cuboid(-14.0F, -64.0F, 18.5F, 28.0F, 2.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        ModelPartData wall_left_windows = wall_left.addChild("wall_left_windows", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_left_window_right = wall_left_windows.addChild("wall_left_window_right", ModelPartBuilder.create().uv(132, 52).cuboid(-14.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 126).cuboid(-14.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(238, 39).cuboid(-14.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(235, 83).cuboid(-14.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(99, 163).cuboid(-14.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(156, 52).cuboid(-4.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(150, 106).cuboid(-9.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 318).cuboid(-13.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 315).cuboid(-13.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData wall_left_window_left = wall_left_windows.addChild("wall_left_window_left", ModelPartBuilder.create().uv(120, 106).cuboid(3.0F, -62.0F, 19.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 106).cuboid(3.0F, -62.0F, 18.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(109, 180).cuboid(3.0F, -44.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(133, 176).cuboid(3.0F, -62.0F, 18.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(24, 150).cuboid(3.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(144, 106).cuboid(13.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(24, 125).cuboid(8.0F, -61.0F, 18.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 312).cuboid(4.0F, -50.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 309).cuboid(4.0F, -56.0F, 18.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData doors = base.addChild("doors", ModelPartBuilder.create().uv(228, 106).cuboid(-17.0F, -73.0F, -22.5F, 34.0F, 9.0F, 5.0F, new Dilation(0.0F))
+            .uv(132, 248).cuboid(16.0F, -64.0F, -22.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F))
+            .uv(202, 244).cuboid(-17.0F, -64.0F, -22.5F, 1.0F, 62.0F, 5.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData labels = base.addChild("labels", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData label_back = labels.addChild("label_back", ModelPartBuilder.create().uv(200, 43).cuboid(-21.0F, -73.1F, 22.0F, 42.0F, 7.0F, 2.0F, new Dilation(0.0F))
+            .uv(124, 126).cuboid(-21.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(120, 126).cuboid(20.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 76).cuboid(-20.0F, -73.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 74).cuboid(-20.0F, -67.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 58).cuboid(-20.0F, -72.1F, 23.25F, 40.0F, 5.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData label_right = labels.addChild("label_right", ModelPartBuilder.create().uv(176, 97).cuboid(-21.0F, -73.1F, 22.0F, 42.0F, 7.0F, 2.0F, new Dilation(0.0F))
+            .uv(30, 125).cuboid(-21.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(40, 52).cuboid(20.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 72).cuboid(-20.0F, -73.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 70).cuboid(-20.0F, -67.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 52).cuboid(-20.0F, -72.1F, 23.25F, 40.0F, 5.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+        ModelPartData label_left = labels.addChild("label_left", ModelPartBuilder.create().uv(176, 88).cuboid(-21.0F, -73.1F, 22.0F, 42.0F, 7.0F, 2.0F, new Dilation(0.0F))
+            .uv(4, 40).cuboid(-21.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 40).cuboid(20.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 68).cuboid(-20.0F, -73.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 66).cuboid(-20.0F, -67.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(228, 172).cuboid(-20.0F, -72.1F, 23.25F, 40.0F, 5.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+        ModelPartData label_front = labels.addChild("label_front", ModelPartBuilder.create().uv(150, 34).cuboid(-21.0F, -73.1F, 22.0F, 42.0F, 7.0F, 2.0F, new Dilation(0.0F))
+            .uv(4, 31).cuboid(-21.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 31).cuboid(20.0F, -73.1F, 24.0F, 1.0F, 7.0F, 1.0F, new Dilation(0.0F))
+            .uv(235, 64).cuboid(-20.0F, -73.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(228, 140).cuboid(-20.0F, -67.1F, 24.0F, 40.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(228, 134).cuboid(-20.0F, -72.1F, 23.25F, 40.0F, 5.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, 0.0F, 3.1416F, 0.0F));
+
+        ModelPartData roof = base.addChild("roof", ModelPartBuilder.create().uv(0, 52).cuboid(-22.0F, -76.0F, -22.0F, 44.0F, 10.0F, 44.0F, new Dilation(0.0F))
+            .uv(0, 106).cuboid(-20.0F, -79.1F, -20.0F, 40.0F, 4.0F, 40.0F, new Dilation(0.0F))
+            .uv(120, 106).cuboid(-18.0F, -80.5F, -18.0F, 36.0F, 2.0F, 36.0F, new Dilation(0.0F))
+            .uv(150, 0).cuboid(-16.0F, -82.0F, -16.0F, 32.0F, 2.0F, 32.0F, new Dilation(0.0F))
+            .uv(79, 150).cuboid(15.0F, -79.0F, -21.0F, 6.0F, 3.0F, 6.0F, new Dilation(0.0F))
+            .uv(150, 20).cuboid(15.0F, -79.0F, 15.0F, 6.0F, 3.0F, 6.0F, new Dilation(0.0F))
+            .uv(18, 86).cuboid(-21.0F, -79.0F, 15.0F, 6.0F, 3.0F, 6.0F, new Dilation(0.0F))
+            .uv(26, 34).cuboid(-21.0F, -79.0F, -21.0F, 6.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData roof_lamp = roof.addChild("roof_lamp", ModelPartBuilder.create().uv(37, 150).cuboid(-7.0F, -83.0F, -7.0F, 14.0F, 1.0F, 14.0F, new Dilation(0.0F))
+            .uv(132, 72).cuboid(-4.0F, -85.0F, -4.0F, 8.0F, 1.0F, 8.0F, new Dilation(0.0F))
+            .uv(120, 126).cuboid(-4.0F, -87.5F, -4.0F, 8.0F, 1.0F, 8.0F, new Dilation(0.0F))
+            .uv(0, 40).cuboid(-4.0F, -90.0F, -4.0F, 8.0F, 1.0F, 8.0F, new Dilation(0.0F))
+            .uv(0, 0).cuboid(-5.0F, -92.5F, -5.0F, 10.0F, 1.0F, 10.0F, new Dilation(0.0F))
+            .uv(0, 31).cuboid(-4.0F, -93.5F, -4.0F, 8.0F, 1.0F, 8.0F, new Dilation(0.0F))
+            .uv(26, 43).cuboid(-3.0F, -94.5F, -3.0F, 6.0F, 1.0F, 6.0F, new Dilation(0.0F))
+            .uv(24, 81).cuboid(-2.0F, -95.5F, -2.0F, 4.0F, 1.0F, 4.0F, new Dilation(0.0F))
+            .uv(36, 106).cuboid(3.25F, -91.5F, 3.25F, 1.0F, 9.0F, 1.0F, new Dilation(0.0F))
+            .uv(40, 79).cuboid(-4.25F, -91.5F, 3.25F, 1.0F, 9.0F, 1.0F, new Dilation(0.0F))
+            .uv(4, 0).cuboid(-4.25F, -91.5F, -4.25F, 1.0F, 9.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 0).cuboid(3.25F, -91.5F, -4.25F, 1.0F, 9.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 0.0F, 0.0F));
+
+        ModelPartData door_left = modelPartData.addChild("door_left", ModelPartBuilder.create().uv(272, 245).cuboid(2.6F, -30.2F, -0.05F, 11.0F, 58.0F, 1.0F, new Dilation(0.0F))
+            .uv(24, 52).cuboid(4.6F, -8.2F, -0.15F, 7.0F, 9.0F, 1.0F, new Dilation(0.0F))
+            .uv(30, 0).cuboid(4.6F, -7.2F, 0.85F, 7.0F, 7.0F, 3.0F, new Dilation(0.0F))
+            .uv(44, 34).cuboid(13.85F, -5.2F, -2.4F, 1.0F, 3.0F, 1.0F, new Dilation(0.0F))
+            .uv(24, 34).cuboid(13.6F, -5.2F, 1.95F, 3.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(284, 304).cuboid(14.6F, -32.2F, -2.55F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(314, 302).cuboid(14.6F, -32.2F, 0.45F, 2.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(104, 315).cuboid(0.6F, -32.2F, -1.55F, 2.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(317, 0).cuboid(0.6F, -32.2F, 0.45F, 2.0F, 62.0F, 1.0F, new Dilation(0.0F))
+            .uv(132, 315).cuboid(13.6F, -32.2F, -2.05F, 1.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(120, 315).cuboid(13.6F, -32.2F, -0.05F, 1.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(150, 43).cuboid(2.6F, 27.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 121).cuboid(2.6F, 27.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(120, 135).cuboid(2.6F, 14.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 118).cuboid(2.6F, 14.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(132, 92).cuboid(2.6F, 1.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(318, 297).cuboid(2.6F, 1.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(132, 88).cuboid(2.6F, -11.2F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(318, 294).cuboid(2.6F, -11.2F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(132, 81).cuboid(2.6F, -32.2F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 124).cuboid(2.6F, -32.2F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(-16.6F, -7.8F, -19.95F));
+
+        ModelPartData door_left_window = door_left.addChild("door_left_window", ModelPartBuilder.create().uv(24, 11).cuboid(-14.0F, -62.0F, -20.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 11).cuboid(-14.0F, -62.0F, -19.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(120, 139).cuboid(-14.0F, -44.0F, -20.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(24, 31).cuboid(-14.0F, -62.0F, -20.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(30, 62).cuboid(-4.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(24, 62).cuboid(-14.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(38, 60).cuboid(-9.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(321, 142).cuboid(-13.0F, -50.0F, -20.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 300).cuboid(-13.0F, -56.0F, -20.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(16.6F, 31.8F, 19.95F));
+
+        ModelPartData door_right = modelPartData.addChild("door_right", ModelPartBuilder.create().uv(290, 178).cuboid(-13.6F, -30.2F, -0.05F, 11.0F, 58.0F, 1.0F, new Dilation(0.0F))
+            .uv(144, 125).cuboid(-10.6F, -6.2F, -0.15F, 5.0F, 5.0F, 1.0F, new Dilation(0.0F))
+            .uv(36, 116).cuboid(-14.85F, -6.7F, -2.4F, 1.0F, 6.0F, 1.0F, new Dilation(0.0F))
+            .uv(28, 37).cuboid(-14.75F, 2.3F, -2.15F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(24, 43).cuboid(-16.6F, -5.2F, 1.95F, 3.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(24, 37).cuboid(-15.1F, -4.7F, 2.2F, 1.0F, 1.0F, 1.0F, new Dilation(0.0F))
+            .uv(294, 304).cuboid(-16.6F, -32.2F, -2.55F, 2.0F, 62.0F, 3.0F, new Dilation(0.0F))
+            .uv(96, 315).cuboid(-16.6F, -32.2F, 0.45F, 2.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(112, 315).cuboid(-2.6F, -32.2F, -1.55F, 2.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(318, 208).cuboid(-2.6F, -32.2F, 0.45F, 2.0F, 62.0F, 1.0F, new Dilation(0.0F))
+            .uv(138, 315).cuboid(-14.6F, -32.2F, -2.05F, 1.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(126, 315).cuboid(-14.6F, -32.2F, -0.05F, 1.0F, 62.0F, 2.0F, new Dilation(0.0F))
+            .uv(109, 174).cuboid(-13.6F, 27.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 133).cuboid(-13.6F, 27.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(174, 45).cuboid(-13.6F, 14.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 136).cuboid(-13.6F, 14.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(133, 172).cuboid(-13.6F, 1.8F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 139).cuboid(-13.6F, 1.8F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(109, 170).cuboid(-13.6F, -11.2F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 130).cuboid(-13.6F, -11.2F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F))
+            .uv(79, 159).cuboid(-13.6F, -32.2F, -1.55F, 11.0F, 2.0F, 2.0F, new Dilation(0.0F))
+            .uv(320, 127).cuboid(-13.6F, -32.2F, 0.45F, 11.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.pivot(16.6F, -7.8F, -19.95F));
+
+        ModelPartData door_right_window = door_right.addChild("door_right_window", ModelPartBuilder.create().uv(0, 72).cuboid(3.0F, -62.0F, -20.1F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(0, 52).cuboid(3.0F, -62.0F, -19.85F, 11.0F, 19.0F, 1.0F, new Dilation(0.0F))
+            .uv(150, 47).cuboid(3.0F, -44.0F, -20.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(150, 29).cuboid(3.0F, -62.0F, -20.75F, 11.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(34, 123).cuboid(3.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(30, 106).cuboid(13.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(24, 106).cuboid(8.0F, -61.0F, -20.75F, 1.0F, 17.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 306).cuboid(4.0F, -50.0F, -20.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F))
+            .uv(322, 303).cuboid(4.0F, -56.0F, -20.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-16.6F, 31.8F, 19.95F));
+
+        ModelPartData lamp = modelPartData.addChild("lamp", ModelPartBuilder.create().uv(0, 170).cuboid(-3.0F, -3.0F, -3.0F, 6.0F, 9.0F, 6.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, -65.0F, 0.0F));
+
+        ModelPartData boti = modelPartData.addChild("boti", ModelPartBuilder.create().uv(125, 144).cuboid(-17.0F, -64.0F, 2.1F, 34.0F, 1.0F, 35.0F, new Dilation(0.0F))
+            .uv(132, 52).cuboid(-17.0F, -1.0F, 2.1F, 34.0F, 1.0F, 35.0F, new Dilation(0.0F))
+            .uv(144, 180).cuboid(-17.0F, -63.0F, 37.1F, 34.0F, 63.0F, 1.0F, new Dilation(0.0F))
+            .uv(72, 150).cuboid(-18.0F, -63.0F, 2.1F, 1.0F, 63.0F, 35.0F, new Dilation(0.0F))
+            .uv(0, 150).cuboid(17.0F, -63.0F, 2.1F, 1.0F, 63.0F, 35.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 22.0F, -20.1F));
+
+        return TexturedModelData.of(modelData, 512, 512);
     }
 
     @Override
@@ -129,6 +293,14 @@ public class TardisExteriorPoliceBoxModel extends Model {
     public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
         door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
         door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    public void renderLamp(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        lamp.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    }
+
+    public void renderBoti(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
+        boti.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
     }
 
     public void setupAnim(TardisExteriorPoliceBoxBlockEntity tile) {

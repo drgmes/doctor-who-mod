@@ -16,6 +16,11 @@ public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<Tar
     }
 
     @Override
+    public int getRenderDistance() {
+        return 256;
+    }
+
+    @Override
     public void render(TardisToyotaSpinnerBlockEntity tile, float delta, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay) {
         TardisToyotaSpinnerModel model = new TardisToyotaSpinnerModel(this.ctx.getLayerModelPart(TardisToyotaSpinnerModel.LAYER_LOCATION));
         VertexConsumer vertexConsumer = buffer.getBuffer(model.getLayer(TardisToyotaSpinnerModel.LAYER_LOCATION.getId()));
@@ -33,10 +38,5 @@ public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<Tar
         matrixStack.translate(0, -1.075F, 0);
         model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
         matrixStack.pop();
-    }
-
-    @Override
-    public int getRenderDistance() {
-        return 256;
     }
 }
