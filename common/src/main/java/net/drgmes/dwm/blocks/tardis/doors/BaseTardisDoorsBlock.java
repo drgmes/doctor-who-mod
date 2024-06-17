@@ -2,10 +2,10 @@ package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypeEntry;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
-import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -34,36 +34,46 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
-import java.util.function.Supplier;
-
 public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
 
-    protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 13.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape NORTH_OPENED_SHAPE = Block.createCuboidShape(-3.0, 0.0, 13.0, 0.0, 16.0, 16.0);
-    protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 3.0);
-    protected static final VoxelShape SOUTH_OPENED_SHAPE = Block.createCuboidShape(-3.0, 0.0, 0.0, 0.0, 16.0, 3.0);
-    protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 3.0, 16.0, 16.0);
-    protected static final VoxelShape EAST_OPENED_SHAPE = Block.createCuboidShape(0.0, 0.0, -3.0, 3.0, 16.0, 0.0);
-    protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(13.0, 0.0, 0.0, 16.0, 16.0, 16.0);
-    protected static final VoxelShape WEST_OPENED_SHAPE = Block.createCuboidShape(13.0, 0.0, -3.0, 16.0, 16.0, 0.0);
+    protected final TardisDoorsTypeEntry doorsType;
+    protected final float shapeOffset;
 
-    private final Supplier<BlockEntityBuilder<C>> blockEntityBuilderSupplier;
+    protected final VoxelShape shapeNorth;
+    protected final VoxelShape shapeSouth;
+    protected final VoxelShape shapeEast;
+    protected final VoxelShape shapeWest;
 
-    public BaseTardisDoorsBlock(AbstractBlock.Settings settings, Supplier<BlockEntityBuilder<C>> blockEntityBuilderSupplier) {
+    protected final VoxelShape shapeNorthOpened;
+    protected final VoxelShape shapeSouthOpened;
+    protected final VoxelShape shapeEastOpened;
+    protected final VoxelShape shapeWestOpened;
+
+    public BaseTardisDoorsBlock(AbstractBlock.Settings settings, TardisDoorsTypeEntry doorsType, VoxelShape shapeNorth, VoxelShape shapeSouth, VoxelShape shapeEast, VoxelShape shapeWest, VoxelShape shapeNorthOpened, VoxelShape shapeSouthOpened, VoxelShape shapeEastOpened, VoxelShape shapeWestOpened, float shapeOffset) {
         super(settings);
-        this.blockEntityBuilderSupplier = blockEntityBuilderSupplier;
+
+        this.doorsType = doorsType;
+        this.shapeNorth = shapeNorth;
+        this.shapeSouth = shapeSouth;
+        this.shapeEast = shapeEast;
+        this.shapeWest = shapeWest;
+        this.shapeNorthOpened = shapeNorthOpened;
+        this.shapeSouthOpened = shapeSouthOpened;
+        this.shapeEastOpened = shapeEastOpened;
+        this.shapeWestOpened = shapeWestOpened;
+        this.shapeOffset = shapeOffset;
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
-        return this.blockEntityBuilderSupplier.get().getBlockEntityType().instantiate(blockPos, blockState);
+        return this.doorsType.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return blockEntityType != this.blockEntityBuilderSupplier.get().getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
+        return blockEntityType != this.doorsType.getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
             ((BaseTardisDoorsBlockEntity) blockEntity).tick();
         };
     }
@@ -89,18 +99,18 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     public VoxelShape getOutlineShape(BlockState blockState, BlockView blockView, BlockPos blockPos, ShapeContext context) {
         if (blockState.get(OPEN)) {
             return switch (blockState.get(FACING)) {
-                case NORTH -> VoxelShapes.union(NORTH_OPENED_SHAPE, NORTH_OPENED_SHAPE.offset(1.185, 0.0, 0.0));
-                case SOUTH -> VoxelShapes.union(SOUTH_OPENED_SHAPE, SOUTH_OPENED_SHAPE.offset(1.185, 0.0, 0.0));
-                case EAST -> VoxelShapes.union(EAST_OPENED_SHAPE, EAST_OPENED_SHAPE.offset(0, 0, 1.185));
-                default -> VoxelShapes.union(WEST_OPENED_SHAPE, WEST_OPENED_SHAPE.offset(0, 0, 1.185));
+                case NORTH -> VoxelShapes.union(this.shapeNorthOpened, this.shapeNorthOpened.offset(this.shapeOffset, 0.0, 0.0));
+                case SOUTH -> VoxelShapes.union(this.shapeSouthOpened, this.shapeSouthOpened.offset(this.shapeOffset, 0.0, 0.0));
+                case EAST -> VoxelShapes.union(this.shapeEastOpened, this.shapeEastOpened.offset(0, 0, this.shapeOffset));
+                default -> VoxelShapes.union(this.shapeWestOpened, this.shapeWestOpened.offset(0, 0, this.shapeOffset));
             };
         }
 
         return switch (blockState.get(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            default -> WEST_SHAPE;
+            case NORTH -> this.shapeNorth;
+            case SOUTH -> this.shapeSouth;
+            case EAST -> this.shapeEast;
+            default -> this.shapeWest;
         };
     }
 

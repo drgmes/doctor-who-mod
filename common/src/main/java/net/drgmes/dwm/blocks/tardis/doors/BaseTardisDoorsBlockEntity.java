@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypeEntry;
 import net.drgmes.dwm.network.server.TardisInteriorDoorsInitPacket;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -13,20 +14,11 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
-    public final double entranceWidth;
-    public final double entranceHeight;
     public String tardisId;
     private boolean isInited;
 
-    public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState, double entranceWidth, double entranceHeight) {
-        super(type, blockPos, blockState);
-
-        this.entranceWidth = entranceWidth;
-        this.entranceHeight = entranceHeight;
-    }
-
     public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
-        this(type, blockPos, blockState, 1, 2);
+        super(type, blockPos, blockState);
     }
 
     @Override
@@ -50,6 +42,10 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
         }
 
         super.markRemoved();
+    }
+
+    public TardisDoorsTypeEntry getDoorsType() {
+        return ((BaseTardisDoorsBlock<?>) this.getCachedState().getBlock()).doorsType;
     }
 
     public void tick() {

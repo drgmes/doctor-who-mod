@@ -54,6 +54,7 @@ import net.drgmes.dwm.blocks.decorative.titaniumstripedskin.TitaniumStripedSkinS
 import net.drgmes.dwm.blocks.decorative.titaniumstripedskin.TitaniumStripedSkinWallColoredBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.TardisConsoleUnitImperialBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.TardisDoorsPhoneBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockBuilder;
@@ -87,6 +88,7 @@ public class ModBlocks {
 
     // Tardis Doors
     public static final BlockBuilder TARDIS_DOORS_POLICE_BOX = new TardisDoorsPoliceBoxBlockBuilder("tardis_doors_police_box");
+    public static final BlockBuilder TARDIS_DOORS_PHONE_BOX = new TardisDoorsPhoneBoxBlockBuilder("tardis_doors_phone_box");
 
     // Tardis Consoles
     public static final BlockBuilder TARDIS_CONSOLE_UNIT_IMPERIAL = new TardisConsoleUnitImperialBlockBuilder("tardis_console_unit_imperial");

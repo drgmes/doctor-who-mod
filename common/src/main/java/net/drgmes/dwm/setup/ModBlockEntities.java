@@ -3,6 +3,7 @@ package net.drgmes.dwm.setup;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.TardisConsoleUnitImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.TardisDoorsPhoneBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
@@ -31,6 +32,12 @@ public class ModBlockEntities {
         "tardis_doors_police_box",
         TardisDoorsPoliceBoxBlockEntity::new,
         ModBlocks.TARDIS_DOORS_POLICE_BOX::getBlock
+    );
+
+    public static final BlockEntityBuilder<TardisDoorsPhoneBoxBlockEntity> TARDIS_DOORS_PHONE_BOX = new BlockEntityBuilder<>(
+        "tardis_doors_phone_box",
+        TardisDoorsPhoneBoxBlockEntity::new,
+        ModBlocks.TARDIS_DOORS_PHONE_BOX::getBlock
     );
 
     // //// //

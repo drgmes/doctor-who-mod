@@ -42,12 +42,12 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty LIT = Properties.LIT;
 
+    protected final TardisExteriorTypeEntry exteriorType;
+
     protected static final VoxelShape NORTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.1, 16.0, 16.0, 16.0);
     protected static final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 15.9);
     protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 15.9, 16.0, 16.0);
     protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.1, 0.0, 0.0, 16.0, 16.0, 16.0);
-
-    private final TardisExteriorTypeEntry exteriorType;
 
     public BaseTardisExteriorBlock(AbstractBlock.Settings settings, TardisExteriorTypeEntry exteriorType) {
         super(settings);

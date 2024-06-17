@@ -3,6 +3,7 @@ package net.drgmes.dwm.forge.setup;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.models.TardisConsoleUnitImperialModel;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.models.TardisConsoleUnitToyotaModel;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.models.TardisDoorsPhoneBoxModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models.TardisEngineToyotaModel;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.models.TardisExteriorCapsuleModel;
@@ -27,10 +28,15 @@ public class ModRenderers {
         event.registerLayerDefinition(TardisExteriorCapsuleModel.LAYER_LOCATION, TardisExteriorCapsuleModel::getTexturedModelData);
         event.registerLayerDefinition(TardisExteriorPoliceBoxModel.LAYER_LOCATION, TardisExteriorPoliceBoxModel::getTexturedModelData);
         event.registerLayerDefinition(TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::getTexturedModelData);
+
         event.registerLayerDefinition(TardisDoorsPoliceBoxModel.LAYER_LOCATION, TardisDoorsPoliceBoxModel::getTexturedModelData);
+        event.registerLayerDefinition(TardisDoorsPhoneBoxModel.LAYER_LOCATION, TardisDoorsPhoneBoxModel::getTexturedModelData);
+
         event.registerLayerDefinition(TardisConsoleUnitImperialModel.LAYER_LOCATION, TardisConsoleUnitImperialModel::getTexturedModelData);
         event.registerLayerDefinition(TardisConsoleUnitToyotaModel.LAYER_LOCATION, TardisConsoleUnitToyotaModel::getTexturedModelData);
+
         event.registerLayerDefinition(TardisEngineToyotaModel.LAYER_LOCATION, TardisEngineToyotaModel::getTexturedModelData);
+
         event.registerLayerDefinition(TardisToyotaSpinnerModel.LAYER_LOCATION, TardisToyotaSpinnerModel::getTexturedModelData);
         event.registerLayerDefinition(TardisRoundelModel.LAYER_LOCATION_DARK, TardisRoundelModel::getTexturedModelData);
         event.registerLayerDefinition(TardisRoundelModel.LAYER_LOCATION_LIGHT, TardisRoundelModel::getTexturedModelData);

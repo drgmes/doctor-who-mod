@@ -193,7 +193,7 @@ public class TardisStateManager extends PersistentState {
         Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
 
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
-        if (tag.contains("exteriorType")) this.exteriorType = TardisExteriorTypes.EXTERIOR_TYPES.get(tag.getString("exteriorType"));
+        if (tag.contains("exteriorType")) this.exteriorType = TardisExteriorTypes.TYPES.get(tag.getString("exteriorType"));
 
         if (tag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getWorldKey(tag.getString("prevExteriorDimension"));
         if (tag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getWorldKey(tag.getString("currExteriorDimension"));

@@ -79,12 +79,13 @@ public class ImmersivePortals {
         public void createEntrancePortals() {
             if (this.tardis.getWorld() == null) return;
 
-            BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
             TardisExteriorTypeEntry exteriorType = this.tardis.getExteriorType();
-            double innerWidth = doorTile == null ? 1 : doorTile.entranceWidth;
-            double innerHeight = doorTile == null ? 2 : doorTile.entranceHeight;
+            BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
+
             double outerWidth = exteriorType == null ? 1 : exteriorType.entranceWidth;
             double outerHeight = exteriorType == null ? 2 : exteriorType.entranceHeight;
+            double innerWidth = doorTile == null ? 1 : doorTile.getDoorsType().entranceWidth;
+            double innerHeight = doorTile == null ? 2 : doorTile.getDoorsType().entranceHeight;
 
             try {
                 Map.Entry<Portal, Portal> portals = createPortals(

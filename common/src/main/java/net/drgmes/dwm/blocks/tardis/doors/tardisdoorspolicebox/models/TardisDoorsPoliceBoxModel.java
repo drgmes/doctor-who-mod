@@ -1,27 +1,15 @@
 package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsModel;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
 
-public class TardisDoorsPoliceBoxModel extends Model {
+public class TardisDoorsPoliceBoxModel extends BaseTardisDoorsModel {
     public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/block/tardis/doors/tardis_doors_police_box.png"), "main");
 
-    private final ModelPart base;
-    private final ModelPart door_left;
-    private final ModelPart door_right;
-
     public TardisDoorsPoliceBoxModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucentCull);
-
-        this.base = root.getChild("base");
-        this.door_left = root.getChild("door_left");
-        this.door_right = root.getChild("door_right");
+        super(root);
     }
 
     @SuppressWarnings("unused")
@@ -116,24 +104,5 @@ public class TardisDoorsPoliceBoxModel extends Model {
             .uv(136, 18).cuboid(4.0F, -56.0F, -0.75F, 9.0F, 1.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(-14.6864F, 32.2273F, -0.2818F));
 
         return TexturedModelData.of(modelData, 256, 256);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void setupAnim(TardisDoorsPoliceBoxBlockEntity tile) {
-        float doorAngle = 1.75F;
-
-        if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
-            this.door_left.yaw = -doorAngle;
-            this.door_right.yaw = doorAngle;
-        }
     }
 }

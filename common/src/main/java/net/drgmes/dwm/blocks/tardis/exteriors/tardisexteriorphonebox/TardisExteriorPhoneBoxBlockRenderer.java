@@ -6,6 +6,13 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 
 public class TardisExteriorPhoneBoxBlockRenderer extends BaseTardisExteriorBlockRenderer<TardisExteriorPhoneBoxBlockEntity> {
     public TardisExteriorPhoneBoxBlockRenderer(BlockEntityRendererFactory.Context context) {
-        super(context, TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::new, 0.465F, 0.025F, -0.5F);
+        super(
+            context,
+            TardisExteriorPhoneBoxModel.LAYER_LOCATION,
+            TardisExteriorPhoneBoxModel::new,
+            0.465F,
+            0.025F,
+            -0.5F
+        );
     }
 }

@@ -8,6 +8,8 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.Tardi
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.models.TardisConsoleUnitImperialModel;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.models.TardisConsoleUnitToyotaModel;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.TardisDoorsPhoneBoxBlockRenderer;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.models.TardisDoorsPhoneBoxModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockRenderer;
@@ -44,10 +46,15 @@ public class ModRenderers {
         EntityModelLayerRegistry.register(TardisExteriorCapsuleModel.LAYER_LOCATION, TardisExteriorCapsuleModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisExteriorPoliceBoxModel.LAYER_LOCATION, TardisExteriorPoliceBoxModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::getTexturedModelData);
+
         EntityModelLayerRegistry.register(TardisDoorsPoliceBoxModel.LAYER_LOCATION, TardisDoorsPoliceBoxModel::getTexturedModelData);
+        EntityModelLayerRegistry.register(TardisDoorsPhoneBoxModel.LAYER_LOCATION, TardisDoorsPhoneBoxModel::getTexturedModelData);
+
         EntityModelLayerRegistry.register(TardisConsoleUnitImperialModel.LAYER_LOCATION, TardisConsoleUnitImperialModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisConsoleUnitToyotaModel.LAYER_LOCATION, TardisConsoleUnitToyotaModel::getTexturedModelData);
+
         EntityModelLayerRegistry.register(TardisEngineToyotaModel.LAYER_LOCATION, TardisEngineToyotaModel::getTexturedModelData);
+
         EntityModelLayerRegistry.register(TardisToyotaSpinnerModel.LAYER_LOCATION, TardisToyotaSpinnerModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisRoundelModel.LAYER_LOCATION_DARK, TardisRoundelModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisRoundelModel.LAYER_LOCATION_LIGHT, TardisRoundelModel::getTexturedModelData);
@@ -65,10 +72,15 @@ public class ModRenderers {
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_EXTERIOR_CAPSULE.getBlockEntityType(), TardisExteriorCapsuleBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX.getBlockEntityType(), TardisExteriorPoliceBoxBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_EXTERIOR_PHONE_BOX.getBlockEntityType(), TardisExteriorPhoneBoxBlockRenderer::new);
+
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_DOORS_POLICE_BOX.getBlockEntityType(), TardisDoorsPoliceBoxBlockRenderer::new);
+        BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_DOORS_PHONE_BOX.getBlockEntityType(), TardisDoorsPhoneBoxBlockRenderer::new);
+
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_CONSOLE_UNIT_IMPERIAL.getBlockEntityType(), TardisConsoleUnitImperialBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_CONSOLE_UNIT_TOYOTA.getBlockEntityType(), TardisConsoleUnitToyotaBlockRenderer::new);
+
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_ENGINE_TOYOTA.getBlockEntityType(), TardisEngineToyotaBlockRenderer::new);
+
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_TOYOTA_SPINNER.getBlockEntityType(), TardisToyotaSpinnerBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_ROUNDEL.getBlockEntityType(), TardisRoundelBlockRenderer::new);
     }
