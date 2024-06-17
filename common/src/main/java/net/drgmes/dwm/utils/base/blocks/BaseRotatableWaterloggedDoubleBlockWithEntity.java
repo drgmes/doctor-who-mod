@@ -25,6 +25,12 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
     }
 
     @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(HALF);
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
@@ -37,19 +43,8 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(HALF);
-    }
-
-    @Override
     protected BlockState getDefaultBlockState() {
         return super.getDefaultBlockState().with(HALF, DoubleBlockHalf.LOWER);
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        world.setBlockState(blockPos.up(), blockState.with(HALF, DoubleBlockHalf.UPPER).with(WATERLOGGED, world.getFluidState(blockPos.up()).isIn(FluidTags.WATER)), Block.NOTIFY_ALL);
     }
 
     @Override
@@ -67,6 +62,11 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
         }
 
         return super.getStateForNeighborUpdate(blockState, direction, neighborBlockState, world, blockPos, neighborBlockPos);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        world.setBlockState(blockPos.up(), blockState.with(HALF, DoubleBlockHalf.UPPER).with(WATERLOGGED, world.getFluidState(blockPos.up()).isIn(FluidTags.WATER)), Block.NOTIFY_ALL);
     }
 
     protected BlockState syncNeighborState(BlockState blockState, BlockState neighborBlockState) {

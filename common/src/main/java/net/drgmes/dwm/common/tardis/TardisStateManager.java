@@ -9,6 +9,8 @@ import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlsStorage;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypes;
 import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
@@ -57,6 +59,7 @@ public class TardisStateManager extends PersistentState {
 
     private ServerWorld world;
     private UUID owner;
+    private TardisExteriorTypeEntry exteriorType;
 
     private RegistryKey<World> prevExteriorDimension;
     private RegistryKey<World> currExteriorDimension;
@@ -134,6 +137,7 @@ public class TardisStateManager extends PersistentState {
         tag.put("tdTagUpgradeComponents", tdTagUpgradeComponents);
 
         if (this.owner != null) tag.putUuid("owner", this.owner);
+        if (this.exteriorType != null) tag.putString("exteriorType", this.exteriorType.name);
 
         if (this.prevExteriorDimension != null) tag.putString("prevExteriorDimension", this.prevExteriorDimension.getValue().toString());
         if (this.currExteriorDimension != null) tag.putString("currExteriorDimension", this.currExteriorDimension.getValue().toString());
@@ -189,6 +193,7 @@ public class TardisStateManager extends PersistentState {
         Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
 
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
+        if (tag.contains("exteriorType")) this.exteriorType = TardisExteriorTypes.EXTERIOR_TYPES.get(tag.getString("exteriorType"));
 
         if (tag.contains("prevExteriorDimension")) this.prevExteriorDimension = DimensionHelper.getWorldKey(tag.getString("prevExteriorDimension"));
         if (tag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getWorldKey(tag.getString("currExteriorDimension"));
@@ -262,6 +267,15 @@ public class TardisStateManager extends PersistentState {
 
     public void setOwner(UUID uuid) {
         this.owner = uuid;
+        this.markDirty();
+    }
+
+    public TardisExteriorTypeEntry getExteriorType() {
+        return this.exteriorType;
+    }
+
+    public void setExteriorType(TardisExteriorTypeEntry exteriorType) {
+        this.exteriorType = exteriorType;
         this.markDirty();
     }
 

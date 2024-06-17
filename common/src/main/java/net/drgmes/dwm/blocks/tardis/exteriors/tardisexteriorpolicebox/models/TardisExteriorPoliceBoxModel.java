@@ -1,31 +1,15 @@
 package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlock;
-import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorModel;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
 
-public class TardisExteriorPoliceBoxModel extends Model {
+public class TardisExteriorPoliceBoxModel extends BaseTardisExteriorModel {
     public static final EntityModelLayer LAYER_LOCATION = new EntityModelLayer(DWM.getIdentifier("textures/block/tardis/exteriors/tardis_exterior_police_box.png"), "main");
 
-    private final ModelPart base;
-    private final ModelPart door_left;
-    private final ModelPart door_right;
-    private final ModelPart lamp;
-    private final ModelPart boti;
-
     public TardisExteriorPoliceBoxModel(ModelPart root) {
-        super(RenderLayer::getEntityTranslucentCull);
-
-        this.base = root.getChild("base");
-        this.door_left = root.getChild("door_left");
-        this.door_right = root.getChild("door_right");
-        this.lamp = root.getChild("lamp");
-        this.boti = root.getChild("boti");
+        super(root);
     }
 
     @SuppressWarnings("unused")
@@ -283,32 +267,5 @@ public class TardisExteriorPoliceBoxModel extends Model {
             .uv(0, 150).cuboid(17.0F, -63.0F, 2.1F, 1.0F, 63.0F, 35.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 22.0F, -20.1F));
 
         return TexturedModelData.of(modelData, 512, 512);
-    }
-
-    @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderLamp(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        lamp.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void renderBoti(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        boti.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-    }
-
-    public void setupAnim(TardisExteriorPoliceBoxBlockEntity tile) {
-        float doorAngle = 1.46F;
-
-        if (tile.getCachedState().get(TardisExteriorPoliceBoxBlock.OPEN)) {
-            this.door_left.yaw = -doorAngle;
-            this.door_right.yaw = doorAngle;
-        }
     }
 }

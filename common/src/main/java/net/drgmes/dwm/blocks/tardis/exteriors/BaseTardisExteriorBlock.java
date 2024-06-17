@@ -2,12 +2,14 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCompats;
+import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
-import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -21,11 +23,13 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -33,8 +37,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-
-import java.util.function.Supplier;
 
 public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
@@ -45,22 +47,22 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     protected static final VoxelShape EAST_SHAPE = Block.createCuboidShape(0.0, 0.0, 0.0, 15.9, 16.0, 16.0);
     protected static final VoxelShape WEST_SHAPE = Block.createCuboidShape(0.1, 0.0, 0.0, 16.0, 16.0, 16.0);
 
-    private final Supplier<BlockEntityBuilder<C>> blockEntityBuilderSupplier;
+    private final TardisExteriorTypeEntry exteriorType;
 
-    public BaseTardisExteriorBlock(AbstractBlock.Settings settings, Supplier<BlockEntityBuilder<C>> blockEntityBuilderSupplier) {
+    public BaseTardisExteriorBlock(AbstractBlock.Settings settings, TardisExteriorTypeEntry exteriorType) {
         super(settings);
-        this.blockEntityBuilderSupplier = blockEntityBuilderSupplier;
+        this.exteriorType = exteriorType;
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
-        return this.blockEntityBuilderSupplier.get().getBlockEntityType().instantiate(blockPos, blockState);
+        return this.exteriorType.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return blockEntityType != this.blockEntityBuilderSupplier.get().getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
+        return blockEntityType != this.exteriorType.getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
             ((BaseTardisExteriorBlockEntity) blockEntity).tick();
         };
     }
@@ -99,6 +101,46 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     @SuppressWarnings("deprecation")
+    public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
+        if (!blockState.isOf(newBlockState.getBlock()) && world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
+                tardis.setDoorsOpenState(false);
+            });
+        }
+
+        super.onStateReplaced(blockState, world, blockPos, newBlockState, moved);
+    }
+
+    @Override
+    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+        if (player.isSneaking() && player.isCreativeLevelTwoOp() && world instanceof ServerWorld serverWorld) {
+            if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                Identifier worldId = DWM.getIdentifier(tardisExteriorBlockEntity.getTardisId());
+                ModDimensions.removeWorldFromRegistry(serverWorld.getServer(), DimensionHelper.getWorldKey(worldId));
+            }
+        }
+
+        super.onBreak(world, blockPos, blockState, player);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            tardisExteriorBlockEntity.remat();
+
+            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
+                tardis.setOwner(entity.getUuid());
+                tardis.setExteriorType(this.exteriorType);
+                tardis.setBrokenState(false);
+                tardis.setDoorsLockState(false, null);
+            });
+        }
+
+        super.onPlaced(world, blockPos, blockState, entity, itemStack);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) blockPos = blockPos.down();
         BlockPos finalBlockPos = blockPos;
@@ -120,6 +162,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
                 tardis.init();
                 tardisExteriorBlockEntity.update();
+                if (tardis.getExteriorType() == null) tardis.setExteriorType(this.exteriorType);
 
                 if (heldItem.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {
@@ -182,33 +225,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 CommonHelper.teleport(entity, tardis.getWorld(), pos, tardis.getEntranceFacing().asRotation());
             });
         }
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
-        if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            tardisExteriorBlockEntity.remat();
-
-            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
-                tardis.setOwner(entity.getUuid());
-                tardis.setBrokenState(false);
-                tardis.setDoorsLockState(false, null);
-            });
-        }
-
-        super.onPlaced(world, blockPos, blockState, entity, itemStack);
-    }
-
-    @Override
-    @SuppressWarnings("deprecation")
-    public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
-        if (!blockState.isOf(newBlockState.getBlock()) && world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
-                tardis.setDoorsOpenState(false);
-            });
-        }
-
-        super.onStateReplaced(blockState, world, blockPos, newBlockState, moved);
     }
 
     public boolean isWooden() {

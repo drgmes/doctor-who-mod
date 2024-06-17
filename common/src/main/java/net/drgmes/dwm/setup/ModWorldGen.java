@@ -36,21 +36,6 @@ public class ModWorldGen {
     // COMMON //
     // ////// //
 
-    public static final FeatureBuilder ABANDONED_TARDIS_UNDERGROUND = new FeatureBuilder(
-        "abandoned_tardis_underground",
-        GenerationStep.Feature.UNDERGROUND_STRUCTURES,
-        ABANDONED_TARDIS,
-        () -> DefaultFeatureConfig.INSTANCE,
-        (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
-        () -> getPlacementModifiers(
-            CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(50),
-            HeightRangePlacementModifier.uniform(YOffset.aboveBottom(32), YOffset.fixed(-32)),
-            EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR_OR_WATER, 32),
-            RandomOffsetPlacementModifier.vertically(ConstantIntProvider.create(1))
-        )
-    );
-
     public static final FeatureBuilder ABANDONED_TARDIS_SURFACE = new FeatureBuilder(
         "abandoned_tardis_surface",
         GenerationStep.Feature.SURFACE_STRUCTURES,
@@ -59,24 +44,9 @@ public class ModWorldGen {
         (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
         () -> getPlacementModifiers(
             CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(70),
+            RarityFilterPlacementModifier.of(40),
             PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP,
             PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP
-        )
-    );
-
-    public static final FeatureBuilder ABANDONED_TARDIS_NETHER = new FeatureBuilder(
-        "abandoned_tardis_nether",
-        GenerationStep.Feature.UNDERGROUND_STRUCTURES,
-        ABANDONED_TARDIS,
-        () -> DefaultFeatureConfig.INSTANCE,
-        (ctx) -> ctx.hasTag(BiomeTags.IS_NETHER),
-        () -> getPlacementModifiers(
-            CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(50),
-            HeightRangePlacementModifier.uniform(YOffset.BOTTOM, YOffset.aboveBottom(96)),
-            EnvironmentScanPlacementModifier.of(Direction.DOWN, BlockPredicate.solid(), BlockPredicate.IS_AIR, 32),
-            RandomOffsetPlacementModifier.vertically(ConstantIntProvider.create(1))
         )
     );
 
@@ -89,7 +59,7 @@ public class ModWorldGen {
         6,
         (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
         () -> createOreWithDeepslateTargets(ModBlocks.TITANIUM_ORE.getBlock(), ModBlocks.TITANIUM_ORE_DEEPSLATE.getBlock()),
-        () -> getPlacementModifiers(CountPlacementModifier.of(14), HeightRangePlacementModifier.trapezoid(YOffset.fixed(-48), YOffset.fixed(112)))
+        () -> getPlacementModifiers(CountPlacementModifier.of(10), HeightRangePlacementModifier.trapezoid(YOffset.fixed(-48), YOffset.fixed(112)))
     );
 
     public static final FeatureBuilder TITANIUM_ORE_LARGE = FeatureBuilder.createOre(
@@ -97,7 +67,7 @@ public class ModWorldGen {
         15,
         (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
         () -> createOreWithDeepslateTargets(ModBlocks.TITANIUM_ORE.getBlock(), ModBlocks.TITANIUM_ORE_DEEPSLATE.getBlock()),
-        () -> getPlacementModifiers(CountPlacementModifier.of(14), HeightRangePlacementModifier.trapezoid(YOffset.fixed(-48), YOffset.fixed(112)))
+        () -> getPlacementModifiers(CountPlacementModifier.of(10), HeightRangePlacementModifier.trapezoid(YOffset.fixed(-48), YOffset.fixed(112)))
     );
 
     public static void init() {

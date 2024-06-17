@@ -4,8 +4,9 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypes;
 import net.drgmes.dwm.network.client.TardisExteriorUpdatePacket;
-import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
@@ -285,11 +286,14 @@ public class TardisSystemMaterialization implements ITardisSystem {
         ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension(), this.tardis.getWorld().getServer());
         if (exteriorWorld == null) return;
 
+        TardisExteriorTypeEntry exteriorType = this.tardis.getExteriorType();
+        if (exteriorType == null) exteriorType = TardisExteriorTypes.CAPSULE;
+
         BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();
         BlockState exteriorBlockState = exteriorWorld.getBlockState(exteriorBlockPos);
         BlockState exteriorUpBlockState = exteriorWorld.getBlockState(exteriorBlockPos.up());
 
-        BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlock().getDefaultState();
+        BlockState tardisExteriorBlockState = exteriorType.getBlock().getDefaultState();
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.LOWER);
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.FACING, this.tardis.getCurrentExteriorFacing());
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, exteriorBlockState.getFluidState().isIn(FluidTags.WATER));
@@ -311,11 +315,11 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.rematConsumers.add(() -> {
                 Box box = Box.of(Vec3d.ofBottomCenter(exteriorBlockPos), 0.5D, 1, 0.5D);
                 Vec3d pos = Vec3d.ofBottomCenter(this.tardis.getEntrancePosition().offset(this.tardis.getEntranceFacing()));
-                float yaw = tardis.getEntranceFacing().asRotation();
+                float yaw = this.tardis.getEntranceFacing().asRotation();
 
                 List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, box, EntityPredicates.VALID_ENTITY);
                 for (Entity entity : entities) {
-                    CommonHelper.teleport(entity, tardis.getWorld(), pos, yaw);
+                    CommonHelper.teleport(entity, this.tardis.getWorld(), pos, yaw);
                 }
 
                 this.tardis.updateConsoleTiles();

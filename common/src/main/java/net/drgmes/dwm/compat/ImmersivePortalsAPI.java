@@ -24,21 +24,22 @@ public class ImmersivePortalsAPI {
         RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
 
         DimensionAPI.addDimensionDynamically(worldIdentifier, dimensionFactory.apply(server));
-        ModDimensions.addWorldToRegistry(server, worldKey);
         DWM.LOGGER.info("Dimension \"%s\" created by DimLib".formatted(id));
 
+        ModDimensions.addWorldToRegistry(server, worldKey);
         return DimensionHelper.getWorld(worldKey, server);
     }
 
-    public static void removeWorld(String id, MinecraftServer server) {
+    public static boolean removeWorld(String id, MinecraftServer server) {
         Identifier worldIdentifier = DWM.getIdentifier(id);
         RegistryKey<World> worldKey = DimensionHelper.getWorldKey(worldIdentifier);
 
         ServerWorld world = DimensionHelper.getWorld(worldKey, server);
-        if (world == null) return;
+        if (world == null) return false;
 
         DimensionAPI.removeDimensionDynamically(world);
-        ModDimensions.removeWorldFromRegistry(server, worldKey);
         DWM.LOGGER.info("Dimension \"%s\" removed by DimLib".formatted(id));
+
+        return ModDimensions.removeWorldFromRegistry(server, worldKey);
     }
 }

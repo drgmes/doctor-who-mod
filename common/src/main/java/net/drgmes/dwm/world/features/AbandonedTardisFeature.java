@@ -43,7 +43,7 @@ public class AbandonedTardisFeature extends Feature<DefaultFeatureConfig> {
             return false;
         }
 
-        BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlock().getDefaultState();
+        BlockState tardisExteriorBlockState = ModBlocks.TARDIS_EXTERIOR_CAPSULE.getBlock().getDefaultState();
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.HALF, DoubleBlockHalf.LOWER);
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.FACING, direction);
         tardisExteriorBlockState = tardisExteriorBlockState.with(BaseTardisExteriorBlock.WATERLOGGED, world.getBlockState(blockPos).getFluidState().isIn(FluidTags.WATER));

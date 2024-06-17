@@ -19,14 +19,14 @@ public class BaseRotatableBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return this.getDefaultBlockState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(FACING);
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return this.getDefaultBlockState().with(FACING, context.getHorizontalPlayerFacing().getOpposite());
     }
 
     protected BlockState getDefaultBlockState() {

@@ -5,6 +5,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.compat.ImmersivePortalsAPI;
 import net.drgmes.dwm.network.client.DimensionAddPacket;
+import net.drgmes.dwm.network.client.DimensionRemovePacket;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.minecraft.registry.RegistryKey;
@@ -107,16 +108,17 @@ public class DimensionHelper {
         return world;
     }
 
-    public static void removeWorld(String id, MinecraftServer server) {
+    public static boolean removeWorld(String id, MinecraftServer server) {
         if (ModCompats.immersivePortalsAPI()) {
-            ImmersivePortalsAPI.removeWorld(id, server);
-            return;
+            return ImmersivePortalsAPI.removeWorld(id, server);
         }
 
-        // TODO ...
-
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
-        ModDimensions.removeWorldFromRegistry(server, worldKey);
+        if (!ModDimensions.removeWorldFromRegistry(server, worldKey)) return false;
+
+        new DimensionRemovePacket(worldKey).sendToAll(server);
+        setChanged(server);
+        return true;
     }
 
     @ExpectPlatform

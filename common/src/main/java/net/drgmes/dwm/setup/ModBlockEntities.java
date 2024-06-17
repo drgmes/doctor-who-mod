@@ -6,6 +6,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisC
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.TardisExteriorCapsuleBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
@@ -63,6 +64,7 @@ public class ModBlockEntities {
     // Tardis Exteriors //
     // //////////////// //
 
+    public static BlockEntityBuilder<TardisExteriorCapsuleBlockEntity> TARDIS_EXTERIOR_CAPSULE;
     public static BlockEntityBuilder<TardisExteriorPoliceBoxBlockEntity> TARDIS_EXTERIOR_POLICE_BOX;
 
     // /////////////// //

@@ -55,8 +55,9 @@ public class TardisRemoveCommand {
         tardis.setDoorsLockState(true, null);
 
         TardisEnergyManager.remove(tardisId);
-        DimensionHelper.removeWorld(tardisId, context.getSource().getServer());
+        boolean flag = DimensionHelper.removeWorld(tardisId, context.getSource().getServer());
         if (ModCompats.immersivePortals()) ImmersivePortals.removeTardisPortalsState(tardisId);
+        if (!flag) return Command.SINGLE_SUCCESS;
 
         if (player != null) player.sendMessage(DWM.TEXTS.TARDIS_REMOVED.apply(tardisId), false);
         else DWM.LOGGER.info(DWM.TEXTS.TARDIS_REMOVED.apply(tardisId).getString());

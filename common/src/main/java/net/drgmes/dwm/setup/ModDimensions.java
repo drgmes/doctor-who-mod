@@ -31,16 +31,18 @@ public class ModDimensions {
     public static void init() {
     }
 
-    public static void addWorldToRegistry(MinecraftServer server, RegistryKey<World> worldKey) {
-        if (WORLDS.contains(worldKey)) return;
+    public static boolean addWorldToRegistry(MinecraftServer server, RegistryKey<World> worldKey) {
+        if (WORLDS.contains(worldKey)) return false;
         WORLDS.add(worldKey);
         saveWorldsRegistry(server);
+        return true;
     }
 
-    public static void removeWorldFromRegistry(MinecraftServer server, RegistryKey<World> worldKey) {
-        if (!WORLDS.contains(worldKey)) return;
+    public static boolean removeWorldFromRegistry(MinecraftServer server, RegistryKey<World> worldKey) {
+        if (!WORLDS.contains(worldKey)) return false;
         WORLDS.remove(worldKey);
         saveWorldsRegistry(server);
+        return true;
     }
 
     public static File getWorldsRegistryFile(MinecraftServer server) {

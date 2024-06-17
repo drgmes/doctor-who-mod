@@ -38,12 +38,6 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
         return ModBlockEntities.TARDIS_ROUNDEL.getBlockEntityType().instantiate(blockPos, blockState);
     }
 
-    @NonnullDefault
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        return super.getPlacementState(context).with(AXIS, context.getSide().getAxis());
-    }
-
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
@@ -56,6 +50,12 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
         return super.getDefaultBlockState()
             .with(AXIS, Direction.Axis.Y)
             .with(LIT, false);
+    }
+
+    @NonnullDefault
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        return super.getPlacementState(context).with(AXIS, context.getSide().getAxis());
     }
 
     @Override

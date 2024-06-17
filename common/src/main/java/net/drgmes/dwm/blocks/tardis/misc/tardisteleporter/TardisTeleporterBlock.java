@@ -36,6 +36,12 @@ public class TardisTeleporterBlock extends Block implements Waterloggable, Block
     }
 
     @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        super.appendProperties(builder);
+        builder.add(WATERLOGGED);
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         BlockState blockState = super.getPlacementState(context);
         FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
@@ -47,12 +53,6 @@ public class TardisTeleporterBlock extends Block implements Waterloggable, Block
     @SuppressWarnings("deprecation")
     public FluidState getFluidState(BlockState blockState) {
         return blockState.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(blockState);
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(WATERLOGGED);
     }
 
     @Override

@@ -20,14 +20,6 @@ public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext context) {
-        BlockState blockState = super.getPlacementState(context);
-        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
-
-        return blockState.with(WATERLOGGED, fluidState.isIn(FluidTags.WATER));
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);
         builder.add(WATERLOGGED);
@@ -36,6 +28,14 @@ public class BaseRotatableWaterloggedBlock extends BaseRotatableBlock implements
     @Override
     protected BlockState getDefaultBlockState() {
         return super.getDefaultBlockState().with(WATERLOGGED, false);
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext context) {
+        BlockState blockState = super.getPlacementState(context);
+        FluidState fluidState = context.getWorld().getFluidState(context.getBlockPos());
+
+        return blockState.with(WATERLOGGED, fluidState.isIn(FluidTags.WATER));
     }
 
     @Override

@@ -11,6 +11,12 @@ public class ModBlockEntitiesImpl {
         // Tardis Exteriors //
         // //////////////// //
 
+        ModBlockEntities.TARDIS_EXTERIOR_CAPSULE = new BlockEntityBuilder<>(
+            "tardis_exterior_capsule",
+            TardisExteriorCapsuleBlockEntity::new,
+            ModBlocks.TARDIS_EXTERIOR_CAPSULE::getBlock
+        );
+
         ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX = new BlockEntityBuilder<>(
             "tardis_exterior_police_box",
             TardisExteriorPoliceBoxBlockEntity::new,

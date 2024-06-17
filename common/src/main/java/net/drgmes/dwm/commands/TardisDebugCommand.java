@@ -8,6 +8,8 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.commands.types.TardisDimensionArgumentType;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -46,11 +48,14 @@ public class TardisDebugCommand {
 
         MutableText text = Text.empty();
         TardisStateManager tardis = tardisHolder.get();
+        TardisConsoleRoomEntry consoleRoom = tardis.getConsoleRoom();
+        TardisExteriorTypeEntry exteriorType = tardis.getExteriorType();
 
         text.append(Text.literal("< === " + tardis.getId() + " === >")).append("\n");
         text.append(Text.literal("\n"));
         text.append(Text.literal("Owner: ").append(Text.literal(tardis.getOwner() != null ? tardis.getOwner().toString() : "None").formatted(Formatting.AQUA))).append("\n");
-        text.append(Text.literal("Room: ").append(Text.literal(tardis.getConsoleRoom().name).formatted(Formatting.AQUA))).append("\n");
+        text.append(Text.literal("Room: ").append(Text.literal(consoleRoom == null ? "None" : consoleRoom.name).formatted(Formatting.AQUA))).append("\n");
+        text.append(Text.literal("Exterior: ").append(Text.literal(exteriorType == null ? "None" : exteriorType.name).formatted(Formatting.AQUA))).append("\n");
         text.append(Text.literal("\n"));
         text.append(Text.literal("Current Dim: ").append(Text.literal(tardis.getCurrentExteriorDimension().getValue().toString()).formatted(Formatting.AQUA))).append("\n");
         text.append(Text.literal("Next Dim: ").append(Text.literal(tardis.getDestinationExteriorDimension().getValue().toString()).formatted(Formatting.AQUA))).append("\n");

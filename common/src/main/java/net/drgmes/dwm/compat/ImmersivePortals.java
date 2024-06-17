@@ -3,6 +3,7 @@ package net.drgmes.dwm.compat;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.types.IMixinPortal;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -79,8 +80,11 @@ public class ImmersivePortals {
             if (this.tardis.getWorld() == null) return;
 
             BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
-            double entranceWidth = doorTile == null ? 1 : doorTile.entranceWidth;
-            double entranceHeight = doorTile == null ? 2 : doorTile.entranceHeight;
+            TardisExteriorTypeEntry exteriorType = this.tardis.getExteriorType();
+            double innerWidth = doorTile == null ? 1 : doorTile.entranceWidth;
+            double innerHeight = doorTile == null ? 2 : doorTile.entranceHeight;
+            double outerWidth = exteriorType == null ? 1 : exteriorType.entranceWidth;
+            double outerHeight = exteriorType == null ? 2 : exteriorType.entranceHeight;
 
             try {
                 Map.Entry<Portal, Portal> portals = createPortals(
@@ -91,7 +95,7 @@ public class ImmersivePortals {
                     this.tardis.getCurrentExteriorPosition().offset(this.tardis.getCurrentExteriorFacing()).up(),
                     this.tardis.getCurrentExteriorDimension(),
                     -0.5 + 0.0275, -0.5, 0,
-                    entranceWidth, entranceHeight, 1, 2
+                    innerWidth, innerHeight, outerWidth, outerHeight
                 );
 
                 this.portalFromTardis = portals.getKey();
