@@ -22,4 +22,11 @@ public class TardisExteriorTypes {
         () -> ModBlocks.TARDIS_EXTERIOR_POLICE_BOX,
         () -> ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX
     );
+
+    public static final TardisExteriorTypeEntry PHONE_BOX = new TardisExteriorTypeEntry(
+        "phone_box",
+        1.0F, 2.0F,
+        () -> ModBlocks.TARDIS_EXTERIOR_PHONE_BOX,
+        () -> ModBlockEntities.TARDIS_EXTERIOR_PHONE_BOX
+    );
 }

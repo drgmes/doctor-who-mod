@@ -23,6 +23,12 @@ public class ModBlockEntitiesImpl {
             ModBlocks.TARDIS_EXTERIOR_POLICE_BOX::getBlock
         );
 
+        ModBlockEntities.TARDIS_EXTERIOR_PHONE_BOX = new BlockEntityBuilder<>(
+            "tardis_exterior_phone_box",
+            TardisExteriorPhoneBoxBlockEntity::new,
+            ModBlocks.TARDIS_EXTERIOR_PHONE_BOX::getBlock
+        );
+
         // /////////////// //
         // Tardis Consoles //
         // /////////////// //

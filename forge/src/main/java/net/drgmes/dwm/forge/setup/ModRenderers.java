@@ -6,6 +6,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.models.
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models.TardisEngineToyotaModel;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.models.TardisExteriorCapsuleModel;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorphonebox.models.TardisExteriorPhoneBoxModel;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.models.TardisExteriorPoliceBoxModel;
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.models.TardisRoundelModel;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
@@ -25,6 +26,7 @@ public class ModRenderers {
     public static void onRegisterLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(TardisExteriorCapsuleModel.LAYER_LOCATION, TardisExteriorCapsuleModel::getTexturedModelData);
         event.registerLayerDefinition(TardisExteriorPoliceBoxModel.LAYER_LOCATION, TardisExteriorPoliceBoxModel::getTexturedModelData);
+        event.registerLayerDefinition(TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::getTexturedModelData);
         event.registerLayerDefinition(TardisDoorsPoliceBoxModel.LAYER_LOCATION, TardisDoorsPoliceBoxModel::getTexturedModelData);
         event.registerLayerDefinition(TardisConsoleUnitImperialModel.LAYER_LOCATION, TardisConsoleUnitImperialModel::getTexturedModelData);
         event.registerLayerDefinition(TardisConsoleUnitToyotaModel.LAYER_LOCATION, TardisConsoleUnitToyotaModel::getTexturedModelData);

@@ -5,6 +5,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisC
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.TardisExteriorCapsuleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorphonebox.TardisExteriorPhoneBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.setup.ModBlockEntities;
@@ -27,6 +28,12 @@ public class ModBlockEntitiesImpl {
             "tardis_exterior_police_box",
             TardisExteriorPoliceBoxBlockEntity::new,
             ModBlocks.TARDIS_EXTERIOR_POLICE_BOX::getBlock
+        );
+
+        ModBlockEntities.TARDIS_EXTERIOR_PHONE_BOX = new BlockEntityBuilder<>(
+            "tardis_exterior_phone_box",
+            TardisExteriorPhoneBoxBlockEntity::new,
+            ModBlocks.TARDIS_EXTERIOR_PHONE_BOX::getBlock
         );
 
         // /////////////// //

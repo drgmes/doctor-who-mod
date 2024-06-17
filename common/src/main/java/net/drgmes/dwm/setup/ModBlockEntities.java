@@ -7,6 +7,7 @@ import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPolice
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockEntity;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.TardisExteriorCapsuleBlockEntity;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorphonebox.TardisExteriorPhoneBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
@@ -66,6 +67,7 @@ public class ModBlockEntities {
 
     public static BlockEntityBuilder<TardisExteriorCapsuleBlockEntity> TARDIS_EXTERIOR_CAPSULE;
     public static BlockEntityBuilder<TardisExteriorPoliceBoxBlockEntity> TARDIS_EXTERIOR_POLICE_BOX;
+    public static BlockEntityBuilder<TardisExteriorPhoneBoxBlockEntity> TARDIS_EXTERIOR_PHONE_BOX;
 
     // /////////////// //
     // Tardis Consoles //
@@ -93,7 +95,9 @@ public class ModBlockEntities {
     }
 
     public static void setup() {
+        TardisEnergyManager.register(TARDIS_EXTERIOR_CAPSULE::getBlockEntityType);
         TardisEnergyManager.register(TARDIS_EXTERIOR_POLICE_BOX::getBlockEntityType);
+        TardisEnergyManager.register(TARDIS_EXTERIOR_PHONE_BOX::getBlockEntityType);
         TardisEnergyManager.register(TARDIS_CONSOLE_UNIT_IMPERIAL::getBlockEntityType);
         TardisEnergyManager.register(TARDIS_CONSOLE_UNIT_TOYOTA::getBlockEntityType);
         TardisEnergyManager.register(TARDIS_ENGINE_IMPERIAL::getBlockEntityType);

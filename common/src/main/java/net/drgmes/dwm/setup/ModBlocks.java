@@ -58,6 +58,7 @@ import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPolice
 import net.drgmes.dwm.blocks.tardis.engines.tardisengineimperial.TardisEngineImperialBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.TardisEngineToyotaBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorcapsule.TardisExteriorCapsuleBlockBuilder;
+import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorphonebox.TardisExteriorPhoneBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorpolicebox.TardisExteriorPoliceBoxBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockBuilder;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockBuilder;
@@ -82,6 +83,7 @@ public class ModBlocks {
     // Tardis Exteriors
     public static final BlockBuilder TARDIS_EXTERIOR_CAPSULE = new TardisExteriorCapsuleBlockBuilder("tardis_exterior_capsule");
     public static final BlockBuilder TARDIS_EXTERIOR_POLICE_BOX = new TardisExteriorPoliceBoxBlockBuilder("tardis_exterior_police_box");
+    public static final BlockBuilder TARDIS_EXTERIOR_PHONE_BOX = new TardisExteriorPhoneBoxBlockBuilder("tardis_exterior_phone_box");
 
     // Tardis Doors
     public static final BlockBuilder TARDIS_DOORS_POLICE_BOX = new TardisDoorsPoliceBoxBlockBuilder("tardis_doors_police_box");

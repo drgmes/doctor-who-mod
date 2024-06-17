@@ -1,0 +1,45 @@
+{
+  "parent": "dwm:item/templates/entity_block_item",
+  "model": "dwm:models/item/block/tardis/exteriors/tardis_exterior_phone_box.obj",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "dwm:block/tardis/exteriors/tardis_exterior_phone_box"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [1, 2.5, 0],
+      "scale": [0.09075, 0.09075, 0.09075]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 1.5, 0],
+      "scale": [0.09075, 0.09075, 0.09075]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, 45, 0],
+      "translation": [1.485, 0, 0],
+      "scale": [0.099, 0.099, 0.099]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, 45, 0],
+      "translation": [0, 0, 1.485],
+      "scale": [0.099, 0.099, 0.099]
+    },
+    "ground": {
+      "translation": [0.5, 2, 0.5],
+      "scale": [0.0495, 0.0495, 0.0495]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "translation": [-1.65, -4.5, 0],
+      "scale": [0.14025, 0.14025, 0.14025]
+    },
+    "fixed": {
+      "rotation": [0, 0, 0],
+      "translation": [1.32, -6, 2.5],
+      "scale": [0.165, 0.165, 0.165]
+    }
+  }
+}
