@@ -12,7 +12,7 @@ public class TardisExteriorTypes {
 
     public static final TardisExteriorTypeEntry CAPSULE = new TardisExteriorTypeEntry(
         "capsule",
-        TardisDoorsTypes.POLICE_BOX,
+        TardisDoorsTypes.CAPSULE,
         () -> ModBlocks.TARDIS_EXTERIOR_CAPSULE,
         () -> ModBlockEntities.TARDIS_EXTERIOR_CAPSULE,
         1.0F, 2.0F

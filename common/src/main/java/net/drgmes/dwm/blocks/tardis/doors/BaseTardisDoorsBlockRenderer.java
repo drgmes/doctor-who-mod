@@ -25,9 +25,10 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
     protected final float modelYScale;
     protected final float modelYOffset;
     protected final float modelZOffset;
+    protected final float foregroundScale;
     protected final int color;
 
-    public BaseTardisDoorsBlockRenderer(BlockEntityRendererFactory.Context context, EntityModelLayer modelLayer, Function<ModelPart, BaseTardisDoorsModel> modelFactory, float modelScale, float modelYScale, float modelYOffset, float modelZOffset, int color) {
+    public BaseTardisDoorsBlockRenderer(BlockEntityRendererFactory.Context context, EntityModelLayer modelLayer, Function<ModelPart, BaseTardisDoorsModel> modelFactory, float modelScale, float modelYScale, float modelYOffset, float modelZOffset, float foregroundScale, int color) {
         this.ctx = context;
         this.modelLayer = modelLayer;
         this.modelFactory = modelFactory;
@@ -35,7 +36,12 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
         this.modelYScale = modelYScale;
         this.modelYOffset = modelYOffset;
         this.modelZOffset = modelZOffset;
+        this.foregroundScale = foregroundScale;
         this.color = color;
+    }
+
+    public BaseTardisDoorsBlockRenderer(BlockEntityRendererFactory.Context context, EntityModelLayer modelLayer, Function<ModelPart, BaseTardisDoorsModel> modelFactory, float modelScale, float modelYScale, float modelYOffset, float modelZOffset, int color) {
+        this(context, modelLayer, modelFactory, modelScale, modelYScale, modelYOffset, modelZOffset, 2.0F, color);
     }
 
     @Override
@@ -73,7 +79,7 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
 
     private void drawForeground(C tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
         matrixStack.push();
-        matrixStack.scale(2, 2.025F, 2);
+        matrixStack.scale(this.foregroundScale, this.foregroundScale + this.modelYScale, this.foregroundScale);
         matrixStack.translate(-0.5F, -1.25F, -0.05F);
 
         RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getGui()), 0, 0, 1, 2, this.color);

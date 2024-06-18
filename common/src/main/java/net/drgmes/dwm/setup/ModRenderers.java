@@ -8,6 +8,8 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.Tardi
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.models.TardisConsoleUnitImperialModel;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.TardisConsoleUnitToyotaBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.models.TardisConsoleUnitToyotaModel;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorscapsule.tardisdoorsphonebox.TardisDoorsCapsuleBlockRenderer;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorscapsule.tardisdoorsphonebox.models.TardisDoorsCapsuleModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.TardisDoorsPhoneBoxBlockRenderer;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.models.TardisDoorsPhoneBoxModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlockRenderer;
@@ -47,6 +49,7 @@ public class ModRenderers {
         EntityModelLayerRegistry.register(TardisExteriorPoliceBoxModel.LAYER_LOCATION, TardisExteriorPoliceBoxModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::getTexturedModelData);
 
+        EntityModelLayerRegistry.register(TardisDoorsCapsuleModel.LAYER_LOCATION, TardisDoorsCapsuleModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisDoorsPoliceBoxModel.LAYER_LOCATION, TardisDoorsPoliceBoxModel::getTexturedModelData);
         EntityModelLayerRegistry.register(TardisDoorsPhoneBoxModel.LAYER_LOCATION, TardisDoorsPhoneBoxModel::getTexturedModelData);
 
@@ -73,6 +76,7 @@ public class ModRenderers {
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_EXTERIOR_POLICE_BOX.getBlockEntityType(), TardisExteriorPoliceBoxBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_EXTERIOR_PHONE_BOX.getBlockEntityType(), TardisExteriorPhoneBoxBlockRenderer::new);
 
+        BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_DOORS_CAPSULE.getBlockEntityType(), TardisDoorsCapsuleBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_DOORS_POLICE_BOX.getBlockEntityType(), TardisDoorsPoliceBoxBlockRenderer::new);
         BlockEntityRendererRegistry.register(ModBlockEntities.TARDIS_DOORS_PHONE_BOX.getBlockEntityType(), TardisDoorsPhoneBoxBlockRenderer::new);
 

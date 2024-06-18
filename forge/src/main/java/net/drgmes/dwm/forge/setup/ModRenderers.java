@@ -3,6 +3,7 @@ package net.drgmes.dwm.forge.setup;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.models.TardisConsoleUnitImperialModel;
 import net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunittoyota.models.TardisConsoleUnitToyotaModel;
+import net.drgmes.dwm.blocks.tardis.doors.tardisdoorscapsule.tardisdoorsphonebox.models.TardisDoorsCapsuleModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox.models.TardisDoorsPhoneBoxModel;
 import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.models.TardisDoorsPoliceBoxModel;
 import net.drgmes.dwm.blocks.tardis.engines.tardisenginetoyota.models.TardisEngineToyotaModel;
@@ -29,6 +30,7 @@ public class ModRenderers {
         event.registerLayerDefinition(TardisExteriorPoliceBoxModel.LAYER_LOCATION, TardisExteriorPoliceBoxModel::getTexturedModelData);
         event.registerLayerDefinition(TardisExteriorPhoneBoxModel.LAYER_LOCATION, TardisExteriorPhoneBoxModel::getTexturedModelData);
 
+        event.registerLayerDefinition(TardisDoorsCapsuleModel.LAYER_LOCATION, TardisDoorsCapsuleModel::getTexturedModelData);
         event.registerLayerDefinition(TardisDoorsPoliceBoxModel.LAYER_LOCATION, TardisDoorsPoliceBoxModel::getTexturedModelData);
         event.registerLayerDefinition(TardisDoorsPhoneBoxModel.LAYER_LOCATION, TardisDoorsPhoneBoxModel::getTexturedModelData);
 

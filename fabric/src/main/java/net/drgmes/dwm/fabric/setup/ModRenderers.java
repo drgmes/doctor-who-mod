@@ -14,6 +14,7 @@ public class ModRenderers {
         BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.TARDIS_EXTERIOR_POLICE_BOX.getBlockItem(), new TardisExteriorPoliceBoxItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.TARDIS_EXTERIOR_PHONE_BOX.getBlockItem(), new TardisExteriorPhoneBoxItemRenderer());
 
+        BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.TARDIS_DOORS_CAPSULE.getBlockItem(), new TardisDoorsCapsuleItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.TARDIS_DOORS_POLICE_BOX.getBlockItem(), new TardisDoorsPoliceBoxItemRenderer());
         BuiltinItemRendererRegistry.INSTANCE.register(ModBlocks.TARDIS_DOORS_PHONE_BOX.getBlockItem(), new TardisDoorsPhoneBoxItemRenderer());
 

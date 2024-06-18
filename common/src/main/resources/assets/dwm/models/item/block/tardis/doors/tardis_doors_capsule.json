@@ -1,0 +1,45 @@
+{
+  "parent": "dwm:item/templates/entity_block_item",
+  "model": "dwm:models/item/block/tardis/doors/tardis_doors_capsule.obj",
+  "loader": "forge:obj",
+  "flip_v": true,
+  "textures": {
+    "texture0": "dwm:block/tardis/doors/tardis_doors_capsule"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [75, 45, 0],
+      "translation": [1, 1, 0],
+      "scale": [0.0985, 0.0985, 0.0985]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [75, 45, 0],
+      "translation": [0, 0, 0],
+      "scale": [0.0985, 0.0985, 0.0985]
+    },
+    "firstperson_righthand": {
+      "rotation": [0, -22.5, 0],
+      "translation": [1.485, 0, 0],
+      "scale": [0.1075, 0.1075, 0.1075]
+    },
+    "firstperson_lefthand": {
+      "rotation": [0, -22.5, 0],
+      "translation": [0, 0, 1.485],
+      "scale": [0.1075, 0.1075, 0.1075]
+    },
+    "ground": {
+      "translation": [0.5, 2, 0.5],
+      "scale": [0.05385, 0.05385, 0.05385]
+    },
+    "gui": {
+      "rotation": [30, 225, 0],
+      "translation": [-1.65, -3.75, 0],
+      "scale": [0.1525, 0.1525, 0.1525]
+    },
+    "fixed": {
+      "rotation": [0, 0, 0],
+      "translation": [1.32, -4.75, 2],
+      "scale": [0.1795, 0.1795, 0.1795]
+    }
+  }
+}
