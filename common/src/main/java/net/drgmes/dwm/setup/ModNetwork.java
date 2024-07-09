@@ -35,7 +35,6 @@ public class ModNetwork {
     public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_CONSOLE_ROOM_APPLY = Registration.registerC2SMessageType("tardis_console_unit_monitor_console_room_apply", TardisConsoleUnitMonitorConsoleRoomApplyPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATION_APPLY = Registration.registerC2SMessageType("tardis_console_unit_telepathic_interface_location_apply", TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::create);
     public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNER_APPLY = Registration.registerC2SMessageType("tardis_console_unit_telepathic_interface_map_banner_apply", TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::create);
-    public static MessageType TARDIS_INTERIOR_DOORS_INIT = Registration.registerC2SMessageType("tardis_interior_doors_init", TardisInteriorDoorsInitPacket::create);
 
     public static void init() {
     }

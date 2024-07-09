@@ -1,14 +1,14 @@
 package net.drgmes.dwm.blocks.tardis.doors.tardisdoorsphonebox;
 
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
-import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypes;
+import net.drgmes.dwm.common.tardis.doors.TardisDoors;
 import net.minecraft.block.Block;
 
 public class TardisDoorsPhoneBoxBlock extends BaseTardisDoorsBlock<TardisDoorsPhoneBoxBlockEntity> {
     public TardisDoorsPhoneBoxBlock(Settings settings) {
         super(
             settings,
-            TardisDoorsTypes.PHONE_BOX,
+            TardisDoors.PHONE_BOX,
             Block.createCuboidShape(0.0, 0.0, 13.0, 16.0, 16.0, 16.0),
             Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 3.0),
             Block.createCuboidShape(0.0, 0.0, 0.0, 3.0, 16.0, 16.0),

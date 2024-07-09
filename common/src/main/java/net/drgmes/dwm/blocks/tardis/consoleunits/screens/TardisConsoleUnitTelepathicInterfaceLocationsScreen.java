@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
+import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.network.server.TardisConsoleUnitTelepathicInterfaceLocationApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
@@ -20,13 +21,8 @@ import java.util.Map.Entry;
 import java.util.Objects;
 
 public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTardisConsoleUnitTelepathicInterfaceScreen {
-    public enum EDataType {
-        BIOME,
-        STRUCTURE
-    }
-
-    private final List<Entry<Identifier, EDataType>> locations;
-    private List<Entry<Identifier, EDataType>> filteredLocations;
+    private final List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations;
+    private List<Entry<Identifier, TardisTelepathicInterfaceDataType>> filteredLocations;
 
     private LocationsListWidget locationsListWidget;
     private LocationsListWidget.LocationEntry selected = null;
@@ -34,7 +30,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     private TextFieldWidget search;
     private String lastSearch;
 
-    public TardisConsoleUnitTelepathicInterfaceLocationsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, List<Entry<Identifier, EDataType>> locations) {
+    public TardisConsoleUnitTelepathicInterfaceLocationsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations) {
         super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_LOCATIONS, tardisConsoleUnitBlockEntity);
 
         this.locations = Collections.unmodifiableList(locations);
@@ -42,31 +38,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     @Override
-    protected void init() {
-        int locationsListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
-        int locationsListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
-        int locationsListOffset = this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
-
-        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_FLD_SEARCH);
-
-        Vector2i locationsListPos = this.getRenderPos(this.getBackgroundBorderSize().x, locationsListOffset);
-        this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
-
-        this.addDrawableChild(this.locationsListWidget);
-        this.addDrawableChild(this.search);
-
-        super.init();
-        this.update();
-    }
-
-    @Override
-    protected void apply() {
-        if (this.selected != null) {
-            new TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(this.selected.entry.getKey(), this.selected.entry.getValue().name()).sendToServer();
-        }
-
-        super.apply();
+    public boolean shouldCloseOnInventoryKey() {
+        return !this.search.isFocused();
     }
 
     @Override
@@ -80,6 +53,25 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
             this.locationsListWidget.refreshList();
             this.update();
         }
+    }
+
+    @Override
+    public void init() {
+        int locationsListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int locationsListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
+        int locationsListOffset = this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
+
+        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
+
+        Vector2i locationsListPos = this.getRenderPos(this.getBackgroundBorderSize().x, locationsListOffset);
+        this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
+
+        this.addDrawableChild(this.locationsListWidget);
+        this.addDrawableChild(this.search);
+
+        super.init();
+        this.update();
     }
 
     @Override
@@ -97,8 +89,12 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     @Override
-    public boolean shouldCloseOnInventoryKey() {
-        return !this.search.isFocused();
+    public void apply() {
+        if (this.selected != null) {
+            new TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(this.selected.entry.getKey(), this.selected.entry.getValue().name()).sendToServer();
+        }
+
+        super.apply();
     }
 
     protected void update() {
@@ -143,9 +139,9 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         }
 
         private class LocationEntry extends BaseListEntry {
-            private final Map.Entry<Identifier, EDataType> entry;
+            private final Map.Entry<Identifier, TardisTelepathicInterfaceDataType> entry;
 
-            public LocationEntry(Map.Entry<Identifier, EDataType> entry) {
+            public LocationEntry(Map.Entry<Identifier, TardisTelepathicInterfaceDataType> entry) {
                 this.entry = entry;
             }
 
@@ -153,8 +149,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
             public Text getText() {
                 MutableText narration = Text.translatable(CommonHelper.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
                 Formatting format = Formatting.WHITE;
-                if (this.entry.getValue() == EDataType.BIOME) format = Formatting.GOLD;
-                else if (this.entry.getValue() == EDataType.STRUCTURE) format = Formatting.AQUA;
+                if (this.entry.getValue() == TardisTelepathicInterfaceDataType.BIOME) format = Formatting.GOLD;
+                else if (this.entry.getValue() == TardisTelepathicInterfaceDataType.STRUCTURE) format = Formatting.AQUA;
 
                 narration = narration.formatted(format);
                 return narration;

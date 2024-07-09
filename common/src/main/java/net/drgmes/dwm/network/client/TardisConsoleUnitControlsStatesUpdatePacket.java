@@ -4,7 +4,6 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -43,7 +42,7 @@ public class TardisConsoleUnitControlsStatesUpdatePacket extends BaseS2CMessage 
         final MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            tardisConsoleUnitBlockEntity.controlsStorage.load(this.tag);
+            tardisConsoleUnitBlockEntity.controlsStorage.readNbt(this.tag);
         }
     }
 }

@@ -13,7 +13,6 @@ import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 
 public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends BaseC2SMessage {
     private final NbtCompound tag;
@@ -42,19 +41,19 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends Ba
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
-                player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
+                player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
                 return;
             }
 
             MapState mapState = MapState.fromNbt(this.tag.getCompound("mapState"));
             MapBannerMarker mapBannerMarker = MapBannerMarker.fromNbt(tag.getCompound("mapBannerMarker"));
 
-            String color = "§e" + mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");
-            player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.map.loaded.banner", color), true);
+            String color = mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");
+            player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
 
             tardis.setDestinationDimension(mapState.dimension);
             tardis.setDestinationPosition(mapBannerMarker.getPos());
-            tardis.updateConsoleTiles();
+            tardis.markConsoleTilesUpdated();
         });
     }
 }

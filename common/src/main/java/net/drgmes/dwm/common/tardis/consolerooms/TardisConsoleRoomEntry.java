@@ -1,16 +1,20 @@
 package net.drgmes.dwm.common.tardis.consolerooms;
 
+import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlock;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarscreator.TardisArsCreatorBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -44,8 +48,9 @@ public class TardisConsoleRoomEntry {
 
     private String teleporterRoom;
     private String decoratorBlock;
+    private String doorsBlock;
 
-    protected TardisConsoleRoomEntry(String name, String title, String structure, BlockPos center, BlockPos entrance, int spawnChance) {
+    public TardisConsoleRoomEntry(String name, String title, String structure, int spawnChance, BlockPos center, BlockPos entrance) {
         this.name = name;
         this.title = title;
         this.structure = structure;
@@ -54,44 +59,44 @@ public class TardisConsoleRoomEntry {
         this.entrance = entrance.toImmutable();
     }
 
-    public static TardisConsoleRoomEntry create(String name, String title, String structure, BlockPos center, BlockPos entrance, int spawnChance) {
-        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, structure, center, entrance, spawnChance);
-        TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
+    public static TardisConsoleRoomEntry fromNbt(NbtCompound tag) {
+        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(
+            tag.getString("name"),
+            tag.getString("title"),
+            tag.getString("structure"),
+            tag.getInt("spawnChance"),
+            BlockPos.fromLong(tag.getLong("center")),
+            BlockPos.fromLong(tag.getLong("entrance"))
+        );
+
+        if (tag.contains("teleporterRoom")) consoleRoom.setTeleporterRoom(tag.getString("teleporterRoom"));
+        if (tag.contains("decoratorBlock")) consoleRoom.setDecoratorBlock(tag.getString("decoratorBlock"));
+        if (tag.contains("doorsBlock")) consoleRoom.setDoorsBlock(tag.getString("doorsBlock"));
+        if (tag.contains("imageUrl")) consoleRoom.setImageUrl(tag.getString("imageUrl"));
+        if (tag.contains("repairTo")) consoleRoom.setRepairTo(tag.getString("repairTo"));
+        if (tag.contains("isHidden")) consoleRoom.setHidden(tag.getBoolean("isHidden"));
+
         return consoleRoom;
     }
 
-    public static TardisConsoleRoomEntry create(NbtCompound tag, boolean saveToRegistry) {
-        String name = tag.getString("name");
-        String title = tag.getString("title");
-        String structure = tag.getString("structure");
-        BlockPos center = BlockPos.fromLong(tag.getLong("center"));
-        BlockPos entrance = BlockPos.fromLong(tag.getLong("entrance"));
-        int spawnChance = tag.getInt("spawnChance");
-
-        TardisConsoleRoomEntry consoleRoom = new TardisConsoleRoomEntry(name, title, structure, center, entrance, spawnChance);
-        if (saveToRegistry) TardisConsoleRooms.CONSOLE_ROOMS.put(name, consoleRoom);
-        consoleRoom.setTeleporterRoom(tag.getString("teleporterRoom"));
-        consoleRoom.setDecoratorBlock(tag.getString("decoratorBlock"));
-        consoleRoom.setImageUrl(tag.getString("imageUrl"));
-        consoleRoom.setRepairTo(tag.getString("repairTo"));
-        consoleRoom.setHidden(tag.getBoolean("isHidden"));
-        return consoleRoom;
-    }
-
-    public NbtCompound writeNbt(NbtCompound tag) {
-        tag.putBoolean("isHidden", this.isHidden);
-        tag.putInt("spawnChance", this.spawnChance);
+    public NbtCompound toNbt() {
+        NbtCompound tag = new NbtCompound();
 
         tag.putString("name", this.name);
         tag.putString("title", this.title);
         tag.putString("structure", this.structure);
-        tag.putString("teleporterRoom", this.teleporterRoom);
-        tag.putString("decoratorBlock", this.decoratorBlock);
-        tag.putString("imageUrl", this.imageUrl);
-        tag.putString("repairTo", this.repairTo);
 
         tag.putLong("center", this.center.asLong());
         tag.putLong("entrance", this.entrance.asLong());
+
+        tag.putBoolean("isHidden", this.isHidden);
+        tag.putInt("spawnChance", this.spawnChance);
+
+        if (this.teleporterRoom != null) tag.putString("teleporterRoom", this.teleporterRoom);
+        if (this.decoratorBlock != null) tag.putString("decoratorBlock", this.decoratorBlock);
+        if (this.doorsBlock != null) tag.putString("doorsBlock", this.doorsBlock);
+        if (this.imageUrl != null) tag.putString("imageUrl", this.imageUrl);
+        if (this.repairTo != null) tag.putString("repairTo", this.repairTo);
 
         return tag;
     }
@@ -126,11 +131,22 @@ public class TardisConsoleRoomEntry {
     }
 
     public Block getDecoratorBlock() {
+        if (this.decoratorBlock == null) return null;
         return Registries.BLOCK.get(new Identifier(this.decoratorBlock));
     }
 
     public TardisConsoleRoomEntry setDecoratorBlock(String decoratorBlock) {
         this.decoratorBlock = decoratorBlock;
+        return this;
+    }
+
+    public Block getDoorsBlock() {
+        if (this.doorsBlock == null) return null;
+        return Registries.BLOCK.get(new Identifier(this.doorsBlock));
+    }
+
+    public TardisConsoleRoomEntry setDoorsBlock(String doorsBlock) {
+        this.doorsBlock = doorsBlock;
         return this;
     }
 
@@ -151,28 +167,35 @@ public class TardisConsoleRoomEntry {
 
     public boolean place(TardisStateManager tardis) {
         ServerWorld tardisWorld = tardis.getWorld();
-        TardisConsoleRoomEntry oldConsoleRoom = tardis.getConsoleRoom();
+        TardisExteriorEntry exteriorType = tardis.getExteriorType();
         StructurePlacementData placeSettings = new StructurePlacementData();
 
-        StructureTemplate newConsoleRoomTemplate = this.getTemplate(tardisWorld);
-        StructureTemplate oldConsoleRoomTemplate = oldConsoleRoom.getTemplate(tardisWorld);
-        StructureTemplate newTeleporterRoomTemplate = this.getTeleporterRoomTemplate(tardisWorld);
-        StructureTemplate oldTeleporterRoomTemplate = oldConsoleRoom.getTeleporterRoomTemplate(tardisWorld);
-        List<StructureTemplate.StructureBlockInfo> newConsoleRoomTacBlockInfos = newConsoleRoomTemplate.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
-        List<StructureTemplate.StructureBlockInfo> oldConsoleRoomTacBlockInfos = oldConsoleRoomTemplate.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
+        StructureTemplate template = this.getTemplate(tardisWorld);
+        StructureTemplate teleporterRoomTemplate = this.getTeleporterRoomTemplate(tardisWorld);
+        List<StructureTemplate.StructureBlockInfo> tacBlockInfos = template.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
 
-        WorldHelper.clearArea(tardisWorld, oldConsoleRoomTemplate.calculateBoundingBox(placeSettings, oldConsoleRoom.getCenterPosition()));
-        this.clearTeleporterRooms(tardisWorld, oldConsoleRoom.getCenterPosition(), oldTeleporterRoomTemplate, oldConsoleRoomTacBlockInfos);
-        this.clearGroundItems(tardisWorld, oldConsoleRoomTemplate, oldConsoleRoom.getCenterPosition(), placeSettings);
-
-        if (newConsoleRoomTemplate.place(tardisWorld, this.getCenterPosition(), BlockPos.ORIGIN, placeSettings, tardisWorld.random, Block.NOTIFY_ALL)) {
-            this.clearGroundItems(tardisWorld, newTeleporterRoomTemplate, this.getCenterPosition(), placeSettings);
-            this.placeTeleporterRooms(tardisWorld, newTeleporterRoomTemplate, newConsoleRoomTacBlockInfos);
-            this.updateRoomsEntrances(tardisWorld, newTeleporterRoomTemplate, newConsoleRoomTacBlockInfos);
+        if (template.place(tardisWorld, this.getCenterPosition(), BlockPos.ORIGIN, placeSettings, tardisWorld.random, Block.NOTIFY_ALL)) {
+            this.updateDoors(tardisWorld, template, exteriorType, placeSettings);
+            this.placeTeleporterRooms(tardisWorld, teleporterRoomTemplate, tacBlockInfos);
+            this.updateRoomsEntrances(tardisWorld, teleporterRoomTemplate, tacBlockInfos);
+            this.clearGroundItems(tardisWorld, template, this.getCenterPosition(), placeSettings);
             return true;
         }
 
         return false;
+    }
+
+    public void remove(TardisStateManager tardis) {
+        ServerWorld tardisWorld = tardis.getWorld();
+        StructurePlacementData placeSettings = new StructurePlacementData();
+
+        StructureTemplate template = this.getTemplate(tardisWorld);
+        StructureTemplate teleporterTemplate = this.getTeleporterRoomTemplate(tardisWorld);
+        List<StructureTemplate.StructureBlockInfo> tacBlockInfos = template.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
+
+        WorldHelper.clearArea(tardisWorld, template.calculateBoundingBox(placeSettings, this.getCenterPosition()));
+        this.removeTeleporterRooms(tardisWorld, this.getCenterPosition(), teleporterTemplate, tacBlockInfos);
+        this.clearGroundItems(tardisWorld, template, this.getCenterPosition(), placeSettings);
     }
 
     private void placeTeleporterRooms(ServerWorld world, StructureTemplate teleporterRoomTemplate, List<StructureTemplate.StructureBlockInfo> tacBlockInfos) {
@@ -181,7 +204,7 @@ public class TardisConsoleRoomEntry {
         });
     }
 
-    private void clearTeleporterRooms(ServerWorld world, BlockPos centerPosition, StructureTemplate teleporterRoomTemplate, List<StructureTemplate.StructureBlockInfo> tacBlockInfos) {
+    private void removeTeleporterRooms(ServerWorld world, BlockPos centerPosition, StructureTemplate teleporterRoomTemplate, List<StructureTemplate.StructureBlockInfo> tacBlockInfos) {
         this.processTeleporterRooms(centerPosition, teleporterRoomTemplate, tacBlockInfos, (placeSettings, blockPos) -> {
             WorldHelper.clearArea(world, teleporterRoomTemplate.calculateBoundingBox(placeSettings, blockPos));
         });
@@ -207,6 +230,29 @@ public class TardisConsoleRoomEntry {
             placeSettings.setRotation(BlockRotation.CLOCKWISE_180);
             executor.accept(placeSettings, farTacBlockPos);
         }
+    }
+
+    private void updateDoors(ServerWorld tardisWorld, StructureTemplate template, TardisExteriorEntry exteriorType, StructurePlacementData placeSettings) {
+        Block doorsBlock = this.getDoorsBlock();
+        Block newDoorsBlock = exteriorType.getDoorsBlock();
+        if (doorsBlock == null || newDoorsBlock == null) return;
+
+        for (StructureTemplate.StructureBlockInfo doorsBlockInfo : template.getInfosForBlock(BlockPos.ORIGIN, placeSettings, doorsBlock)) {
+            BlockState blockState = doorsBlockInfo.state();
+            BlockPos blockPos = this.getCenterPosition().add(doorsBlockInfo.pos()).toImmutable();
+
+            tardisWorld.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
+
+            BlockState newBlockState = newDoorsBlock.getDefaultState();
+            newBlockState = newBlockState.with(BaseTardisDoorsBlock.WATERLOGGED, blockState.get(BaseTardisDoorsBlock.WATERLOGGED));
+            newBlockState = newBlockState.with(BaseTardisDoorsBlock.FACING, blockState.get(BaseTardisDoorsBlock.FACING));
+            newBlockState = newBlockState.with(BaseTardisDoorsBlock.HALF, blockState.get(BaseTardisDoorsBlock.HALF));
+            newBlockState = newBlockState.with(BaseTardisDoorsBlock.OPEN, blockState.get(BaseTardisDoorsBlock.OPEN));
+
+            tardisWorld.setBlockState(blockPos, newBlockState, Block.NOTIFY_ALL);
+        }
+
+        this.clearGroundItems(tardisWorld, template, this.getCenterPosition(), placeSettings);
     }
 
     private void updateRoomsEntrances(ServerWorld world, StructureTemplate teleporterRoomTemplate, List<StructureTemplate.StructureBlockInfo> tacBlockInfos) {

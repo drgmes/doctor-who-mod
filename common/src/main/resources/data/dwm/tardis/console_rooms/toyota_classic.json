@@ -1,10 +1,11 @@
 {
-  "title": "dwm.console_room.toyota_classic",
+  "title": "title.dwm.console_room.toyota_classic",
   "center": [14, 6, 18],
   "entrance": [14, 7, 6],
   "spawnChance": 5,
-  "decorator_block": "minecraft:gray_terracotta",
   "structure": "dwm:tardis/console_rooms/toyota_classic",
+  "doors_block": "dwm:tardis_doors_police_box",
+  "decorator_block": "minecraft:gray_terracotta",
   "teleporter_room": "dwm:tardis/teleporter_rooms/toyota_classic",
   "image": "https://i.imgur.com/Rw5hJQK.png"
 }

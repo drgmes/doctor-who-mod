@@ -9,13 +9,12 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.commands.types.TardisDimensionArgumentType;
 import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.compat.ImmersivePortals;
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortals;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 
 import java.util.Optional;
 
@@ -23,8 +22,8 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class TardisRemoveCommand {
-    private static final DynamicCommandExceptionType INVALID_TARDIS_EXCEPTION = new DynamicCommandExceptionType((id) -> Text.translatable("argument." + DWM.MODID + ".tardis.invalid"));
-    private static final DynamicCommandExceptionType PLAYER_PRESENT_EXCEPTION = new DynamicCommandExceptionType((id) -> Text.translatable("argument." + DWM.MODID + ".tardis.player_present"));
+    private static final DynamicCommandExceptionType INVALID_TARDIS_EXCEPTION = new DynamicCommandExceptionType((id) -> DWM.TEXTS.ARGUMENT_INVALID_TARDIS);
+    private static final DynamicCommandExceptionType PLAYER_PRESENT_EXCEPTION = new DynamicCommandExceptionType((id) -> DWM.TEXTS.ARGUMENT_PLAYER_PRESENT);
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(

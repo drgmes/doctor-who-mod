@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.doors;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -78,6 +79,8 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
     }
 
     private void drawForeground(C tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
+        if (!TardisHelper.isTardisDimension(tile.getWorld())) return;
+
         matrixStack.push();
         matrixStack.scale(this.foregroundScale, this.foregroundScale + this.modelYScale, this.foregroundScale);
         matrixStack.translate(-0.5F, -1.25F, -0.05F);

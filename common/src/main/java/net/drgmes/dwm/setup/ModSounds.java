@@ -36,8 +36,8 @@ public class ModSounds {
     public static void init() {
     }
 
-    public static void playSound(World world, BlockPos blockPos, SoundEvent sound, float pitch, float distance) {
-        world.playSound(null, blockPos, sound, SoundCategory.BLOCKS, pitch, distance);
+    public static void playSound(World world, BlockPos blockPos, SoundEvent sound, float volume, float pitch) {
+        world.playSound(null, blockPos, sound, SoundCategory.BLOCKS, volume, pitch);
     }
 
     public static void playTardisConsoleCrackSound(World world, BlockPos blockPos) {

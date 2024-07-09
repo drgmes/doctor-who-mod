@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.enums.TardisVerticalScanning;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -61,31 +62,32 @@ public class TardisKeyItem extends Item {
                             TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
                             if (flightSystem.inProgress() || materializationSystem.inProgress()) return;
 
-                            materializationSystem.setSafeDirection(TardisSystemMaterialization.ESafeDirection.TOP);
+                            materializationSystem.setVerticalScanning(TardisVerticalScanning.TOP);
                             tardis.setDestinationFacing(Direction.fromRotation(player.getHeadYaw()));
                             tardis.setDestinationDimension(world.getRegistryKey());
                             tardis.setDestinationPosition(player.getBlockPos());
                             flightSystem.setFlight(true);
 
                             if (materializationSystem.inProgress()) {
-                                float duration = DWM.TIMINGS.DEMAT + DWM.TIMINGS.REMAT + flightSystem.getFlightDuration();
-                                player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_IN.apply(duration / 20), true);
-                                player.getItemCooldownManager().set(itemStack.getItem(), (int) (DWM.TIMINGS.DEMAT + DWM.TIMINGS.REMAT + DWM.TIMINGS.FLIGHT_LOOP));
+                                float duration = DWM.TIMINGS.DEMAT_DURATION + DWM.TIMINGS.REMAT_DURATION + flightSystem.getFlightDuration();
+                                player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_TIMER.apply(duration / 20), true);
+                                player.getItemCooldownManager().set(itemStack.getItem(), (int) (DWM.TIMINGS.DEMAT_DURATION + DWM.TIMINGS.REMAT_DURATION + DWM.TIMINGS.FLIGHT_LOOP));
 
                                 flightSystem.onFail(() -> {
-                                    tag.putString("tardisPos", tardis.getDestinationExteriorPosition().toShortString());
-                                    player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_FAILED.apply(tardis.getDestinationExteriorPosition().toShortString()));
+                                    String tardisPos = tardis.getDestinationExteriorPosition().toShortString();
+
+                                    tag.putString("tardisPos", tardisPos);
+                                    player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_FAILED.apply(tardisPos));
                                     player.getItemCooldownManager().remove(itemStack.getItem());
                                 });
                             }
-                            else {
-                                if (tardis.getFuelAmount() == 0 && tardis.getEnergyAmount() == 0) {
-                                    player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_NO_FUEL, true);
-                                }
+                            else if (tardis.getFuelAmount() == 0 && tardis.getEnergyAmount() == 0) {
+                                player.sendMessage(DWM.TEXTS.TARDIS_NO_FUEL, true);
                             }
                         }
                         else {
-                            player.sendMessage(DWM.TEXTS.TARDIS_POS.apply(tardis.getCurrentExteriorPosition().toShortString(), Formatting.AQUA), true);
+                            String tardisPos = tardis.getCurrentExteriorPosition().toShortString();
+                            player.sendMessage(DWM.TEXTS.TARDIS_POS.apply(tardisPos, Formatting.AQUA), true);
                         }
 
                         return;
@@ -97,7 +99,7 @@ public class TardisKeyItem extends Item {
                     if (!tardis.isDoorsLocked()) {
                         if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
                             world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, blockPos);
-                            tardis.updateConsoleTiles();
+                            tardis.markConsoleTilesUpdated();
                         }
                     }
                 });
@@ -114,12 +116,15 @@ public class TardisKeyItem extends Item {
         NbtCompound tag = itemStack.getOrCreateNbt();
 
         if (tag.contains("tardisId")) {
-            tooltips.add(Text.empty());
-            tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tag.getString("tardisId").substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
-        }
+            String tardisId = tag.getString("tardisId");
 
-        if (tag.contains("tardisPos")) {
-            tooltips.add(DWM.TEXTS.TARDIS_LAST_POS.apply(tag.getString("tardisPos"), Formatting.GOLD).copy().formatted(Formatting.GRAY));
+            tooltips.add(Text.empty());
+            tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tardisId.substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
+
+            if (tag.contains("tardisPos")) {
+                String tardisPos = tag.getString("tardisPos");
+                tooltips.add(DWM.TEXTS.TARDIS_LAST_POS.apply(tardisPos, Formatting.GOLD).copy().formatted(Formatting.GRAY));
+            }
         }
 
         super.appendTooltip(itemStack, world, tooltips, context);

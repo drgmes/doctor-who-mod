@@ -1,6 +1,8 @@
 package net.drgmes.dwm.items.sonicdevices;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
+import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.screens.SonicDeviceInterfaceMainScreen;
 import net.drgmes.dwm.network.server.SonicDeviceUpdatePacket;
 import net.drgmes.dwm.setup.ModKeys;
@@ -48,9 +50,9 @@ public interface ISonicDeviceItem {
                 if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return;
 
                 NbtCompound tag = SonicDevice.getData(itemStack);
-                List<SonicDevice.EMode> modes = List.of(SonicDevice.EMode.values());
-                SonicDevice.EMode mode = modes.get((SonicDevice.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
-                if (tag.contains("prevMode")) mode = SonicDevice.EMode.valueOf(tag.getString("prevMode"));
+                List<SonicDeviceMode> modes = List.of(SonicDeviceMode.values());
+                SonicDeviceMode mode = modes.get((SonicDevice.getInteractionMode(itemStack).ordinal() + 1) % modes.size());
+                if (tag.contains("prevMode")) mode = SonicDeviceMode.valueOf(tag.getString("prevMode"));
 
                 SonicDevice.setInteractionMode(itemStack, mode);
                 new SonicDeviceUpdatePacket(itemStack, slot.getName()).sendToServer();
@@ -65,14 +67,12 @@ public interface ISonicDeviceItem {
         tooltips.add(Text.empty());
 
         MutableText mode = SonicDevice.getInteractionMode(itemStack).getTitle().copy();
-        MutableText modeText = Text.translatable("title.dwm.sonic_device.mode", mode.formatted(Formatting.GOLD));
+        MutableText modeText = DWM.TEXTS.SONIC_DEVICE_MODE_TITLE.apply(mode.formatted(Formatting.GOLD)).copy();
         tooltips.add(modeText.formatted(Formatting.GRAY));
 
         String tardisId = SonicDevice.getTardisId(itemStack);
         if (!tardisId.isEmpty()) {
-            MutableText tardis = Text.literal(tardisId.substring(0, 8));
-            MutableText tardisText = Text.translatable("title.dwm.tardis_id", tardis.formatted(Formatting.GOLD));
-            tooltips.add(tardisText.formatted(Formatting.GRAY));
+            tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tardisId.substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
         }
     }
 

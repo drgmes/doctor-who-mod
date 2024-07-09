@@ -1,4 +1,4 @@
-package net.drgmes.dwm.compat;
+package net.drgmes.dwm.compat.clothconfig;
 
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;

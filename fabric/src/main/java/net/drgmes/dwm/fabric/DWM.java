@@ -1,6 +1,6 @@
 package net.drgmes.dwm.fabric;
 
-import net.drgmes.dwm.compat.ImmersivePortalsAPI;
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsAPI;
 import net.drgmes.dwm.fabric.setup.*;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.Registration;

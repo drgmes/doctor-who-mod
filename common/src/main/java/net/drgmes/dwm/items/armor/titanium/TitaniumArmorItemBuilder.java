@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 
 public class TitaniumArmorItemBuilder extends ItemBuilder {
     public TitaniumArmorItemBuilder(String name, ArmorItem.Type type) {
-        super(name, () -> new ArmorItem(ModMaterials.ARMOR.TITANIUM, type, getItemSettings()));
+        super(name, () -> new ArmorItem(ModMaterials.ArmorMaterial.TITANIUM, type, getItemSettings()));
     }
 
     @Override

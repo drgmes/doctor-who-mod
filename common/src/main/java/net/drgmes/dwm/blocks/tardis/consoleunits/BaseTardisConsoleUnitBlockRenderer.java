@@ -3,14 +3,14 @@ package net.drgmes.dwm.blocks.tardis.consoleunits;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitTypeEntry;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlEntry;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRoleType;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlEntry;
+import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitEntry;
+import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleUnitControlEntry;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlValueType;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
@@ -23,12 +23,12 @@ import net.minecraft.util.math.BlockPos;
 
 public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisConsoleUnitBlockEntity> implements BlockEntityRenderer<C> {
     protected final BlockEntityRendererFactory.Context ctx;
-    protected final TardisConsoleUnitTypeEntry consoleType;
+    protected final TardisConsoleUnitEntry consoleType;
 
     protected int SCREEN_SIZE = 239;
     protected int SCREEN_PARAM_SUBSTRING = 16;
 
-    public BaseTardisConsoleUnitBlockRenderer(BlockEntityRendererFactory.Context context, TardisConsoleUnitTypeEntry consoleType) {
+    public BaseTardisConsoleUnitBlockRenderer(BlockEntityRendererFactory.Context context, TardisConsoleUnitEntry consoleType) {
         this.ctx = context;
         this.consoleType = consoleType;
     }
@@ -43,58 +43,58 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.animateFuelIndicator(tile, modelRoot, delta);
             this.animateEnergyIndicator(tile, modelRoot, delta);
 
-            for (ETardisConsoleUnitControlRole controlRole : ETardisConsoleUnitControlRole.values()) {
-                if (!tile.consoleType.controlEntries.containsKey(controlRole)) continue;
+            for (TardisConsoleUnitControlRole controlRole : TardisConsoleUnitControlRole.values()) {
+                if (!this.consoleType.controlEntries.containsKey(controlRole)) continue;
 
-                TardisConsoleControlEntry controlEntry = tile.consoleType.controlEntries.get(controlRole);
+                TardisConsoleUnitControlEntry controlEntry = this.consoleType.controlEntries.get(controlRole);
                 ModelPart model = this.getModelPart(modelRoot, controlEntry.modelPath);
                 Object value = tile.controlsStorage.get(controlRole);
 
-                if (controlRole == ETardisConsoleUnitControlRole.STARTER && (boolean) value) this.activateStarter(model, controlRole);
-                else if (controlRole == ETardisConsoleUnitControlRole.HANDBRAKE && (boolean) value) this.activateHandbrake(model, controlRole);
+                if (controlRole == TardisConsoleUnitControlRole.STARTER && (boolean) value) this.activateStarter(model, controlRole);
+                else if (controlRole == TardisConsoleUnitControlRole.HANDBRAKE && (boolean) value) this.activateHandbrake(model, controlRole);
 
-                else if (controlRole.type == ETardisConsoleUnitControlRoleType.ANIMATION) {
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.LEVER) this.animateLever(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.BUTTON) this.animateButton(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.SLIDER) this.animateSlider(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.ROTATOR) this.animateRotator(model, controlRole.maxIntValue - (int) value, controlRole, delta);
+                else if (controlRole.type == TardisConsoleUnitControlValueType.ANIMATION) {
+                    if (controlEntry.type == TardisConsoleUnitControlType.LEVER) this.animateLever(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.BUTTON) this.animateButton(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.SLIDER) this.animateSlider(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.ROTATOR) this.animateRotator(model, controlRole.maxIntValue - (int) value, controlRole, delta);
                 }
-                else if (controlRole.type == ETardisConsoleUnitControlRoleType.ANIMATION_DIRECT) {
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.LEVER) this.animateLever(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.BUTTON) this.animateButton(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.SLIDER) this.animateSlider(model, (int) value, controlRole, delta);
-                    if (controlEntry.type == ETardisConsoleUnitControlEntry.ROTATOR) this.animateRotator(model, controlRole.maxIntValue + (int) value, controlRole, delta);
+                else if (controlRole.type == TardisConsoleUnitControlValueType.ANIMATION_DIRECT) {
+                    if (controlEntry.type == TardisConsoleUnitControlType.LEVER) this.animateLever(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.BUTTON) this.animateButton(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.SLIDER) this.animateSlider(model, (int) value, controlRole, delta);
+                    if (controlEntry.type == TardisConsoleUnitControlType.ROTATOR) this.animateRotator(model, controlRole.maxIntValue + (int) value, controlRole, delta);
                 }
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.LEVER && value instanceof Boolean) this.activateLever(model, (boolean) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.LEVER && value instanceof Integer) this.activateLever(model, (int) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.BUTTON && value instanceof Boolean) this.activateButton(model, (boolean) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.BUTTON && value instanceof Integer) this.activateButton(model, (int) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.SLIDER && value instanceof Boolean) this.activateSlider(model, (boolean) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.SLIDER && value instanceof Integer) this.activateSlider(model, (int) value, controlRole, delta);
-                else if (controlEntry.type == ETardisConsoleUnitControlEntry.ROTATOR) this.activateRotator(model, (int) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.LEVER && value instanceof Boolean) this.activateLever(model, (boolean) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.LEVER && value instanceof Integer) this.activateLever(model, (int) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.BUTTON && value instanceof Boolean) this.activateButton(model, (boolean) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.BUTTON && value instanceof Integer) this.activateButton(model, (int) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.SLIDER && value instanceof Boolean) this.activateSlider(model, (boolean) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.SLIDER && value instanceof Integer) this.activateSlider(model, (int) value, controlRole, delta);
+                else if (controlEntry.type == TardisConsoleUnitControlType.ROTATOR) this.activateRotator(model, (int) value, controlRole, delta);
             }
         } catch (Exception e) {
             DWM.LOGGER.error("Error in animating ModelPart (" + e.getMessage() + ")");
         }
     }
 
-    protected abstract void activateLever(ModelPart model, boolean value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void activateLever(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void animateLever(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateLever(ModelPart model, boolean value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateLever(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void animateLever(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
 
-    protected abstract void activateButton(ModelPart model, boolean value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void activateButton(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void animateButton(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateButton(ModelPart model, boolean value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateButton(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void animateButton(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
 
-    protected abstract void activateSlider(ModelPart model, boolean value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void activateSlider(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void animateSlider(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateSlider(ModelPart model, boolean value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateSlider(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void animateSlider(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
 
-    protected abstract void activateRotator(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
-    protected abstract void animateRotator(ModelPart model, int value, ETardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void activateRotator(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
+    protected abstract void animateRotator(ModelPart model, int value, TardisConsoleUnitControlRole controlRole, float delta);
 
-    protected abstract void activateHandbrake(ModelPart model, ETardisConsoleUnitControlRole controlRole);
-    protected abstract void activateStarter(ModelPart model, ETardisConsoleUnitControlRole controlRole);
+    protected abstract void activateHandbrake(ModelPart model, TardisConsoleUnitControlRole controlRole);
+    protected abstract void activateStarter(ModelPart model, TardisConsoleUnitControlRole controlRole);
 
     protected abstract void animateFuelIndicator(C tile, ModelPart modelRoot, float delta);
     protected abstract void animateEnergyIndicator(C tile, ModelPart modelRoot, float delta);
@@ -120,11 +120,11 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
     }
 
     protected void renderScreen(BaseTardisConsoleUnitBlockEntity tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
-        if (tile.tardis.isBroken()) return;
+        if (tile.tardisStateManager.isBroken()) return;
 
         switch (tile.monitorPage) {
-            case 1 -> this.renderScreenPage2(matrixStack, buffer, tile.tardis);
-            default -> this.renderScreenPage1(matrixStack, buffer, tile.tardis);
+            case 1 -> this.renderScreenPage2(matrixStack, buffer, tile.tardisStateManager);
+            default -> this.renderScreenPage1(matrixStack, buffer, tile.tardisStateManager);
         }
     }
 
@@ -213,7 +213,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         String append = appendInput.substring(0, Math.min(SCREEN_PARAM_SUBSTRING, appendInput.length()));
         append += appendInput.length() > append.length() ? "..." : "";
 
-        String prepend = Text.translatable("title." + DWM.MODID + ".monitor.state." + title).getString() + ": ";
+        String prepend = Text.translatable("title.dwm.monitor.state." + title).getString() + ": ";
         return prepend + " ".repeat((SCREEN_SIZE - textRenderer.getWidth(prepend + append)) / textRenderer.getWidth(" ")) + append;
     }
 

@@ -1,5 +1,6 @@
 package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
@@ -52,8 +53,8 @@ public class SonicDeviceScanModeOverlay {
 
         float modeTextScale = 0.5F;
         int modeTextOffset = player.isCreative() ? 3 : 5;
-        MutableText modeTitle = SonicDevice.getInteractionMode(sonicDeviceItemStack).getTitle().copy().formatted(Formatting.GOLD);
-        MutableText modeText = Text.translatable("title.dwm.sonic_device.mode", modeTitle);
+        MutableText mode = SonicDevice.getInteractionMode(sonicDeviceItemStack).getTitle().copy();
+        MutableText modeText = DWM.TEXTS.SONIC_DEVICE_MODE_TITLE.apply(mode.formatted(Formatting.GOLD)).copy();
         Vector2i modePos = new Vector2i(screenWidth - (screenWidth - 192 + PADDING) / 2 - (int) Math.floor(mc.textRenderer.getWidth(modeText) * modeTextScale), screenHeight - mc.textRenderer.fontHeight * modeTextOffset);
 
         matrixStack.push();

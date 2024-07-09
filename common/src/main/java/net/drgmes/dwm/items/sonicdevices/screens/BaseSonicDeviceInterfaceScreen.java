@@ -2,7 +2,7 @@ package net.drgmes.dwm.items.sonicdevices.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
-import net.drgmes.dwm.common.sonicdevice.SonicDevice.EMode;
+import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -15,7 +15,7 @@ public abstract class BaseSonicDeviceInterfaceScreen extends BaseScreen {
     protected final ItemStack sonicDeviceItemStack;
     protected final String slot;
 
-    protected EMode mode;
+    protected SonicDeviceMode mode;
 
     public BaseSonicDeviceInterfaceScreen(Text title, ItemStack sonicDeviceItemStack, String slot) {
         super(title);

@@ -1,11 +1,10 @@
-package net.drgmes.dwm.compat;
+package net.drgmes.dwm.compat.immersiveportals;
 
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.types.IMixinPortal;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
@@ -76,10 +75,27 @@ public class ImmersivePortals {
             this.tardis = tardis;
         }
 
+        public List<BlockPos> getRoomsEntrances() {
+            System.out.println("getRoomsEntrances");
+            List<BlockPos> roomsEntrances = new ArrayList<>();
+            ServerWorld tardisWorld = this.tardis.getWorld();
+            if (tardisWorld == null) return roomsEntrances;
+
+            StructurePlacementData placeSettings = new StructurePlacementData();
+            List<StructureTemplate.StructureBlockInfo> tacBlockInfos = this.tardis.getConsoleRoom().getTemplate(tardisWorld).getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_CREATOR.getBlock());
+
+            for (StructureTemplate.StructureBlockInfo tacBlockInfo : tacBlockInfos) {
+                BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos()).toImmutable();
+                if (!tardisWorld.isAir(tacBlockPos)) roomsEntrances.add(tacBlockPos);
+            }
+
+            return roomsEntrances;
+        }
+
         public void createEntrancePortals() {
             if (this.tardis.getWorld() == null) return;
 
-            TardisExteriorTypeEntry exteriorType = this.tardis.getExteriorType();
+            TardisExteriorEntry exteriorType = this.tardis.getExteriorType();
             BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
 
             double outerWidth = exteriorType == null ? 1 : exteriorType.entranceWidth;
@@ -187,7 +203,7 @@ public class ImmersivePortals {
         }
 
         public boolean isRoomEntrancePortalsValid() {
-            if (this.portalsToRooms.isEmpty()) return false;
+             if (this.portalsToRooms.isEmpty() && !this.getRoomsEntrances().isEmpty()) return false;
 
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
                 if (portalsToRoom.getKey() == null || portalsToRoom.getValue() == null) return false;

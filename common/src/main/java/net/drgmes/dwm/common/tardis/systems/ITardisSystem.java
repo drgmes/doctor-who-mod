@@ -6,8 +6,8 @@ public interface ITardisSystem {
     boolean isEnabled();
     boolean inProgress();
 
-    void load(NbtCompound tag);
-    NbtCompound save();
+    void readNbt(NbtCompound tag);
+    NbtCompound writeNbt(NbtCompound tag);
 
     void tick();
 }

@@ -1,7 +1,7 @@
 package net.drgmes.dwm.common.tardis;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.drgmes.dwm.compat.TechReborn;
+import net.drgmes.dwm.compat.techreborn.TechReborn;
 import net.drgmes.dwm.setup.ModCompats;
 import net.minecraft.block.entity.BlockEntityType;
 

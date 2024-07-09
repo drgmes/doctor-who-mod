@@ -43,7 +43,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         List<String> keys = new ArrayList<>(roomsTag.getKeys().stream().toList());
 
         keys.sort(Comparator.comparing((key) -> key));
-        keys.forEach((key) -> this.consoleRooms.add(TardisConsoleRoomEntry.create(roomsTag.getCompound(key), false)));
+        keys.forEach((key) -> this.consoleRooms.add(TardisConsoleRoomEntry.fromNbt(roomsTag.getCompound(key))));
     }
 
     @Override

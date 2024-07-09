@@ -29,17 +29,8 @@ public class CommonHelper {
         return thread;
     }
 
-    public static Identifier loadRemoteImage(String id, URL url) {
-        try {
-            URLConnection uc = url.openConnection();
-            uc.connect();
-
-            NativeImageBackedTexture image = new NativeImageBackedTexture(NativeImage.read(uc.getInputStream()));
-            return MinecraftClient.getInstance().getTextureManager().registerDynamicTexture(DWM.MODID + "_" + id, image);
-        } catch (IOException ignored) {
-        }
-
-        return null;
+    public static float clamp(float value, float min, float max) {
+        return Math.max(min, Math.min(max, value));
     }
 
     public static String capitaliseAllWords(String str) {
@@ -73,6 +64,19 @@ public class CommonHelper {
         else if (number >= 1000000) str = String.format("%.1f", (float) number / 1000000) + "m";
         else if (number >= 1000) str = String.format("%.1f", (float) number / 1000) + "k";
         return str.replace(",", ".");
+    }
+
+    public static Identifier loadRemoteImage(String id, URL url) {
+        try {
+            URLConnection uc = url.openConnection();
+            uc.connect();
+
+            NativeImageBackedTexture image = new NativeImageBackedTexture(NativeImage.read(uc.getInputStream()));
+            return MinecraftClient.getInstance().getTextureManager().registerDynamicTexture(DWM.MODID + "_" + id, image);
+        } catch (IOException ignored) {
+        }
+
+        return null;
     }
 
     @ExpectPlatform

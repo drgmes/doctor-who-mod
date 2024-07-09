@@ -26,7 +26,7 @@
       "net.drgmes.dwm.fabric.datagen.DataGenerators"
     ],
     "modmenu": [
-      "net.drgmes.dwm.compat.ModMenu"
+      "net.drgmes.dwm.compat.modmenu.ModMenu"
     ]
   },
   "mixins": [

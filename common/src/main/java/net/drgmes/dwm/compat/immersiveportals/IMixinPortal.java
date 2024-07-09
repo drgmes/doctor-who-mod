@@ -1,4 +1,4 @@
-package net.drgmes.dwm.types;
+package net.drgmes.dwm.compat.immersiveportals;
 
 public interface IMixinPortal {
     String getTardisId();

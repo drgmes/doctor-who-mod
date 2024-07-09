@@ -32,16 +32,14 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
     }
 
     public void tick() {
-        if (this.world != null && this.world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(serverWorld)) {
+        if (this.world != null && this.world instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 boolean prevInProgress = this.inProgress;
                 this.inProgress = tardis.getSystem(TardisSystemMaterialization.class).inProgress() || tardis.getSystem(TardisSystemFlight.class).inProgress();
 
                 if (prevInProgress != this.inProgress) {
                     new TardisToyotaSpinnerUpdatePacket(this.getPos(), this.inProgress)
-                        // TODO uncomment method when this will work properly
-                        // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
-                        .sendToLevel(serverWorld);
+                         .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
                 }
             });
         }

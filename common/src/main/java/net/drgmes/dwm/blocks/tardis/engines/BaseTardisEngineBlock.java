@@ -8,8 +8,10 @@ import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -20,6 +22,13 @@ import net.minecraft.world.World;
 public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBlockWithEntity {
     public BaseTardisEngineBlock(AbstractBlock.Settings settings) {
         super(settings);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState blockState, World world, BlockPos blockPos) {
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
+        return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory) blockEntity : null;
     }
 
     @Override
@@ -35,7 +44,7 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
 
                 if (heldItem.getItem() instanceof RepairKitItem) {
                     tardis.setBrokenState(false);
-                    tardis.updateConsoleTiles();
+                    tardis.markConsoleTilesUpdated();
                     tardis.updateRoomEntrancePortals();
 
                     if (!player.isCreative()) {

@@ -21,20 +21,22 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     }
 
     @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
+    }
+
+    @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        if (tag.contains("arsStructureName")) {
-            this.arsStructureName = tag.getString("arsStructureName");
-        }
-
-        if (tag.contains("tacBlockPos")) {
-            this.tacBlockPos = BlockPos.fromLong(tag.getLong("tacBlockPos"));
-        }
-
-        if (tag.contains("tacFacing")) {
-            this.tacFacing = Direction.byId(tag.getInt("tacFacing"));
-        }
+        if (tag.contains("arsStructureName")) this.arsStructureName = tag.getString("arsStructureName");
+        if (tag.contains("tacBlockPos")) this.tacBlockPos = BlockPos.fromLong(tag.getLong("tacBlockPos"));
+        if (tag.contains("tacFacing")) this.tacFacing = Direction.byId(tag.getInt("tacFacing"));
 
         this.tacIndex = tag.getInt("tacIndex");
         this.tacIsInitial = tag.getBoolean("tacIsInitial");
@@ -44,29 +46,11 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     protected void writeNbt(NbtCompound tag) {
         super.writeNbt(tag);
 
-        if (this.arsStructureName != null) {
-            tag.putString("arsStructureName", this.arsStructureName);
-        }
-
-        if (this.tacBlockPos != null) {
-            tag.putLong("tacBlockPos", this.tacBlockPos.asLong());
-        }
-
-        if (this.tacFacing != null) {
-            tag.putInt("tacFacing", this.tacFacing.getId());
-        }
+        if (this.arsStructureName != null) tag.putString("arsStructureName", this.arsStructureName);
+        if (this.tacBlockPos != null) tag.putLong("tacBlockPos", this.tacBlockPos.asLong());
+        if (this.tacFacing != null) tag.putInt("tacFacing", this.tacFacing.getId());
 
         tag.putInt("tacIndex", this.tacIndex);
         tag.putBoolean("tacIsInitial", this.tacIsInitial);
-    }
-
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
     }
 }

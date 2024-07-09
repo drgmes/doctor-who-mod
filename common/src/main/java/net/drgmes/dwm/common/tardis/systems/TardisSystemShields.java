@@ -36,19 +36,19 @@ public class TardisSystemShields implements ITardisSystem {
     }
 
     @Override
-    public void load(NbtCompound tag) {
+    public void readNbt(NbtCompound tag) {
     }
 
     @Override
-    public NbtCompound save() {
-        return new NbtCompound();
+    public NbtCompound writeNbt(NbtCompound tag) {
+        return tag;
     }
 
     @Override
     public void tick() {
         if (!this.inProgress()) return;
 
-        ServerWorld exteriorWorld = DimensionHelper.getWorld(this.tardis.getCurrentExteriorDimension(), this.tardis.getWorld().getServer());
+        ServerWorld exteriorWorld = this.tardis.getExteriorWorld();
         if (exteriorWorld == null) return;
 
         BlockPos exteriorBlockPos = this.tardis.getCurrentExteriorPosition();

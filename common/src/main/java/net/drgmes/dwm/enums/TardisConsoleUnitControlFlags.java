@@ -1,6 +1,6 @@
-package net.drgmes.dwm.common.tardis.consoleunits.controls;
+package net.drgmes.dwm.enums;
 
-public enum ETardisConsoleUnitControlRoleFlags {
+public enum TardisConsoleUnitControlFlags {
     REQUIRED_MATERIALIZING_SYSTEM,
     REQUIRED_FLIGHT_SYSTEM,
     REQUIRED_SHIELDS_SYSTEM,

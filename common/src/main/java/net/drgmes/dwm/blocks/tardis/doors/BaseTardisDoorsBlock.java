@@ -2,19 +2,19 @@ package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypeEntry;
+import net.drgmes.dwm.common.tardis.doors.TardisDoorsEntry;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.setup.ModCompats;
+import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableWaterloggedDoubleBlockWithEntity;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -37,7 +37,7 @@ import net.minecraft.world.event.GameEvent;
 public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
 
-    protected final TardisDoorsTypeEntry doorsType;
+    protected final TardisDoorsEntry doorsType;
     protected final float shapeOffset;
 
     protected final VoxelShape shapeNorth;
@@ -50,7 +50,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     protected final VoxelShape shapeEastOpened;
     protected final VoxelShape shapeWestOpened;
 
-    public BaseTardisDoorsBlock(AbstractBlock.Settings settings, TardisDoorsTypeEntry doorsType, VoxelShape shapeNorth, VoxelShape shapeSouth, VoxelShape shapeEast, VoxelShape shapeWest, VoxelShape shapeNorthOpened, VoxelShape shapeSouthOpened, VoxelShape shapeEastOpened, VoxelShape shapeWestOpened, float shapeOffset) {
+    public BaseTardisDoorsBlock(AbstractBlock.Settings settings, TardisDoorsEntry doorsType, VoxelShape shapeNorth, VoxelShape shapeSouth, VoxelShape shapeEast, VoxelShape shapeWest, VoxelShape shapeNorthOpened, VoxelShape shapeSouthOpened, VoxelShape shapeEastOpened, VoxelShape shapeWestOpened, float shapeOffset) {
         super(settings);
 
         this.doorsType = doorsType;
@@ -69,13 +69,6 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     public BlockEntity createBlockEntity(BlockPos blockPos, BlockState blockState) {
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) return null;
         return this.doorsType.getBlockEntityType().instantiate(blockPos, blockState);
-    }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return blockEntityType != this.doorsType.getBlockEntityType() ? null : (l, bp, bs, blockEntity) -> {
-            ((BaseTardisDoorsBlockEntity) blockEntity).tick();
-        };
     }
 
     @Override
@@ -115,6 +108,27 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     }
 
     @Override
+    @SuppressWarnings("deprecation")
+    public void onStateReplaced(BlockState blockState, World world, BlockPos blockPos, BlockState newBlockState, boolean moved) {
+        if (!blockState.isOf(newBlockState.getBlock())) {
+            if (world.getBlockEntity(blockPos) instanceof BaseTardisDoorsBlockEntity tardisDoorsBlockEntity) {
+                tardisDoorsBlockEntity.remove();
+            }
+        }
+
+        super.onStateReplaced(blockState, world, blockPos, newBlockState, moved);
+    }
+
+    @Override
+    public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
+        if (world.getBlockEntity(blockPos) instanceof BaseTardisDoorsBlockEntity tardisDoorsBlockEntity) {
+            tardisDoorsBlockEntity.init();
+        }
+
+        super.onPlaced(world, blockPos, blockState, entity, itemStack);
+    }
+
+    @Override
     public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
             BlockPos tmpBlockPos;
@@ -134,6 +148,17 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     @Override
     @SuppressWarnings("deprecation")
     public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (!TardisHelper.isTardisDimension(world)) {
+            blockState = blockState.cycle(OPEN);
+            world.setBlockState(blockPos, blockState, 10);
+
+            if (blockState.get(OPEN)) ModSounds.playTardisDoorsOpenSound(world, blockPos, this.isWooden());
+            else ModSounds.playTardisDoorsCloseSound(world, blockPos, this.isWooden());
+
+            world.emitGameEvent(player, !blockState.get(OPEN) ? GameEvent.BLOCK_CLOSE : GameEvent.BLOCK_OPEN, blockPos);
+            return ActionResult.success(world.isClient);
+        }
+
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) blockPos = blockPos.down();
         BlockPos finalBlockPos = blockPos;
 
@@ -157,7 +182,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                         player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
                         world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
-                        tardis.updateConsoleTiles();
+                        tardis.markConsoleTilesUpdated();
                     }
 
                     return;
@@ -167,7 +192,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                         player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
                         world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
-                        tardis.updateConsoleTiles();
+                        tardis.markConsoleTilesUpdated();
                     }
 
                     return;
@@ -175,7 +200,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
 
                 if (tardis.setDoorsOpenState(!tardis.isDoorsOpened())) {
                     world.emitGameEvent(player, tardis.isDoorsOpened() ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, finalBlockPos);
-                    tardis.updateConsoleTiles();
+                    tardis.markConsoleTilesUpdated();
                 }
             });
         }
@@ -189,7 +214,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
         if (ModCompats.immersivePortals()) return;
         if (!entity.canUsePortals()) return;
 
-        if (world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(world)) {
+        if (world instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 if (!tardis.isDoorsOpened()) return;
 

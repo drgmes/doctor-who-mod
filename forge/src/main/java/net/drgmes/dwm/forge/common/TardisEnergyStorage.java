@@ -65,6 +65,6 @@ public class TardisEnergyStorage implements IEnergyStorage {
     private void updateEnergyAmount(int energy) {
         if (this.tardisHolder.isEmpty()) return;
         this.tardisHolder.get().setEnergyAmount(energy);
-        this.tardisHolder.get().updateConsoleTiles();
+        this.tardisHolder.get().markConsoleTilesUpdated();
     }
 }

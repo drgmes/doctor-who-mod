@@ -1,7 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox;
 
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
-import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypes;
+import net.drgmes.dwm.common.tardis.doors.TardisDoors;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 
@@ -9,7 +9,7 @@ public class TardisDoorsPoliceBoxBlock extends BaseTardisDoorsBlock<TardisDoorsP
     public TardisDoorsPoliceBoxBlock(AbstractBlock.Settings settings) {
         super(
             settings,
-            TardisDoorsTypes.POLICE_BOX,
+            TardisDoors.POLICE_BOX,
             Block.createCuboidShape(0.0, 0.0, 13.0, 16.0, 16.0, 16.0),
             Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 16.0, 3.0),
             Block.createCuboidShape(0.0, 0.0, 0.0, 3.0, 16.0, 16.0),

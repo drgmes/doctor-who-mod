@@ -13,14 +13,13 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
 public class TardisDimensionArgumentType implements ArgumentType<Identifier> {
-    private static final DynamicCommandExceptionType INVALID_DIMENSION_EXCEPTION = new DynamicCommandExceptionType((id) -> Text.translatable("argument.dimension.invalid", id));
+    private static final DynamicCommandExceptionType INVALID_DIMENSION_EXCEPTION = new DynamicCommandExceptionType((id) -> DWM.TEXTS.ARGUMENT_INVALID_DIMENSION.apply(id.toString()));
 
     @Override
     public Identifier parse(StringReader reader) throws CommandSyntaxException {

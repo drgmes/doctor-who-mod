@@ -12,7 +12,6 @@ import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 public class ArsDestroyerApplyPacket extends BaseC2SMessage {
@@ -53,9 +52,9 @@ public class ArsDestroyerApplyPacket extends BaseC2SMessage {
             }
 
             ArsStructure arsStructure = ArsStructures.STRUCTURES.get(this.arsStructureName);
-            boolean isArsStructureDestroyed = arsStructure.destroy(player, tardis, this.blockPos);
+            boolean flag = arsStructure.destroy(player, tardis, this.blockPos);
 
-            player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.destroy." + (isArsStructureDestroyed ? "success" : "failed")), true);
+            player.sendMessage(flag ? DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_SUCCESS : DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_FAILED, true);
         });
     }
 }

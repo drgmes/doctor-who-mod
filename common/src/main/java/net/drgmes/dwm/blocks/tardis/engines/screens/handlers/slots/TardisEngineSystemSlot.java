@@ -24,7 +24,7 @@ public class TardisEngineSystemSlot extends Slot {
         if (itemStack.getItem() instanceof TardisSystemItem && this.inventory instanceof BaseTardisEngineBlockEntity tardisEngineBlockEntity && tardisEngineBlockEntity.getWorld() instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 ModSounds.playTardisComponentRemovedSound(tardis.getWorld(), tardis.getMainConsolePosition());
-                tardis.updateConsoleTiles();
+                tardis.markConsoleTilesUpdated();
             });
         }
     }
@@ -42,7 +42,7 @@ public class TardisEngineSystemSlot extends Slot {
         if (itemStack.getItem() instanceof TardisSystemItem && this.inventory instanceof BaseTardisEngineBlockEntity tardisEngineBlockEntity && tardisEngineBlockEntity.getWorld() instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 ModSounds.playTardisComponentAddedSound(tardis.getWorld(), tardis.getMainConsolePosition());
-                tardis.updateConsoleTiles();
+                tardis.markConsoleTilesUpdated();
             });
         }
     }

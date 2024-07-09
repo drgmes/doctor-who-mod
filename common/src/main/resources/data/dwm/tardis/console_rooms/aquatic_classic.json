@@ -1,10 +1,11 @@
 {
-  "title": "dwm.console_room.aquatic_classic",
+  "title": "title.dwm.console_room.aquatic_classic",
   "center": [15, 8, 14],
   "entrance": [15, 7, 1],
   "spawnChance": 30,
-  "decorator_block": "minecraft:dark_prismarine",
   "structure": "dwm:tardis/console_rooms/aquatic_classic",
+  "doors_block": "dwm:tardis_doors_phone_box",
+  "decorator_block": "minecraft:dark_prismarine",
   "teleporter_room": "dwm:tardis/teleporter_rooms/aquatic_classic",
   "image": "https://i.imgur.com/F7lmTJI.png"
 }

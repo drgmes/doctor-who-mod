@@ -14,16 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TardisSystemFlight implements ITardisSystem {
-    public float tickInProgress = 0;
-    public float tickInProgressGoal = 0;
-    public float destinationDistanceRate = 0;
-
     private final TardisStateManager tardis;
     private final List<Runnable> failConsumers = new ArrayList<>();
 
     private boolean isInFlight = false;
-    private boolean isFlightLaunched = false;
-    private boolean isSoundFlyPlayed = false;
+    private boolean isLaunched = false;
+    private boolean isSoundPlayed = false;
+    private float tickInProgress = 0;
+    private float tickInProgressGoal = 0;
+    private float destinationDistanceRate = 0;
 
     public TardisSystemFlight(TardisStateManager tardis) {
         this.tardis = tardis;
@@ -36,20 +35,18 @@ public class TardisSystemFlight implements ITardisSystem {
 
     @Override
     public boolean inProgress() {
-        return this.isInFlight || this.isFlightLaunched || this.tickInProgress > 0;
+        return this.isInFlight || this.isLaunched || this.tickInProgress > 0;
     }
 
     @Override
-    public void load(NbtCompound tag) {
+    public void readNbt(NbtCompound tag) {
         this.tickInProgress = tag.getFloat("tickInProgress");
         this.tickInProgressGoal = tag.getFloat("tickInProgressGoal");
         this.destinationDistanceRate = tag.getFloat("destinationDistanceRate");
     }
 
     @Override
-    public NbtCompound save() {
-        NbtCompound tag = new NbtCompound();
-
+    public NbtCompound writeNbt(NbtCompound tag) {
         tag.putFloat("tickInProgress", this.tickInProgress);
         tag.putFloat("tickInProgressGoal", this.tickInProgressGoal);
         tag.putFloat("destinationDistanceRate", this.destinationDistanceRate);
@@ -59,33 +56,33 @@ public class TardisSystemFlight implements ITardisSystem {
 
     @Override
     public void tick() {
-        if (this.tickInProgress > 0) {
-            if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % ModConfig.COMMON.tardisFuelConsumeTiming.get() == 0) {
-                int fuelAmount = this.tardis.getFuelAmount();
-                int energyAmount = this.tardis.getEnergyAmount();
+        if (this.tickInProgress <= 0) return;
 
-                if (fuelAmount >= 1) {
-                    this.tardis.setFuelAmount(fuelAmount - 1);
-                    this.tardis.updateConsoleTiles();
-                }
-                else if (energyAmount >= ModConfig.COMMON.tardisFuelToEnergyRating.get()) {
-                    this.tardis.setEnergyAmount(energyAmount - ModConfig.COMMON.tardisFuelToEnergyRating.get());
-                    this.tardis.updateConsoleTiles();
-                }
-                else {
-                    ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-                    this.land();
-                    return;
-                }
+        if (!this.tardis.getWorld().isClient && this.tardis.getWorld().getTime() % ModConfig.COMMON.tardisFuelConsumeTiming.get() == 0) {
+            int fuelAmount = this.tardis.getFuelAmount();
+            int energyAmount = this.tardis.getEnergyAmount();
+
+            if (fuelAmount >= 1) {
+                this.tardis.setFuelAmount(fuelAmount - 1);
+                this.tardis.markConsoleTilesUpdated();
             }
-
-            this.tickInProgress -= this.destinationDistanceRate;
-
-            this.playFlySound();
-            if ((int) this.tickInProgress <= 1) this.land();
-            if ((int) (this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardis.updateConsoleTiles();
-            if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundFlyPlayed = false;
+            else if (energyAmount >= ModConfig.COMMON.tardisFuelToEnergyRating.get()) {
+                this.tardis.setEnergyAmount(energyAmount - ModConfig.COMMON.tardisFuelToEnergyRating.get());
+                this.tardis.markConsoleTilesUpdated();
+            }
+            else {
+                ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
+                this.land();
+                return;
+            }
         }
+
+        this.tickInProgress -= this.destinationDistanceRate;
+
+        this.playSound();
+        if ((int) this.tickInProgress <= 1) this.land();
+        if ((int) (this.tickInProgress / this.destinationDistanceRate) % 3 == 0) this.tardis.markConsoleTilesUpdated();
+        if ((int) (this.tickInProgress / this.destinationDistanceRate) % DWM.TIMINGS.FLIGHT_LOOP == 0) this.isSoundPlayed = false;
     }
 
     public int getProgressPercent() {
@@ -94,7 +91,7 @@ public class TardisSystemFlight implements ITardisSystem {
 
     public boolean setFlight(boolean flag) {
         if (flag ? this.takeoff() : this.land()) {
-            this.tardis.updateConsoleTiles();
+            this.tardis.markConsoleTilesUpdated();
             return true;
         }
 
@@ -115,17 +112,17 @@ public class TardisSystemFlight implements ITardisSystem {
             return false;
         }
 
-        this.isFlightLaunched = true;
+        this.isLaunched = true;
 
         return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
-            if (!this.isFlightLaunched) return;
+            if (!this.isLaunched) return;
 
             this.tardis.setFuelHarvesting(false);
             this.tardis.setEnergyHarvesting(false);
-            this.tardis.updateConsoleTiles();
+            this.tardis.markConsoleTilesUpdated();
 
             float timeToFly = this.getFlightDuration();
-            this.isSoundFlyPlayed = false;
+            this.isSoundPlayed = false;
             this.isInFlight = true;
             this.tickInProgress = timeToFly;
             this.tickInProgressGoal = timeToFly;
@@ -143,7 +140,7 @@ public class TardisSystemFlight implements ITardisSystem {
         }
 
         boolean isFailed = false;
-        this.isFlightLaunched = false;
+        this.isLaunched = false;
 
         if (this.tickInProgress > 1) {
             isFailed = true;
@@ -153,18 +150,18 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tardis.setDestinationPosition(currExteriorPosition.add((int) resultPosition.x, (int) resultPosition.y, (int) resultPosition.z));
         }
 
-        this.isSoundFlyPlayed = false;
+        this.isSoundPlayed = false;
         this.tickInProgress = 0;
         this.destinationDistanceRate = 0;
         this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
         this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
         this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
-        this.tardis.updateConsoleTiles();
+        this.tardis.markConsoleTilesUpdated();
         if (!isFailed) this.failConsumers.clear();
 
         Runnable deferredConsumer = () -> {
             this.isInFlight = false;
-            this.tardis.updateConsoleTiles();
+            this.tardis.markConsoleTilesUpdated();
             this.failConsumers.forEach(Runnable::run);
         };
 
@@ -185,9 +182,9 @@ public class TardisSystemFlight implements ITardisSystem {
         return DWM.TIMINGS.FLIGHT_LOOP * distance * (currExteriorDimension != destExteriorDimension ? 2 : 1);
     }
 
-    private void playFlySound() {
-        if (this.isSoundFlyPlayed) return;
+    private void playSound() {
+        if (this.isSoundPlayed) return;
         ModSounds.playTardisFlySound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
-        this.isSoundFlyPlayed = true;
+        this.isSoundPlayed = true;
     }
 }

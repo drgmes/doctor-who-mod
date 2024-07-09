@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumSwordItemBuilder extends ItemBuilder {
     public TitaniumSwordItemBuilder(String name) {
-        super(name, () -> new SwordItem(ModMaterials.TOOL.TITANIUM, 3, -2.4F, getItemSettings()));
+        super(name, () -> new SwordItem(ModMaterials.ToolMaterial.TITANIUM, 3, -2.4F, getItemSettings()));
     }
 
     @Override

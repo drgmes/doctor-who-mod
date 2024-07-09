@@ -1,10 +1,11 @@
 {
-  "title": "dwm.console_room.imperial_classic",
+  "title": "title.dwm.console_room.imperial_classic",
   "center": [7, 1, 7],
   "entrance": [7, 1, 1],
   "spawnChance": 100,
-  "decorator_block": "minecraft:chiseled_quartz_block",
   "structure": "dwm:tardis/console_rooms/imperial_classic",
+  "doors_block": "dwm:tardis_doors_capsule",
+  "decorator_block": "minecraft:chiseled_quartz_block",
   "teleporter_room": "dwm:tardis/teleporter_rooms/imperial_classic",
   "image": "https://i.imgur.com/nhFyIZn.png"
 }

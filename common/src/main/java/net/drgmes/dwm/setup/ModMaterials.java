@@ -2,9 +2,7 @@ package net.drgmes.dwm.setup;
 
 import net.fabricmc.yarn.constants.MiningLevels;
 import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ToolMaterial;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -12,7 +10,7 @@ import net.minecraft.sound.SoundEvents;
 import java.util.function.Supplier;
 
 public class ModMaterials {
-    public enum TOOL implements ToolMaterial {
+    public enum ToolMaterial implements net.minecraft.item.ToolMaterial {
         TITANIUM(
             MiningLevels.IRON,
             650,
@@ -29,7 +27,7 @@ public class ModMaterials {
         private final float attackDamage;
         private final Supplier<ItemConvertible> repairIngredientSupplier;
 
-        TOOL(int miningLevel, int durability, int enchantability, float miningSpeedMultiplier, float attackDamage, Supplier<ItemConvertible> repairIngredientSupplier) {
+        ToolMaterial(int miningLevel, int durability, int enchantability, float miningSpeedMultiplier, float attackDamage, Supplier<ItemConvertible> repairIngredientSupplier) {
             this.miningLevel = miningLevel;
             this.durability = durability;
             this.enchantability = enchantability;
@@ -69,7 +67,7 @@ public class ModMaterials {
         }
     }
 
-    public enum ARMOR implements ArmorMaterial {
+    public enum ArmorMaterial implements net.minecraft.item.ArmorMaterial {
         TITANIUM(
             "titanium",
             27,
@@ -92,7 +90,7 @@ public class ModMaterials {
         private final SoundEvent equipSound;
         private final Supplier<ItemConvertible> repairIngredientSupplier;
 
-        ARMOR(String name, int durabilityMultiplier, int enchantability, float toughness, float knockbackResistance, int[] protectionAmounts, SoundEvent equipSound, Supplier<ItemConvertible> repairIngredientSupplier) {
+        ArmorMaterial(String name, int durabilityMultiplier, int enchantability, float toughness, float knockbackResistance, int[] protectionAmounts, SoundEvent equipSound, Supplier<ItemConvertible> repairIngredientSupplier) {
             this.name = name;
             this.durabilityMultiplier = durabilityMultiplier;
             this.enchantability = enchantability;

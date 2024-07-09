@@ -18,36 +18,6 @@ public class TardisTeleporterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
-
-        this.isLocked = tag.getBoolean("isLocked");
-
-        if (tag.contains("destinationBlockPos")) {
-            this.destinationBlockPos = BlockPos.fromLong(tag.getLong("destinationBlockPos"));
-        }
-
-        if (tag.contains("destinationFacing")) {
-            this.destinationFacing = Direction.byId(tag.getInt("destinationFacing"));
-        }
-    }
-
-    @Override
-    protected void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
-
-        tag.putBoolean("isLocked", this.isLocked);
-
-        if (this.destinationBlockPos != null) {
-            tag.putLong("destinationBlockPos", this.destinationBlockPos.asLong());
-        }
-
-        if (this.destinationFacing != null) {
-            tag.putInt("destinationFacing", this.destinationFacing.getId());
-        }
-    }
-
-    @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
     }
@@ -55,5 +25,23 @@ public class TardisTeleporterBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    @Override
+    public void readNbt(NbtCompound tag) {
+        super.readNbt(tag);
+
+        this.isLocked = tag.getBoolean("isLocked");
+        if (tag.contains("destinationBlockPos")) this.destinationBlockPos = BlockPos.fromLong(tag.getLong("destinationBlockPos"));
+        if (tag.contains("destinationFacing")) this.destinationFacing = Direction.byId(tag.getInt("destinationFacing"));
+    }
+
+    @Override
+    protected void writeNbt(NbtCompound tag) {
+        super.writeNbt(tag);
+
+        tag.putBoolean("isLocked", this.isLocked);
+        if (this.destinationBlockPos != null) tag.putLong("destinationBlockPos", this.destinationBlockPos.asLong());
+        if (this.destinationFacing != null) tag.putInt("destinationFacing", this.destinationFacing.getId());
     }
 }

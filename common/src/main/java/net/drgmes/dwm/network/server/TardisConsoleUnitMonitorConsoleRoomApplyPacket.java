@@ -5,15 +5,15 @@ import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
-import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemConsoleRoom;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 
 public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessage {
     private final String tardisId;
@@ -42,16 +42,10 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
     @Override
     public void handle(NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
-        Text failMessage = Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms.failed");
-
-        if (!TardisConsoleRooms.CONSOLE_ROOMS.containsKey(this.consoleRoomId)) {
-            player.sendMessage(failMessage, true);
-            return;
-        }
 
         ServerWorld tardisWorld = DimensionHelper.getModWorld(this.tardisId, player.getServer());
         if (tardisWorld == null) {
-            player.sendMessage(failMessage, true);
+            player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
             return;
         }
 
@@ -62,17 +56,27 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
                 return;
             }
 
-            TardisConsoleRoomEntry consoleRoom = TardisConsoleRooms.getConsoleRoom(this.consoleRoomId, tardis.isBroken());
-            boolean isConsoleRoomGenerated = consoleRoom.place(tardis);
-
-            if (isConsoleRoomGenerated) {
-                tardis.setConsoleRoom(consoleRoom);
-                tardis.updateConsoleTiles();
-                tardis.updateEntrancePortals();
-                tardis.updateRoomEntrancePortals();
+            TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+            if (flightSystem.inProgress()) {
+                player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+                return;
             }
 
-            player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.monitor.console_rooms." + (isConsoleRoomGenerated ? "success" : "failed")), true);
+            TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+            if (materializationSystem.inProgress() || !materializationSystem.isMaterialized()) {
+                player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+                return;
+            }
+
+            TardisSystemConsoleRoom consoleRoomSystem = tardis.getSystem(TardisSystemConsoleRoom.class);
+            if (consoleRoomSystem.inProgress()) {
+                player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_IN_PROGRESS, true);
+                return;
+            }
+
+            if (!consoleRoomSystem.init(this.consoleRoomId, player)) {
+                player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
+            }
         });
     }
 }

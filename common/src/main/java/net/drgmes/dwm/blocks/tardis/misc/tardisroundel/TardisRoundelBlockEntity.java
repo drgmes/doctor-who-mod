@@ -27,6 +27,16 @@ public class TardisRoundelBlockEntity extends BlockEntity {
     }
 
     @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
+    }
+
+    @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
@@ -48,35 +58,19 @@ public class TardisRoundelBlockEntity extends BlockEntity {
         else tag.remove("blockTemplate");
     }
 
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
-    }
-
     public void sendUpdatePacket() {
         if (!(this.world instanceof ServerWorld serverWorld)) return;
 
         new TardisRoundelUpdatePacket(this.getPos(), this.uncovered, this.lightMode)
-            // TODO uncomment method when this will work properly
-            // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
-            .sendToLevel(serverWorld);
+            .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
 
         if (this.blockTemplate != null) {
             new TardisRoundelBlockTemplateUpdatePacket(this.getPos(), this.blockTemplate)
-                // TODO uncomment method when this will work properly
-                // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
-                .sendToLevel(serverWorld);
+                .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
         }
         else {
             new TardisRoundelBlockTemplateClearPacket(this.getPos())
-                // TODO uncomment method when this will work properly
-                // .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
-                .sendToLevel(serverWorld);
+                .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
         }
     }
 }

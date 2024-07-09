@@ -25,7 +25,17 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     @Override
-    protected void init() {
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
+    @Override
+    public void tick() {
+        this.bannersListWidget.setSelected(this.selected);
+    }
+
+    @Override
+    public void init() {
         int bannersListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
         int bannersListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_HEIGHT - 3;
         int bannersListOffset = this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
@@ -39,20 +49,6 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     @Override
-    protected void apply() {
-        if (this.selected != null) {
-            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(this.selected.banner.getNbt()).sendToServer();
-        }
-
-        this.close();
-    }
-
-    @Override
-    public void tick() {
-        this.bannersListWidget.setSelected(this.selected);
-    }
-
-    @Override
     public void resize(MinecraftClient mc, int width, int height) {
         BannersListWidget.BannerEntry selected = this.selected;
         super.resize(mc, width, height);
@@ -60,8 +56,12 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     @Override
-    public boolean shouldCloseOnInventoryKey() {
-        return true;
+    public void apply() {
+        if (this.selected != null) {
+            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(this.selected.banner.getNbt()).sendToServer();
+        }
+
+        this.close();
     }
 
     protected void update() {

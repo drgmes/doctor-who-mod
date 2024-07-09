@@ -83,16 +83,17 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     protected void renderConfirmationMessage(DrawContext context) {
         if (this.blockPos == null || this.arsStructure == null) return;
 
-        Text text = Text.translatable("screen." + DWM.MODID + ".ars_interface.message");
-        int textX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(text)) / 2F);
+        int textX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(DWM.TEXTS.ARS_INTERFACE_MESSAGE)) / 2F);
         int textY = (int) Math.floor((this.getBackgroundSize().y - this.textRenderer.fontHeight * 3) / 2F) - BUTTON_HEIGHT;
         Vector2i textPos = this.getRenderPos(textX, textY);
-        RenderHelper.drawText(text, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
+
+        RenderHelper.drawText(DWM.TEXTS.ARS_INTERFACE_MESSAGE, this.textRenderer, context, textPos.x, textPos.y, 0xE0E0E0, true);
 
         MutableText name = this.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
         name.append(Text.literal("?").formatted(Formatting.WHITE));
         int nameX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2F);
         Vector2i namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);
+
         RenderHelper.drawText(name, this.textRenderer, context, namePos.x, namePos.y, 0xE0E0E0, true);
     }
 }

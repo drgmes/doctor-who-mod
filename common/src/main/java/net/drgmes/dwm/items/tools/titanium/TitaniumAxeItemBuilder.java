@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumAxeItemBuilder extends ItemBuilder {
     public TitaniumAxeItemBuilder(String name) {
-        super(name, () -> new AxeItem(ModMaterials.TOOL.TITANIUM, 6, -3.1F, getItemSettings()));
+        super(name, () -> new AxeItem(ModMaterials.ToolMaterial.TITANIUM, 6, -3.1F, getItemSettings()));
     }
 
     @Override

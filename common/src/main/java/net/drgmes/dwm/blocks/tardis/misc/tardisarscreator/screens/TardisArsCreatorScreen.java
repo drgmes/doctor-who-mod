@@ -76,7 +76,26 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     @Override
-    protected void init() {
+    public boolean shouldCloseOnInventoryKey() {
+        return !this.search.isFocused();
+    }
+
+    @Override
+    public void tick() {
+        this.search.tick();
+        this.listWidget.setSelected(this.selectedArsStructureEntry);
+
+        if (!this.search.getText().equals(lastSearch)) {
+            this.selectedArsStructureEntry = null;
+            this.reloadCategoriesList();
+            this.reloadArsStructuresList();
+            this.listWidget.refreshList();
+            this.update();
+        }
+    }
+
+    @Override
+    public void init() {
         super.init();
 
         int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
@@ -96,7 +115,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
 
         Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 2);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_FLD_SEARCH);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_SEARCH);
 
         this.addDrawableChild(this.listWidget);
         this.addDrawableChild(this.search);
@@ -104,20 +123,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.addDrawableChild(this.acceptButton);
 
         this.update();
-    }
-
-    @Override
-    public void tick() {
-        this.search.tick();
-        this.listWidget.setSelected(this.selectedArsStructureEntry);
-
-        if (!this.search.getText().equals(lastSearch)) {
-            this.selectedArsStructureEntry = null;
-            this.reloadCategoriesList();
-            this.reloadArsStructuresList();
-            this.listWidget.refreshList();
-            this.update();
-        }
     }
 
     @Override
@@ -133,11 +138,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
             this.reloadCategoriesList();
             this.reloadArsStructuresList();
         }
-    }
-
-    @Override
-    public boolean shouldCloseOnInventoryKey() {
-        return !this.search.isFocused();
     }
 
     protected void apply() {
@@ -260,7 +260,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
                         return this.arsCategory.getTitle().copy().formatted(Formatting.GOLD);
                     }
 
-                    MutableText text = Text.translatable("title." + DWM.MODID + ".ars.categories.back").formatted(Formatting.YELLOW);
+                    MutableText text = DWM.TEXTS.ARS_CATEGORIES_BACK.copy();
                     ArsCategory arsCategory = ListWidget.this.parent.selectedArsCategory;
 
                     if (arsCategory != null) {

@@ -1,10 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.common.tardis.doors.TardisDoorsTypeEntry;
-import net.drgmes.dwm.network.server.TardisInteriorDoorsInitPacket;
-import net.drgmes.dwm.utils.helpers.DimensionHelper;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.common.tardis.doors.TardisDoorsEntry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -14,8 +11,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
-    public String tardisId;
-    private boolean isInited;
+    private boolean inited;
 
     public BaseTardisDoorsBlockEntity(BlockEntityType<?> type, BlockPos blockPos, BlockState blockState) {
         super(type, blockPos, blockState);
@@ -32,44 +28,34 @@ public abstract class BaseTardisDoorsBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void markRemoved() {
-        if (this.world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(this.world)) {
-            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                tardis.getInteriorDoorTiles().remove(this);
-                tardis.updateEntrancePortals();
-                tardis.updateConsoleTiles();
-            });
-        }
-
-        super.markRemoved();
+    protected void writeNbt(NbtCompound tag) {
+        if (!this.inited) this.init();
+        super.writeNbt(tag);
     }
 
-    public TardisDoorsTypeEntry getDoorsType() {
+    public TardisDoorsEntry getDoorsType() {
         return ((BaseTardisDoorsBlock<?>) this.getCachedState().getBlock()).doorsType;
     }
 
-    public void tick() {
-        if (!this.isInited) {
-            this.isInited = true;
-            this.init();
+    public void init() {
+        if (this.inited) return;
+        this.inited = true;
+
+        if (this.world instanceof ServerWorld serverWorld) {
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
+                tardis.addInteriorDoorTile(this);
+                tardis.markDoorsTilesUpdated();
+                tardis.updateEntrancePortals();
+            });
         }
     }
 
-    public void init() {
-        if (TardisHelper.isTardisDimension(this.world)) {
-            this.tardisId = DimensionHelper.getWorldId(this.world);
-
-            if (this.world instanceof ServerWorld serverWorld) {
-                TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                    if (tardis.getInteriorDoorTiles().contains(this)) return;
-                    tardis.getInteriorDoorTiles().add(this);
-                    tardis.updateEntrancePortals();
-                    tardis.updateDoorsTiles();
-                });
-            }
-            else {
-                new TardisInteriorDoorsInitPacket(this.getPos()).sendToServer();
-            }
+    public void remove() {
+        if (this.world instanceof ServerWorld serverWorld) {
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
+                tardis.removeInteriorDoorTile(this);
+                tardis.updateEntrancePortals();
+            });
         }
     }
 }

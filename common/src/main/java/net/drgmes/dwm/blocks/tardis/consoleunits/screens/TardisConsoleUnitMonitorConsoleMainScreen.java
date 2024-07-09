@@ -2,6 +2,8 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.minecraft.block.Blocks;
@@ -18,43 +20,43 @@ import net.minecraft.util.math.Vec2f;
 import org.joml.Vector2i;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsoleUnitMonitorScreen {
     private enum EActions {
-        SETTINGS(DWM.TEXTS.MONITOR_ACTION_SETTINGS, true, ModBlocks.TARDIS_EXTERIOR_POLICE_BOX::getBlock, (screen) -> {
+        SETTINGS(DWM.TEXTS.MONITOR_ACTION_SETTINGS, true, (screen) -> screen.exteriorType.getBlock(), (screen) -> {
         }),
 
-        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, () -> Items.COMPASS, (screen) -> {
+        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
         }),
 
-        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_RESEARCHER, true, () -> Items.SPYGLASS, (screen) -> {
+        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_RESEARCHER, true, (screen) -> Items.SPYGLASS, (screen) -> {
         }),
 
-        ROOMS(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, ModBlocks.TARDIS_ARS_CREATOR::getBlockItem, (screen) -> {
+        ROOMS(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, (screen) -> ModBlocks.TARDIS_ARS_CREATOR.getBlockItem(), (screen) -> {
             screen.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
-        EXTERNAL_MONITOR(DWM.TEXTS.MONITOR_ACTION_EXTERNAL_MONITOR, true, () -> Blocks.OBSERVER, (screen) -> {
+        EXTERNAL_MONITOR(DWM.TEXTS.MONITOR_ACTION_EXTERNAL_MONITOR, true, (screen) -> Blocks.OBSERVER, (screen) -> {
         });
 
         private final Text title;
         private final boolean disabled;
-        private final Supplier<ItemConvertible> iconSupplier;
+        private final Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier;
         private final Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress;
 
-        EActions(Text title, boolean disabled, Supplier<ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+        EActions(Text title, boolean disabled, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
             this.title = title;
             this.disabled = disabled;
             this.iconSupplier = iconSupplier;
             this.onPress = onPress;
         }
 
-        EActions(Text title, Supplier<ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+        EActions(Text title, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
             this(title, false, iconSupplier, onPress);
         }
     }
@@ -62,7 +64,8 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     private final NbtCompound tag;
     private final String tardisId;
     private final String owner;
-    private final Map<EActions, ButtonWidget> buttons = new HashMap<>();
+    private final TardisExteriorEntry exteriorType;
+    private final Map<EActions, ButtonWidget> buttons = new LinkedHashMap<>();
 
     public TardisConsoleUnitMonitorConsoleMainScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String owner, NbtCompound tag) {
         super(DWM.TEXTS.MONITOR_TITLE, tardisConsoleUnitBlockEntity);
@@ -70,6 +73,9 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         this.tardisId = tardisId;
         this.owner = owner;
         this.tag = tag;
+
+        String exteriorTypeId = this.tag.getCompound("tardisTag").getString("exteriorType");
+        this.exteriorType = TardisExteriors.getExteriorType(exteriorTypeId);
     }
 
     @Override
@@ -125,13 +131,16 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     }
 
     private void renderData(DrawContext context) {
-        List<Text> datas = new ArrayList<>();
-        datas.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_ID.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.tardisId).formatted(Formatting.RESET)));
-        datas.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_OWNER.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.owner).formatted(Formatting.RESET)));
+        Text exteriorTitle = Text.translatable("title.dwm.tardis.exterior." + this.exteriorType.name);
+
+        List<Text> lines = new ArrayList<>();
+        lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_ID.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.tardisId)));
+        lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_OWNER.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.owner)));
+        lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_EXTERIOR.copy().append(": ").formatted(Formatting.AQUA)).append(exteriorTitle));
 
         float scale = 0.915F;
-        int index = 0;
-        int padding = 5;
+        int padding = 10;
+        int lineHeight = 5;
         int maxTextLength = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - padding * 2;
         Vector2i pos = this.getRenderPos(this.getBackgroundBorderSize().x + padding, this.getBackgroundBorderSize().y + padding);
         Vector2i scaledPos = pos.div(scale, new Vector2i());
@@ -139,9 +148,9 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         context.getMatrices().push();
         context.getMatrices().scale(scale, scale, scale);
 
-        for (Text line : datas) {
+        for (Text line : lines) {
             scaledPos.add(RenderHelper.drawTextMultiline(line, this.textRenderer, context, scaledPos, this.textRenderer.fontHeight, (int) Math.floor(maxTextLength / scale), 0xE0E0E0));
-            scaledPos.add(0, padding / 2);
+            scaledPos.add(0, lineHeight);
         }
 
         context.getMatrices().pop();
@@ -162,7 +171,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
             context.getMatrices().push();
             context.getMatrices().scale(scale, scale, 1);
             context.getMatrices().translate(iconOffset.x / scale, iconOffset.y / scale, 0);
-            context.drawItem(new ItemStack(entry.getKey().iconSupplier.get()), iconPos.x, iconPos.y);
+            context.drawItem(new ItemStack(entry.getKey().iconSupplier.apply(this)), iconPos.x, iconPos.y);
             context.getMatrices().pop();
         }
     }

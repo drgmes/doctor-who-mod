@@ -1,4 +1,4 @@
-package net.drgmes.dwm.compat;
+package net.drgmes.dwm.compat.immersiveportals;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.setup.ModDimensions;

@@ -16,6 +16,16 @@ public class TardisArsCreatorBlockEntity extends BlockEntity {
     }
 
     @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
+    }
+
+    @Override
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
@@ -29,15 +39,5 @@ public class TardisArsCreatorBlockEntity extends BlockEntity {
 
         tag.putInt("index", this.index);
         tag.putBoolean("isInitial", this.isInitial);
-    }
-
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
     }
 }

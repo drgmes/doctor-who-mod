@@ -1,7 +1,7 @@
 package net.drgmes.dwm.entities.tardis.consoleunit.controls;
 
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -34,14 +34,14 @@ public class TardisConsoleControlEntity extends Entity {
 
     @Override
     public void initDataTracker() {
-        this.dataTracker.startTracking(CONTROL_ROLE, ETardisConsoleUnitControlRole.NONE.name());
+        this.dataTracker.startTracking(CONTROL_ROLE, TardisConsoleUnitControlRole.NONE.name());
         this.dataTracker.startTracking(CONSOLE_UNIT_POS, BlockPos.ORIGIN);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound tag) {
         if (tag.contains("controlRole")) {
-            this.setTardisControlRole(ETardisConsoleUnitControlRole.valueOf(tag.getString("controlRole")));
+            this.setTardisControlRole(TardisConsoleUnitControlRole.valueOf(tag.getString("controlRole")));
         }
 
         if (tag.contains("consoleUnitPos")) {
@@ -51,7 +51,7 @@ public class TardisConsoleControlEntity extends Entity {
 
     @Override
     public void writeCustomDataToNbt(NbtCompound tag) {
-        ETardisConsoleUnitControlRole controlRole = this.getTardisControlRole();
+        TardisConsoleUnitControlRole controlRole = this.getTardisControlRole();
         if (controlRole != null) {
             tag.putString("controlRole", controlRole.name());
         }
@@ -90,11 +90,11 @@ public class TardisConsoleControlEntity extends Entity {
         return true;
     }
 
-    public ETardisConsoleUnitControlRole getTardisControlRole() {
-        return ETardisConsoleUnitControlRole.valueOf(this.dataTracker.get(CONTROL_ROLE));
+    public TardisConsoleUnitControlRole getTardisControlRole() {
+        return TardisConsoleUnitControlRole.valueOf(this.dataTracker.get(CONTROL_ROLE));
     }
 
-    public void setTardisControlRole(ETardisConsoleUnitControlRole controlRole) {
+    public void setTardisControlRole(TardisConsoleUnitControlRole controlRole) {
         this.dataTracker.set(CONTROL_ROLE, controlRole.name());
     }
 

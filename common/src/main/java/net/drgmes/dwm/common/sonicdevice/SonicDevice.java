@@ -2,9 +2,7 @@ package net.drgmes.dwm.common.sonicdevice;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
-import net.drgmes.dwm.common.sonicdevice.modes.scan.SonicDeviceScanMode;
-import net.drgmes.dwm.common.sonicdevice.modes.setting.SonicDeviceSettingMode;
-import net.drgmes.dwm.common.sonicdevice.modes.tardis.SonicDeviceTardisMode;
+import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.ISonicDeviceItem;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
@@ -13,7 +11,6 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
@@ -23,34 +20,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class SonicDevice {
-    public enum EMode {
-        SCAN(SonicDeviceScanMode.INSTANCE, DWM.TEXTS.SONIC_DEVICE_MODE_SCAN, DWM.TEXTS.SONIC_DEVICE_MODE_SCAN_DESCRIPTION),
-        SETTING(SonicDeviceSettingMode.INSTANCE, DWM.TEXTS.SONIC_DEVICE_MODE_SETTING, DWM.TEXTS.SONIC_DEVICE_MODE_SETTING_DESCRIPTION),
-        TARDIS_RELOCATION(SonicDeviceTardisMode.INSTANCE, DWM.TEXTS.SONIC_DEVICE_MODE_TARDIS_RELOCATION, DWM.TEXTS.SONIC_DEVICE_MODE_TARDIS_RELOCATION_DESCRIPTION);
-
-        private final BaseSonicDeviceMode mode;
-        private final Text title;
-        private final Text description;
-
-        EMode(BaseSonicDeviceMode mode, Text title, Text description) {
-            this.mode = mode;
-            this.title = title;
-            this.description = description;
-        }
-
-        public BaseSonicDeviceMode getInstance() {
-            return this.mode;
-        }
-
-        public Text getTitle() {
-            return this.title;
-        }
-
-        public Text getDescription() {
-            return this.description;
-        }
-    }
-
     public static boolean checkItemStackIsSonicDevice(ItemStack itemStack) {
         return itemStack.getItem() instanceof ISonicDeviceItem;
     }
@@ -91,20 +60,20 @@ public class SonicDevice {
         return sonicDeviceItemStack.getOrCreateSubNbt("sonicDeviceData");
     }
 
-    public static void setInteractionMode(ItemStack sonicDeviceItemStack, EMode mode) {
+    public static void setInteractionMode(ItemStack sonicDeviceItemStack, SonicDeviceMode mode) {
         if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
         getData(sonicDeviceItemStack).putString("prevMode", getInteractionMode(sonicDeviceItemStack).name());
         getData(sonicDeviceItemStack).putString("mode", mode.name());
     }
 
-    public static EMode getInteractionMode(ItemStack sonicDeviceItemStack) {
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return EMode.SCAN;
+    public static SonicDeviceMode getInteractionMode(ItemStack sonicDeviceItemStack) {
+        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return SonicDeviceMode.SCAN;
 
-        EMode mode = null;
+        SonicDeviceMode mode = null;
         NbtCompound tag = getData(sonicDeviceItemStack);
-        if (tag.contains("mode")) mode = EMode.valueOf(tag.getString("mode"));
+        if (tag.contains("mode")) mode = SonicDeviceMode.valueOf(tag.getString("mode"));
 
-        return mode != null ? mode : EMode.SCAN;
+        return mode != null ? mode : SonicDeviceMode.SCAN;
     }
 
     public static void setTardisId(ItemStack sonicDeviceItemStack, World world) {

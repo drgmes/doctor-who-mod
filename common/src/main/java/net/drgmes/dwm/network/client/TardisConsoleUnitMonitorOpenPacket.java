@@ -96,7 +96,7 @@ public class TardisConsoleUnitMonitorOpenPacket extends BaseS2CMessage {
 
         list.forEach((entry) -> {
             int index = entry.name.equals(currentConsoleRoomId) ? 0 : i.incrementAndGet();
-            tag.put(String.format("%1$" + 5 + "s", index).replace(' ', '0'), entry.writeNbt(new NbtCompound()));
+            tag.put(String.format("%1$" + 5 + "s", index).replace(' ', '0'), entry.toNbt());
         });
 
         return tag;

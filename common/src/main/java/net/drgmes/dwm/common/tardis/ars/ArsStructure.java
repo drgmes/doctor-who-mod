@@ -14,6 +14,7 @@ import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -24,10 +25,8 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
 import org.apache.commons.lang3.function.TriFunction;
@@ -97,8 +96,8 @@ public class ArsStructure {
 
                 boolean isAreaEmpty = WorldHelper.foreachArea(aabb, (bp) -> {
                     if (!world.getBlockState(bp).isAir()) {
-                        MutableText posText = Text.literal("[" + bp.getX() + " " + bp.getY() + " " + bp.getZ() + "]").formatted(Formatting.YELLOW);
-                        player.sendMessage(Text.translatable("message." + DWM.MODID + ".tardis.ars_interface.generated.failed.details", posText), false);
+                        String posText = "[" + bp.getX() + " " + bp.getY() + " " + bp.getZ() + "]";
+                        player.sendMessage(DWM.TEXTS.ARS_SECONDARY_ROOM_BUILD_FAILED_DETAILS.apply(posText), false);
                         return false;
                     }
 
@@ -191,10 +190,13 @@ public class ArsStructure {
             tardisArsDestroyerBlockEntity.tacIsInitial,
             tardisArsDestroyerBlockEntity.tacIndex,
             (placeSettings, blockPos, tadOffset) -> {
+                Block decoratorBlock = tardis.getConsoleRoom().getDecoratorBlock();
+                if (decoratorBlock == null) decoratorBlock = Blocks.CHISELED_QUARTZ_BLOCK;
+
                 WorldHelper.fillArea(world, BlockBox.create(
                     tacBlockPos.add(new BlockPos(BlockPos.ZERO.up().west()).rotate(wallRotation)),
                     tacBlockPos.add(new BlockPos(BlockPos.ZERO.down().east()).rotate(wallRotation))
-                ), tardis.getConsoleRoom().getDecoratorBlock().getDefaultState());
+                ), decoratorBlock.getDefaultState());
 
                 Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
                 BlockBox aabb = template.calculateBoundingBox(placeSettings, blockPos);

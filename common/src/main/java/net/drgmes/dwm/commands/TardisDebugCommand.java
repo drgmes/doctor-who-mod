@@ -9,7 +9,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.commands.types.TardisDimensionArgumentType;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
-import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypeEntry;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -23,7 +23,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class TardisDebugCommand {
-    private static final DynamicCommandExceptionType INVALID_TARDIS_EXCEPTION = new DynamicCommandExceptionType((id) -> Text.translatable("argument.dwm.tardis.invalid"));
+    private static final DynamicCommandExceptionType INVALID_TARDIS_EXCEPTION = new DynamicCommandExceptionType((id) -> DWM.TEXTS.ARGUMENT_INVALID_TARDIS);
 
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
@@ -49,7 +49,7 @@ public class TardisDebugCommand {
         MutableText text = Text.empty();
         TardisStateManager tardis = tardisHolder.get();
         TardisConsoleRoomEntry consoleRoom = tardis.getConsoleRoom();
-        TardisExteriorTypeEntry exteriorType = tardis.getExteriorType();
+        TardisExteriorEntry exteriorType = tardis.getExteriorType();
 
         text.append(Text.literal("< === " + tardis.getId() + " === >")).append("\n");
         text.append(Text.literal("\n"));

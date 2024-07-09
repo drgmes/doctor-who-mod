@@ -48,15 +48,16 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
 
-//        if (world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-//            if (!world.isClient) {
-//                tardisRoundelBlockEntity.uncovered = !tardisRoundelBlockEntity.uncovered;
-//                tardisRoundelBlockEntity.markDirty();
-//                tardisRoundelBlockEntity.sendUpdatePacket();
-//            }
-//
-//            return ActionResult.SUCCESS;
-//        }
+        // TODO implement new feature
+        /*if (world.getBlockEntity(blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            if (!world.isClient) {
+                tardisRoundelBlockEntity.uncovered = !tardisRoundelBlockEntity.uncovered;
+                tardisRoundelBlockEntity.markDirty();
+                tardisRoundelBlockEntity.sendUpdatePacket();
+            }
+
+            return ActionResult.SUCCESS;
+        }*/
 
         // SculkShriekerBlock
         if (blockEntity instanceof SculkShriekerBlockEntity sculkShriekerBlockEntity) {

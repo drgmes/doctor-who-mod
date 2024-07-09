@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumHoeItemBuilder extends ItemBuilder {
     public TitaniumHoeItemBuilder(String name) {
-        super(name, () -> new HoeItem(ModMaterials.TOOL.TITANIUM, -2, -1.0F, getItemSettings()));
+        super(name, () -> new HoeItem(ModMaterials.ToolMaterial.TITANIUM, -2, -1.0F, getItemSettings()));
     }
 
     @Override

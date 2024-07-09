@@ -17,7 +17,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatableWaterloggedBlockWithEntity {
+public abstract class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatableWaterloggedBlockWithEntity {
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 
     public BaseRotatableWaterloggedDoubleBlockWithEntity(AbstractBlock.Settings settings) {
@@ -31,6 +31,11 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
     }
 
     @Override
+    protected BlockState getDefaultBlockState() {
+        return super.getDefaultBlockState().with(HALF, DoubleBlockHalf.LOWER);
+    }
+
+    @Override
     public BlockState getPlacementState(ItemPlacementContext context) {
         World world = context.getWorld();
         BlockPos blockPos = context.getBlockPos();
@@ -40,11 +45,6 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
         }
 
         return null;
-    }
-
-    @Override
-    protected BlockState getDefaultBlockState() {
-        return super.getDefaultBlockState().with(HALF, DoubleBlockHalf.LOWER);
     }
 
     @Override
@@ -67,6 +67,7 @@ public class BaseRotatableWaterloggedDoubleBlockWithEntity extends BaseRotatable
     @Override
     public void onPlaced(World world, BlockPos blockPos, BlockState blockState, LivingEntity entity, ItemStack itemStack) {
         world.setBlockState(blockPos.up(), blockState.with(HALF, DoubleBlockHalf.UPPER).with(WATERLOGGED, world.getFluidState(blockPos.up()).isIn(FluidTags.WATER)), Block.NOTIFY_ALL);
+        super.onPlaced(world, blockPos, blockState, entity, itemStack);
     }
 
     protected BlockState syncNeighborState(BlockState blockState, BlockState neighborBlockState) {

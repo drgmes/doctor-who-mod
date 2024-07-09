@@ -1,4 +1,4 @@
-package net.drgmes.dwm.compat;
+package net.drgmes.dwm.compat.techreborn;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
@@ -79,7 +79,7 @@ public class TechReborn {
         @SuppressWarnings("UnstableApiUsage")
         protected void onFinalCommit() {
             this.tardis.setEnergyAmount((int) this.amount);
-            this.tardis.updateConsoleTiles();
+            this.tardis.markConsoleTilesUpdated();
         }
     }
 }

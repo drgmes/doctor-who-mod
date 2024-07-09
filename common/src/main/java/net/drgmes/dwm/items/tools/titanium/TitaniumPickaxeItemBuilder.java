@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumPickaxeItemBuilder extends ItemBuilder {
     public TitaniumPickaxeItemBuilder(String name) {
-        super(name, () -> new PickaxeItem(ModMaterials.TOOL.TITANIUM, 1, -2.8F, getItemSettings()));
+        super(name, () -> new PickaxeItem(ModMaterials.ToolMaterial.TITANIUM, 1, -2.8F, getItemSettings()));
     }
 
     @Override

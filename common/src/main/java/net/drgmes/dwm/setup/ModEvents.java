@@ -5,7 +5,7 @@ import dev.architectury.event.events.common.*;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
 import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.compat.ImmersivePortals;
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortals;
 import net.drgmes.dwm.items.sonicdevices.ISonicDeviceItem;
 import net.drgmes.dwm.items.sonicdevices.SonicScrewdriverItem;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;

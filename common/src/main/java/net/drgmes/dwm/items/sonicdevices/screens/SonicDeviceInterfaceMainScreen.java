@@ -2,6 +2,7 @@ package net.drgmes.dwm.items.sonicdevices.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
+import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.network.server.SonicDeviceUpdatePacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
@@ -15,14 +16,19 @@ import org.joml.Vector2i;
 import java.util.List;
 
 public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScreen {
-    private final List<SonicDevice.EMode> modes;
+    private final List<SonicDeviceMode> modes;
 
     private SonicDeviceModesListWidget modesListWidget;
     private SonicDeviceModesListWidget.SonicDeviceModeEntry selected = null;
 
     public SonicDeviceInterfaceMainScreen(ItemStack sonicDeviceItemStack, String slot) {
         super(DWM.TEXTS.SONIC_DEVICE_INTERFACE_NAME, sonicDeviceItemStack, slot);
-        this.modes = List.of(SonicDevice.EMode.values());
+        this.modes = List.of(SonicDeviceMode.values());
+    }
+
+    @Override
+    public void tick() {
+        this.modesListWidget.setSelected(this.selected);
     }
 
     @Override
@@ -38,11 +44,6 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
     public void resize(MinecraftClient mc, int width, int height) {
         super.resize(mc, width, height);
         this.modesListWidget.refreshList();
-    }
-
-    @Override
-    public void tick() {
-        this.modesListWidget.setSelected(this.selected);
     }
 
     @Override
@@ -121,9 +122,9 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         }
 
         private class SonicDeviceModeEntry extends BaseListEntry {
-            private final SonicDevice.EMode mode;
+            private final SonicDeviceMode mode;
 
-            public SonicDeviceModeEntry(SonicDevice.EMode mode) {
+            public SonicDeviceModeEntry(SonicDeviceMode mode) {
                 super(Formatting.WHITE, Formatting.GOLD);
                 this.mode = mode;
             }

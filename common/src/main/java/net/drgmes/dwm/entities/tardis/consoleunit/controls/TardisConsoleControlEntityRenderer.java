@@ -1,6 +1,6 @@
 package net.drgmes.dwm.entities.tardis.consoleunit.controls;
 
-import net.drgmes.dwm.common.tardis.consoleunits.controls.ETardisConsoleUnitControlRole;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -25,7 +25,7 @@ public class TardisConsoleControlEntityRenderer extends EntityRenderer<TardisCon
     protected void renderLabelIfPresent(TardisConsoleControlEntity entity, Text text, MatrixStack matrixStack, VertexConsumerProvider buffer, int light) {
         if (this.dispatcher.getSquaredDistanceToCamera(entity) > 6) return;
 
-        ETardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
+        TardisConsoleUnitControlRole controlRole = entity.getTardisControlRole();
         if (controlRole.name == null) return;
 
         float scale = 0.0055F;

@@ -1,7 +1,7 @@
 package net.drgmes.dwm.mixin.fabric;
 
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.types.IMixinPortal;
+import net.drgmes.dwm.compat.immersiveportals.IMixinPortal;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.nbt.NbtCompound;

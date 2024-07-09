@@ -5,10 +5,11 @@ import dev.architectury.networking.NetworkManager;
 import dev.architectury.networking.simple.BaseC2SMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
+import net.drgmes.dwm.enums.TardisVerticalScanning;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -59,20 +60,20 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
             if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
-                player.sendMessage(DWM.TEXTS.DIRECTIONAL_UNIT_NOT_INSTALLED, true);
+                player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
                 return;
             }
 
             Text message = null;
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType dataType = TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.valueOf(this.type);
+            TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(this.type);
 
-            if (dataType == TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.BIOME) {
+            if (dataType == TardisTelepathicInterfaceDataType.BIOME) {
                 String msg = findBiome(this.id, tardis) ? "found" : "not_found";
-                message = Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.biome." + msg);
+                message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + msg);
             }
-            else if (dataType == TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.STRUCTURE) {
+            else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) {
                 String msg = findStructure(this.id, tardis) ? "found" : "not_found";
-                message = Text.translatable("message." + DWM.MODID + ".tardis.telepathic_interface.structure." + msg);
+                message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + msg);
             }
 
             if (message != null) player.sendMessage(message, true);
@@ -88,16 +89,16 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
         if (pair == null) return false;
 
         boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
+
+        TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
+        if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+
         BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
         if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
 
-        tardis.getSystem(TardisSystemMaterialization.class).setSafeDirection(isUnderground
-            ? TardisSystemMaterialization.ESafeDirection.BOTTOM
-            : TardisSystemMaterialization.ESafeDirection.TOP
-        );
-
+        tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
         tardis.setDestinationPosition(blockPos);
-        tardis.updateConsoleTiles();
+        tardis.markConsoleTilesUpdated();
         return true;
     }
 
@@ -125,16 +126,15 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
         else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_DECORATION) isUnderground = true;
         else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_STRUCTURES) isUnderground = true;
 
+        TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
+        if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+
         BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
         if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
 
-        tardis.getSystem(TardisSystemMaterialization.class).setSafeDirection(isUnderground
-            ? TardisSystemMaterialization.ESafeDirection.BOTTOM
-            : TardisSystemMaterialization.ESafeDirection.TOP
-        );
-
+        tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
         tardis.setDestinationPosition(blockPos);
-        tardis.updateConsoleTiles();
+        tardis.markConsoleTilesUpdated();
         return true;
     }
 }

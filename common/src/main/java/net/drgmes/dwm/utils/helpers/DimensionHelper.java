@@ -3,7 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.compat.ImmersivePortalsAPI;
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsAPI;
 import net.drgmes.dwm.network.client.DimensionAddPacket;
 import net.drgmes.dwm.network.client.DimensionRemovePacket;
 import net.drgmes.dwm.setup.ModCompats;

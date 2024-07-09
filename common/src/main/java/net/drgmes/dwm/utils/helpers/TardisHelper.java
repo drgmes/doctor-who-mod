@@ -42,7 +42,7 @@ public class TardisHelper {
         if (tile.getWorld() == null || tile.getWorld().isClient) return null;
 
         return TardisHelper.getOrCreateTardisWorld(
-            tile.getTardisId(),
+            tile.getOrCreateTardisId(),
             tile.getWorld().getRegistryKey(),
             tile.getPos(),
             tile.getCachedState().get(BaseTardisExteriorBlock.FACING),

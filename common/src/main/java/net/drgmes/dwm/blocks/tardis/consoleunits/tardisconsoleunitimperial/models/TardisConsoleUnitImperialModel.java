@@ -545,7 +545,7 @@ public class TardisConsoleUnitImperialModel extends Model {
     public void setupAnim(BaseTardisConsoleUnitBlockEntity tile) {
         float speed = 0.1F;
         float intense = 4F;
-        float yOffset = (float) Math.cos(tile.tickInProgress * speed) * intense + (1.0F / 100) * tile.tickInProgress;
+        float yOffset = (float) Math.cos(tile.tick * speed) * intense + (1.0F / 100) * tile.tick;
 
         this.rotor_rods.pivotY += yOffset + 10;
         this.rotor_glass.pivotY += yOffset + 10;

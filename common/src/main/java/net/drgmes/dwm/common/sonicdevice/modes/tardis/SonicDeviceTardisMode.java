@@ -9,7 +9,6 @@ import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Formatting;
@@ -19,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.List;
 import java.util.Optional;
 
 public class SonicDeviceTardisMode extends BaseSonicDeviceMode {
@@ -37,15 +37,15 @@ public class SonicDeviceTardisMode extends BaseSonicDeviceMode {
         Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisWorld);
         if (tardisHolder.isEmpty()) return ActionResult.FAIL;
 
-        MutableText x = Text.literal(String.valueOf(blockPos.getX())).formatted(Formatting.YELLOW);
-        MutableText y = Text.literal(String.valueOf(blockPos.getY())).formatted(Formatting.YELLOW);
-        MutableText z = Text.literal(String.valueOf(blockPos.getZ())).formatted(Formatting.YELLOW);
+        Text x = Text.literal(String.valueOf(blockPos.getX())).formatted(Formatting.YELLOW);
+        Text y = Text.literal(String.valueOf(blockPos.getY())).formatted(Formatting.YELLOW);
+        Text z = Text.literal(String.valueOf(blockPos.getZ())).formatted(Formatting.YELLOW);
 
-        player.sendMessage(Text.translatable("message." + DWM.MODID + ".sonic_device.tardis_relocated", x, y, z), true);
+        player.sendMessage(DWM.TEXTS.SONIC_DEVICE_TARDIS_RELOCATED.apply(List.of(x, y, z)), true);
         tardisHolder.get().setDestinationFacing(Direction.fromRotation(player.getHeadYaw()).getOpposite());
         tardisHolder.get().setDestinationDimension(world.getRegistryKey());
         tardisHolder.get().setDestinationPosition(blockPos);
-        tardisHolder.get().updateConsoleTiles();
+        tardisHolder.get().markConsoleTilesUpdated();
         return ActionResult.SUCCESS;
     }
 

@@ -1,11 +1,11 @@
 package net.drgmes.dwm.blocks.tardis.exteriors.tardisexteriorphonebox;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
-import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorTypes;
+import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
 
 public class TardisExteriorPhoneBoxBlock extends BaseTardisExteriorBlock<TardisExteriorPhoneBoxBlockEntity> {
     public TardisExteriorPhoneBoxBlock(Settings settings) {
-        super(settings, TardisExteriorTypes.PHONE_BOX);
+        super(settings, TardisExteriors.PHONE_BOX);
     }
 
     @Override

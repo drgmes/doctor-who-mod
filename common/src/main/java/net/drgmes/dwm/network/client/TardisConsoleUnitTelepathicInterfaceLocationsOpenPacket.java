@@ -5,6 +5,7 @@ import dev.architectury.networking.simple.BaseS2CMessage;
 import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
+import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.setup.ModNetwork;
 import net.fabricmc.api.EnvType;
@@ -61,14 +62,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends Bas
         final MinecraftClient mc = MinecraftClient.getInstance();
 
         if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> locations = new ArrayList<>();
+            List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
             List<String> keys = new ArrayList<>(this.tag.getKeys().stream().toList());
 
             keys.sort(Comparator.comparing((key) -> key));
             keys.forEach((key) -> {
                 locations.add(Map.entry(
                     new Identifier(this.tag.getCompound(key).getString("id")),
-                    TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.valueOf(this.tag.getCompound(key).getString("type"))
+                    TardisTelepathicInterfaceDataType.valueOf(this.tag.getCompound(key).getString("type"))
                 ));
             });
 
@@ -77,7 +78,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends Bas
     }
 
     private static NbtCompound createLocationsListFromRegistry(ServerWorld world, @Nullable ServerWorld destinationWorld) {
-        List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> list = new ArrayList<>();
+        List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> list = new ArrayList<>();
 
         List<Identifier> biomeIds;
         Registry<Structure> structureRegistry;
@@ -93,7 +94,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends Bas
         }
 
         list.addAll(getLocationsForRegistry(
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.BIOME,
+            TardisTelepathicInterfaceDataType.BIOME,
             RegistryKeys.BIOME,
             world,
             (entry) -> (
@@ -102,7 +103,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends Bas
         ));
 
         list.addAll(getLocationsForRegistry(
-            TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType.STRUCTURE,
+            TardisTelepathicInterfaceDataType.STRUCTURE,
             RegistryKeys.STRUCTURE,
             world,
             (entry) -> {
@@ -131,14 +132,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends Bas
         return tag;
     }
 
-    private static <T> List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> getLocationsForRegistry(TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType type, RegistryKey<Registry<T>> registryKey, ServerWorld world, Function<RegistryKey<T>, Boolean> entryChecker) {
+    private static <T> List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> getLocationsForRegistry(TardisTelepathicInterfaceDataType dataType, RegistryKey<Registry<T>> registryKey, ServerWorld world, Function<RegistryKey<T>, Boolean> entryChecker) {
         Registry<T> registry = world.getRegistryManager().get(registryKey);
 
-        List<Map.Entry<Identifier, TardisConsoleUnitTelepathicInterfaceLocationsScreen.EDataType>> list = new ArrayList<>(
-            registry.getKeys().stream().filter(entryChecker::apply).map((res) -> Map.entry(res.getValue(), type)).toList()
+        List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> list = new ArrayList<>(
+            registry.getKeys().stream().filter(entryChecker::apply).map((res) -> Map.entry(res.getValue(), dataType)).toList()
         );
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             list.sort(Comparator.comparing(a -> a.getKey().getPath()));
         }
 

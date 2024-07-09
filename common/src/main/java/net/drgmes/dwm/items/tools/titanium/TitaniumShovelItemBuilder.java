@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class TitaniumShovelItemBuilder extends ItemBuilder {
     public TitaniumShovelItemBuilder(String name) {
-        super(name, () -> new ShovelItem(ModMaterials.TOOL.TITANIUM, 1.5F, -3.0F, getItemSettings()));
+        super(name, () -> new ShovelItem(ModMaterials.ToolMaterial.TITANIUM, 1.5F, -3.0F, getItemSettings()));
     }
 
     @Override
