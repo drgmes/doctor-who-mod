@@ -2,7 +2,6 @@ package net.drgmes.dwm.common.tardis.systems;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
-import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;

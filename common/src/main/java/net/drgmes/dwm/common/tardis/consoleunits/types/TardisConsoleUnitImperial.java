@@ -1,8 +1,8 @@
 package net.drgmes.dwm.common.tardis.consoleunits.types;
 
 import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitEntry;
-import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModEntities;
 import net.minecraft.util.math.Vec3d;

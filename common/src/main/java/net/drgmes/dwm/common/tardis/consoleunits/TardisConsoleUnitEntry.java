@@ -1,9 +1,9 @@
 package net.drgmes.dwm.common.tardis.consoleunits;
 
-import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
-import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleUnitControlEntry;
 import net.drgmes.dwm.entities.tardis.consoleunit.controls.TardisConsoleControlEntityBuilder;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
+import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
 import net.drgmes.dwm.setup.ModEntities;
 import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
 import net.minecraft.block.entity.BlockEntityType;

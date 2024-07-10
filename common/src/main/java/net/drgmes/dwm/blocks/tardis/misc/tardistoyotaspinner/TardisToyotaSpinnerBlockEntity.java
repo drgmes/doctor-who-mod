@@ -5,7 +5,6 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.client.TardisToyotaSpinnerUpdatePacket;
 import net.drgmes.dwm.setup.ModBlockEntities;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,7 +44,7 @@ public class TardisToyotaSpinnerBlockEntity extends BlockEntity {
 
                 if (prevInProgress != this.inProgress) {
                     new TardisToyotaSpinnerUpdatePacket(this.getPos(), this.inProgress)
-                         .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
+                        .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
                 }
             });
         }
