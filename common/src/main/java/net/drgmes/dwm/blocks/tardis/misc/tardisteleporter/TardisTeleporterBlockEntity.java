@@ -31,7 +31,7 @@ public class TardisTeleporterBlockEntity extends BlockEntity {
     public void readNbt(NbtCompound tag) {
         super.readNbt(tag);
 
-        this.isLocked = tag.getBoolean("isLocked");
+        if (tag.contains("isLocked")) this.isLocked = tag.getBoolean("isLocked");
         if (tag.contains("destinationBlockPos")) this.destinationBlockPos = BlockPos.fromLong(tag.getLong("destinationBlockPos"));
         if (tag.contains("destinationFacing")) this.destinationFacing = Direction.byId(tag.getInt("destinationFacing"));
     }

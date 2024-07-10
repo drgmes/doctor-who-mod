@@ -40,9 +40,9 @@ public class TardisSystemFlight implements ITardisSystem {
 
     @Override
     public void readNbt(NbtCompound tag) {
-        this.tickInProgress = tag.getFloat("tickInProgress");
-        this.tickInProgressGoal = tag.getFloat("tickInProgressGoal");
-        this.destinationDistanceRate = tag.getFloat("destinationDistanceRate");
+        if (tag.contains("tickInProgress")) this.tickInProgress = tag.getFloat("tickInProgress");
+        if (tag.contains("tickInProgressGoal")) this.tickInProgressGoal = tag.getFloat("tickInProgressGoal");
+        if (tag.contains("destinationDistanceRate")) this.destinationDistanceRate = tag.getFloat("destinationDistanceRate");
     }
 
     @Override

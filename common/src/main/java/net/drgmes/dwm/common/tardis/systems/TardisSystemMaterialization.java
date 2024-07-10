@@ -61,12 +61,12 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void readNbt(NbtCompound tag) {
-        this.isMaterialized = tag.getBoolean("isMaterialized");
-        this.dematTickInProgress = tag.getFloat("dematTickInProgress");
-        this.rematTickInProgress = tag.getFloat("rematTickInProgress");
-        this.dematTickInProgressGoal = tag.getFloat("dematTickInProgressGoal");
-        this.rematTickInProgressGoal = tag.getFloat("rematTickInProgressGoal");
-        this.verticalScanning = TardisVerticalScanning.valueOf(tag.getString("verticalScanning"));
+        if (tag.contains("isMaterialized")) this.isMaterialized = tag.getBoolean("isMaterialized");
+        if (tag.contains("dematTickInProgress")) this.dematTickInProgress = tag.getFloat("dematTickInProgress");
+        if (tag.contains("rematTickInProgress")) this.rematTickInProgress = tag.getFloat("rematTickInProgress");
+        if (tag.contains("dematTickInProgressGoal")) this.dematTickInProgressGoal = tag.getFloat("dematTickInProgressGoal");
+        if (tag.contains("rematTickInProgressGoal")) this.rematTickInProgressGoal = tag.getFloat("rematTickInProgressGoal");
+        if (tag.contains("verticalScanning")) this.verticalScanning = TardisVerticalScanning.valueOf(tag.getString("verticalScanning"));
     }
 
     @Override
