@@ -18,9 +18,7 @@ dependencies {
         modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:v${rootProject.imm_ptl_version}") {
             transitive(false)
         }
-    }
 
-    if (rootProject.hasProperty("imm_ptl_version")) {
         modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
             transitive(false)
         }

@@ -8,7 +8,9 @@
     "MixinMinecraftClient"
   ],
   "mixins": [
-    "MixinLivingEntity"
+    "MixinLivingEntity",
+    "MixinPortal",
+    "MixinServerTeleportationManager"
   ],
   "injectors": {
     "defaultRequire": 1

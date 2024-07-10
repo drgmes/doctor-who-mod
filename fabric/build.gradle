@@ -51,9 +51,7 @@ dependencies {
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
-    }
 
-    if (rootProject.hasProperty("imm_ptl_version")) {
         modCompileOnlyApi("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:v${rootProject.imm_ptl_version}") {
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)

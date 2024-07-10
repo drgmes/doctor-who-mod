@@ -42,7 +42,7 @@ public class DimensionAddPacket extends BaseS2CMessage {
         if (mc.player == null || mc.getNetworkHandler() == null) return;
 
         Set<RegistryKey<World>> worlds = mc.getNetworkHandler().getWorldKeys();
-        if (worlds == null) return;
+        if (worlds == null || worlds.contains(this.worldKey)) return;
 
         worlds.add(this.worldKey);
     }

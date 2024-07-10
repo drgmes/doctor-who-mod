@@ -76,7 +76,6 @@ public class ImmersivePortals {
         }
 
         public List<BlockPos> getRoomsEntrances() {
-            System.out.println("getRoomsEntrances");
             List<BlockPos> roomsEntrances = new ArrayList<>();
             ServerWorld tardisWorld = this.tardis.getWorld();
             if (tardisWorld == null) return roomsEntrances;
@@ -103,29 +102,28 @@ public class ImmersivePortals {
             double innerWidth = doorTile == null ? 1 : doorTile.getDoorsType().entranceWidth;
             double innerHeight = doorTile == null ? 2 : doorTile.getDoorsType().entranceHeight;
 
-            try {
-                Map.Entry<Portal, Portal> portals = createPortals(
-                    this.tardis.getWorld(),
-                    this.tardis.getEntranceFacing(),
-                    this.tardis.getCurrentExteriorFacing(),
-                    this.tardis.getEntrancePosition().up(),
-                    this.tardis.getCurrentExteriorPosition().offset(this.tardis.getCurrentExteriorFacing()).up(),
-                    this.tardis.getCurrentExteriorDimension(),
-                    -0.5 + 0.0275, -0.5, 0,
-                    innerWidth, innerHeight, outerWidth, outerHeight
-                );
+            Map.Entry<Portal, Portal> portals = createPortals(
+                this.tardis.getWorld(),
+                this.tardis.getEntranceFacing(),
+                this.tardis.getCurrentExteriorFacing(),
+                this.tardis.getEntrancePosition().up(),
+                this.tardis.getCurrentExteriorPosition().offset(this.tardis.getCurrentExteriorFacing()).up(),
+                this.tardis.getCurrentExteriorDimension(),
+                -0.5 + 0.0275, -0.5, 0,
+                innerWidth, innerHeight, outerWidth, outerHeight
+            );
 
-                this.portalFromTardis = portals.getKey();
-                this.portalToTardis = portals.getValue();
+            this.portalFromTardis = portals.getKey();
+            this.portalToTardis = portals.getValue();
 
-                String worldId = this.tardis.getId();
-                ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
-                ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
+            String worldId = this.tardis.getId();
+            ((IMixinPortal) this.portalFromTardis).markAsTardisEntrance().setTardisId(worldId);
+            ((IMixinPortal) this.portalToTardis).markAsTardisEntrance().setTardisId(worldId);
 
-                if (this.portalFromTardis.getWorld() != null) this.portalFromTardis.getWorld().spawnEntity(this.portalFromTardis);
-                if (this.portalToTardis.getWorld() != null) this.portalToTardis.getWorld().spawnEntity(this.portalToTardis);
-            } catch (Exception ignored) {
-            }
+            World portalFromTardisWorld = this.portalFromTardis.getWorld();
+            World portalToTardisWorld = this.portalToTardis.getWorld();
+            if (portalFromTardisWorld != null) portalFromTardisWorld.spawnEntity(this.portalFromTardis);
+            if (portalToTardisWorld != null) portalToTardisWorld.spawnEntity(this.portalToTardis);
         }
 
         public void createRoomsEntrancesPortals() {
@@ -144,47 +142,37 @@ public class ImmersivePortals {
                 BlockPos tacBlockPos = this.tardis.getConsoleRoom().getCenterPosition().add(tacBlockInfo.pos()).toImmutable();
                 if (!tardisWorld.isAir(tacBlockPos)) continue;
 
-                try {
-                    Map.Entry<Portal, Portal> portals = createPortals(
-                        tardisWorld,
-                        direction,
-                        Direction.SOUTH,
-                        tacBlockPos.offset(direction).up(),
-                        TardisHelper.getTardisFarPos(index + 1).up(3),
-                        tardisWorld.getRegistryKey(),
-                        -0.50, -0.50, -0.5,
-                        3, 3, 3, 3
-                    );
+                Map.Entry<Portal, Portal> portals = createPortals(
+                    tardisWorld,
+                    direction,
+                    Direction.SOUTH,
+                    tacBlockPos.offset(direction).up(),
+                    TardisHelper.getTardisFarPos(index + 1).up(3),
+                    tardisWorld.getRegistryKey(),
+                    -0.50, -0.50, -0.5,
+                    3, 3, 3, 3
+                );
 
-                    ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
-                    ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
+                ((IMixinPortal) portals.getKey()).markAsTardisRoomsEntrance().setTardisId(worldId);
+                ((IMixinPortal) portals.getValue()).markAsTardisRoomsEntrance().setTardisId(worldId);
 
-                    tardisWorld.spawnEntity(portals.getKey());
-                    tardisWorld.spawnEntity(portals.getValue());
-                    this.portalsToRooms.add(portals);
-                } catch (Exception ignored) {
-                }
+                tardisWorld.spawnEntity(portals.getKey());
+                tardisWorld.spawnEntity(portals.getValue());
+                this.portalsToRooms.add(portals);
             }
         }
 
         public void clearEntrancePortals() {
-            try {
-                if (this.portalFromTardis != null) this.portalFromTardis.discard();
-                if (this.portalToTardis != null) this.portalToTardis.discard();
-            } catch (Exception ignored) {
-            } finally {
-                this.portalFromTardis = null;
-                this.portalToTardis = null;
-            }
+            if (this.portalFromTardis != null) this.portalFromTardis.discard();
+            if (this.portalToTardis != null) this.portalToTardis.discard();
+            this.portalFromTardis = null;
+            this.portalToTardis = null;
         }
 
         public void clearRoomEntrancePortals() {
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
-                try {
-                    portalsToRoom.getKey().discard();
-                    portalsToRoom.getValue().discard();
-                } catch (Exception ignored) {
-                }
+                if (portalsToRoom.getKey() != null) portalsToRoom.getKey().discard();
+                if (portalsToRoom.getValue() != null) portalsToRoom.getValue().discard();
             }
 
             this.portalsToRooms.clear();
@@ -203,7 +191,7 @@ public class ImmersivePortals {
         }
 
         public boolean isRoomEntrancePortalsValid() {
-             if (this.portalsToRooms.isEmpty() && !this.getRoomsEntrances().isEmpty()) return false;
+            if (this.portalsToRooms.isEmpty() && !this.getRoomsEntrances().isEmpty()) return false;
 
             for (Map.Entry<Portal, Portal> portalsToRoom : this.portalsToRooms) {
                 if (portalsToRoom.getKey() == null || portalsToRoom.getValue() == null) return false;

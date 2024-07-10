@@ -757,6 +757,7 @@ public class TardisStateManager extends PersistentState {
         this.updatedConsoleTiles = false;
 
         this.consoleTiles.forEach((id, tile) -> {
+            if (tile == null) return;
             tile.controlsStorage.applyData(this);
 
             NbtCompound tag = new NbtCompound();
@@ -806,6 +807,7 @@ public class TardisStateManager extends PersistentState {
         this.updatedDoorsTiles = false;
 
         this.doorsTiles.forEach((blockPos, tile) -> {
+            if (tile == null) return;
             this.world.setBlockState(blockPos, tile.getCachedState().with(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), Block.NOTIFY_ALL);
         });
     }

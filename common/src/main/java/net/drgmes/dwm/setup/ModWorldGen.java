@@ -44,7 +44,7 @@ public class ModWorldGen {
         (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
         () -> getPlacementModifiers(
             CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(40),
+            RarityFilterPlacementModifier.of(75),
             PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP,
             PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP
         )

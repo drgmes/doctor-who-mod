@@ -1,7 +1,6 @@
 package net.drgmes.dwm.compat.immersiveportals;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.setup.ModDimensions;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.MinecraftServer;
@@ -25,8 +24,6 @@ public class ImmersivePortalsAPI {
 
         DimensionAPI.addDimensionDynamically(worldIdentifier, dimensionFactory.apply(server));
         DWM.LOGGER.info("Dimension \"%s\" created by DimLib".formatted(id));
-
-        ModDimensions.addWorldToRegistry(server, worldKey);
         return DimensionHelper.getWorld(worldKey, server);
     }
 
@@ -39,7 +36,6 @@ public class ImmersivePortalsAPI {
 
         DimensionAPI.removeDimensionDynamically(world);
         DWM.LOGGER.info("Dimension \"%s\" removed by DimLib".formatted(id));
-
-        return ModDimensions.removeWorldFromRegistry(server, worldKey);
+        return true;
     }
 }

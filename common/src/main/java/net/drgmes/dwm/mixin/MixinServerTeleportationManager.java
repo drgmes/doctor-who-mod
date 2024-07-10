@@ -1,4 +1,4 @@
-package net.drgmes.dwm.mixin.fabric;
+package net.drgmes.dwm.mixin;
 
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;

@@ -66,32 +66,34 @@ public class DimensionHelper {
         ServerWorld world = getModWorld(id, server);
         if (world != null) return world;
 
-        if (ModCompats.immersivePortalsAPI()) {
-            return ImmersivePortalsAPI.createWorld(id, server, dimensionFactory);
-        }
-
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
-        DimensionOptions dimension = dimensionFactory.apply(server);
         WorldGenerationProgressListener chunkListener = server.worldGenerationProgressListenerFactory.create(11);
 
-        SaveProperties serverConfig = server.getSaveProperties();
-        GeneratorOptions dimensionGeneratorSettings = serverConfig.getGeneratorOptions();
-        UnmodifiableLevelProperties derivedWorldInfo = new UnmodifiableLevelProperties(serverConfig, serverConfig.getMainWorldProperties());
+        if (ModCompats.immersivePortalsAPI()) {
+            world = ImmersivePortalsAPI.createWorld(id, server, dimensionFactory);
+        }
+        else {
+            DimensionOptions dimension = dimensionFactory.apply(server);
 
-        world = new ServerWorld(
-            server,
-            server.workerExecutor,
-            server.session,
-            derivedWorldInfo,
-            worldKey,
-            dimension,
-            chunkListener,
-            false,
-            BiomeAccess.hashSeed(dimensionGeneratorSettings.getSeed()),
-            ImmutableList.of(),
-            false,
-            null
-        );
+            SaveProperties serverConfig = server.getSaveProperties();
+            GeneratorOptions dimensionGeneratorSettings = serverConfig.getGeneratorOptions();
+            UnmodifiableLevelProperties derivedWorldInfo = new UnmodifiableLevelProperties(serverConfig, serverConfig.getMainWorldProperties());
+
+            world = new ServerWorld(
+                server,
+                server.workerExecutor,
+                server.session,
+                derivedWorldInfo,
+                worldKey,
+                dimension,
+                chunkListener,
+                false,
+                BiomeAccess.hashSeed(dimensionGeneratorSettings.getSeed()),
+                ImmutableList.of(),
+                false,
+                null
+            );
+        }
 
         WorldBorder worldBorder = server.getOverworld().getWorldBorder();
         if (worldBorder != null) worldBorder.addListener(new WorldBorderListener.WorldBorderSyncer(world.getWorldBorder()));
@@ -110,7 +112,7 @@ public class DimensionHelper {
 
     public static boolean removeWorld(String id, MinecraftServer server) {
         if (ModCompats.immersivePortalsAPI()) {
-            return ImmersivePortalsAPI.removeWorld(id, server);
+            ImmersivePortalsAPI.removeWorld(id, server);
         }
 
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
