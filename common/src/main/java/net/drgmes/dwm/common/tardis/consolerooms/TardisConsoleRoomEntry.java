@@ -233,6 +233,8 @@ public class TardisConsoleRoomEntry {
     }
 
     private void updateDoors(ServerWorld tardisWorld, StructureTemplate template, TardisExteriorEntry exteriorType, StructurePlacementData placeSettings) {
+        if (exteriorType == null) return;
+
         Block doorsBlock = this.getDoorsBlock();
         Block newDoorsBlock = exteriorType.getDoorsBlock();
         if (doorsBlock == null || newDoorsBlock == null) return;

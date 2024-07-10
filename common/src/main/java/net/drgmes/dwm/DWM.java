@@ -108,16 +108,19 @@ public class DWM {
         public static final Text MONITOR_DATA_ID = Text.translatable("screen.dwm.monitor.data.id");
         public static final Text MONITOR_DATA_OWNER = Text.translatable("screen.dwm.monitor.data.owner");
         public static final Text MONITOR_DATA_EXTERIOR = Text.translatable("screen.dwm.monitor.data.exterior");
-        public static final Text MONITOR_ACTION_SETTINGS = Text.translatable("screen.dwm.monitor.action.settings");
+        public static final Text MONITOR_ACTION_EXTERIOR = Text.translatable("screen.dwm.monitor.action.exterior");
         public static final Text MONITOR_ACTION_WAYPOINTS = Text.translatable("screen.dwm.monitor.action.waypoints");
         public static final Text MONITOR_ACTION_RESEARCHER = Text.translatable("screen.dwm.monitor.action.researcher");
         public static final Text MONITOR_ACTION_CONSOLE_ROOMS = Text.translatable("screen.dwm.monitor.action.console_rooms");
         public static final Text MONITOR_ACTION_EXTERNAL_MONITOR = Text.translatable("screen.dwm.monitor.action.external_monitor");
 
-        public static final Text MONITOR_BTN_CONSOLE_ROOMS_CANCEL = Text.translatable("screen.dwm.monitor.button.console_rooms.cancel");
-        public static final Text MONITOR_BTN_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen.dwm.monitor.button.console_rooms.accept");
-        public static final Text MONITOR_BTN_CONSOLE_ROOMS_PREV = Text.translatable("screen.dwm.monitor.button.console_rooms.prev");
-        public static final Text MONITOR_BTN_CONSOLE_ROOMS_NEXT = Text.translatable("screen.dwm.monitor.button.console_rooms.next");
+        public static final Text MONITOR_EXTERNAL_SHELLS_CANCEL = Text.translatable("screen.dwm.monitor.external_shells.cancel");
+        public static final Text MONITOR_EXTERNAL_SHELLS_ACCEPT = Text.translatable("screen.dwm.monitor.external_shells.accept");
+
+        public static final Text MONITOR_CONSOLE_ROOMS_CANCEL = Text.translatable("screen.dwm.monitor.console_rooms.cancel");
+        public static final Text MONITOR_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen.dwm.monitor.console_rooms.accept");
+        public static final Text MONITOR_CONSOLE_ROOMS_PREV = Text.translatable("screen.dwm.monitor.console_rooms.prev");
+        public static final Text MONITOR_CONSOLE_ROOMS_NEXT = Text.translatable("screen.dwm.monitor.console_rooms.next");
 
         public static final Text TELEPATHIC_INTERFACE_NAME_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_NAME_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");

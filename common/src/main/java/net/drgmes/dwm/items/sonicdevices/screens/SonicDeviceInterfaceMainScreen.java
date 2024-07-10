@@ -16,14 +16,11 @@ import org.joml.Vector2i;
 import java.util.List;
 
 public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScreen {
-    private final List<SonicDeviceMode> modes;
-
     private SonicDeviceModesListWidget modesListWidget;
     private SonicDeviceModesListWidget.SonicDeviceModeEntry selected = null;
 
     public SonicDeviceInterfaceMainScreen(ItemStack sonicDeviceItemStack, String slot) {
         super(DWM.TEXTS.SONIC_DEVICE_INTERFACE_NAME, sonicDeviceItemStack, slot);
-        this.modes = List.of(SonicDeviceMode.values());
     }
 
     @Override
@@ -33,11 +30,13 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
 
     @Override
     protected void init() {
+        super.init();
+
         Vector2i modesListSize = this.getModesListSize();
-        this.modesListWidget = new SonicDeviceModesListWidget(this, modesListSize.x, modesListSize.y, this.getModesListPos());
+        Vector2i modesListPos = this.getModesListPos();
+        this.modesListWidget = new SonicDeviceModesListWidget(this, modesListSize.x, modesListSize.y, modesListPos);
 
         this.addDrawableChild(this.modesListWidget);
-        super.init();
     }
 
     @Override
@@ -77,6 +76,14 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         context.getMatrices().pop();
     }
 
+    private Vector2i getModesListSize() {
+        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
+    }
+
+    private Vector2i getModesListPos() {
+        return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundBorderSize().y);
+    }
+
     protected void setSelected(SonicDeviceModesListWidget.SonicDeviceModeEntry entry) {
         this.selected = entry;
         this.apply();
@@ -88,14 +95,6 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         this.mode = this.selected.mode;
         SonicDevice.setInteractionMode(this.sonicDeviceItemStack, this.selected.mode);
         new SonicDeviceUpdatePacket(this.sonicDeviceItemStack, this.slot).sendToServer();
-    }
-
-    private Vector2i getModesListSize() {
-        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
-    }
-
-    private Vector2i getModesListPos() {
-        return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundSize().y - this.getModesListSize().y - this.getBackgroundBorderSize().y);
     }
 
     private static class SonicDeviceModesListWidget extends BaseListWidget {
@@ -110,7 +109,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         public void refreshList() {
             super.refreshList();
 
-            this.parent.modes.forEach((mode) -> {
+            List.of(SonicDeviceMode.values()).forEach((mode) -> {
                 SonicDeviceModeEntry entry = new SonicDeviceModeEntry(mode);
                 this.addEntry(entry);
 

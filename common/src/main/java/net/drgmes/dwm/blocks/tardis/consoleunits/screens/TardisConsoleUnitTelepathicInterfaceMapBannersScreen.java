@@ -36,6 +36,8 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
 
     @Override
     public void init() {
+        super.init();
+
         int bannersListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
         int bannersListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_HEIGHT - 3;
         int bannersListOffset = this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
@@ -44,7 +46,6 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
         this.addDrawableChild(this.bannersListWidget);
 
-        super.init();
         this.update();
     }
 

@@ -773,32 +773,32 @@ public class TardisStateManager extends PersistentState {
     // Tardis Door Tiles methods //
     // ///////////////////////// //
 
-    public Map<BlockPos, BaseTardisDoorsBlockEntity> getInteriorDoorTiles() {
+    public Map<BlockPos, BaseTardisDoorsBlockEntity> getInteriorDoorsTiles() {
         return this.doorsTiles;
     }
 
-    public void addInteriorDoorTile(BaseTardisDoorsBlockEntity doorsTile) {
+    public void addInteriorDoorsTile(BaseTardisDoorsBlockEntity doorsTile) {
         this.doorsTiles.put(doorsTile.getPos(), doorsTile);
         this.markDirty();
     }
 
-    public void removeInteriorDoorTile(BaseTardisDoorsBlockEntity doorsTile) {
+    public void removeInteriorDoorsTile(BaseTardisDoorsBlockEntity doorsTile) {
         this.doorsTiles.remove(doorsTile.getPos());
         this.markDirty();
     }
 
-    public BaseTardisDoorsBlockEntity getMainInteriorDoorTile() {
+    public BaseTardisDoorsBlockEntity getMainInteriorDoorsTile() {
         int size = this.doorsTiles.size();
         return size > 0 ? this.doorsTiles.values().stream().toList().get(size - 1) : null;
     }
 
     public BlockPos getEntrancePosition() {
-        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
+        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorsTile();
         return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getPos() : this.getConsoleRoom().getEntrancePosition();
     }
 
     public Direction getEntranceFacing() {
-        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorTile();
+        BaseTardisDoorsBlockEntity tardisDoorsBlockEntity = this.getMainInteriorDoorsTile();
         return tardisDoorsBlockEntity != null ? tardisDoorsBlockEntity.getCachedState().get(BaseTardisDoorsBlock.FACING) : Direction.SOUTH;
     }
 

@@ -39,9 +39,9 @@ public interface IBaseScreen {
 
     default void renderElements(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackgroundImage(context);
+        this.renderAdditional(context, mouseX, mouseY, delta);
         this.renderTitleBackground(context);
         this.renderTitle(context);
-        this.renderAdditional(context, mouseX, mouseY, delta);
     }
 
     default void renderElementsAfter(DrawContext context, int mouseX, int mouseY, float delta) {

@@ -19,6 +19,7 @@ import net.drgmes.dwm.items.sonicdevices.SonicScrewdriverItem;
 import net.drgmes.dwm.network.client.*;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -38,6 +39,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -106,6 +108,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
     public TardisConsoleUnitEntry getConsoleUnitType() {
         return ((BaseTardisConsoleUnitBlock<?>) this.getCachedState().getBlock()).consoleUnitType;
+    }
+
+    public Box getRenderBoundingBox() {
+        return WorldHelper.getRenderBoundingBox(this);
     }
 
     public void tick() {

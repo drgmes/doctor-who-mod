@@ -5,6 +5,7 @@ import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.builders.BlockEntityBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.text.Text;
 
 import java.util.function.Supplier;
 
@@ -25,6 +26,10 @@ public class TardisExteriorEntry {
         this.entranceHeight = entranceHeight;
 
         TardisExteriors.TYPES.put(name, this);
+    }
+
+    public Text getTitle() {
+        return Text.translatable("title.dwm.tardis.exterior." + this.name);
     }
 
     public Block getBlock() {

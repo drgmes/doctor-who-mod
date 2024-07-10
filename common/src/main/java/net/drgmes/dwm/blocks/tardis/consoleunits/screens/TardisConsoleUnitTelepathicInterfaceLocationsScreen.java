@@ -57,6 +57,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     @Override
     public void init() {
+        super.init();
+
         int locationsListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
         int locationsListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
         int locationsListOffset = this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
@@ -70,7 +72,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         this.addDrawableChild(this.locationsListWidget);
         this.addDrawableChild(this.search);
 
-        super.init();
         this.update();
     }
 

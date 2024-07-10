@@ -28,7 +28,8 @@ import java.util.function.Function;
 
 public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsoleUnitMonitorScreen {
     private enum EActions {
-        SETTINGS(DWM.TEXTS.MONITOR_ACTION_SETTINGS, true, (screen) -> screen.exteriorType.getBlock(), (screen) -> {
+        EXTERIOR(DWM.TEXTS.MONITOR_ACTION_EXTERIOR, (screen) -> screen.exteriorType.getBlock(), (screen) -> {
+            screen.client.setScreen(new TardisConsoleUnitMonitorExternalShellScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
         WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
@@ -131,12 +132,10 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     }
 
     private void renderData(DrawContext context) {
-        Text exteriorTitle = Text.translatable("title.dwm.tardis.exterior." + this.exteriorType.name);
-
         List<Text> lines = new ArrayList<>();
         lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_ID.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.tardisId)));
         lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_OWNER.copy().append(": ").formatted(Formatting.AQUA)).append(Text.literal(this.owner)));
-        lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_EXTERIOR.copy().append(": ").formatted(Formatting.AQUA)).append(exteriorTitle));
+        lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_EXTERIOR.copy().append(": ").formatted(Formatting.AQUA)).append(this.exteriorType.getTitle()));
 
         float scale = 0.915F;
         int padding = 10;
@@ -166,8 +165,9 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
             context.fillGradient(bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, color, color);
 
             float scale = 1.25F;
-            Vec2f iconOffset = new Vec2f((float) entry.getValue().getWidth() / 2 - 9, (float) entry.getValue().getHeight() / 2 - 9);
             Vector2i iconPos = new Vector2i((int) Math.floor(entry.getValue().getX() / scale), (int) Math.floor(entry.getValue().getY() / scale));
+            Vec2f iconOffset = new Vec2f((float) entry.getValue().getWidth() / 2 - 9, (float) entry.getValue().getHeight() / 2 - 9);
+
             context.getMatrices().push();
             context.getMatrices().scale(scale, scale, 1);
             context.getMatrices().translate(iconOffset.x / scale, iconOffset.y / scale, 0);

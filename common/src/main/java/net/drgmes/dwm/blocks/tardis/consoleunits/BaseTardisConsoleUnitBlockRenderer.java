@@ -14,6 +14,7 @@ import net.drgmes.dwm.enums.TardisConsoleUnitControlValueType;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -231,7 +232,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
                 buffer,
                 TextRenderer.TextLayerType.NORMAL,
                 0,
-                240
+                LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE
             );
         }
     }

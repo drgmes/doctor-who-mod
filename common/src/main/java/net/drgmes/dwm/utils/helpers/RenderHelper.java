@@ -3,6 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -26,7 +27,7 @@ public class RenderHelper {
     }
 
     public static void drawText(OrderedText text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
-        textRenderer.draw(text, x, y, color, shadow, context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.SEE_THROUGH, 0, 240);
+        textRenderer.draw(text, x, y, color, shadow, context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.SEE_THROUGH, 0, LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE);
     }
 
     public static void drawText(Text text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {

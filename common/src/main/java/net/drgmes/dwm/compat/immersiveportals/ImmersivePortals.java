@@ -96,7 +96,7 @@ public class ImmersivePortals {
             if (this.tardis.getWorld() == null) return;
 
             TardisExteriorEntry exteriorType = this.tardis.getExteriorType();
-            BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorTile();
+            BaseTardisDoorsBlockEntity doorTile = this.tardis.getMainInteriorDoorsTile();
 
             double outerWidth = exteriorType == null ? 1 : exteriorType.entranceWidth;
             double outerHeight = exteriorType == null ? 2 : exteriorType.entranceHeight;
