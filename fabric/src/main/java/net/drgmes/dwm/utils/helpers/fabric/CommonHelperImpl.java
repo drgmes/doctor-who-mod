@@ -1,18 +1,13 @@
 package net.drgmes.dwm.utils.helpers.fabric;
 
-import net.fabricmc.fabric.api.dimension.v1.FabricDimensions;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.TeleportTarget;
 
 public class CommonHelperImpl {
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw, float pitch) {
-        return FabricDimensions.teleport(entity, destination, new TeleportTarget(
-            new Vec3d(pos.x, pos.y, pos.z),
-            new Vec3d(0, 0, 0),
-            yaw,
-            pitch
-        ));
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d position, float yaw, float pitch) {
+        TeleportTarget.PostDimensionTransition transition = TeleportTarget.SEND_TRAVEL_THROUGH_PORTAL_PACKET.then(TeleportTarget.ADD_PORTAL_CHUNK_TICKET);
+        return entity.teleportTo(new TeleportTarget(destination, position, entity.getVelocity(), yaw, pitch, transition));
     }
 }

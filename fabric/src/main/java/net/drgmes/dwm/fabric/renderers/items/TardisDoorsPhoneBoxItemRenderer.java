@@ -12,6 +12,6 @@ public class TardisDoorsPhoneBoxItemRenderer extends BaseItemRenderer {
 
     @Override
     public void customRender(MatrixStack matrixStack, VertexConsumer vertexConsumer, Model model, int light, int overlay) {
-        ((TardisDoorsPhoneBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        ((TardisDoorsPhoneBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
     }
 }

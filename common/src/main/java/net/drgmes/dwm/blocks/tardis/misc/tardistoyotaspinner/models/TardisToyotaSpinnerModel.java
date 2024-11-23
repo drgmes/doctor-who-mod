@@ -85,11 +85,11 @@ public class TardisToyotaSpinnerModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        platform.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        rotor_1.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        rotor_2.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        rotor_3.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        platform.render(matrixStack, vertexConsumer, light, overlay, color);
+        rotor_1.render(matrixStack, vertexConsumer, light, overlay, color);
+        rotor_2.render(matrixStack, vertexConsumer, light, overlay, color);
+        rotor_3.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
     public void setupAnim(TardisToyotaSpinnerBlockEntity tile) {

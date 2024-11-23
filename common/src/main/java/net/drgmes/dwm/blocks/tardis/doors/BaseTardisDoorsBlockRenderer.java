@@ -4,6 +4,7 @@ import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -13,6 +14,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.function.Function;
@@ -45,6 +47,11 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
         this(context, modelLayer, modelFactory, modelScale, modelYScale, modelYOffset, modelZOffset, 2.0F, color);
     }
 
+    // @Override
+    public Box getRenderBoundingBox(C blockEntity) {
+        return WorldHelper.getRenderBoundingBox(blockEntity);
+    }
+
     @Override
     public int getRenderDistance() {
         return 256;
@@ -71,8 +78,8 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
         matrixStack.scale(this.modelScale, this.modelScale + this.modelYScale, this.modelScale);
 
         VertexConsumer vertexConsumer = buffer.getBuffer(modelLayer);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
-        model.renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
+        model.renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         if (isOpen && !hasImmersivePortals) this.drawForeground(tile, matrixStack, buffer);
 
         matrixStack.pop();

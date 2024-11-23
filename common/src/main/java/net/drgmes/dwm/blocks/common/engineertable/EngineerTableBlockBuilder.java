@@ -2,18 +2,16 @@ package net.drgmes.dwm.blocks.common.engineertable;
 
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
-import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.sound.BlockSoundGroup;
-
-import java.util.function.Consumer;
 
 public class EngineerTableBlockBuilder extends BlockBuilder {
     public EngineerTableBlockBuilder(String name) {
@@ -30,7 +28,7 @@ public class EngineerTableBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
             .input('#', Blocks.CRAFTING_TABLE)
             .input('0', Blocks.CHEST)
@@ -41,7 +39,7 @@ public class EngineerTableBlockBuilder extends BlockBuilder {
             .pattern("123")
             .pattern("4#4")
             .pattern("404")
-            .criterion("has_planks", RecipeHelper.conditionsFromTag(ItemTags.PLANKS))
+            .criterion("has_planks", RecipeProvider.conditionsFromTag(ItemTags.PLANKS))
             .offerTo(exporter);
     }
 

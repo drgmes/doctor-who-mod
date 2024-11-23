@@ -1,49 +1,39 @@
 package net.drgmes.dwm.network.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemConsoleRoom;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 
-public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessage {
-    private final String tardisId;
-    private final String consoleRoomId;
+public record TardisConsoleUnitMonitorConsoleRoomApplyPacket(
+    String tardisId,
+    String consoleRoomId
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_monitor_console_room_apply");
+    public static final CustomPayload.Id<TardisConsoleUnitMonitorConsoleRoomApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitMonitorConsoleRoomApplyPacket(String tardisId, String consoleRoomId) {
-        this.tardisId = tardisId;
-        this.consoleRoomId = consoleRoomId;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitMonitorConsoleRoomApplyPacket> PACKET_CODEC = PacketCodec.tuple(
+        PacketCodecs.STRING, TardisConsoleUnitMonitorConsoleRoomApplyPacket::tardisId,
+        PacketCodecs.STRING, TardisConsoleUnitMonitorConsoleRoomApplyPacket::consoleRoomId,
+        TardisConsoleUnitMonitorConsoleRoomApplyPacket::new
+    );
 
-    public static TardisConsoleUnitMonitorConsoleRoomApplyPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitMonitorConsoleRoomApplyPacket(buf.readString(), buf.readString());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_MONITOR_CONSOLE_ROOM_APPLY;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeString(this.tardisId);
-        buf.writeString(this.consoleRoomId);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitMonitorConsoleRoomApplyPacket payload, NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        ServerWorld tardisWorld = DimensionHelper.getModWorld(this.tardisId, player.getServer());
+        ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, player.getServer());
         if (tardisWorld == null) {
             player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
             return;
@@ -74,9 +64,14 @@ public class TardisConsoleUnitMonitorConsoleRoomApplyPacket extends BaseC2SMessa
                 return;
             }
 
-            if (!consoleRoomSystem.init(this.consoleRoomId, player)) {
+            if (!consoleRoomSystem.init(payload.consoleRoomId, player)) {
                 player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
             }
         });
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

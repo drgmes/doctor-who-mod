@@ -14,6 +14,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
+import net.minecraft.world.dimension.DimensionType;
+
+import java.util.Optional;
 
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
@@ -23,7 +26,10 @@ public class TardisHelper {
     }
 
     public static boolean isTardisDimension(World world) {
-        return world != null && world.getDimensionKey().equals(ModDimensionTypes.TARDIS);
+        if (world == null) return false;
+
+        Optional<RegistryKey<DimensionType>> dimensionTypeRegistryKey = world.getDimensionEntry().getKey();
+        return dimensionTypeRegistryKey.isPresent() && dimensionTypeRegistryKey.get().equals(ModDimensionTypes.TARDIS);
     }
 
     public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {

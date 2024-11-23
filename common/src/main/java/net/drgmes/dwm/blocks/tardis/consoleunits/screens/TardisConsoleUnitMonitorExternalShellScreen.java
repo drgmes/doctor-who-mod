@@ -8,6 +8,8 @@ import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
 import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorExternalShellApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
@@ -30,6 +32,7 @@ import org.joml.Vector2i;
 
 import java.util.Objects;
 
+@Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConsoleUnitMonitorScreen {
     protected static final int LINE_PADDING = 3;
 

@@ -127,17 +127,17 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, BlockHitResult hit) {
         if (blockState.get(HALF) != DoubleBlockHalf.LOWER) blockPos = blockPos.down();
         BlockPos finalBlockPos = blockPos;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             if (tardisExteriorBlockEntity.getExteriorState() != TardisExteriorState.MATERIALIZED) return ActionResult.PASS;
 
-            ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
-            NbtCompound heldItemTag = heldItem.getOrCreateNbt();
+            ItemStack heldItemStack = player.getStackInHand(Hand.MAIN_HAND);
+            NbtCompound heldItemTag = CommonHelper.getItemStackData(heldItemStack).copyNbt();
 
-            if (tardisExteriorBlockEntity.tardisId == null && !(heldItem.getItem() instanceof TardisKeyItem)) {
+            if (tardisExteriorBlockEntity.tardisId == null && !(heldItemStack.getItem() instanceof TardisKeyItem)) {
                 player.sendMessage(DWM.TEXTS.TARDIS_LOCKED, true);
                 ModSounds.playTardisDoorsKnockSound(world, finalBlockPos);
                 return ActionResult.success(world.isClient);
@@ -150,18 +150,23 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 tardisExteriorBlockEntity.update();
                 if (tardis.getExteriorType() == null) tardis.setExteriorType(this.exteriorType);
 
-                if (heldItem.getItem() instanceof TardisKeyItem) {
+                if (heldItemStack.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {
                         if (tardis.getOwner() != null && !tardis.getOwner().equals(player.getUuid())) return;
                         if (tardis.getOwner() == null) tardis.setOwner(player.getUuid());
-                        heldItemTag.putString("tardisId", tardisId);
+
+                        CommonHelper.updateItemStackData(heldItemStack, (tag) -> {
+                            tag.putString("tardisId", tardisId);
+                        });
                     }
 
                     if (!heldItemTag.getString("tardisId").equalsIgnoreCase(tardisId)) {
                         return;
                     }
 
-                    heldItemTag.putString("tardisPos", tardis.getCurrentExteriorPosition().toShortString());
+                    CommonHelper.updateItemStackData(heldItemStack, (tag) -> {
+                        tag.putString("tardisPos", tardis.getCurrentExteriorPosition().toShortString());
+                    });
 
                     if (tardis.setDoorsLockState(!tardis.isDoorsLocked(), null)) {
                         player.sendMessage(tardis.isDoorsLocked() ? DWM.TEXTS.TARDIS_DOORS_LOCKED : DWM.TEXTS.TARDIS_DOORS_UNLOCKED, true);
@@ -202,7 +207,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
     @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
         if (ModCompats.immersivePortals()) return;
-        if (!entity.canUsePortals()) return;
+        if (!entity.canUsePortals(true)) return;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
             TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {

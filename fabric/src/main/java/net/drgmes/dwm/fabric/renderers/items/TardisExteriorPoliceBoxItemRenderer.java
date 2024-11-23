@@ -12,7 +12,7 @@ public class TardisExteriorPoliceBoxItemRenderer extends BaseItemRenderer {
 
     @Override
     public void customRender(MatrixStack matrixStack, VertexConsumer vertexConsumer, Model model, int light, int overlay) {
-        ((TardisExteriorPoliceBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
-        ((TardisExteriorPoliceBoxModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        ((TardisExteriorPoliceBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
+        ((TardisExteriorPoliceBoxModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
     }
 }

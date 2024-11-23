@@ -174,9 +174,9 @@ public class TardisEngineToyotaModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        covers.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        base.render(matrixStack, vertexConsumer, light, overlay, color);
+        covers.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
     public void setupAnim(BaseTardisEngineBlockEntity tile) {

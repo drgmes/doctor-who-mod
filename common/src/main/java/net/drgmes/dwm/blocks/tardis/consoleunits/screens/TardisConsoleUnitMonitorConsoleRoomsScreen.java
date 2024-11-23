@@ -6,6 +6,8 @@ import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorConsoleRoomApplyPacket;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -17,6 +19,7 @@ import org.joml.Vector2i;
 import java.net.URL;
 import java.util.*;
 
+@Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsoleUnitMonitorScreen {
     private static final Map<String, Identifier> LOADED_CONSOLE_ROOMS_IMAGES = new HashMap<>();
 
@@ -123,7 +126,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         if (selectedConsoleRoom == null) return;
 
         Vector2i titlePos = this.getRenderPos(paddingX, paddingY);
-        RenderHelper.drawText(selectedConsoleRoom.getTitle(), this.textRenderer, context, titlePos.x, titlePos.y, 0xE0E0E0, true);
+        context.drawText(this.textRenderer, selectedConsoleRoom.getTitle(), titlePos.x, titlePos.y, 0xE0E0E0, true);
 
         Vector2i imagePos = this.getRenderPos(paddingX, (int) Math.floor(paddingY + this.getTextRenderer().fontHeight * 1.5F));
         Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + selectedConsoleRoom.name + ".png");

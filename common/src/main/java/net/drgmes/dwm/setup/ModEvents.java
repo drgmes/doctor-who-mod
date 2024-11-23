@@ -57,8 +57,10 @@ public class ModEvents {
             if (entity instanceof ItemEntity itemEntity) {
                 Item item = itemEntity.getStack().getItem();
 
-                if (item instanceof ISonicDeviceItem) itemEntity.setNeverDespawn();
-                else if (item instanceof TardisKeyItem) itemEntity.setNeverDespawn();
+                if (item instanceof ISonicDeviceItem || item instanceof TardisKeyItem) {
+                    itemEntity.setNeverDespawn();
+                    itemEntity.setInvulnerable(true);
+                }
             }
 
             return EventResult.pass();

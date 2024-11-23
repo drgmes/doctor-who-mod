@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
 import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.ISonicDeviceItem;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.PlayerHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -19,77 +20,91 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.function.Consumer;
+
 public class SonicDevice {
     public static boolean checkItemStackIsSonicDevice(ItemStack itemStack) {
         return itemStack.getItem() instanceof ISonicDeviceItem;
     }
 
     public static ActionResult interact(World world, PlayerEntity player, EquipmentSlot slot, boolean isAlternativeAction) {
-        ActionResult wasUsed = ActionResult.PASS;
-        ItemStack sonicDeviceItemStack = player.getEquippedStack(slot);
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return ActionResult.FAIL;
-        if (player.getItemCooldownManager().isCoolingDown(sonicDeviceItemStack.getItem())) return ActionResult.CONSUME;
+        ActionResult result = ActionResult.PASS;
+        ItemStack itemStack = player.getEquippedStack(slot);
+        if (!checkItemStackIsSonicDevice(itemStack)) return ActionResult.FAIL;
+        if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return ActionResult.CONSUME;
 
-        BaseSonicDeviceMode mode = getInteractionMode(sonicDeviceItemStack).getInstance();
-        HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(sonicDeviceItemStack));
+        BaseSonicDeviceMode mode = getInteractionMode(itemStack).getInstance();
+        HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(itemStack));
         if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) return ActionResult.PASS;
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {
-            if (!(wasUsed = mode.interactWithBlock(world, player, slot, (BlockHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
-                if (isAlternativeAction) wasUsed = mode.interactWithBlockAlternative(world, player, slot, (BlockHitResult) hitResult);
-                else wasUsed = mode.interactWithBlockNative(world, player, slot, (BlockHitResult) hitResult);
+            if (!(result = mode.interactWithBlock(world, player, slot, (BlockHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
+                if (isAlternativeAction) result = mode.interactWithBlockAlternative(world, player, slot, (BlockHitResult) hitResult);
+                else result = mode.interactWithBlockNative(world, player, slot, (BlockHitResult) hitResult);
             }
         }
         else if (hitResult.getType() == HitResult.Type.ENTITY) {
-            if (!(wasUsed = mode.interactWithEntity(world, player, slot, (EntityHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
-                if (isAlternativeAction) wasUsed = mode.interactWithEntityAlternative(world, player, slot, (EntityHitResult) hitResult);
-                else wasUsed = mode.interactWithEntityNative(world, player, slot, (EntityHitResult) hitResult);
+            if (!(result = mode.interactWithEntity(world, player, slot, (EntityHitResult) hitResult, isAlternativeAction)).shouldSwingHand()) {
+                if (isAlternativeAction) result = mode.interactWithEntityAlternative(world, player, slot, (EntityHitResult) hitResult);
+                else result = mode.interactWithEntityNative(world, player, slot, (EntityHitResult) hitResult);
             }
         }
 
-        if (wasUsed.shouldSwingHand()) {
+        if (result.shouldSwingHand()) {
             Vec3d pos = hitResult.getPos();
-            player.getItemCooldownManager().set(sonicDeviceItemStack.getItem(), DWM.TIMINGS.SONIC_DEVICE_TIMEOUT);
+            player.getItemCooldownManager().set(itemStack.getItem(), DWM.TIMINGS.SONIC_DEVICE_TIMEOUT);
             mode.generateVibration(world, player, new BlockPos((int) pos.x, (int) pos.y, (int) pos.z));
         }
 
-        return wasUsed;
+        return result;
     }
 
-    public static NbtCompound getData(ItemStack sonicDeviceItemStack) {
-        return sonicDeviceItemStack.getOrCreateSubNbt("sonicDeviceData");
+    public static NbtCompound getData(ItemStack itemStack) {
+        if (!checkItemStackIsSonicDevice(itemStack)) return new NbtCompound();
+        NbtCompound tag = CommonHelper.getItemStackData(itemStack).copyNbt();
+        return tag.contains("sonicDeviceData") ? tag.getCompound("sonicDeviceData") : new NbtCompound();
     }
 
-    public static void setInteractionMode(ItemStack sonicDeviceItemStack, SonicDeviceMode mode) {
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
-        getData(sonicDeviceItemStack).putString("prevMode", getInteractionMode(sonicDeviceItemStack).name());
-        getData(sonicDeviceItemStack).putString("mode", mode.name());
+    public static void updateData(ItemStack itemStack, Consumer<NbtCompound> consumer) {
+        if (!checkItemStackIsSonicDevice(itemStack)) return;
+
+        CommonHelper.updateItemStackData(itemStack, (tag) -> {
+            NbtCompound dataTag = tag.contains("sonicDeviceData") ? tag.getCompound("sonicDeviceData") : new NbtCompound();
+            consumer.accept(dataTag);
+            tag.put("sonicDeviceData", dataTag);
+        });
     }
 
-    public static SonicDeviceMode getInteractionMode(ItemStack sonicDeviceItemStack) {
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return SonicDeviceMode.SCAN;
+    public static void setInteractionMode(ItemStack itemStack, SonicDeviceMode mode) {
+        SonicDevice.updateData(itemStack, (tag) -> {
+            tag.putString("prevMode", getInteractionMode(itemStack).name());
+            tag.putString("mode", mode.name());
+        });
+    }
 
+    public static SonicDeviceMode getInteractionMode(ItemStack itemStack) {
         SonicDeviceMode mode = null;
-        NbtCompound tag = getData(sonicDeviceItemStack);
+        NbtCompound tag = getData(itemStack);
         if (tag.contains("mode")) mode = SonicDeviceMode.valueOf(tag.getString("mode"));
 
         return mode != null ? mode : SonicDeviceMode.SCAN;
     }
 
-    public static void setTardisId(ItemStack sonicDeviceItemStack, World world) {
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
+    public static void setTardisId(ItemStack itemStack, World world) {
         if (!TardisHelper.isTardisDimension(world)) return;
-        getData(sonicDeviceItemStack).putString("tardisId", DimensionHelper.getWorldId(world));
+
+        SonicDevice.updateData(itemStack, (tag) -> {
+            tag.putString("tardisId", DimensionHelper.getWorldId(world));
+        });
     }
 
-    public static String getTardisId(ItemStack sonicDeviceItemStack) {
-        if (!checkItemStackIsSonicDevice(sonicDeviceItemStack)) return "";
-        NbtCompound tag = getData(sonicDeviceItemStack);
+    public static String getTardisId(ItemStack itemStack) {
+        NbtCompound tag = getData(itemStack);
         return !tag.contains("tardisId") ? "" : tag.getString("tardisId");
     }
 
-    public static double getInteractionDistance(ItemStack sonicDeviceItemStack) {
-        NbtCompound tag = getData(sonicDeviceItemStack);
+    public static double getInteractionDistance(ItemStack itemStack) {
+        NbtCompound tag = getData(itemStack);
         return !tag.contains("interactionDistance") ? 100D : tag.getDouble("interactionDistance");
     }
 }

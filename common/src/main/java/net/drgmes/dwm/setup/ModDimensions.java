@@ -3,7 +3,7 @@ package net.drgmes.dwm.setup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 
 public class ModDimensions {
     public static ArrayList<RegistryKey<World>> WORLDS = new ArrayList<>();
-    public static Supplier<Codec<? extends ChunkGenerator>> TARDIS_CHUNK_GENERATOR = Registration.registerChunkGenerator("tardis", () -> TardisChunkGenerator.CODEC);
+    public static Supplier<MapCodec<? extends ChunkGenerator>> TARDIS_CHUNK_GENERATOR = Registration.registerChunkGenerator("tardis", () -> TardisChunkGenerator.CODEC);
 
     public static void init() {
     }

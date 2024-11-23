@@ -3,7 +3,7 @@ package net.drgmes.dwm.utils.helpers;
 import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsAPI;
+import net.drgmes.dwm.compat.dimlib.DimLib;
 import net.drgmes.dwm.network.client.DimensionAddPacket;
 import net.drgmes.dwm.network.client.DimensionRemovePacket;
 import net.drgmes.dwm.setup.ModCompats;
@@ -39,7 +39,7 @@ public class DimensionHelper {
     }
 
     public static RegistryKey<World> getWorldKey(String id) {
-        return getWorldKey(new Identifier(id));
+        return getWorldKey(Identifier.of(id));
     }
 
     public static RegistryKey<World> getWorldKey(World world) {
@@ -70,7 +70,7 @@ public class DimensionHelper {
         WorldGenerationProgressListener chunkListener = server.worldGenerationProgressListenerFactory.create(11);
 
         if (ModCompats.immersivePortalsAPI()) {
-            world = ImmersivePortalsAPI.createWorld(id, server, dimensionFactory);
+            world = DimLib.createWorld(id, server, dimensionFactory);
         }
         else {
             DimensionOptions dimension = dimensionFactory.apply(server);
@@ -112,7 +112,7 @@ public class DimensionHelper {
 
     public static boolean removeWorld(String id, MinecraftServer server) {
         if (ModCompats.immersivePortalsAPI()) {
-            ImmersivePortalsAPI.removeWorld(id, server);
+            DimLib.removeWorld(id, server);
         }
 
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));

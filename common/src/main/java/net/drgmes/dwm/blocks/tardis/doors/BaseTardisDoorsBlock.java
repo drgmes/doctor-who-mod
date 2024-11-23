@@ -129,7 +129,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     }
 
     @Override
-    public void onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos blockPos, BlockState blockState, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
             BlockPos tmpBlockPos;
             BlockState tmpBlockState;
@@ -142,12 +142,12 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
             }
         }
 
-        super.onBreak(world, blockPos, blockState, player);
+        return super.onBreak(world, blockPos, blockState, player);
     }
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, BlockHitResult hit) {
         if (!TardisHelper.isTardisDimension(world)) {
             blockState = blockState.cycle(OPEN);
             world.setBlockState(blockPos, blockState, 10);
@@ -165,14 +165,17 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
         if (world instanceof ServerWorld serverWorld && TardisHelper.isTardisDimension(world)) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 String tardisId = tardis.getId();
-                ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
-                NbtCompound heldItemTag = heldItem.getOrCreateNbt();
+                ItemStack heldItemStack = player.getStackInHand(Hand.MAIN_HAND);
+                NbtCompound heldItemTag = CommonHelper.getItemStackData(heldItemStack).copyNbt();
 
-                if (heldItem.getItem() instanceof TardisKeyItem) {
+                if (heldItemStack.getItem() instanceof TardisKeyItem) {
                     if (!heldItemTag.contains("tardisId")) {
                         if (tardis.getOwner() != null && !tardis.getOwner().equals(player.getUuid())) return;
                         if (tardis.getOwner() == null) tardis.setOwner(player.getUuid());
-                        heldItemTag.putString("tardisId", tardisId);
+
+                        CommonHelper.updateItemStackData(heldItemStack, (tag) -> {
+                            tag.putString("tardisId", tardisId);
+                        });
                     }
 
                     if (!heldItemTag.getString("tardisId").equalsIgnoreCase(tardisId)) {
@@ -212,7 +215,7 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
         if (ModCompats.immersivePortals()) return;
-        if (!entity.canUsePortals()) return;
+        if (!entity.canUsePortals(true)) return;
 
         if (world instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {

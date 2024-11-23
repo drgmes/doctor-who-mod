@@ -292,7 +292,7 @@
   "entity.minecraft.villager.shobogan_engineer": "Engineer",
   "entity.minecraft.villager.dwm.shobogan_engineer": "Engineer",
 
-  "title.dwm.sonic_device.mode": "Mode: %s",
+  "title.dwm.sonic_device.mode": "Sonic screwdriver mode: %s",
   "title.dwm.sonic_device.mode.scan": "Scan",
   "title.dwm.sonic_device.mode.scan.description": "Allows you to get information about a block or entity.",
   "title.dwm.sonic_device.mode.setting": "Setting",

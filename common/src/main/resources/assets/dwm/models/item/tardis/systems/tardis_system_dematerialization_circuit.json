@@ -1,7 +1,7 @@
 {
   "parent": "dwm:item/templates/entity_block_item",
   "model": "dwm:models/item/tardis/systems/tardis_system_dematerialization_circuit.obj",
-  "loader": "forge:obj",
+  "loader": "neoforge:obj",
   "flip_v": true,
   "textures": {
     "texture0": "dwm:item/tardis/systems/tardis_system_dematerialization_circuit"

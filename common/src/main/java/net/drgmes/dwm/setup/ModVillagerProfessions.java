@@ -8,9 +8,11 @@ import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.village.TradedItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ModVillagerProfessions {
     public static final List<VillagerProfessionBuilder> VILLAGER_PROFESSION_BUILDERS = new ArrayList<>();
@@ -24,28 +26,28 @@ public class ModVillagerProfessions {
         (profession) -> {
             TradeRegistry.registerVillagerTrade(
                 profession, 1,
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.TARDIS_KEY_1.getItem()), 1, 10, 1),
-                new SimpleTrade(new ItemStack(ModItems.TITANIUM_INGOT.getItem()), ItemStack.EMPTY, new ItemStack(Items.EMERALD, 2), 16, 2, 1)
+                new SimpleTrade(new TradedItem(Items.EMERALD, 64), Optional.empty(), new ItemStack(ModItems.TARDIS_KEY_1.getItem()), 1, 10, 1),
+                new SimpleTrade(new TradedItem(ModItems.TITANIUM_INGOT.getItem()), Optional.empty(), new ItemStack(Items.EMERALD, 2), 16, 2, 1)
             );
 
             TradeRegistry.registerVillagerTrade(
                 profession, 2,
-                new SimpleTrade(new ItemStack(Items.EMERALD, 12), ItemStack.EMPTY, new ItemStack(ModItems.REPAIR_KIT.getItem()), 1, 2, 1),
-                new SimpleTrade(new ItemStack(Items.AMETHYST_SHARD), ItemStack.EMPTY, new ItemStack(Items.EMERALD, 4), 8, 4, 1)
+                new SimpleTrade(new TradedItem(Items.EMERALD, 12), Optional.empty(), new ItemStack(ModItems.REPAIR_KIT.getItem()), 1, 2, 1),
+                new SimpleTrade(new TradedItem(Items.AMETHYST_SHARD), Optional.empty(), new ItemStack(Items.EMERALD, 4), 8, 4, 1)
             );
 
             TradeRegistry.registerVillagerTrade(
                 profession, 3,
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_11.getItem()), 1, 60, 1),
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_12.getItem()), 1, 60, 1),
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SCREWDRIVER_13.getItem()), 1, 60, 1),
-                new SimpleTrade(new ItemStack(Items.EMERALD, 64), ItemStack.EMPTY, new ItemStack(ModItems.SONIC_SUNGLASSES.getItem()), 1, 60, 1)
+                new SimpleTrade(new TradedItem(Items.EMERALD, 64), Optional.empty(), new ItemStack(ModItems.SONIC_SCREWDRIVER_11.getItem()), 1, 60, 1),
+                new SimpleTrade(new TradedItem(Items.EMERALD, 64), Optional.empty(), new ItemStack(ModItems.SONIC_SCREWDRIVER_12.getItem()), 1, 60, 1),
+                new SimpleTrade(new TradedItem(Items.EMERALD, 64), Optional.empty(), new ItemStack(ModItems.SONIC_SCREWDRIVER_13.getItem()), 1, 60, 1),
+                new SimpleTrade(new TradedItem(Items.EMERALD, 64), Optional.empty(), new ItemStack(ModItems.SONIC_SUNGLASSES.getItem()), 1, 60, 1)
             );
 
             TradeRegistry.registerVillagerTrade(
                 profession, 4,
-                new SimpleTrade(new ItemStack(Items.EMERALD, 6), new ItemStack(Blocks.REDSTONE_BLOCK, 1), new ItemStack(ModBlocks.TARDIS_ROUNDEL.getBlockItem()), 16, 10, 1),
-                new SimpleTrade(new ItemStack(Items.ECHO_SHARD), ItemStack.EMPTY, new ItemStack(Items.EMERALD, 12), 4, 10, 1)
+                new SimpleTrade(new TradedItem(Items.EMERALD, 6), Optional.of(new TradedItem(Blocks.REDSTONE_BLOCK, 1)), new ItemStack(ModBlocks.TARDIS_ROUNDEL.getBlockItem()), 16, 10, 1),
+                new SimpleTrade(new TradedItem(Items.ECHO_SHARD), Optional.empty(), new ItemStack(Items.EMERALD, 12), 4, 10, 1)
             );
         }
     );

@@ -2,9 +2,12 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
 import org.joml.Vector2i;
 
+@Environment(EnvType.CLIENT)
 public abstract class BaseTardisConsoleUnitScreen extends BaseScreen {
     protected final BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity;
 

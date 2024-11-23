@@ -12,6 +12,6 @@ public class TardisDoorsCapsuleItemRenderer extends BaseItemRenderer {
 
     @Override
     public void customRender(MatrixStack matrixStack, VertexConsumer vertexConsumer, Model model, int light, int overlay) {
-        ((TardisDoorsCapsuleModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        ((TardisDoorsCapsuleModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
     }
 }

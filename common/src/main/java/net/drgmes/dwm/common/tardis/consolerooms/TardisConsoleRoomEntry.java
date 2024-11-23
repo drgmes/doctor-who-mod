@@ -102,11 +102,11 @@ public class TardisConsoleRoomEntry {
     }
 
     public StructureTemplate getTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.structure));
+        return world.getStructureTemplateManager().getTemplateOrBlank(Identifier.of(this.structure));
     }
 
     public StructureTemplate getTeleporterRoomTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.teleporterRoom));
+        return world.getStructureTemplateManager().getTemplateOrBlank(Identifier.of(this.teleporterRoom));
     }
 
     public Text getTitle() {
@@ -132,7 +132,7 @@ public class TardisConsoleRoomEntry {
 
     public Block getDecoratorBlock() {
         if (this.decoratorBlock == null) return null;
-        return Registries.BLOCK.get(new Identifier(this.decoratorBlock));
+        return Registries.BLOCK.get(Identifier.of(this.decoratorBlock));
     }
 
     public TardisConsoleRoomEntry setDecoratorBlock(String decoratorBlock) {
@@ -142,7 +142,7 @@ public class TardisConsoleRoomEntry {
 
     public Block getDoorsBlock() {
         if (this.doorsBlock == null) return null;
-        return Registries.BLOCK.get(new Identifier(this.doorsBlock));
+        return Registries.BLOCK.get(Identifier.of(this.doorsBlock));
     }
 
     public TardisConsoleRoomEntry setDoorsBlock(String doorsBlock) {
@@ -322,7 +322,7 @@ public class TardisConsoleRoomEntry {
         for (ItemEntity entity : entities) {
             if (SonicDevice.checkItemStackIsSonicDevice(entity.getStack())) continue;
             if (entity.getStack().getItem() instanceof TardisKeyItem) continue;
-            if (entity.getStack().getItem().getRarity(entity.getStack()) != Rarity.COMMON) continue;
+            if (entity.getStack().getRarity() != Rarity.COMMON) continue;
             entity.kill();
         }
     }

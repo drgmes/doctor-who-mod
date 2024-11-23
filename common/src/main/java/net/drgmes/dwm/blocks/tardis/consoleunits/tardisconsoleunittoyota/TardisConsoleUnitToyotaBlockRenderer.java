@@ -38,7 +38,7 @@ public class TardisConsoleUnitToyotaBlockRenderer extends BaseTardisConsoleUnitB
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, 0.25F, 0);
         this.animate(tile, modelRoot, delta);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         matrixStack.pop();
 
         this.renderScreen(tile, matrixStack, buffer, rotateDegrees);

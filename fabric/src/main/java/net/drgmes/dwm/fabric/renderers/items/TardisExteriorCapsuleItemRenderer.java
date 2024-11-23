@@ -12,7 +12,7 @@ public class TardisExteriorCapsuleItemRenderer extends BaseItemRenderer {
 
     @Override
     public void customRender(MatrixStack matrixStack, VertexConsumer vertexConsumer, Model model, int light, int overlay) {
-        ((TardisExteriorCapsuleModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
-        ((TardisExteriorCapsuleModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        ((TardisExteriorCapsuleModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
+        ((TardisExteriorCapsuleModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
     }
 }

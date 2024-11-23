@@ -19,7 +19,6 @@ import net.drgmes.dwm.items.sonicdevices.SonicScrewdriverItem;
 import net.drgmes.dwm.network.client.*;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
-import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,6 +31,7 @@ import net.minecraft.item.map.MapBannerMarker;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
@@ -39,7 +39,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -69,35 +68,35 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         if (tag.contains("controlsState")) this.controlsStorage.readNbt(tag.getCompound("controlsState"));
-        if (tag.contains("tardisState")) this.tardisStateManager.readNbt(tag.getCompound("tardisState"));
+        if (tag.contains("tardisState")) this.tardisStateManager.readNbt(tag.getCompound("tardisState"), registryLookup);
         if (tag.contains("monitorPage")) this.monitorPage = tag.getInt("monitorPage") % MONITOR_PAGES_LENGTH;
 
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
         if (tag.contains("Items", 9)) {
-            Inventories.readNbt(tag, itemStacks);
+            Inventories.readNbt(tag, itemStacks, registryLookup);
             this.sonicScrewdriverItemStack = itemStacks.get(0);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound tag) {
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         if (!this.inited) this.init();
-        super.writeNbt(tag);
+        super.writeNbt(tag, registryLookup);
 
         tag.put("controlsState", this.controlsStorage.writeNbt(new NbtCompound()));
-        tag.put("tardisState", this.tardisStateManager.writeNbt(new NbtCompound()));
+        tag.put("tardisState", this.tardisStateManager.writeNbt(new NbtCompound(), registryLookup));
         tag.putInt("monitorPage", this.monitorPage % MONITOR_PAGES_LENGTH);
 
-        Inventories.writeNbt(tag, DefaultedList.ofSize(1, this.sonicScrewdriverItemStack), true);
+        Inventories.writeNbt(tag, DefaultedList.ofSize(1, this.sonicScrewdriverItemStack), registryLookup);
     }
 
     @Override
@@ -108,10 +107,6 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
     public TardisConsoleUnitEntry getConsoleUnitType() {
         return ((BaseTardisConsoleUnitBlock<?>) this.getCachedState().getBlock()).consoleUnitType;
-    }
-
-    public Box getRenderBoundingBox() {
-        return WorldHelper.getRenderBoundingBox(this);
     }
 
     public void tick() {
@@ -137,7 +132,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 tardis.addConsoleTile(this);
 
                 this.controlsStorage.applyData(tardis);
-                this.tardisStateManager.readNbt(tardis.writeNbt(new NbtCompound()));
+                this.tardisStateManager.readNbt(tardis.writeNbt(new NbtCompound(), serverWorld.getRegistryManager()), serverWorld.getRegistryManager());
             });
         }
     }
@@ -193,9 +188,9 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     return;
                 }
                 else if (mapData.getBanners().size() == 1 && mapData.getBanners().toArray()[0] instanceof MapBannerMarker banner) {
-                    String color = banner.getColor().getName().toUpperCase().replace("_", " ");
+                    String color = banner.color().getName().toUpperCase().replace("_", " ");
                     player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
-                    blockPos = banner.getPos();
+                    blockPos = banner.pos();
                 }
                 else {
                     player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_COORDS_LOADED, true);
@@ -465,7 +460,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     private void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
-        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardisStateManager.writeNbt(new NbtCompound()))
+        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardisStateManager.writeNbt(new NbtCompound(), player.getRegistryManager()))
             .sendTo(player);
     }
 
@@ -475,7 +470,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     private void sendTelepathicInterfaceMapBannersOpenPacket(ServerPlayerEntity player, MapState mapData) {
-        new TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(this.getPos(), mapData.writeNbt(new NbtCompound()))
+        new TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(this.getPos(), mapData.writeNbt(new NbtCompound(), player.getRegistryManager()))
             .sendTo(player);
     }
 

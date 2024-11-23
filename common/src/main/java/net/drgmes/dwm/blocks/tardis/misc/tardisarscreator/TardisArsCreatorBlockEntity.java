@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 
 public class TardisArsCreatorBlockEntity extends BlockEntity {
@@ -21,21 +22,21 @@ public class TardisArsCreatorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         this.index = tag.getInt("index");
         this.isInitial = tag.getBoolean("isInitial");
     }
 
     @Override
-    protected void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(tag, registryLookup);
 
         tag.putInt("index", this.index);
         tag.putBoolean("isInitial", this.isInitial);

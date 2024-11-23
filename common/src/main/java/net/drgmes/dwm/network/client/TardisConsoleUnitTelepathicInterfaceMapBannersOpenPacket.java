@@ -1,50 +1,46 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceMapBannersScreen;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final NbtCompound tag;
+public record TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(
+    BlockPos blockPos,
+    NbtCompound tag
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_telepathic_interface_map_banners_open");
+    public static final CustomPayload.Id<TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(BlockPos blockPos, NbtCompound tag) {
-        this.blockPos = blockPos;
-        this.tag = tag;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::blockPos,
+        PacketCodecs.NBT_COMPOUND, TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::tag,
+        TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::new
+    );
 
-    public static TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(buf.readBlockPos(), buf.readNbt());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNERS_OPEN;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeNbt(this.tag);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            mc.setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(this.tag)));
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+            mc.setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(payload.tag, mc.world.getRegistryManager())));
         }
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

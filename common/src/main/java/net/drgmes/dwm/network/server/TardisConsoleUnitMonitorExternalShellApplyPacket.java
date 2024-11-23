@@ -1,15 +1,13 @@
 package net.drgmes.dwm.network.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.block.Block;
@@ -19,36 +17,28 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisConsoleUnitMonitorExternalShellApplyPacket extends BaseC2SMessage {
-    private final String tardisId;
-    private final String exteriorTypeId;
+public record TardisConsoleUnitMonitorExternalShellApplyPacket(
+    String tardisId,
+    String exteriorTypeId
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_monitor_external_shell_apply");
+    public static final CustomPayload.Id<TardisConsoleUnitMonitorExternalShellApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitMonitorExternalShellApplyPacket(String tardisId, String exteriorTypeId) {
-        this.tardisId = tardisId;
-        this.exteriorTypeId = exteriorTypeId;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitMonitorExternalShellApplyPacket> PACKET_CODEC = PacketCodec.tuple(
+        PacketCodecs.STRING, TardisConsoleUnitMonitorExternalShellApplyPacket::tardisId,
+        PacketCodecs.STRING, TardisConsoleUnitMonitorExternalShellApplyPacket::exteriorTypeId,
+        TardisConsoleUnitMonitorExternalShellApplyPacket::new
+    );
 
-    public static TardisConsoleUnitMonitorExternalShellApplyPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitMonitorExternalShellApplyPacket(buf.readString(), buf.readString());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_MONITOR_EXTERNAL_SHELL_APPLY;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeString(this.tardisId);
-        buf.writeString(this.exteriorTypeId);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
-        ServerWorld tardisWorld = DimensionHelper.getModWorld(this.tardisId, context.getPlayer().getServer());
+    public static void handle(TardisConsoleUnitMonitorExternalShellApplyPacket payload, NetworkManager.PacketContext context) {
+        ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, context.getPlayer().getServer());
         PlayerEntity player = context.getPlayer();
 
         TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
@@ -58,7 +48,7 @@ public class TardisConsoleUnitMonitorExternalShellApplyPacket extends BaseC2SMes
                 return;
             }
 
-            TardisExteriorEntry exteriorType = TardisExteriors.TYPES.get(this.exteriorTypeId);
+            TardisExteriorEntry exteriorType = TardisExteriors.TYPES.get(payload.exteriorTypeId);
             if (exteriorType == null) {
                 ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
                 return;
@@ -99,5 +89,10 @@ public class TardisConsoleUnitMonitorExternalShellApplyPacket extends BaseC2SMes
             tardisWorld.setBlockState(blockPos, newBlockState, Block.NOTIFY_ALL);
             tardisWorld.setBlockState(blockPos.up(), newBlockState.with(BaseTardisDoorsBlock.HALF, DoubleBlockHalf.UPPER), Block.NOTIFY_ALL);
         });
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

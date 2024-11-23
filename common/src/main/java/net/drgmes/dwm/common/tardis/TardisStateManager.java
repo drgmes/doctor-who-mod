@@ -19,17 +19,20 @@ import net.drgmes.dwm.network.client.TardisConsoleUnitUpdatePacket;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
+import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkTicketType;
@@ -111,12 +114,15 @@ public class TardisStateManager extends PersistentState {
         this.addSystem(new TardisSystemShields(this));
     }
 
+    public static PersistentState.Type<TardisStateManager> getPersistentStateType() {
+        return new PersistentState.Type<>(TardisStateManager::new, TardisStateManager::createFromNbt, DataFixTypes.LEVEL);
+    }
+
     public static Optional<TardisStateManager> get(ServerWorld world) {
         if (!TardisHelper.isTardisDimension(world)) return Optional.empty();
 
         TardisStateManager tardis = world.getPersistentStateManager().getOrCreate(
-            TardisStateManager::createFromNbt,
-            TardisStateManager::new,
+            TardisStateManager.getPersistentStateType(),
             DWM.LOCS.TARDIS.getPath()
         );
 
@@ -124,24 +130,24 @@ public class TardisStateManager extends PersistentState {
         return Optional.ofNullable(tardis);
     }
 
-    public static TardisStateManager createFromNbt(NbtCompound tag) {
+    public static TardisStateManager createFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         TardisStateManager tardisStateManager = new TardisStateManager();
-        tardisStateManager.readNbt(tag);
+        tardisStateManager.readNbt(tag, registryLookup);
         return tardisStateManager;
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
+    public NbtCompound writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         NbtCompound tdTagSystemComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagSystemComponents, this.systemComponents);
+        Inventories.writeNbt(tdTagSystemComponents, this.systemComponents, registryLookup);
         tag.put("tdTagSystemComponents", tdTagSystemComponents);
 
         NbtCompound tdTagBatteryComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagBatteryComponents, this.batteryComponents);
+        Inventories.writeNbt(tdTagBatteryComponents, this.batteryComponents, registryLookup);
         tag.put("tdTagBatteryComponents", tdTagBatteryComponents);
 
         NbtCompound tdTagUpgradeComponents = new NbtCompound();
-        Inventories.writeNbt(tdTagUpgradeComponents, this.upgradeComponents);
+        Inventories.writeNbt(tdTagUpgradeComponents, this.upgradeComponents, registryLookup);
         tag.put("tdTagUpgradeComponents", tdTagUpgradeComponents);
 
         if (this.owner != null) tag.putUuid("owner", this.owner);
@@ -199,15 +205,15 @@ public class TardisStateManager extends PersistentState {
         return tag;
     }
 
-    public void readNbt(NbtCompound tag) {
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         this.systemComponents = DefaultedList.ofSize(this.systemComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents);
+        Inventories.readNbt(tag.getCompound("tdTagSystemComponents"), this.systemComponents, registryLookup);
 
         this.batteryComponents = DefaultedList.ofSize(this.batteryComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagBatteryComponents"), this.batteryComponents);
+        Inventories.readNbt(tag.getCompound("tdTagBatteryComponents"), this.batteryComponents, registryLookup);
 
         this.upgradeComponents = DefaultedList.ofSize(this.upgradeComponents.size(), ItemStack.EMPTY);
-        Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents);
+        Inventories.readNbt(tag.getCompound("tdTagUpgradeComponents"), this.upgradeComponents, registryLookup);
 
         if (tag.contains("owner")) this.owner = tag.getUuid("owner");
         if (tag.contains("exteriorType")) this.exteriorType = TardisExteriors.getExteriorType(tag.getString("exteriorType"));
@@ -321,7 +327,7 @@ public class TardisStateManager extends PersistentState {
         if (!hasBaseAccess && deep) {
             for (ItemStack itemStack : player.getInventory().main) {
                 if (itemStack.getItem() instanceof TardisKeyItem) {
-                    NbtCompound tag = itemStack.getOrCreateNbt();
+                    NbtCompound tag = CommonHelper.getItemStackData(itemStack).copyNbt();
                     if (tag.contains("tardisId") && tag.getString("tardisId").equals(this.getId())) return true;
                 }
             }
@@ -762,8 +768,8 @@ public class TardisStateManager extends PersistentState {
 
             NbtCompound tag = new NbtCompound();
             tag.put("controlsState", tile.controlsStorage.writeNbt(new NbtCompound()));
-            tag.put("tardisState", this.writeNbt(new NbtCompound()));
-            tile.tardisStateManager.readNbt(tag.getCompound("tardisState"));
+            tag.put("tardisState", this.writeNbt(new NbtCompound(), this.world.getRegistryManager()));
+            tile.tardisStateManager.readNbt(tag.getCompound("tardisState"), this.world.getRegistryManager());
 
             new TardisConsoleUnitUpdatePacket(tile.getPos(), tag)
                 .sendToChunkListeners(this.world.getWorldChunk(tile.getPos()));
@@ -941,12 +947,9 @@ public class TardisStateManager extends PersistentState {
 
                 worlds.forEach((world) -> {
                     if (TardisHelper.isTardisDimension(world)) return;
+                    if (!world.getServer().isWorldAllowed(world)) return;
                     if (world.getRegistryKey() == this.world.getRegistryKey()) return;
                     if (ModConfig.COMMON.dimensionsBlacklist.get().contains(world.getRegistryKey().getValue().toString())) return;
-
-                    if (world.getRegistryKey() == World.NETHER) {
-                        if (!world.getServer().isNetherAllowed()) return;
-                    }
 
                     if (world.getRegistryKey() == World.END) {
                         EnderDragonFight enderDragonFight = world.getEnderDragonFight();

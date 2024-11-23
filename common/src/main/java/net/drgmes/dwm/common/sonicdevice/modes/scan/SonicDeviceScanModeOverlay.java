@@ -2,7 +2,6 @@ package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
-import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -34,6 +34,8 @@ public class SonicDeviceScanModeOverlay {
 
     public void render(DrawContext context) {
         MinecraftClient mc = MinecraftClient.getInstance();
+        if (mc.currentScreen != null || mc.options.hudHidden || mc.player == null || mc.player.isSpectator()) return;
+
         MatrixStack matrixStack = context.getMatrices();
         ClientPlayerEntity player = mc.player;
         if (player == null || mc.world == null) return;
@@ -59,20 +61,20 @@ public class SonicDeviceScanModeOverlay {
 
         matrixStack.push();
         matrixStack.scale(modeTextScale, modeTextScale, modeTextScale);
-        RenderHelper.drawText(modeText, mc.textRenderer, context, modePos.x / modeTextScale, modePos.y / modeTextScale, 0xFFFFFF, true);
+        context.drawText(mc.textRenderer, modeText, (int) (modePos.x / modeTextScale), (int) (modePos.y / modeTextScale), 0xFFFFFF, true);
         matrixStack.pop();
 
         NbtCompound tag = SonicDevice.getData(sonicDeviceItemStack);
         if (mc.world.getTime() - tag.getLong("time") > 60) return;
 
         int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);
-        Text title = Text.Serializer.fromJson(tag.getString("title"));
+        Text title = Text.Serialization.fromJson(tag.getString("title"), DynamicRegistryManager.EMPTY);
         List<Text> lines = new ArrayList<>();
         List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
         List<OrderedText> titleLines = Language.getInstance().reorder(mc.textRenderer.getTextHandler().wrapLines(title, maxTextLength, Style.EMPTY));
 
         keys.sort(Comparator.comparing((key) -> key));
-        keys.forEach((key) -> lines.add(Text.Serializer.fromJson(tag.getCompound("linesTag").getString(key))));
+        keys.forEach((key) -> lines.add(Text.Serialization.fromJson(tag.getCompound("linesTag").getString(key), DynamicRegistryManager.EMPTY)));
 
         int titleLineHeight = mc.textRenderer.fontHeight + LINE_MARGIN;
         int lineHeight = (int) Math.floor(mc.textRenderer.fontHeight * LINE_SCALE) + LINE_MARGIN;
@@ -81,22 +83,15 @@ public class SonicDeviceScanModeOverlay {
         Vector2i pos = new Vector2i(screenWidth - maxTextLength - PADDING, screenHeight - height - PADDING / 2 - 1);
         int y = pos.y;
 
-        // TODO
-//        int color = 0x05000000;
-//        int bgPadding = PADDING / 2;
-//        Vector2i bgPos1 = new Vector2i(pos.x - bgPadding, pos.y - bgPadding);
-//        Vector2i bgPos2 = new Vector2i(pos.x + maxTextLength + bgPadding, pos.y + height + bgPadding);
-//        this.fillGradient(matrixStack, bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, color, color);
-
         for (OrderedText titleLine : titleLines) {
-            RenderHelper.drawText(titleLine, mc.textRenderer, context, pos.x, y, 0xFFFFFF, true);
+            context.drawText(mc.textRenderer, titleLine, pos.x, y, 0xFFFFFF, true);
             y += titleLineHeight;
         }
 
         matrixStack.push();
         matrixStack.scale(LINE_SCALE, LINE_SCALE, LINE_SCALE);
         for (Text line : lines) {
-            RenderHelper.drawText(line, mc.textRenderer, context, pos.x / LINE_SCALE, y / LINE_SCALE, 0xFFFFFF, true);
+            context.drawText(mc.textRenderer, line, (int) (pos.x / LINE_SCALE), (int) (y / LINE_SCALE), 0xFFFFFF, true);
             y += lineHeight;
         }
         matrixStack.pop();

@@ -1,9 +1,10 @@
 {
   "required": true,
-  "compatibilityLevel": "JAVA_17",
-  "package": "net.drgmes.dwm.mixin",
   "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_21",
+  "package": "net.drgmes.dwm.mixin",
   "client": [
+    "MixinEntryListWidget",
     "MixinInGameHud",
     "MixinMinecraftClient"
   ],

@@ -1,41 +1,37 @@
 package net.drgmes.dwm.setup;
 
-import dev.architectury.networking.simple.MessageType;
-import dev.architectury.networking.simple.SimpleNetworkManager;
-import net.drgmes.dwm.DWM;
+import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.network.client.*;
 import net.drgmes.dwm.network.server.*;
 
 public class ModNetwork {
-    public static SimpleNetworkManager NETWORK_MANAGER = SimpleNetworkManager.create(DWM.MODID);
+    public static void setup() {
+        Registration.registerPacket(NetworkManager.Side.S2C, ArsCreatorOpenPacket.PACKET_ID, ArsCreatorOpenPacket.PACKET_CODEC, () -> ArsCreatorOpenPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, ArsDestroyerOpenPacket.PACKET_ID, ArsDestroyerOpenPacket.PACKET_CODEC, () -> ArsDestroyerOpenPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, DimensionAddPacket.PACKET_ID, DimensionAddPacket.PACKET_CODEC, () -> DimensionAddPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, DimensionRemovePacket.PACKET_ID, DimensionRemovePacket.PACKET_CODEC, () -> DimensionRemovePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, SonicDeviceUpdatePacket.PACKET_ID, SonicDeviceUpdatePacket.PACKET_CODEC, () -> SonicDeviceUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitControlsStatesUpdatePacket.PACKET_ID, TardisConsoleUnitControlsStatesUpdatePacket.PACKET_CODEC, () -> TardisConsoleUnitControlsStatesUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitMonitorOpenPacket.PACKET_ID, TardisConsoleUnitMonitorOpenPacket.PACKET_CODEC, () -> TardisConsoleUnitMonitorOpenPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitMonitorPageUpdatePacket.PACKET_ID, TardisConsoleUnitMonitorPageUpdatePacket.PACKET_CODEC, () -> TardisConsoleUnitMonitorPageUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitSonicScrewdriverSlotUpdatePacket.PACKET_ID, TardisConsoleUnitSonicScrewdriverSlotUpdatePacket.PACKET_CODEC, () -> TardisConsoleUnitSonicScrewdriverSlotUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisConsoleUnitUpdatePacket.PACKET_ID, TardisConsoleUnitUpdatePacket.PACKET_CODEC, () -> TardisConsoleUnitUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisExteriorUpdatePacket.PACKET_ID, TardisExteriorUpdatePacket.PACKET_CODEC, () -> TardisExteriorUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisRoundelBlockTemplateClearPacket.PACKET_ID, TardisRoundelBlockTemplateClearPacket.PACKET_CODEC, () -> TardisRoundelBlockTemplateClearPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisRoundelBlockTemplateUpdatePacket.PACKET_ID, TardisRoundelBlockTemplateUpdatePacket.PACKET_CODEC, () -> TardisRoundelBlockTemplateUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisRoundelUpdatePacket.PACKET_ID, TardisRoundelUpdatePacket.PACKET_CODEC, () -> TardisRoundelUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisToyotaSpinnerUpdatePacket.PACKET_ID, TardisToyotaSpinnerUpdatePacket.PACKET_CODEC, () -> TardisToyotaSpinnerUpdatePacket::handle);
 
-    public static MessageType ARS_CREATOR_OPEN = Registration.registerS2CMessageType("ars_creator_open", ArsCreatorOpenPacket::create);
-    public static MessageType ARS_DESTROYER_OPEN = Registration.registerS2CMessageType("ars_destroyer_open", ArsDestroyerOpenPacket::create);
-    public static MessageType DIMENSION_ADD = Registration.registerS2CMessageType("dimension_add", DimensionAddPacket::create);
-    public static MessageType DIMENSION_REMOVE = Registration.registerS2CMessageType("dimension_remove", DimensionRemovePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_CONTROLS_STATES_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_controls_states_update", TardisConsoleUnitControlsStatesUpdatePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_OPEN = Registration.registerS2CMessageType("tardis_console_unit_monitor_open", TardisConsoleUnitMonitorOpenPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_PAGE_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_monitor_page_update", TardisConsoleUnitMonitorPageUpdatePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_SONIC_SCREWDRIVER_SLOT_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_sonic_screwdriver_slot_update", TardisConsoleUnitSonicScrewdriverSlotUpdatePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNERS_OPEN = Registration.registerS2CMessageType("tardis_console_unit_telepathic_interface_map_banners_open", TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATIONS_OPEN = Registration.registerS2CMessageType("tardis_console_unit_telepathic_interface_locations_open", TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_UPDATE = Registration.registerS2CMessageType("tardis_console_unit_update", TardisConsoleUnitUpdatePacket::create);
-    public static MessageType TARDIS_EXTERIOR_UPDATE = Registration.registerS2CMessageType("tardis_exterior_update", TardisExteriorUpdatePacket::create);
-    public static MessageType TARDIS_ROUNDEL_BLOCK_TEMPLATE_CLEAR = Registration.registerS2CMessageType("tardis_roundel_block_template_clear", TardisRoundelBlockTemplateClearPacket::create);
-    public static MessageType TARDIS_ROUNDEL_BLOCK_TEMPLATE_UPDATE = Registration.registerS2CMessageType("tardis_roundel_block_template_update", TardisRoundelBlockTemplateUpdatePacket::create);
-    public static MessageType TARDIS_ROUNDEL_UPDATE = Registration.registerS2CMessageType("tardis_roundel_update", TardisRoundelUpdatePacket::create);
-    public static MessageType TARDIS_TOYOTA_SPINNER_UPDATE = Registration.registerS2CMessageType("tardis_toyota_spinner_update", TardisToyotaSpinnerUpdatePacket::create);
-
-    public static MessageType ARS_CREATOR_APPLY = Registration.registerC2SMessageType("ars_creator_apply", ArsCreatorApplyPacket::create);
-    public static MessageType ARS_DESTROYER_APPLY = Registration.registerC2SMessageType("ars_destroyer_apply", ArsDestroyerApplyPacket::create);
-    public static MessageType SONIC_DEVICE_UPDATE = Registration.registerC2SMessageType("sonic_device_update", SonicDeviceUpdatePacket::create);
-    public static MessageType SONIC_DEVICE_USE = Registration.registerC2SMessageType("sonic_device_use", SonicDeviceUsePacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_SOUND = Registration.registerC2SMessageType("tardis_console_unit_sound", TardisConsoleUnitSoundPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_CONSOLE_ROOM_APPLY = Registration.registerC2SMessageType("tardis_console_unit_monitor_console_room_apply", TardisConsoleUnitMonitorConsoleRoomApplyPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_MONITOR_EXTERNAL_SHELL_APPLY = Registration.registerC2SMessageType("tardis_console_unit_monitor_external_shell_apply", TardisConsoleUnitMonitorExternalShellApplyPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATION_APPLY = Registration.registerC2SMessageType("tardis_console_unit_telepathic_interface_location_apply", TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::create);
-    public static MessageType TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNER_APPLY = Registration.registerC2SMessageType("tardis_console_unit_telepathic_interface_map_banner_apply", TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::create);
-
-    public static void init() {
+        Registration.registerPacket(NetworkManager.Side.C2S, ArsCreatorApplyPacket.PACKET_ID, ArsCreatorApplyPacket.PACKET_CODEC, () -> ArsCreatorApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, ArsDestroyerApplyPacket.PACKET_ID, ArsDestroyerApplyPacket.PACKET_CODEC, () -> ArsDestroyerApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, SonicDeviceModeUpdatePacket.PACKET_ID, SonicDeviceModeUpdatePacket.PACKET_CODEC, () -> SonicDeviceModeUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, SonicDeviceUsePacket.PACKET_ID, SonicDeviceUsePacket.PACKET_CODEC, () -> SonicDeviceUsePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitMonitorConsoleRoomApplyPacket.PACKET_ID, TardisConsoleUnitMonitorConsoleRoomApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitMonitorConsoleRoomApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitMonitorExternalShellApplyPacket.PACKET_ID, TardisConsoleUnitMonitorExternalShellApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitMonitorExternalShellApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitSoundPacket.PACKET_ID, TardisConsoleUnitSoundPacket.PACKET_CODEC, () -> TardisConsoleUnitSoundPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::handle);
     }
 }

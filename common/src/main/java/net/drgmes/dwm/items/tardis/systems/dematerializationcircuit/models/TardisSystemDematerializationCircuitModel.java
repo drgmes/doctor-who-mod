@@ -94,10 +94,10 @@ public class TardisSystemDematerializationCircuitModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        caps.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        rods.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        connection_0.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        bb_main.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        caps.render(matrixStack, vertexConsumer, light, overlay, color);
+        rods.render(matrixStack, vertexConsumer, light, overlay, color);
+        connection_0.render(matrixStack, vertexConsumer, light, overlay, color);
+        bb_main.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 }

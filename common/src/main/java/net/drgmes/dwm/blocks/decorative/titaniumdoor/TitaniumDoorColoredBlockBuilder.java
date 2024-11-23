@@ -3,14 +3,12 @@ package net.drgmes.dwm.blocks.decorative.titaniumdoor;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
-import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.book.RecipeCategory;
-
-import java.util.function.Consumer;
 
 public class TitaniumDoorColoredBlockBuilder extends TitaniumDoorBlockBuilder {
     private final Item dyeItem;
@@ -30,13 +28,13 @@ public class TitaniumDoorColoredBlockBuilder extends TitaniumDoorBlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
             .input('#', ModBlocks.TITANIUM_DOOR_BASE.getBlock())
             .input('0', this.dyeItem)
             .pattern("#")
             .pattern("0")
-            .criterion("has_item", RecipeHelper.conditionsFromItem(ModBlocks.TITANIUM_DOOR_BASE.getBlock()))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(ModBlocks.TITANIUM_DOOR_BASE.getBlock()))
             .offerTo(exporter);
     }
 }

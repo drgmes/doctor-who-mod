@@ -1,44 +1,69 @@
 package net.drgmes.dwm.setup;
 
-import net.fabricmc.yarn.constants.MiningLevels;
+import net.drgmes.dwm.DWM;
+import net.minecraft.block.Block;
 import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.sound.SoundEvent;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Util;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ModMaterials {
+    public static class ArmorMaterials {
+        public static final RegistryEntry<net.minecraft.item.ArmorMaterial> TITANIUM = Registration.registerArmorMaterial("titanium", () -> {
+            return new ArmorMaterial(
+                Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                    map.put(ArmorItem.Type.BOOTS, 2);
+                    map.put(ArmorItem.Type.LEGGINGS, 5);
+                    map.put(ArmorItem.Type.CHESTPLATE, 4);
+                    map.put(ArmorItem.Type.HELMET, 1);
+                    map.put(ArmorItem.Type.BODY, 10);
+                }),
+                9,
+                SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE,
+                () -> Ingredient.ofItems(ModItems.TITANIUM_INGOT.getItem()),
+                List.of(new ArmorMaterial.Layer(DWM.getIdentifier("titanium"))),
+                0.0f,
+                0.1f
+            );
+        });
+
+        public static void init() {
+        }
+    }
+
     public enum ToolMaterial implements net.minecraft.item.ToolMaterial {
         TITANIUM(
-            MiningLevels.IRON,
             650,
-            14,
-            6.5f,
+            10,
+            7.5f,
             2.5f,
-            ModItems.TITANIUM_INGOT::getItem
+            ModItems.TITANIUM_INGOT::getItem,
+            BlockTags.INCORRECT_FOR_IRON_TOOL
         );
 
-        private final int miningLevel;
         private final int durability;
         private final int enchantability;
         private final float miningSpeedMultiplier;
         private final float attackDamage;
         private final Supplier<ItemConvertible> repairIngredientSupplier;
+        private final TagKey<Block> inverseTag;
 
-        ToolMaterial(int miningLevel, int durability, int enchantability, float miningSpeedMultiplier, float attackDamage, Supplier<ItemConvertible> repairIngredientSupplier) {
-            this.miningLevel = miningLevel;
+        ToolMaterial(int durability, int enchantability, float miningSpeedMultiplier, float attackDamage, Supplier<ItemConvertible> repairIngredientSupplier, TagKey<Block> inverseTag) {
             this.durability = durability;
             this.enchantability = enchantability;
             this.miningSpeedMultiplier = miningSpeedMultiplier;
             this.attackDamage = attackDamage;
             this.repairIngredientSupplier = repairIngredientSupplier;
-        }
-
-        @Override
-        public int getMiningLevel() {
-            return this.miningLevel;
+            this.inverseTag = inverseTag;
         }
 
         @Override
@@ -65,80 +90,10 @@ public class ModMaterials {
         public Ingredient getRepairIngredient() {
             return Ingredient.ofItems(this.repairIngredientSupplier.get());
         }
-    }
-
-    public enum ArmorMaterial implements net.minecraft.item.ArmorMaterial {
-        TITANIUM(
-            "titanium",
-            27,
-            9,
-            0.0f,
-            0.1f,
-            new int[]{2, 5, 4, 1},
-            SoundEvents.ITEM_ARMOR_EQUIP_NETHERITE,
-            ModItems.TITANIUM_INGOT::getItem
-        );
-
-        private static final int[] BASE_DURABILITY = new int[]{13, 15, 16, 11};
-
-        private final String name;
-        private final int durabilityMultiplier;
-        private final int enchantability;
-        private final float toughness;
-        private final float knockbackResistance;
-        private final int[] protectionAmounts;
-        private final SoundEvent equipSound;
-        private final Supplier<ItemConvertible> repairIngredientSupplier;
-
-        ArmorMaterial(String name, int durabilityMultiplier, int enchantability, float toughness, float knockbackResistance, int[] protectionAmounts, SoundEvent equipSound, Supplier<ItemConvertible> repairIngredientSupplier) {
-            this.name = name;
-            this.durabilityMultiplier = durabilityMultiplier;
-            this.enchantability = enchantability;
-            this.toughness = toughness;
-            this.knockbackResistance = knockbackResistance;
-            this.protectionAmounts = protectionAmounts;
-            this.equipSound = equipSound;
-            this.repairIngredientSupplier = repairIngredientSupplier;
-        }
 
         @Override
-        public String getName() {
-            return this.name;
-        }
-
-        @Override
-        public int getDurability(ArmorItem.Type type) {
-            return BASE_DURABILITY[type.ordinal()] * this.durabilityMultiplier;
-        }
-
-        @Override
-        public int getEnchantability() {
-            return this.enchantability;
-        }
-
-        @Override
-        public float getToughness() {
-            return this.toughness;
-        }
-
-        @Override
-        public float getKnockbackResistance() {
-            return this.knockbackResistance;
-        }
-
-        @Override
-        public int getProtection(ArmorItem.Type type) {
-            return this.protectionAmounts[type.ordinal()];
-        }
-
-        @Override
-        public SoundEvent getEquipSound() {
-            return this.equipSound;
-        }
-
-        @Override
-        public Ingredient getRepairIngredient() {
-            return Ingredient.ofItems(this.repairIngredientSupplier.get());
+        public TagKey<Block> getInverseTag() {
+            return this.inverseTag;
         }
     }
 }

@@ -33,14 +33,14 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
 
     @Override
     @SuppressWarnings("deprecation")
-    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState blockState, World world, BlockPos blockPos, PlayerEntity player, BlockHitResult hit) {
         if (!TardisHelper.isTardisDimension(world)) return ActionResult.PASS;
         if (player.isSpectator()) return ActionResult.PASS;
         if (world.isClient) return ActionResult.SUCCESS;
 
         TardisStateManager.get((ServerWorld) world).ifPresent((tardis) -> {
             if (tardis.isBroken()) {
-                ItemStack heldItem = player.getStackInHand(hand);
+                ItemStack heldItem = player.getStackInHand(Hand.MAIN_HAND);
 
                 if (heldItem.getItem() instanceof RepairKitItem) {
                     tardis.setBrokenState(false);
@@ -49,7 +49,7 @@ public abstract class BaseTardisEngineBlock extends BaseRotatableWaterloggedBloc
 
                     if (!player.isCreative()) {
                         heldItem.decrement(1);
-                        player.setStackInHand(hand, heldItem);
+                        player.setStackInHand(Hand.MAIN_HAND, heldItem);
                     }
 
                     player.sendMessage(DWM.TEXTS.TARDIS_REPAIRED, true);

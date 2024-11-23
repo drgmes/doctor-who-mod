@@ -1,5 +1,7 @@
 package net.drgmes.dwm.utils.base.screens;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -7,6 +9,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import org.joml.Vector2i;
 
+@Environment(EnvType.CLIENT)
 public abstract class BaseScreen extends Screen implements IBaseScreen {
     protected static final int BUTTON_HEIGHT = 20;
 
@@ -65,12 +68,12 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public void renderBackground(DrawContext context) {
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderBackground(context);
+        super.renderBackground(context, mouseX, mouseY, delta);
         this.renderElements(context, mouseX, mouseY, delta);
         super.render(context, mouseX, mouseY, delta);
         this.renderElementsAfter(context, mouseX, mouseY, delta);

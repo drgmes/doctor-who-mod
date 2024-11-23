@@ -39,7 +39,7 @@ public class TardisRoundelBlockRenderer implements BlockEntityRenderer<TardisRou
         matrixStack.translate(0.5, 0.5, 0.5);
         matrixStack.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180));
         matrixStack.translate(0, -1, 0);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         matrixStack.pop();
 
         if (tile.blockTemplate != null && !Objects.equals(tile.blockTemplate.getPath(), "") && tile.getWorld() != null) {

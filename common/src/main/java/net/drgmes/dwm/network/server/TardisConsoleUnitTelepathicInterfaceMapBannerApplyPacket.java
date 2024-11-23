@@ -1,42 +1,38 @@
 package net.drgmes.dwm.network.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.map.MapBannerMarker;
-import net.minecraft.item.map.MapState;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
-public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends BaseC2SMessage {
-    private final NbtCompound tag;
+public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
+    String dimension,
+    DyeColor dyeColor,
+    BlockPos blockPos
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_telepathic_interface_map_banner_apply");
+    public static final CustomPayload.Id<TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(NbtCompound tag) {
-        this.tag = tag;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket> PACKET_CODEC = PacketCodec.tuple(
+        PacketCodecs.STRING, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::dimension,
+        DyeColor.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::dyeColor,
+        BlockPos.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::blockPos,
+        TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::new
+    );
 
-    public static TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(buf.readNbt());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_MAP_BANNER_APPLY;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeNbt(this.tag);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket payload, NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
@@ -45,15 +41,17 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket extends Ba
                 return;
             }
 
-            MapState mapState = MapState.fromNbt(this.tag.getCompound("mapState"));
-            MapBannerMarker mapBannerMarker = MapBannerMarker.fromNbt(tag.getCompound("mapBannerMarker"));
-
-            String color = mapBannerMarker.getColor().getName().toUpperCase().replace("_", " ");
+            String color = payload.dyeColor.getName().toUpperCase().replace("_", " ");
             player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
 
-            tardis.setDestinationDimension(mapState.dimension);
-            tardis.setDestinationPosition(mapBannerMarker.getPos());
+            tardis.setDestinationDimension(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(payload.dimension)));
+            tardis.setDestinationPosition(payload.blockPos);
             tardis.markConsoleTilesUpdated();
         });
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

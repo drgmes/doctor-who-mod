@@ -4,7 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.screens.SonicDeviceInterfaceMainScreen;
-import net.drgmes.dwm.network.server.SonicDeviceUpdatePacket;
+import net.drgmes.dwm.network.server.SonicDeviceModeUpdatePacket;
 import net.drgmes.dwm.setup.ModKeys;
 import net.drgmes.dwm.setup.ModSounds;
 import net.fabricmc.api.EnvType;
@@ -55,7 +55,7 @@ public interface ISonicDeviceItem {
                 if (tag.contains("prevMode")) mode = SonicDeviceMode.valueOf(tag.getString("prevMode"));
 
                 SonicDevice.setInteractionMode(itemStack, mode);
-                new SonicDeviceUpdatePacket(itemStack, slot.getName()).sendToServer();
+                new SonicDeviceModeUpdatePacket(mode.name(), slot.getName()).sendToServer();
                 return;
             }
 

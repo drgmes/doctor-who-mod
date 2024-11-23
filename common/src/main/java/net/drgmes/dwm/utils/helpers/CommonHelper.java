@@ -5,7 +5,11 @@ import net.drgmes.dwm.DWM;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -15,6 +19,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class CommonHelper {
     private static final Map<String, Thread> threads = new HashMap<>();
@@ -27,6 +32,10 @@ public class CommonHelper {
         thread.start();
 
         return thread;
+    }
+
+    public static int getColorWithAlpha(int color, float alpha) {
+        return (color & 0x00FFFFFF) | ((int) (clamp(alpha, 0F, 1F) * 255) << 24);
     }
 
     public static float clamp(float value, float min, float max) {
@@ -80,11 +89,21 @@ public class CommonHelper {
     }
 
     @ExpectPlatform
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw, float pitch) {
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d position, float yaw, float pitch) {
         throw new AssertionError();
     }
 
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d pos, float yaw) {
-        return CommonHelper.teleport(entity, destination, pos, yaw, 0);
+    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d position, float yaw) {
+        return CommonHelper.teleport(entity, destination, position, yaw, 0);
+    }
+
+    public static NbtComponent getItemStackData(ItemStack itemStack) {
+        return itemStack.getOrDefault(DataComponentTypes.CUSTOM_DATA, NbtComponent.DEFAULT);
+    }
+
+    public static void updateItemStackData(ItemStack itemStack, Consumer<NbtCompound> updater) {
+        NbtCompound tag = getItemStackData(itemStack).copyNbt();
+        updater.accept(tag);
+        itemStack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(tag));
     }
 }

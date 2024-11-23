@@ -2,19 +2,21 @@ package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
+import net.drgmes.dwm.network.client.SonicDeviceUpdatePacket;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.JukeboxBlockEntity;
+import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.MusicDiscItem;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
@@ -52,11 +54,8 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
         }
 
         if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
-            ItemStack itemStack = jukeboxBlockEntity.getStack();
-            if (!itemStack.isEmpty()) {
-                MusicDiscItem record = (MusicDiscItem) itemStack.getItem();
-                lines.add(record.getDescription());
-            }
+            JukeboxSong song = jukeboxBlockEntity.getManager().getSong();
+            if (song != null) lines.add(song.description());
         }
 
         if (blockEntity instanceof Inventory inventory) {
@@ -127,18 +126,19 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
     }
 
     private void updateSonicDeviceData(ServerPlayerEntity player, EquipmentSlot slot, Text title, List<Text> lines) {
-        ItemStack sonicDeviceItemStack = player.getEquippedStack(slot);
-        if (!SonicDevice.checkItemStackIsSonicDevice(sonicDeviceItemStack)) return;
+        ItemStack itemStack = player.getEquippedStack(slot);
+        if (!SonicDevice.checkItemStackIsSonicDevice(itemStack)) return;
 
-        NbtCompound tag = SonicDevice.getData(sonicDeviceItemStack);
-        tag.putString("title", Text.Serializer.toJson(title));
-        tag.putLong("time", player.getServerWorld().getTime());
+        SonicDevice.updateData(itemStack, (tag) -> {
+            tag.putString("title", Text.Serialization.toJsonString(title, DynamicRegistryManager.EMPTY));
+            tag.putLong("time", player.getServerWorld().getTime());
 
-        AtomicInteger i = new AtomicInteger();
-        NbtCompound linesTag = new NbtCompound();
-        for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serializer.toJson(line));
-        tag.put("linesTag", linesTag);
+            AtomicInteger i = new AtomicInteger();
+            NbtCompound linesTag = new NbtCompound();
+            for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serialization.toJsonString(line, DynamicRegistryManager.EMPTY));
+            tag.put("linesTag", linesTag);
+        });
 
-        player.equipStack(slot, sonicDeviceItemStack);
+        new SonicDeviceUpdatePacket(itemStack, slot.getName()).sendTo(player);
     }
 }

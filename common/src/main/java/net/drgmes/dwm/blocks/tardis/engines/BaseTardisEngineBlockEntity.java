@@ -3,7 +3,6 @@ package net.drgmes.dwm.blocks.tardis.engines;
 import net.drgmes.dwm.blocks.tardis.engines.screens.handlers.TardisEngineSystemsScreenHandler;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.utils.base.inventory.IInventory;
-import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -12,13 +11,13 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.util.Optional;
 
@@ -33,8 +32,8 @@ public abstract class BaseTardisEngineBlockEntity extends BlockEntity implements
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
@@ -52,9 +51,5 @@ public abstract class BaseTardisEngineBlockEntity extends BlockEntity implements
     @Override
     public ScreenHandler createMenu(int inventoryId, PlayerInventory playerInventory, PlayerEntity player) {
         return new TardisEngineSystemsScreenHandler(inventoryId, playerInventory, this);
-    }
-
-    public Box getRenderBoundingBox() {
-        return WorldHelper.getRenderBoundingBox(this);
     }
 }

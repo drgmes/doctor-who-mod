@@ -33,9 +33,9 @@ public class TardisConsoleControlEntity extends Entity {
     }
 
     @Override
-    public void initDataTracker() {
-        this.dataTracker.startTracking(CONTROL_ROLE, TardisConsoleUnitControlRole.NONE.name());
-        this.dataTracker.startTracking(CONSOLE_UNIT_POS, BlockPos.ORIGIN);
+    public void initDataTracker(DataTracker.Builder builder) {
+        builder.add(CONTROL_ROLE, TardisConsoleUnitControlRole.NONE.name());
+        builder.add(CONSOLE_UNIT_POS, BlockPos.ORIGIN);
     }
 
     @Override

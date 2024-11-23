@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_overworld",
+  "features": "dwm:ore_titanium_small",
+  "step": "underground_ores"
+}

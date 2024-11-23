@@ -31,7 +31,7 @@ public abstract class BaseItemRenderer implements BuiltinItemRendererRegistry.Dy
         matrixStack.push();
         matrixStack.translate(0, 1.5, 0);
         matrixStack.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(180));
-        model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         this.customRender(matrixStack, vertexConsumer, model, light, overlay);
         matrixStack.pop();
     }

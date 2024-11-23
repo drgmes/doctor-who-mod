@@ -292,7 +292,7 @@
   "entity.minecraft.villager.shobogan_engineer": "Інженер",
   "entity.minecraft.villager.dwm.shobogan_engineer": "Інженер",
 
-  "title.dwm.sonic_device.mode": "Режим: %s",
+  "title.dwm.sonic_device.mode": "Режим звукової викрутки: %s",
   "title.dwm.sonic_device.mode.scan": "Сканування",
   "title.dwm.sonic_device.mode.scan.description": "Дозволяє отримати інформацію про блок або сутність.",
   "title.dwm.sonic_device.mode.setting": "Налаштування",

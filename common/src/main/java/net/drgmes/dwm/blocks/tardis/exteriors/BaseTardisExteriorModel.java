@@ -32,21 +32,21 @@ public abstract class BaseTardisExteriorModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        base.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
-    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        door_left.render(matrixStack, vertexConsumer, light, overlay, color);
+        door_right.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
-    public void renderLamp(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        lamp.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void renderLamp(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        lamp.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
-    public void renderBoti(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        boti.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void renderBoti(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        boti.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
     public void setupAnim(BaseTardisExteriorBlockEntity tile) {

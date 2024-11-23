@@ -2,18 +2,19 @@ package net.drgmes.dwm.network.server;
 
 import com.mojang.datafixers.util.Pair;
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.enums.TardisVerticalScanning;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -30,32 +31,20 @@ import net.minecraft.world.gen.structure.Structure;
 
 import java.util.Optional;
 
-public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends BaseC2SMessage {
-    private final Identifier id;
-    private final String type;
+public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
+    String id,
+    String type
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_telepathic_interface_location_apply");
+    public static final CustomPayload.Id<TardisConsoleUnitTelepathicInterfaceLocationApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(Identifier id, String type) {
-        this.id = id;
-        this.type = type;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket> PACKET_CODEC = PacketCodec.tuple(
+        PacketCodecs.STRING, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::id,
+        PacketCodecs.STRING, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::type,
+        TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::new
+    );
 
-    public static TardisConsoleUnitTelepathicInterfaceLocationApplyPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(buf.readIdentifier(), buf.readString());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATION_APPLY;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeIdentifier(this.id);
-        buf.writeString(this.type);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationApplyPacket payload, NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
         TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
@@ -65,19 +54,24 @@ public class TardisConsoleUnitTelepathicInterfaceLocationApplyPacket extends Bas
             }
 
             Text message = null;
-            TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(this.type);
+            TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(payload.type);
 
             if (dataType == TardisTelepathicInterfaceDataType.BIOME) {
-                String msg = findBiome(this.id, tardis) ? "found" : "not_found";
+                String msg = findBiome(Identifier.of(payload.id), tardis) ? "found" : "not_found";
                 message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + msg);
             }
             else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) {
-                String msg = findStructure(this.id, tardis) ? "found" : "not_found";
+                String msg = findStructure(Identifier.of(payload.id), tardis) ? "found" : "not_found";
                 message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + msg);
             }
 
             if (message != null) player.sendMessage(message, true);
         });
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 
     private static boolean findBiome(Identifier id, TardisStateManager tardis) {

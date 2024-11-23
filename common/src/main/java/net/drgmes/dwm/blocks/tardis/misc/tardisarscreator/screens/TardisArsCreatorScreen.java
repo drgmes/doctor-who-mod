@@ -7,6 +7,8 @@ import net.drgmes.dwm.network.server.ArsCreatorApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -20,6 +22,7 @@ import org.joml.Vector2i;
 
 import java.util.*;
 
+@Environment(EnvType.CLIENT)
 public class TardisArsCreatorScreen extends BaseScreen {
     private static final int LINE_PADDING = 3;
 
@@ -82,7 +85,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     @Override
     public void tick() {
-        this.search.tick();
         this.listWidget.setSelected(this.selectedArsStructureEntry);
 
         if (!this.search.getText().equals(lastSearch)) {

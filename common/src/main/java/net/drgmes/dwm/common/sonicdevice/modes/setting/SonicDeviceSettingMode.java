@@ -5,6 +5,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.JukeboxBlockEntity;
 import net.minecraft.block.entity.SculkShriekerBlockEntity;
+import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.CreeperEntity;
@@ -15,8 +16,8 @@ import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.passive.TraderLlamaEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FireballEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
@@ -25,13 +26,11 @@ import net.minecraft.stat.Stats;
 import net.minecraft.state.property.Properties;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 
 import java.lang.reflect.Method;
@@ -88,28 +87,17 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
 
         // Dispenser
         if (block instanceof DispenserBlock dispenserBlock) {
-            if (!world.isClient) dispenserBlock.scheduledTick(blockState, (ServerWorld) world, blockPos, world.random);
+            if (!world.isClient) dispenserBlock.randomDisplayTick(blockState, (ServerWorld) world, blockPos, world.random);
             world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, true), Block.NOTIFY_ALL);
             world.setBlockState(blockPos, blockState.with(DispenserBlock.TRIGGERED, false), Block.NOTIFY_ALL);
             return ActionResult.SUCCESS;
         }
 
-        // NoteBlock
-        if (block instanceof NoteBlock noteBlock) {
-            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), Block.NOTIFY_ALL);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), Block.NOTIFY_ALL);
-            return ActionResult.SUCCESS;
-        }
-
         // Jukebox
         if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
-            ItemStack disk = jukeboxBlockEntity.getStack();
-
-            if (disk != null) {
-                world.syncWorldEvent(null, WorldEvents.JUKEBOX_STARTS_PLAYING, blockPos, Item.getRawId(disk.getItem())); // 1010 event
-                return ActionResult.SUCCESS;
-            }
+            JukeboxSong song = jukeboxBlockEntity.getManager().getSong();
+            if (song != null) jukeboxBlockEntity.getManager().startPlaying(world, world.getRegistryManager().get(RegistryKeys.JUKEBOX_SONG).getEntry(song));
+            if (blockState.get(JukeboxBlock.HAS_RECORD)) return ActionResult.SUCCESS;
         }
 
         // Wooden Blocks
@@ -126,6 +114,7 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
 
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
+        BlockEntity blockEntity = world.getBlockEntity(blockPos);
         Block block = blockState.getBlock();
 
         // Torch
@@ -144,6 +133,14 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
             }
         }
 
+        // Ice
+        if (block instanceof IceBlock) {
+            if (player.isSneaking()) {
+                if (!world.isClient) world.breakBlock(blockPos, true);
+                return ActionResult.SUCCESS;
+            }
+        }
+
         // MobSpawnerBlockEntity
         if (block instanceof SpawnerBlock) {
             if (player.isSneaking()) {
@@ -154,20 +151,10 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
         }
 
         // Jukebox
-        if (block instanceof JukeboxBlock jukeboxBlock) {
-            jukeboxBlock.onUse(blockState, world, blockPos, player, Hand.MAIN_HAND, hitResult);
-            return ActionResult.SUCCESS;
-        }
-
-        // NoteBlock
-        if (block instanceof NoteBlock noteBlock) {
-            blockState = player.isSneaking() ? blockState.cycle(NoteBlock.INSTRUMENT) : blockState.cycle(NoteBlock.NOTE);
-            world.setBlockState(blockPos, blockState, Block.NOTIFY_ALL);
-
-            noteBlock.onSyncedBlockEvent(blockState, world, blockPos, 0, 0);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, true), Block.NOTIFY_ALL);
-            world.setBlockState(blockPos, blockState.with(NoteBlock.POWERED, false), Block.NOTIFY_ALL);
-            return ActionResult.SUCCESS;
+        if (blockEntity instanceof JukeboxBlockEntity jukeboxBlockEntity) {
+            JukeboxSong song = jukeboxBlockEntity.getManager().getSong();
+            if (song != null) jukeboxBlockEntity.dropRecord();
+            if (blockState.get(JukeboxBlock.HAS_RECORD)) return ActionResult.SUCCESS;
         }
 
         return ActionResult.CONSUME;
@@ -223,7 +210,7 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
                 Method method = entity.getClass().getDeclaredMethod("spit", ItemStack.class);
                 method.setAccessible(true);
                 method.invoke(entity, fox.getEquippedStack(EquipmentSlot.MAINHAND));
-                entity.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+                fox.equipStack(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
                 return ActionResult.SUCCESS;
             } catch (Exception ignored) {
             }
@@ -231,12 +218,9 @@ public class SonicDeviceSettingMode extends BaseSonicDeviceMode {
 
         // Fireball
         if (entity instanceof FireballEntity fireball) {
-            Vec3d vec3 = player.getRotationVector();
-            fireball.setVelocity(vec3);
-            fireball.powerX = vec3.x * 0.1D;
-            fireball.powerY = vec3.y * 0.1D;
-            fireball.powerZ = vec3.z * 0.1D;
+            Vec3d vec3 = Vec3d.ZERO.add(player.getRotationVector()).multiply(0.5D);
             fireball.setOwner(player);
+            fireball.setVelocity(vec3);
             return ActionResult.SUCCESS;
         }
 

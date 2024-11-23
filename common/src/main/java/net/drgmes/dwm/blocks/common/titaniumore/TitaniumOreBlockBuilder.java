@@ -10,10 +10,11 @@ import net.minecraft.block.MapColor;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
 
 public class TitaniumOreBlockBuilder extends BlockBuilder {
     public TitaniumOreBlockBuilder(String name) {
-        super(name, () -> new ExperienceDroppingBlock(getBlockSettings()));
+        super(name, () -> new ExperienceDroppingBlock(ConstantIntProvider.create(0), getBlockSettings()));
     }
 
     public static AbstractBlock.Settings getBlockSettings() {

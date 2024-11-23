@@ -9,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -32,24 +33,24 @@ public class TardisRoundelBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         this.uncovered = tag.getBoolean("uncovered");
         this.lightMode = tag.getBoolean("lightMode");
 
-        if (tag.contains("blockTemplate")) this.blockTemplate = new Identifier(tag.getString("blockTemplate"));
+        if (tag.contains("blockTemplate")) this.blockTemplate = Identifier.of(tag.getString("blockTemplate"));
         else this.blockTemplate = null;
     }
 
     @Override
-    protected void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(tag, registryLookup);
 
         tag.putBoolean("uncovered", this.uncovered);
         tag.putBoolean("lightMode", this.lightMode);
@@ -65,7 +66,7 @@ public class TardisRoundelBlockEntity extends BlockEntity {
             .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
 
         if (this.blockTemplate != null) {
-            new TardisRoundelBlockTemplateUpdatePacket(this.getPos(), this.blockTemplate)
+            new TardisRoundelBlockTemplateUpdatePacket(this.getPos(), this.blockTemplate.toString())
                 .sendToChunkListeners(serverWorld.getWorldChunk(this.getPos()));
         }
         else {

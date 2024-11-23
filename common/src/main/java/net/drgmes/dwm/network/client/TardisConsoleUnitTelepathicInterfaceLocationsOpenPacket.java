@@ -1,18 +1,20 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
+import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModDimensions;
-import net.drgmes.dwm.setup.ModNetwork;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -28,53 +30,46 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-public class TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final NbtCompound tag;
+public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
+    BlockPos blockPos,
+    NbtCompound tag
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_telepathic_interface_locations_open");
+    public static final CustomPayload.Id<TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(BlockPos blockPos, NbtCompound tag) {
-        this.blockPos = blockPos;
-        this.tag = tag;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::blockPos,
+        PacketCodecs.NBT_COMPOUND, TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::tag,
+        TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket::new
+    );
 
     public TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(BlockPos blockPos, ServerWorld originWorld, @Nullable ServerWorld destinationWorld) {
         this(blockPos, createLocationsListFromRegistry(originWorld, destinationWorld));
     }
 
-    public static TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(buf.readBlockPos(), buf.readNbt());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_TELEPATHIC_INTERFACE_LOCATIONS_OPEN;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeNbt(this.tag);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
-            List<String> keys = new ArrayList<>(this.tag.getKeys().stream().toList());
+            List<String> keys = new ArrayList<>(payload.tag.getKeys().stream().toList());
 
             keys.sort(Comparator.comparing((key) -> key));
             keys.forEach((key) -> {
                 locations.add(Map.entry(
-                    new Identifier(this.tag.getCompound(key).getString("id")),
-                    TardisTelepathicInterfaceDataType.valueOf(this.tag.getCompound(key).getString("type"))
+                    Identifier.of(payload.tag.getCompound(key).getString("id")),
+                    TardisTelepathicInterfaceDataType.valueOf(payload.tag.getCompound(key).getString("type"))
                 ));
             });
 
             mc.setScreen(new TardisConsoleUnitTelepathicInterfaceLocationsScreen(tardisConsoleUnitBlockEntity, locations));
         }
+    }
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 
     private static NbtCompound createLocationsListFromRegistry(ServerWorld world, @Nullable ServerWorld destinationWorld) {

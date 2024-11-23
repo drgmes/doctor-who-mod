@@ -22,7 +22,7 @@ public class EntityBuilder<C extends Entity> {
     public EntityBuilder(String name, EntityType.EntityFactory<C> factory, SpawnGroup spawnGroup, float width, float height, int maxTrackingRange, int trackingTickInterval) {
         this(name, () -> {
             EntityType.Builder<C> builder = EntityType.Builder.create(factory, spawnGroup);
-            builder.setDimensions(width, height);
+            builder.dimensions(width, height);
             builder.maxTrackingRange(maxTrackingRange);
             builder.trackingTickInterval(trackingTickInterval);
             return builder.build(name);

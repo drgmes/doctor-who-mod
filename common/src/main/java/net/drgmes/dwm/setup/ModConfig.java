@@ -64,7 +64,7 @@ public class ModConfig {
                     tardisRecallOperatorOnly = builder
                         .comment("Allow only operators to recall the TARDIS by key")
                         .translation("config.dwm.option.tardisRecallOperatorOnly.@Tooltip")
-                        .define("tardisRecallOperatorOnly", true);
+                        .define("tardisRecallOperatorOnly", false);
 
                     tardisFlightDistanceRate = builder
                         .comment("Time ratio divider in ticks per distance traveled (aka TARDIS speed)")

@@ -1,41 +1,46 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitMonitorConsoleMainScreen;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class TardisConsoleUnitMonitorOpenPacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final String tardisId;
-    private final String owner;
+public record TardisConsoleUnitMonitorOpenPacket(
+    BlockPos blockPos,
+    String tardisId,
+    String owner,
+    NbtCompound tardisTag,
+    NbtCompound roomsTag
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_monitor_open");
+    public static final CustomPayload.Id<TardisConsoleUnitMonitorOpenPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    private final NbtCompound tardisTag;
-    private final NbtCompound roomsTag;
-
-    public TardisConsoleUnitMonitorOpenPacket(BlockPos blockPos, String tardisId, String owner, NbtCompound tardisTag, NbtCompound roomsTag) {
-        this.blockPos = blockPos;
-        this.tardisId = tardisId;
-        this.owner = owner;
-
-        this.tardisTag = tardisTag;
-        this.roomsTag = roomsTag;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisConsoleUnitMonitorOpenPacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, TardisConsoleUnitMonitorOpenPacket::blockPos,
+        PacketCodecs.STRING, TardisConsoleUnitMonitorOpenPacket::tardisId,
+        PacketCodecs.STRING, TardisConsoleUnitMonitorOpenPacket::owner,
+        PacketCodecs.NBT_COMPOUND, TardisConsoleUnitMonitorOpenPacket::tardisTag,
+        PacketCodecs.NBT_COMPOUND, TardisConsoleUnitMonitorOpenPacket::roomsTag,
+        TardisConsoleUnitMonitorOpenPacket::new
+    );
 
     public TardisConsoleUnitMonitorOpenPacket(BlockPos blockPos, String tardisId, String owner, NbtCompound tardisTag) {
         this(blockPos, tardisId, owner, tardisTag, createRoomsTag(tardisTag.getString("consoleRoom")));
@@ -45,36 +50,21 @@ public class TardisConsoleUnitMonitorOpenPacket extends BaseS2CMessage {
         this(blockPos, tardisId, getOwnerName(player, tardisTag), tardisTag);
     }
 
-    public static TardisConsoleUnitMonitorOpenPacket create(PacketByteBuf buf) {
-        return new TardisConsoleUnitMonitorOpenPacket(buf.readBlockPos(), buf.readString(), buf.readString(), buf.readNbt(), buf.readNbt());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_CONSOLE_UNIT_MONITOR_OPEN;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeString(this.tardisId);
-        buf.writeString(this.owner);
-
-        buf.writeNbt(this.tardisTag);
-        buf.writeNbt(this.roomsTag);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisConsoleUnitMonitorOpenPacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
             NbtCompound tag = new NbtCompound();
-            tag.put("tardisTag", this.tardisTag);
-            tag.put("roomsTag", this.roomsTag);
-            mc.setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, this.tardisId, this.owner, tag));
+            tag.put("tardisTag", payload.tardisTag);
+            tag.put("roomsTag", payload.roomsTag);
+            mc.setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
         }
+    }
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 
     private static String getOwnerName(ServerPlayerEntity player, NbtCompound tardisTag) {

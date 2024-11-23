@@ -1,47 +1,43 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.TardisToyotaSpinnerBlockEntity;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisToyotaSpinnerUpdatePacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final boolean inProgress;
+public record TardisToyotaSpinnerUpdatePacket(
+    BlockPos blockPos,
+    boolean inProgress
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_toyota_spinner_update");
+    public static final CustomPayload.Id<TardisToyotaSpinnerUpdatePacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisToyotaSpinnerUpdatePacket(BlockPos blockPos, boolean inProgress) {
-        this.blockPos = blockPos;
-        this.inProgress = inProgress;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisToyotaSpinnerUpdatePacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, TardisToyotaSpinnerUpdatePacket::blockPos,
+        PacketCodecs.BOOL, TardisToyotaSpinnerUpdatePacket::inProgress,
+        TardisToyotaSpinnerUpdatePacket::new
+    );
 
-    public static TardisToyotaSpinnerUpdatePacket create(PacketByteBuf buf) {
-        return new TardisToyotaSpinnerUpdatePacket(buf.readBlockPos(), buf.readBoolean());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_TOYOTA_SPINNER_UPDATE;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeBoolean(this.inProgress);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisToyotaSpinnerUpdatePacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof TardisToyotaSpinnerBlockEntity tardisToyotaSpinnerBlockEntity) {
-            tardisToyotaSpinnerBlockEntity.inProgress = this.inProgress;
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisToyotaSpinnerBlockEntity tardisToyotaSpinnerBlockEntity) {
+            tardisToyotaSpinnerBlockEntity.inProgress = payload.inProgress;
         }
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

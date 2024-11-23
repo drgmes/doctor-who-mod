@@ -1,45 +1,35 @@
 package net.drgmes.dwm.network.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class ArsDestroyerApplyPacket extends BaseC2SMessage {
-    private final BlockPos blockPos;
-    private final String arsStructureName;
+public record ArsDestroyerApplyPacket(
+    BlockPos blockPos,
+    String arsStructureName
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("ars_destroyer_apply");
+    public static final CustomPayload.Id<ArsDestroyerApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public ArsDestroyerApplyPacket(BlockPos blockPos, String arsStructureName) {
-        this.blockPos = blockPos;
-        this.arsStructureName = arsStructureName;
-    }
+    public static final PacketCodec<PacketByteBuf, ArsDestroyerApplyPacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, ArsDestroyerApplyPacket::blockPos,
+        PacketCodecs.STRING, ArsDestroyerApplyPacket::arsStructureName,
+        ArsDestroyerApplyPacket::new
+    );
 
-    public static ArsDestroyerApplyPacket create(PacketByteBuf buf) {
-        return new ArsDestroyerApplyPacket(buf.readBlockPos(), buf.readString());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.ARS_DESTROYER_APPLY;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeString(this.arsStructureName);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(ArsDestroyerApplyPacket payload, NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
         ServerWorld serverWorld = (ServerWorld) player.getWorld();
@@ -51,10 +41,15 @@ public class ArsDestroyerApplyPacket extends BaseC2SMessage {
                 return;
             }
 
-            ArsStructure arsStructure = ArsStructures.STRUCTURES.get(this.arsStructureName);
-            boolean flag = arsStructure.destroy(player, tardis, this.blockPos);
+            ArsStructure arsStructure = ArsStructures.STRUCTURES.get(payload.arsStructureName);
+            boolean flag = arsStructure.destroy(player, tardis, payload.blockPos);
 
             player.sendMessage(flag ? DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_SUCCESS : DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_FAILED, true);
         });
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

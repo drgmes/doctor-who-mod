@@ -1,9 +1,9 @@
 {
   "required": true,
+  "minVersion": "0.8",
   "compatibilityLevel": "JAVA_17",
   "package": "net.drgmes.dwm.mixin.fabric",
   "refmap": "dwm.refmap.json",
-  "minVersion": "0.8",
   "client": [
   ],
   "mixins": [

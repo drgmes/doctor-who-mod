@@ -1,54 +1,44 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.TardisArsDestroyerBlockEntity;
 import net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer.screens.TardisArsDestroyerScreen;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
-import net.drgmes.dwm.common.tardis.ars.ArsStructures;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class ArsDestroyerOpenPacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final ArsStructure arsStructure;
+public record ArsDestroyerOpenPacket(
+    BlockPos blockPos,
+    ArsStructure arsStructure
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("ars_destroyer_open");
+    public static final CustomPayload.Id<ArsDestroyerOpenPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public ArsDestroyerOpenPacket(BlockPos blockPos, ArsStructure arsStructure) {
-        this.blockPos = blockPos;
-        this.arsStructure = arsStructure;
-    }
+    public static final PacketCodec<PacketByteBuf, ArsDestroyerOpenPacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, ArsDestroyerOpenPacket::blockPos,
+        ArsStructure.PACKET_CODEC, ArsDestroyerOpenPacket::arsStructure,
+        ArsDestroyerOpenPacket::new
+    );
 
-    public ArsDestroyerOpenPacket(BlockPos blockPos, String arsStructureName) {
-        this(blockPos, ArsStructures.STRUCTURES.get(arsStructureName));
-    }
-
-    public static ArsDestroyerOpenPacket create(PacketByteBuf buf) {
-        return new ArsDestroyerOpenPacket(buf.readBlockPos(), ArsStructure.fromPacket(buf));
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.ARS_DESTROYER_OPEN;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        ArsStructure.toPacket(buf, this.arsStructure);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(ArsDestroyerOpenPacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof TardisArsDestroyerBlockEntity) {
-            mc.setScreen(new TardisArsDestroyerScreen(this.blockPos, this.arsStructure));
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisArsDestroyerBlockEntity) {
+            mc.setScreen(new TardisArsDestroyerScreen(payload.blockPos, payload.arsStructure));
         }
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

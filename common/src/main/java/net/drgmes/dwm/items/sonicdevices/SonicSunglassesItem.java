@@ -6,15 +6,13 @@ import net.drgmes.dwm.setup.ModKeys;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -31,11 +29,6 @@ public class SonicSunglassesItem extends Item implements ISonicDeviceItem, Equip
     @Override
     public EquipmentSlot getSlotType() {
         return EquipmentSlot.HEAD;
-    }
-
-    @Override
-    public boolean damage(DamageSource source) {
-        return super.damage(source) && !source.isIn(DamageTypeTags.IS_EXPLOSION);
     }
 
     @Override
@@ -66,8 +59,8 @@ public class SonicSunglassesItem extends Item implements ISonicDeviceItem, Equip
     }
 
     @Override
-    public void appendTooltip(ItemStack itemStack, World world, List<Text> tooltips, TooltipContext context) {
+    public void appendTooltip(ItemStack itemStack, Item.TooltipContext context, List<Text> tooltips, TooltipType type) {
         this.fillTooltip(itemStack, tooltips);
-        super.appendTooltip(itemStack, world, tooltips, context);
+        super.appendTooltip(itemStack, context, tooltips, type);
     }
 }

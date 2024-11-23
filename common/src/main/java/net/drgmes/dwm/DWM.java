@@ -142,20 +142,20 @@ public class DWM {
     }
 
     public static class MODELS {
-        public static final Identifier BUILTIN_ENTITY = new Identifier("builtin/entity");
-        public static final Identifier ITEM_GENERATED = new Identifier("item/generated");
-        public static final Identifier BLOCK_CUBE_ALL = new Identifier("block/cube_all");
-        public static final Identifier BLOCK_CUBE_BOTTOM_TOP = new Identifier("block/cube_bottom_top");
-        public static final Identifier BLOCK_ORIENTABLE = new Identifier("block/orientable");
-        public static final Identifier BLOCK_SLAB = new Identifier("block/slab");
-        public static final Identifier BLOCK_SLAB_TOP = new Identifier("block/slab_top");
-        public static final Identifier BLOCK_STAIRS = new Identifier("block/stairs");
-        public static final Identifier BLOCK_STAIRS_INNER = new Identifier("block/inner_stairs");
-        public static final Identifier BLOCK_STAIRS_OUTER = new Identifier("block/outer_stairs");
-        public static final Identifier BLOCK_WALL_POST = new Identifier("block/template_wall_post");
-        public static final Identifier BLOCK_WALL_SIDE = new Identifier("block/template_wall_side");
-        public static final Identifier BLOCK_WALL_SIDE_TALL = new Identifier("block/template_wall_side_tall");
-        public static final Identifier BLOCK_WALL_INVENTORY = new Identifier("block/wall_inventory");
+        public static final Identifier BUILTIN_ENTITY = Identifier.ofVanilla("builtin/entity");
+        public static final Identifier ITEM_GENERATED = Identifier.ofVanilla("item/generated");
+        public static final Identifier BLOCK_CUBE_ALL = Identifier.ofVanilla("block/cube_all");
+        public static final Identifier BLOCK_CUBE_BOTTOM_TOP = Identifier.ofVanilla("block/cube_bottom_top");
+        public static final Identifier BLOCK_ORIENTABLE = Identifier.ofVanilla("block/orientable");
+        public static final Identifier BLOCK_SLAB = Identifier.ofVanilla("block/slab");
+        public static final Identifier BLOCK_SLAB_TOP = Identifier.ofVanilla("block/slab_top");
+        public static final Identifier BLOCK_STAIRS = Identifier.ofVanilla("block/stairs");
+        public static final Identifier BLOCK_STAIRS_INNER = Identifier.ofVanilla("block/inner_stairs");
+        public static final Identifier BLOCK_STAIRS_OUTER = Identifier.ofVanilla("block/outer_stairs");
+        public static final Identifier BLOCK_WALL_POST = Identifier.ofVanilla("block/template_wall_post");
+        public static final Identifier BLOCK_WALL_SIDE = Identifier.ofVanilla("block/template_wall_side");
+        public static final Identifier BLOCK_WALL_SIDE_TALL = Identifier.ofVanilla("block/template_wall_side_tall");
+        public static final Identifier BLOCK_WALL_INVENTORY = Identifier.ofVanilla("block/wall_inventory");
 
         public static final Identifier BLOCK_INVISIBLE = DWM.getIdentifier("block/templates/invisible");
         public static final Identifier BLOCK_WALL_XY_POST = DWM.getIdentifier("block/templates/template_wall_xy_post");
@@ -197,6 +197,6 @@ public class DWM {
     }
 
     public static Identifier getIdentifier(String path) {
-        return new Identifier(DWM.MODID, path);
+        return Identifier.of(DWM.MODID, path);
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -23,13 +24,13 @@ public class TardisTeleporterBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         if (tag.contains("isLocked")) this.isLocked = tag.getBoolean("isLocked");
         if (tag.contains("destinationBlockPos")) this.destinationBlockPos = BlockPos.fromLong(tag.getLong("destinationBlockPos"));
@@ -37,8 +38,8 @@ public class TardisTeleporterBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(tag, registryLookup);
 
         tag.putBoolean("isLocked", this.isLocked);
         if (this.destinationBlockPos != null) tag.putLong("destinationBlockPos", this.destinationBlockPos.asLong());

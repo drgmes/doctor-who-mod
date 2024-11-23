@@ -5,16 +5,14 @@ import net.drgmes.dwm.datagen.BlockModelDataBuilder;
 import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.base.blocks.BaseRotatableBlock;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
-import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumPanelLampBlockBuilder extends BlockBuilder {
     public TitaniumPanelLampBlockBuilder(String name) {
@@ -41,7 +39,7 @@ public class TitaniumPanelLampBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
             .input('#', ModBlocks.TITANIUM_PANEL.getBlock())
             .input('0', Items.DIAMOND)
@@ -49,7 +47,7 @@ public class TitaniumPanelLampBlockBuilder extends BlockBuilder {
             .pattern("0")
             .pattern("1")
             .pattern("#")
-            .criterion("has_item", RecipeHelper.conditionsFromItem(ModBlocks.TITANIUM_PANEL.getBlock()))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(ModBlocks.TITANIUM_PANEL.getBlock()))
             .offerTo(exporter);
     }
 }

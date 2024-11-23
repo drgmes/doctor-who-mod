@@ -8,15 +8,14 @@ import net.drgmes.dwm.enums.TardisExteriorState;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 
 import java.util.UUID;
 
@@ -37,13 +36,13 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         if (tag.contains("tardisId")) this.tardisId = tag.getString("tardisId");
         if (tag.contains("exteriorState")) this.exteriorState = TardisExteriorState.valueOf(tag.getString("exteriorState"));
@@ -51,17 +50,13 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound tag) {
+    public void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
         if (!this.inited) this.init();
-        super.writeNbt(tag);
+        super.writeNbt(tag, registryLookup);
 
         if (this.tardisId != null) tag.putString("tardisId", this.tardisId);
         tag.putString("exteriorState", this.exteriorState.name());
         tag.putInt("tick", this.tick);
-    }
-
-    public Box getRenderBoundingBox() {
-        return WorldHelper.getRenderBoundingBox(this);
     }
 
     public String getOrCreateTardisId() {

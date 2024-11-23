@@ -5,16 +5,22 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntit
 import net.drgmes.dwm.network.server.TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.map.MapBannerMarker;
 import net.minecraft.item.map.MapState;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
 import org.joml.Vector2i;
 
 import java.util.Collection;
 
+@Environment(EnvType.CLIENT)
 public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTardisConsoleUnitTelepathicInterfaceScreen {
     private final Collection<MapBannerMarker> banners;
+    private final RegistryKey<World> dimension;
 
     private BannersListWidget bannersListWidget;
     private BannersListWidget.BannerEntry selected = null;
@@ -22,6 +28,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     public TardisConsoleUnitTelepathicInterfaceMapBannersScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, MapState mapData) {
         super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_BANNERS, tardisConsoleUnitBlockEntity);
         this.banners = mapData.getBanners();
+        this.dimension = mapData.dimension;
     }
 
     @Override
@@ -59,7 +66,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     @Override
     public void apply() {
         if (this.selected != null) {
-            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(this.selected.banner.getNbt()).sendToServer();
+            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
+                this.dimension.getValue().toString(),
+                this.selected.banner.color(),
+                this.selected.banner.pos()
+            ).sendToServer();
         }
 
         this.close();
@@ -97,7 +108,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
 
             @Override
             public Text getText() {
-                return Text.translatable(CommonHelper.capitaliseAllWords(this.banner.getColor().getName().replace("_", " ")));
+                return Text.translatable(CommonHelper.capitaliseAllWords(this.banner.color().getName().replace("_", " ")));
             }
 
             @Override

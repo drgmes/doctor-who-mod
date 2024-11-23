@@ -2,6 +2,8 @@ package net.drgmes.dwm.utils.base.screens;
 
 import com.google.common.collect.ImmutableList;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
@@ -17,12 +19,13 @@ import org.joml.Vector2i;
 import java.util.Collections;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
     private final Vector2i pos;
     private final int padding;
 
     public BaseListWidget(MinecraftClient mc, int width, int height, int padding, Vector2i pos) {
-        super(mc, width, height, pos.y, pos.y + height, mc.textRenderer.fontHeight + padding * 2);
+        super(mc, width, height, pos.y, mc.textRenderer.fontHeight + padding * 2);
 
         this.pos = pos;
         this.padding = padding;
@@ -34,15 +37,13 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     }
 
     @Override
-    protected int getScrollbarPositionX() {
+    protected int getDefaultScrollbarX() {
         return this.getRowRight() - 8;
     }
 
     public void init() {
         this.refreshList();
-        this.setLeftPos(this.pos.x);
-        this.setRenderHorizontalShadows(false);
-        this.setRenderBackground(false);
+        this.setX(this.pos.x);
     }
 
     public void refreshList() {

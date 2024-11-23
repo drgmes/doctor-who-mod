@@ -3,6 +3,7 @@ package net.drgmes.dwm.blocks.tardis.exteriors;
 import net.drgmes.dwm.enums.TardisExteriorState;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -12,6 +13,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.RotationAxis;
 
 import java.util.function.Function;
@@ -32,6 +34,11 @@ public abstract class BaseTardisExteriorBlockRenderer<C extends BaseTardisExteri
         this.modelScale = modelScale;
         this.modelYScale = modelYScale;
         this.modelYOffset = modelYOffset;
+    }
+
+    // @Override
+    public Box getRenderBoundingBox(C blockEntity) {
+        return WorldHelper.getRenderBoundingBox(blockEntity);
     }
 
     @Override
@@ -63,11 +70,13 @@ public abstract class BaseTardisExteriorBlockRenderer<C extends BaseTardisExteri
         matrixStack.scale(this.modelScale, this.modelScale + this.modelYScale, this.modelScale);
 
         VertexConsumer vertexConsumer = buffer.getBuffer(renderLayer);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, alpha);
-        if (!hasImmersivePortals || !isOpen) model.renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, alpha);
+        int color = CommonHelper.getColorWithAlpha(0x00FFFFFF, alpha);
 
-        model.renderLamp(matrixStack, isLit ? buffer.getBuffer(RenderLayer.getEntityAlpha(this.modelLayer.getId())) : vertexConsumer, light, overlay, 1, 1, 1, alpha);
-        if (isOpen && !hasImmersivePortals) model.renderBoti(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), light, overlay, 1, 1, 1, alpha);
+        model.render(matrixStack, vertexConsumer, light, overlay, color);
+        if (!hasImmersivePortals || !isOpen) model.renderDoors(matrixStack, vertexConsumer, light, overlay, color);
+
+        model.renderLamp(matrixStack, isLit ? buffer.getBuffer(RenderLayer.getEntityAlpha(this.modelLayer.getId())) : vertexConsumer, light, overlay, color);
+        if (isOpen && !hasImmersivePortals) model.renderBoti(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), light, overlay, color);
 
         matrixStack.pop();
     }

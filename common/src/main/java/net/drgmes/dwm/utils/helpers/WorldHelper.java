@@ -35,7 +35,7 @@ public class WorldHelper {
             VoxelShape shape = blockState.getCollisionShape(world, blockPos);
             if (!shape.isEmpty()) return shape.getBoundingBox().offset(blockPos).expand(2);
         } catch (Exception e) {
-            return new Box(blockPos.add(-3, 0, -3), blockPos.add(3, 3, 3));
+            return new Box(blockPos.add(-3, 0, -3).toCenterPos(), blockPos.add(3, 3, 3).toCenterPos());
         }
 
         return INFINITE_EXTENT_AABB;

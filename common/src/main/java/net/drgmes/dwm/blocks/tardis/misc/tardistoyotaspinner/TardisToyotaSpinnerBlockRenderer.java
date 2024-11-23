@@ -1,11 +1,13 @@
 package net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner;
 
 import net.drgmes.dwm.blocks.tardis.misc.tardistoyotaspinner.models.TardisToyotaSpinnerModel;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.RotationAxis;
 
 public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<TardisToyotaSpinnerBlockEntity> {
@@ -13,6 +15,11 @@ public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<Tar
 
     public TardisToyotaSpinnerBlockRenderer(BlockEntityRendererFactory.Context context) {
         this.ctx = context;
+    }
+
+    // @Override
+    public Box getRenderBoundingBox(TardisToyotaSpinnerBlockEntity blockEntity) {
+        return WorldHelper.getRenderBoundingBox(blockEntity);
     }
 
     @Override
@@ -36,7 +43,7 @@ public class TardisToyotaSpinnerBlockRenderer implements BlockEntityRenderer<Tar
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotateDegrees));
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, -1.075F, 0);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         matrixStack.pop();
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 
@@ -26,13 +27,13 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
-    public void readNbt(NbtCompound tag) {
-        super.readNbt(tag);
+    public void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(tag, registryLookup);
 
         if (tag.contains("arsStructureName")) this.arsStructureName = tag.getString("arsStructureName");
         if (tag.contains("tacBlockPos")) this.tacBlockPos = BlockPos.fromLong(tag.getLong("tacBlockPos"));
@@ -43,8 +44,8 @@ public class TardisArsDestroyerBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound tag) {
-        super.writeNbt(tag);
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(tag, registryLookup);
 
         if (this.arsStructureName != null) tag.putString("arsStructureName", this.arsStructureName);
         if (this.tacBlockPos != null) tag.putLong("tacBlockPos", this.tacBlockPos.asLong());

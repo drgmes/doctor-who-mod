@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.tardisconsoleunitimperial.mode
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -534,12 +535,12 @@ public class TardisConsoleUnitImperialModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        controls.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        sonic_screwdriver_slot.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        rotor_glass.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha * 0.15F);
-        rotor_rods.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        base.render(matrixStack, vertexConsumer, light, overlay, color);
+        controls.render(matrixStack, vertexConsumer, light, overlay, color);
+        sonic_screwdriver_slot.render(matrixStack, vertexConsumer, light, overlay, color);
+        rotor_rods.render(matrixStack, vertexConsumer, light, overlay, color);
+        rotor_glass.render(matrixStack, vertexConsumer, light, overlay, CommonHelper.getColorWithAlpha(color, 0.15F));
     }
 
     public void setupAnim(BaseTardisConsoleUnitBlockEntity tile) {

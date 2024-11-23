@@ -18,6 +18,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.world.ServerWorld;
@@ -35,6 +36,21 @@ import java.util.List;
 import java.util.Map;
 
 public class ArsStructure {
+    public static final PacketCodec<PacketByteBuf, ArsStructure> PACKET_CODEC = new PacketCodec<>() {
+        @Override
+        public void encode(PacketByteBuf buf, ArsStructure payload) {
+            buf.writeString(payload.name);
+            buf.writeString(payload.path);
+            buf.writeString(payload.title);
+            buf.writeString(payload.category);
+        }
+
+        @Override
+        public ArsStructure decode(PacketByteBuf buf) {
+            return new ArsStructure(buf.readString(), buf.readString(), buf.readString(), buf.readString());
+        }
+    };
+
     public final String name;
     public final String path;
     public final String title;
@@ -49,23 +65,12 @@ public class ArsStructure {
         this.category = category;
     }
 
-    public static void toPacket(PacketByteBuf buf, ArsStructure arsStructure) {
-        buf.writeString(arsStructure.name);
-        buf.writeString(arsStructure.path);
-        buf.writeString(arsStructure.title);
-        buf.writeString(arsStructure.category);
-    }
-
-    public static ArsStructure fromPacket(PacketByteBuf buf) {
-        return new ArsStructure(buf.readString(), buf.readString(), buf.readString(), buf.readString());
-    }
-
     public Text getTitle() {
         return Text.translatable(this.title);
     }
 
     public StructureTemplate getTemplate(ServerWorld world) {
-        return world.getStructureTemplateManager().getTemplateOrBlank(new Identifier(this.path));
+        return world.getStructureTemplateManager().getTemplateOrBlank(Identifier.of(this.path));
     }
 
     public ArsStructure setReplaceables(Map<String, JsonElement> replaceables) {
@@ -113,7 +118,7 @@ public class ArsStructure {
                                 String blockId = Registries.BLOCK.getId(bs.getBlock()).toString();
 
                                 if (this.replaceables.containsKey(blockId)) {
-                                    Block replacingBlock = Registries.BLOCK.get(new Identifier(this.replaceables.get(blockId).getAsString()));
+                                    Block replacingBlock = Registries.BLOCK.get(Identifier.of(this.replaceables.get(blockId).getAsString()));
 
                                     BlockState replacingBlockState = replacingBlock.getDefaultState();
                                     replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.OPEN);

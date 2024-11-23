@@ -6,6 +6,8 @@ import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.network.server.TardisConsoleUnitTelepathicInterfaceLocationApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.MutableText;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 
+@Environment(EnvType.CLIENT)
 public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTardisConsoleUnitTelepathicInterfaceScreen {
     private final List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations;
     private List<Entry<Identifier, TardisTelepathicInterfaceDataType>> filteredLocations;
@@ -44,7 +47,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     @Override
     public void tick() {
-        this.search.tick();
         this.locationsListWidget.setSelected(this.selected);
 
         if (!this.search.getText().equals(lastSearch)) {
@@ -92,7 +94,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     @Override
     public void apply() {
         if (this.selected != null) {
-            new TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(this.selected.entry.getKey(), this.selected.entry.getValue().name()).sendToServer();
+            new TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(this.selected.entry.getKey().toString(), this.selected.entry.getValue().name()).sendToServer();
         }
 
         super.apply();

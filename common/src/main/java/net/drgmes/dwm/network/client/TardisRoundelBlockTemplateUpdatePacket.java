@@ -1,48 +1,43 @@
 package net.drgmes.dwm.network.client;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseS2CMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class TardisRoundelBlockTemplateUpdatePacket extends BaseS2CMessage {
-    private final BlockPos blockPos;
-    private final Identifier blockTemplate;
+public record TardisRoundelBlockTemplateUpdatePacket(
+    BlockPos blockPos,
+    String blockTemplateId
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("tardis_roundel_block_template_update");
+    public static final CustomPayload.Id<TardisRoundelBlockTemplateUpdatePacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public TardisRoundelBlockTemplateUpdatePacket(BlockPos blockPos, Identifier blockTemplate) {
-        this.blockPos = blockPos;
-        this.blockTemplate = blockTemplate;
-    }
+    public static final PacketCodec<PacketByteBuf, TardisRoundelBlockTemplateUpdatePacket> PACKET_CODEC = PacketCodec.tuple(
+        BlockPos.PACKET_CODEC, TardisRoundelBlockTemplateUpdatePacket::blockPos,
+        PacketCodecs.STRING, TardisRoundelBlockTemplateUpdatePacket::blockTemplateId,
+        TardisRoundelBlockTemplateUpdatePacket::new
+    );
 
-    public static TardisRoundelBlockTemplateUpdatePacket create(PacketByteBuf buf) {
-        return new TardisRoundelBlockTemplateUpdatePacket(buf.readBlockPos(), buf.readIdentifier());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.TARDIS_ROUNDEL_BLOCK_TEMPLATE_UPDATE;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeBlockPos(this.blockPos);
-        buf.writeIdentifier(this.blockTemplate);
-    }
-
-    @Override
     @Environment(EnvType.CLIENT)
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(TardisRoundelBlockTemplateUpdatePacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
 
-        if (mc.world.getBlockEntity(this.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.blockTemplate = this.blockTemplate;
+        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            tardisRoundelBlockEntity.blockTemplate = Identifier.of(payload.blockTemplateId);
         }
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

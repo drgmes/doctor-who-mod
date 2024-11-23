@@ -1,5 +1,6 @@
 package net.drgmes.dwm.utils.base.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -16,6 +17,11 @@ public class BaseRotatableBlock extends HorizontalFacingBlock {
     public BaseRotatableBlock(AbstractBlock.Settings settings) {
         super(settings);
         this.setDefaultState(this.getDefaultBlockState());
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return null;
     }
 
     @Override

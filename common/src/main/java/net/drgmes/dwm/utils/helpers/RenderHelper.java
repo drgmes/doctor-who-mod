@@ -3,7 +3,6 @@ package net.drgmes.dwm.utils.helpers;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
@@ -26,17 +25,9 @@ public class RenderHelper {
         return (mouseX >= pos.x && mouseX <= x) && (mouseY >= pos.y && mouseY <= y);
     }
 
-    public static void drawText(OrderedText text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
-        textRenderer.draw(text, x, y, color, shadow, context.getMatrices().peek().getPositionMatrix(), context.getVertexConsumers(), TextRenderer.TextLayerType.SEE_THROUGH, 0, LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE);
-    }
-
-    public static void drawText(Text text, TextRenderer textRenderer, DrawContext context, float x, float y, int color, boolean shadow) {
-        drawText(text.asOrderedText(), textRenderer, context, x, y, color, shadow);
-    }
-
     public static void drawTextClipped(Text text, TextRenderer textRenderer, DrawContext context, Vector2i pos, int maxTextLength, int color) {
         List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
-        drawText(lines.get(0), textRenderer, context, pos.x, pos.y, color, true);
+        context.drawText(textRenderer, lines.get(0), pos.x, pos.y, color, true);
     }
 
     public static Vector2i drawTextMultiline(Text text, TextRenderer textRenderer, DrawContext context, Vector2i pos, int lineHeight, int maxTextLength, int color) {
@@ -44,7 +35,7 @@ public class RenderHelper {
 
         int offsetY = 0;
         for (OrderedText line : lines) {
-            drawText(line, textRenderer, context, pos.x, pos.y + offsetY, color, true);
+            context.drawText(textRenderer, line, pos.x, pos.y + offsetY, color, true);
             offsetY += lineHeight;
         }
 
@@ -53,9 +44,9 @@ public class RenderHelper {
 
     public static void drawRectangle(MatrixStack matrixStack, VertexConsumer vertexConsumer, float x1, float y1, float x2, float y2, int color) {
         Matrix4f matrix = matrixStack.peek().getPositionMatrix();
-        vertexConsumer.vertex(matrix, x1, y1, 0).color(color).next();
-        vertexConsumer.vertex(matrix, x1, y2, 0).color(color).next();
-        vertexConsumer.vertex(matrix, x2, y2, 0).color(color).next();
-        vertexConsumer.vertex(matrix, x2, y1, 0).color(color).next();
+        vertexConsumer.vertex(matrix, x1, y1, 0).color(color);
+        vertexConsumer.vertex(matrix, x1, y2, 0).color(color);
+        vertexConsumer.vertex(matrix, x2, y2, 0).color(color);
+        vertexConsumer.vertex(matrix, x2, y1, 0).color(color);
     }
 }

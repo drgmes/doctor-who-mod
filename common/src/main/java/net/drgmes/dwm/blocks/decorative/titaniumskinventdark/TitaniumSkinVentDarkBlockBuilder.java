@@ -5,13 +5,13 @@ import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.utils.builders.BlockBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumSkinVentDarkBlockBuilder extends BlockBuilder {
     public TitaniumSkinVentDarkBlockBuilder(String name) {
@@ -24,7 +24,7 @@ public class TitaniumSkinVentDarkBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock(), 4)
             .input('#', ModItems.TITANIUM_PLATE.getItem())
             .input('0', ModItems.TITANIUM_INGOT.getItem())
@@ -32,8 +32,8 @@ public class TitaniumSkinVentDarkBlockBuilder extends BlockBuilder {
             .pattern("###")
             .pattern("010")
             .pattern("###")
-            .criterion("has_titanium_panel", RecipeHelper.conditionsFromItem(ModItems.TITANIUM_PLATE.getItem()))
-            .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), Items.COAL.toString()));
+            .criterion("has_titanium_panel", RecipeProvider.conditionsFromItem(ModItems.TITANIUM_PLATE.getItem()))
+            .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), Registries.ITEM.getId(Items.COAL).getPath()));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock(), 4)
             .input('#', ModBlocks.TITANIUM_SKIN_VENT.getBlock())
@@ -41,7 +41,7 @@ public class TitaniumSkinVentDarkBlockBuilder extends BlockBuilder {
             .pattern(" # ")
             .pattern("#0#")
             .pattern(" # ")
-            .criterion("has_titanium_skin_vent", RecipeHelper.conditionsFromItem(ModBlocks.TITANIUM_SKIN_VENT.getBlock()))
+            .criterion("has_titanium_skin_vent", RecipeProvider.conditionsFromItem(ModBlocks.TITANIUM_SKIN_VENT.getBlock()))
             .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), ModBlocks.TITANIUM_SKIN_VENT.getName()));
     }
 }

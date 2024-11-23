@@ -6,18 +6,21 @@ import net.drgmes.dwm.setup.ModItems;
 import net.drgmes.dwm.setup.ModMaterials;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumAxeItemBuilder extends ItemBuilder {
     public TitaniumAxeItemBuilder(String name) {
-        super(name, () -> new AxeItem(ModMaterials.ToolMaterial.TITANIUM, 6, -3.1F, getItemSettings()));
+        super(name, () -> new AxeItem(
+            ModMaterials.ToolMaterial.TITANIUM,
+            getItemSettings().attributeModifiers(AxeItem.createAttributeModifiers(ModMaterials.ToolMaterial.TITANIUM, 6.0F, -3.1F))
+        ));
     }
 
     @Override
@@ -31,14 +34,19 @@ public class TitaniumAxeItemBuilder extends ItemBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.TOOLS, this.getItem())
             .input('#', ModItems.TITANIUM_INGOT.getItem())
             .input('0', Items.STICK)
             .pattern("##")
             .pattern("#0")
             .pattern(" 0")
-            .criterion("has_titanium_ingot", RecipeHelper.conditionsFromItem(ModItems.TITANIUM_INGOT.getItem()))
+            .criterion("has_titanium_ingot", RecipeProvider.conditionsFromItem(ModItems.TITANIUM_INGOT.getItem()))
             .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), ModItems.TITANIUM_INGOT.getName()));
+    }
+
+    @Override
+    public void registerTags() {
+        this.tags.add(ItemTags.AXES);
     }
 }

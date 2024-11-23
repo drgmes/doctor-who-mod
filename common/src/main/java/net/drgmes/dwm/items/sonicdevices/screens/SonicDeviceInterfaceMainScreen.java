@@ -3,9 +3,11 @@ package net.drgmes.dwm.items.sonicdevices.screens;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.enums.SonicDeviceMode;
-import net.drgmes.dwm.network.server.SonicDeviceUpdatePacket;
+import net.drgmes.dwm.network.server.SonicDeviceModeUpdatePacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
@@ -15,6 +17,7 @@ import org.joml.Vector2i;
 
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScreen {
     private SonicDeviceModesListWidget modesListWidget;
     private SonicDeviceModesListWidget.SonicDeviceModeEntry selected = null;
@@ -94,7 +97,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
 
         this.mode = this.selected.mode;
         SonicDevice.setInteractionMode(this.sonicDeviceItemStack, this.selected.mode);
-        new SonicDeviceUpdatePacket(this.sonicDeviceItemStack, this.slot).sendToServer();
+        new SonicDeviceModeUpdatePacket(this.selected.mode.name(), this.slot).sendToServer();
     }
 
     private static class SonicDeviceModesListWidget extends BaseListWidget {

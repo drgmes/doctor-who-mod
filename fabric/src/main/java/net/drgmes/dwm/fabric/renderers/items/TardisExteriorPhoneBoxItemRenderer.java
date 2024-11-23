@@ -12,7 +12,7 @@ public class TardisExteriorPhoneBoxItemRenderer extends BaseItemRenderer {
 
     @Override
     public void customRender(MatrixStack matrixStack, VertexConsumer vertexConsumer, Model model, int light, int overlay) {
-        ((TardisExteriorPhoneBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
-        ((TardisExteriorPhoneBoxModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 1, 1, 1, 1);
+        ((TardisExteriorPhoneBoxModel) model).renderDoors(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
+        ((TardisExteriorPhoneBoxModel) model).renderLamp(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
     }
 }

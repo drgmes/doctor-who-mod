@@ -36,9 +36,9 @@ public class ModItems {
 
     // Tools
     public static final ItemBuilder TITANIUM_SWORD = new TitaniumSwordItemBuilder("titanium_sword");
-    public static final ItemBuilder TITANIUM_AXE = new TitaniumAxeItemBuilder("titanium_axe");
     public static final ItemBuilder TITANIUM_SHOVEL = new TitaniumShovelItemBuilder("titanium_shovel");
     public static final ItemBuilder TITANIUM_PICKAXE = new TitaniumPickaxeItemBuilder("titanium_pickaxe");
+    public static final ItemBuilder TITANIUM_AXE = new TitaniumAxeItemBuilder("titanium_axe");
     public static final ItemBuilder TITANIUM_HOE = new TitaniumHoeItemBuilder("titanium_hoe");
 
     // Tardis Misc

@@ -1,6 +1,6 @@
 package net.drgmes.dwm.world.generator;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.drgmes.dwm.setup.ModBiomes;
 import net.minecraft.block.BlockState;
@@ -26,10 +26,9 @@ import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
 public class TardisChunkGenerator extends ChunkGenerator {
-    public static final Codec<TardisChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> (
+    public static final MapCodec<TardisChunkGenerator> CODEC = RecordCodecBuilder.mapCodec((instance) -> (
         instance
             .group(RegistryOps.getEntryCodec(ModBiomes.TARDIS_KEY))
             .apply(instance, instance.stable(TardisChunkGenerator::new))
@@ -44,7 +43,7 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    protected Codec<? extends ChunkGenerator> getCodec() {
+    protected MapCodec<? extends ChunkGenerator> getCodec() {
         return CODEC;
     }
 
@@ -79,7 +78,7 @@ public class TardisChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
+    public CompletableFuture<Chunk> populateNoise(Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk) {
         return CompletableFuture.completedFuture(chunk);
     }
 

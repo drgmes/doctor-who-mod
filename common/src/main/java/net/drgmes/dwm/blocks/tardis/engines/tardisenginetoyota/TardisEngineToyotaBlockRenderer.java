@@ -31,7 +31,7 @@ public class TardisEngineToyotaBlockRenderer extends BaseTardisEngineBlockRender
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rotateDegrees));
         matrixStack.scale(scale, scale, scale);
         matrixStack.translate(0, -1.5F, 0);
-        model.render(matrixStack, vertexConsumer, light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+        model.render(matrixStack, vertexConsumer, light, overlay, 0xFFFFFFFF);
         matrixStack.pop();
     }
 }

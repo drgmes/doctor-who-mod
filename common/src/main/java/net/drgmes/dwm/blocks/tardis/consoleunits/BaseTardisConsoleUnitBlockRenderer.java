@@ -12,6 +12,7 @@ import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlValueType;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -21,6 +22,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 
 public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisConsoleUnitBlockEntity> implements BlockEntityRenderer<C> {
     protected final BlockEntityRendererFactory.Context ctx;
@@ -32,6 +34,11 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
     public BaseTardisConsoleUnitBlockRenderer(BlockEntityRendererFactory.Context context, TardisConsoleUnitEntry consoleType) {
         this.ctx = context;
         this.consoleType = consoleType;
+    }
+
+    // @Override
+    public Box getRenderBoundingBox(C blockEntity) {
+        return WorldHelper.getRenderBoundingBox(blockEntity);
     }
 
     @Override

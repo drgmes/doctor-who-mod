@@ -1,48 +1,43 @@
 package net.drgmes.dwm.network.server;
 
 import dev.architectury.networking.NetworkManager;
-import dev.architectury.networking.simple.BaseC2SMessage;
-import dev.architectury.networking.simple.MessageType;
+import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.items.sonicdevices.ISonicDeviceItem;
-import net.drgmes.dwm.setup.ModNetwork;
+import net.drgmes.dwm.network.IPacket;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.codec.PacketCodecs;
+import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.util.Identifier;
 
-public class SonicDeviceUsePacket extends BaseC2SMessage {
-    private final ItemStack itemStack;
-    private final String slot;
-    private final boolean isAlternativeAction;
+public record SonicDeviceUsePacket(
+    ItemStack itemStack,
+    String slot,
+    boolean isAlternativeAction
+) implements IPacket {
+    public static final Identifier ID = DWM.getIdentifier("sonic_device_use");
+    public static final CustomPayload.Id<SonicDeviceUsePacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
-    public SonicDeviceUsePacket(ItemStack itemStack, String slot, boolean isAlternativeAction) {
-        this.itemStack = itemStack;
-        this.slot = slot;
-        this.isAlternativeAction = isAlternativeAction;
-    }
+    public static final PacketCodec<RegistryByteBuf, SonicDeviceUsePacket> PACKET_CODEC = PacketCodec.tuple(
+        ItemStack.OPTIONAL_PACKET_CODEC, SonicDeviceUsePacket::itemStack,
+        PacketCodecs.STRING, SonicDeviceUsePacket::slot,
+        PacketCodecs.BOOL, SonicDeviceUsePacket::isAlternativeAction,
+        SonicDeviceUsePacket::new
+    );
 
-    public static SonicDeviceUsePacket create(PacketByteBuf buf) {
-        return new SonicDeviceUsePacket(buf.readItemStack(), buf.readString(), buf.readBoolean());
-    }
-
-    @Override
-    public MessageType getType() {
-        return ModNetwork.SONIC_DEVICE_USE;
-    }
-
-    @Override
-    public void write(PacketByteBuf buf) {
-        buf.writeItemStack(this.itemStack);
-        buf.writeString(this.slot);
-        buf.writeBoolean(this.isAlternativeAction);
-    }
-
-    @Override
-    public void handle(NetworkManager.PacketContext context) {
+    public static void handle(SonicDeviceUsePacket payload, NetworkManager.PacketContext context) {
         PlayerEntity player = context.getPlayer();
 
-        if (this.itemStack.getItem() instanceof ISonicDeviceItem sonicDeviceItem) {
-            sonicDeviceItem.useSonicDevice(player.getWorld(), player, EquipmentSlot.byName(this.slot), this.isAlternativeAction);
+        if (payload.itemStack.getItem() instanceof ISonicDeviceItem sonicDeviceItem) {
+            sonicDeviceItem.useSonicDevice(player.getWorld(), player, EquipmentSlot.byName(payload.slot), payload.isAlternativeAction);
         }
+    }
+
+    @Override
+    public CustomPayload.Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
     }
 }

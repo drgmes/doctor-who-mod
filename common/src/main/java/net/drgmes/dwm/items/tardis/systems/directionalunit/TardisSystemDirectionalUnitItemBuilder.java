@@ -2,13 +2,11 @@ package net.drgmes.dwm.items.tardis.systems.directionalunit;
 
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItemBuilder;
-import net.drgmes.dwm.utils.helpers.RecipeHelper;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
-
-import java.util.function.Consumer;
 
 public class TardisSystemDirectionalUnitItemBuilder extends TardisSystemItemBuilder {
     public TardisSystemDirectionalUnitItemBuilder(String name) {
@@ -16,7 +14,7 @@ public class TardisSystemDirectionalUnitItemBuilder extends TardisSystemItemBuil
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         ShapedRecipeJsonBuilder.create(RecipeCategory.MISC, this.getItem())
             .input('i', Items.IRON_INGOT)
             .input('r', Items.REDSTONE)
@@ -26,7 +24,7 @@ public class TardisSystemDirectionalUnitItemBuilder extends TardisSystemItemBuil
             .pattern(" a ")
             .pattern("rer")
             .pattern("ifi")
-            .criterion("has_item", RecipeHelper.conditionsFromItem(Items.IRON_INGOT))
+            .criterion("has_item", RecipeProvider.conditionsFromItem(Items.IRON_INGOT))
             .offerTo(exporter);
     }
 }

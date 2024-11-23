@@ -29,13 +29,13 @@ public abstract class BaseTardisDoorsModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        base.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        base.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
-    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        door_left.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        door_right.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void renderDoors(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        door_left.render(matrixStack, vertexConsumer, light, overlay, color);
+        door_right.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
     public void setupAnim(BaseTardisDoorsBlockEntity tile) {

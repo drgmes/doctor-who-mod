@@ -80,11 +80,11 @@ public class TardisRoundelModel extends Model {
     }
 
     @Override
-    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, float red, float green, float blue, float alpha) {
-        outers.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        wires.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        covers.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
-        bb_main.render(matrixStack, vertexConsumer, light, overlay, red, green, blue, alpha);
+    public void render(MatrixStack matrixStack, VertexConsumer vertexConsumer, int light, int overlay, int color) {
+        outers.render(matrixStack, vertexConsumer, light, overlay, color);
+        wires.render(matrixStack, vertexConsumer, light, overlay, color);
+        covers.render(matrixStack, vertexConsumer, light, overlay, color);
+        bb_main.render(matrixStack, vertexConsumer, light, overlay, color);
     }
 
     public void setupAnim(TardisRoundelBlockEntity tile) {

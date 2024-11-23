@@ -1,6 +1,6 @@
 package net.drgmes.dwm.fabric;
 
-import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsAPI;
+import net.drgmes.dwm.compat.dimlib.DimLib;
 import net.drgmes.dwm.fabric.setup.*;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.Registration;
@@ -11,11 +11,10 @@ import net.fabricmc.api.ModInitializer;
 public class DWM implements ModInitializer, ClientModInitializer, DedicatedServerModInitializer {
     @Override
     public void onInitialize() {
-        if (ModCompats.immersivePortalsAPI()) ImmersivePortalsAPI.suppressExperimentalWarning();
+        if (ModCompats.immersivePortalsAPI()) DimLib.suppressExperimentalWarning();
 
         net.drgmes.dwm.setup.ModConfig.setup();
         ModConfig.setup();
-        ModEvents.setup();
         ModCommands.setup();
         ModResourcePacks.setup();
 
@@ -24,8 +23,11 @@ public class DWM implements ModInitializer, ClientModInitializer, DedicatedServe
 
     @Override
     public void onInitializeClient() {
-        Registration.setupClient();
+        net.drgmes.dwm.setup.ModKeys.setup();
         ModRenderers.setup();
+        ModScreens.setup();
+
+        Registration.setupClient();
     }
 
     @Override

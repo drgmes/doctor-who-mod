@@ -9,14 +9,13 @@ import net.drgmes.dwm.utils.helpers.RecipeHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.TextureKey;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
     private final Item dyeItem;
@@ -46,7 +45,7 @@ public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
     }
 
     @Override
-    public void registerRecipe(Consumer<RecipeJsonProvider> exporter) {
+    public void registerRecipe(RecipeExporter exporter) {
         BlockBuilder stripedBuilder = ModBlocks.TITANIUM_STRIPED_SKINS.get(this.dyeItem);
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
@@ -56,7 +55,7 @@ public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
             .pattern("0")
             .pattern("1")
             .pattern("#")
-            .criterion("has_titanium_striped_skin", RecipeHelper.conditionsFromItem(stripedBuilder.getBlock()))
+            .criterion("has_titanium_striped_skin", RecipeProvider.conditionsFromItem(stripedBuilder.getBlock()))
             .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), stripedBuilder.getName()));
 
         ShapedRecipeJsonBuilder.create(RecipeCategory.DECORATIONS, this.getBlock())
@@ -64,7 +63,7 @@ public class TitaniumSkinLampColoredBlockBuilder extends BlockBuilder {
             .input('0', this.dyeItem)
             .pattern("0")
             .pattern("#")
-            .criterion("has_titanium_skin_lamp_base", RecipeHelper.conditionsFromItem(ModBlocks.TITANIUM_SKIN_LAMP_BASE.getBlock()))
+            .criterion("has_titanium_skin_lamp_base", RecipeProvider.conditionsFromItem(ModBlocks.TITANIUM_SKIN_LAMP_BASE.getBlock()))
             .offerTo(exporter, RecipeHelper.getConversionRecipeName(this.getName(), ModBlocks.TITANIUM_SKIN_LAMP_BASE.getName()));
     }
 }

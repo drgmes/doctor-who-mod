@@ -1,50 +1,42 @@
 plugins {
-    // https://github.com/architectury/architectury-plugin
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-
     // https://github.com/architectury/architectury-loom
-    id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
+    id 'dev.architectury.loom' version '1.7-SNAPSHOT' apply false
+
+    // https://github.com/architectury/architectury-plugin
+    id 'architectury-plugin' version '3.4-SNAPSHOT'
+
+    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
-}
-
-subprojects {
-    apply plugin: "dev.architectury.loom"
-
-    dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings "net.fabricmc:yarn:${rootProject.minecraft_version}+${rootProject.yarn_mappings_version}:v2"
-    }
+    minecraft = project.minecraft_version
 }
 
 allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
+    apply plugin: 'java'
 
-    archivesBaseName = "${rootProject.mod_name}-${rootProject.minecraft_version}"
     version = rootProject.mod_version
     group = rootProject.maven_group
 
     rootProject.ext.attrs = [
-        "modId"                    : rootProject.mod_id,
-        "modVersion"               : rootProject.mod_version,
-        "modLicense"               : rootProject.mod_license,
-        "modAuthors"               : rootProject.mod_authors,
-        "modName"                  : rootProject.mod_name,
-        "modDescription"           : rootProject.mod_description,
-        "modHomepage"              : rootProject.mod_homepage,
-        "modSource"                : rootProject.mod_source,
-        "minecraftVersion"         : rootProject.minecraft_version,
-        "architecturyVersion"      : rootProject.architectury_version,
-        "forgeConfigApiPortVersion": rootProject.forge_config_api_port_version,
+        mod_id                       : rootProject.mod_id,
+        mod_version                  : rootProject.mod_version,
+        mod_license                  : rootProject.mod_license,
+        mod_authors                  : rootProject.mod_authors,
+        mod_name                     : rootProject.mod_name,
+        mod_description              : rootProject.mod_description,
+        mod_homepage                 : rootProject.mod_homepage,
+        mod_source                   : rootProject.mod_source,
+        minecraft_version            : rootProject.minecraft_version,
+        fabric_loader_version        : rootProject.fabric_loader_version,
+        architectury_api_version     : rootProject.architectury_api_version,
+        forge_config_api_port_version: rootProject.forge_config_api_port_version,
     ]
 
     repositories {
         maven { url 'https://jitpack.io' }
-        maven { url 'https://cursemaven.com'}
+        maven { url 'https://cursemaven.com' }
+        maven { url 'https://maven.shedaniel.me' }
         maven { url 'https://maven.terraformersmc.com/releases/' }
         maven { url 'https://raw.githubusercontent.com/Fuzss/modresources/main/maven/' }
 
@@ -53,13 +45,38 @@ allprojects {
             content { includeGroup 'appeng' }
         }
     }
+}
 
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = 17
+subprojects {
+    apply plugin: 'dev.architectury.loom'
+    apply plugin: 'architectury-plugin'
+    apply plugin: 'maven-publish'
+
+    base {
+        archivesName = "$rootProject.mod_name-$rootProject.minecraft_version"
+    }
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "net.minecraft:minecraft:$rootProject.minecraft_version"
+
+        mappings loom.layered {
+            it.mappings("net.fabricmc:yarn:$rootProject.minecraft_version+$rootProject.yarn_mappings_version:v2")
+            it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
+        }
     }
 
     java {
         withSourcesJar()
+
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release = 21
     }
 }
