@@ -26,7 +26,6 @@ bin/
 run/
 common/run/
 fabric/run/
-forge/run/
 neoforge/run/
 !fabric/run/config/fabric_loader_dependencies.json
 

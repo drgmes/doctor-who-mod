@@ -18,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -26,15 +27,20 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
-public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity {
+import java.util.Optional;
+
+public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity> extends BaseRotatableWaterloggedDoubleBlockWithEntity implements Portal {
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     protected final TardisDoorsEntry doorsType;
@@ -215,16 +221,30 @@ public abstract class BaseTardisDoorsBlock<C extends BaseTardisDoorsBlockEntity>
     @SuppressWarnings("deprecation")
     public void onEntityCollision(BlockState blockState, World world, BlockPos blockPos, Entity entity) {
         if (ModCompats.immersivePortals()) return;
-        if (!entity.canUsePortals(true)) return;
+        if (world.isClient || !entity.canUsePortals(false)) return;
 
         if (world instanceof ServerWorld serverWorld) {
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 if (!tardis.isDoorsOpened()) return;
-
-                Vec3d pos = Vec3d.ofBottomCenter(tardis.getCurrentExteriorPosition().offset(tardis.getCurrentExteriorFacing()));
-                CommonHelper.teleport(entity, DimensionHelper.getWorld(tardis.getCurrentExteriorDimension(), serverWorld.getServer()), pos, tardis.getCurrentExteriorFacing().asRotation());
+                entity.tryUsePortal(this, blockPos);
             });
         }
+    }
+
+    @Override
+    public @Nullable TeleportTarget createTeleportTarget(ServerWorld world, Entity entity, BlockPos blockPos) {
+        if (entity instanceof ServerPlayerEntity player && player.isInTeleportationState()) return null;
+        if (!entity.canUsePortals(false)) return null;
+
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(world);
+        if (tardisHolder.isEmpty() || !tardisHolder.get().isDoorsOpened()) return null;
+
+        Direction facing = tardisHolder.get().getCurrentExteriorFacing();
+        ServerWorld destination = DimensionHelper.getWorld(tardisHolder.get().getCurrentExteriorDimension(), world.getServer());
+        Vec3d position = Vec3d.ofBottomCenter(tardisHolder.get().getCurrentExteriorPosition().offset(facing));
+        TeleportTarget.PostDimensionTransition transition = TeleportTarget.SEND_TRAVEL_THROUGH_PORTAL_PACKET.then(TeleportTarget.ADD_PORTAL_CHUNK_TICKET);
+
+        return new TeleportTarget(destination, position, entity.getVelocity(), facing.asRotation(), 0, transition);
     }
 
     public boolean isWooden() {
