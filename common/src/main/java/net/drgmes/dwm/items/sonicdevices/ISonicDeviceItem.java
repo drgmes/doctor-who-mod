@@ -5,7 +5,7 @@ import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.screens.SonicDeviceInterfaceMainScreen;
 import net.drgmes.dwm.network.server.SonicDeviceModeUpdatePacket;
-import net.drgmes.dwm.setup.ModKeys;
+import net.drgmes.dwm.setup.ModKeyBindings;
 import net.drgmes.dwm.setup.ModSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +33,7 @@ public interface ISonicDeviceItem {
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
-        if (ModKeys.SONIC_DEVICE_SETTINGS.isPressed()) {
+        if (ModKeyBindings.SONIC_DEVICE_SETTINGS.isPressed()) {
             EquipmentSlot slot;
 
             if (player.getEquippedStack(EquipmentSlot.MAINHAND).equals(itemStack)) slot = EquipmentSlot.MAINHAND;

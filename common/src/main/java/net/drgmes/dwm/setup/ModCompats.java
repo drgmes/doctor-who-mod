@@ -19,9 +19,9 @@ public class ModCompats {
         }
     }
 
-    public static boolean immersivePortalsAPI() {
+    public static boolean dimLib() {
         try {
-            Class.forName("qouteall.q_misc_util.api.DimensionAPI");
+            Class.forName("qouteall.dimlib.api.DimensionAPI");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
@@ -31,6 +31,15 @@ public class ModCompats {
     public static boolean immersivePortals() {
         try {
             Class.forName("qouteall.imm_ptl.core.portal.Portal");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
+    public static boolean immersivePortalsUtils() {
+        try {
+            Class.forName("qouteall.q_misc_util.dimension.DimIntIdMap");
             return true;
         } catch (ClassNotFoundException e) {
             return false;

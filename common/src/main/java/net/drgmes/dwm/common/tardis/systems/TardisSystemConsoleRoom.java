@@ -190,6 +190,6 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
         }
 
         new TardisExteriorUpdatePacket(exteriorBlockPos, exteriorAction)
-            .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            .sendToAll(exteriorWorld.getServer());
     }
 }

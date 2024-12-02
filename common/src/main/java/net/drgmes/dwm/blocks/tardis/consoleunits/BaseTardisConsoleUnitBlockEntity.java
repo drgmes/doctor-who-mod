@@ -451,12 +451,17 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
     private void sendControlsUpdatePacket(ServerWorld world) {
         new TardisConsoleUnitControlsStatesUpdatePacket(this.getPos(), this.controlsStorage.writeNbt(new NbtCompound()))
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            .sendToAll(world.getServer());
     }
 
     private void sendMonitorUpdatePacket(ServerWorld world) {
         new TardisConsoleUnitMonitorPageUpdatePacket(this.getPos(), this.monitorPage)
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
+            .sendToAll(world.getServer());
+    }
+
+    private void sendSonicScrewdriverSlotUpdatePacket(ServerWorld world) {
+        new TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(this.getPos(), this.sonicScrewdriverItemStack)
+            .sendToAll(world.getServer());
     }
 
     private void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
@@ -472,10 +477,5 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     private void sendTelepathicInterfaceMapBannersOpenPacket(ServerPlayerEntity player, MapState mapData) {
         new TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(this.getPos(), mapData.writeNbt(new NbtCompound(), player.getRegistryManager()))
             .sendTo(player);
-    }
-
-    private void sendSonicScrewdriverSlotUpdatePacket(ServerWorld world) {
-        new TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(this.getPos(), this.sonicScrewdriverItemStack)
-            .sendToChunkListeners(world.getWorldChunk(this.getPos()));
     }
 }

@@ -4,7 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.engines.screens.TardisEngineSystemsScreen;
 import net.drgmes.dwm.common.sonicdevice.modes.scan.SonicDeviceScanModeOverlay;
 import net.drgmes.dwm.setup.ModInventories;
-import net.drgmes.dwm.setup.ModKeys;
+import net.drgmes.dwm.setup.ModKeyBindings;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -26,10 +26,10 @@ public class ModEvents {
         @SubscribeEvent
         @OnlyIn(Dist.CLIENT)
         public static void registerBindings(RegisterKeyMappingsEvent event) {
-            ModKeys.setup();
+            ModKeyBindings.init();
 
-            event.register(ModKeys.SONIC_DEVICE_SETTINGS);
-            event.register(ModKeys.SONIC_SUNGLASSES_USAGE);
+            event.register(ModKeyBindings.SONIC_DEVICE_SETTINGS);
+            event.register(ModKeyBindings.SONIC_SUNGLASSES_USAGE);
         }
 
         @SubscribeEvent

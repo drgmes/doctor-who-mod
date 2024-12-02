@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.compat.dimlib.DimLib;
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsUtils;
 import net.drgmes.dwm.network.client.DimensionAddPacket;
 import net.drgmes.dwm.network.client.DimensionRemovePacket;
 import net.drgmes.dwm.setup.ModCompats;
@@ -69,13 +70,12 @@ public class DimensionHelper {
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
         WorldGenerationProgressListener chunkListener = server.worldGenerationProgressListenerFactory.create(11);
 
-        if (ModCompats.immersivePortalsAPI()) {
+        if (ModCompats.dimLib()) {
             world = DimLib.createWorld(id, server, dimensionFactory);
         }
         else {
-            DimensionOptions dimension = dimensionFactory.apply(server);
-
             SaveProperties serverConfig = server.getSaveProperties();
+            DimensionOptions dimension = dimensionFactory.apply(server);
             GeneratorOptions dimensionGeneratorSettings = serverConfig.getGeneratorOptions();
             UnmodifiableLevelProperties derivedWorldInfo = new UnmodifiableLevelProperties(serverConfig, serverConfig.getMainWorldProperties());
 
@@ -100,6 +100,8 @@ public class DimensionHelper {
 
         server.worlds.put(worldKey, world);
         ModDimensions.addWorldToRegistry(server, worldKey);
+        if (ModCompats.immersivePortalsUtils()) ImmersivePortalsUtils.addWorldToIPRegistry(server, worldKey);
+
         new DimensionAddPacket(worldKey).sendToAll(server);
         setChanged(server);
 
@@ -111,12 +113,11 @@ public class DimensionHelper {
     }
 
     public static boolean removeWorld(String id, MinecraftServer server) {
-        if (ModCompats.immersivePortalsAPI()) {
-            DimLib.removeWorld(id, server);
-        }
+        if (ModCompats.dimLib()) DimLib.removeWorld(id, server);
 
         RegistryKey<World> worldKey = getWorldKey(DWM.getIdentifier(id));
         if (!ModDimensions.removeWorldFromRegistry(server, worldKey)) return false;
+        if (ModCompats.immersivePortalsUtils()) ImmersivePortalsUtils.removeWorldFromIPRegistry(server, worldKey);
 
         new DimensionRemovePacket(worldKey).sendToAll(server);
         setChanged(server);

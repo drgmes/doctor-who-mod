@@ -27,7 +27,7 @@ public class ModEvents {
 
         LifecycleEvent.SERVER_STARTED.register((server) -> {
             TardisEnergyManager.clear();
-            if (!ModCompats.immersivePortalsAPI()) ModDimensions.loadWorldsRegistry(server);
+            ModDimensions.loadWorldsRegistry(server);
             if (ModCompats.immersivePortals()) ImmersivePortals.clearTardisPortalsState();
         });
 

@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import dev.architectury.networking.NetworkManager;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.CreativeTabRegistry;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import dev.architectury.utils.Env;
@@ -12,7 +11,6 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.compat.clothconfig.ClothConfig;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
@@ -145,11 +143,5 @@ public class Registration {
         }
 
         NetworkManager.registerReceiver(side, id, codec, receiverSupplier.get());
-    }
-
-    public static KeyBinding registerKeyBinding(String name, String category, int keycode) {
-        KeyBinding keyBinding = new KeyBinding("key.dwm." + name, keycode, category);
-        KeyMappingRegistry.register(keyBinding);
-        return keyBinding;
     }
 }

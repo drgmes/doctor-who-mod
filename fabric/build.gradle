@@ -7,6 +7,10 @@ architectury {
     fabric()
 }
 
+base {
+    archivesName = "$rootProject.mod_name-$rootProject.minecraft_version-fabric"
+}
+
 loom {
     accessWidenerPath = project(':common').loom.accessWidenerPath
 
@@ -92,7 +96,7 @@ dependencies {
     }
 
     if (rootProject.hasProperty('ae2_api_version')) {
-        modCompileOnlyApi("appeng:appliedenergistics2-neoforge:$rootProject.ae2_api_version:api") {
+        modCompileOnlyApi("appeng:appliedenergistics2-fabric:$rootProject.ae2_api_version:api") {
             exclude(group: 'net.fabricmc.fabric-api')
             transitive(false)
         }

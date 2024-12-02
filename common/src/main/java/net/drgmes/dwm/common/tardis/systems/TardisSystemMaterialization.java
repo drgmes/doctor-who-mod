@@ -405,7 +405,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
         }
 
         new TardisExteriorUpdatePacket(exteriorBlockPos, exteriorAction)
-            .sendToChunkListeners(exteriorWorld.getWorldChunk(exteriorBlockPos));
+            .sendToAll(exteriorWorld.getServer());
     }
 
     private boolean setupFail() {

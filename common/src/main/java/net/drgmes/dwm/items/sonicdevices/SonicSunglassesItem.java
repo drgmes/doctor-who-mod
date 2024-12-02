@@ -2,7 +2,7 @@ package net.drgmes.dwm.items.sonicdevices;
 
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.network.server.SonicDeviceUsePacket;
-import net.drgmes.dwm.setup.ModKeys;
+import net.drgmes.dwm.setup.ModKeyBindings;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -46,7 +46,7 @@ public class SonicSunglassesItem extends Item implements ISonicDeviceItem, Equip
         MinecraftClient mc = MinecraftClient.getInstance();
         if (mc.currentScreen != null || !(entity instanceof PlayerEntity player)) return;
 
-        if (ModKeys.SONIC_SUNGLASSES_USAGE.isPressed()) {
+        if (ModKeyBindings.SONIC_SUNGLASSES_USAGE.isPressed()) {
             if (!player.getEquippedStack(EquipmentSlot.HEAD).equals(itemStack)) return;
             if (SonicDevice.checkItemStackIsSonicDevice(player.getEquippedStack(EquipmentSlot.MAINHAND))) return;
             if (SonicDevice.checkItemStackIsSonicDevice(player.getEquippedStack(EquipmentSlot.OFFHAND))) return;

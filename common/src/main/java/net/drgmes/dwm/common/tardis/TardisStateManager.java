@@ -772,7 +772,7 @@ public class TardisStateManager extends PersistentState {
             tile.tardisStateManager.readNbt(tag.getCompound("tardisState"), this.world.getRegistryManager());
 
             new TardisConsoleUnitUpdatePacket(tile.getPos(), tag)
-                .sendToChunkListeners(this.world.getWorldChunk(tile.getPos()));
+                .sendToAll(this.world.getServer());
         });
     }
 

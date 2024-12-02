@@ -11,7 +11,7 @@ import net.fabricmc.api.ModInitializer;
 public class DWM implements ModInitializer, ClientModInitializer, DedicatedServerModInitializer {
     @Override
     public void onInitialize() {
-        if (ModCompats.immersivePortalsAPI()) DimLib.suppressExperimentalWarning();
+        if (ModCompats.dimLib()) DimLib.suppressExperimentalWarning();
 
         net.drgmes.dwm.setup.ModConfig.setup();
         ModConfig.setup();
@@ -23,7 +23,7 @@ public class DWM implements ModInitializer, ClientModInitializer, DedicatedServe
 
     @Override
     public void onInitializeClient() {
-        net.drgmes.dwm.setup.ModKeys.setup();
+        net.drgmes.dwm.setup.ModKeyBindings.setup();
         ModRenderers.setup();
         ModScreens.setup();
 
