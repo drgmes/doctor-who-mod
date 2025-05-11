@@ -205,11 +205,13 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (!entity.canUsePortals()) return;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
-                if (!tardis.isDoorsOpened()) return;
-                Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
-                CommonHelper.teleport(entity, tardis.getWorld(), pos, tardis.getEntranceFacing().asRotation());
-            });
+            tardisExteriorBlockEntity.getTardisWorldIfPresent()
+                    .flatMap(TardisStateManager::get)
+                    .ifPresent((tardis) -> {
+                        if (!tardis.isDoorsOpened()) return;
+                        Vec3d pos = Vec3d.ofBottomCenter(tardis.getEntrancePosition().offset(tardis.getEntranceFacing()));
+                        CommonHelper.teleport(entity, tardis.getWorld(), pos, tardis.getEntranceFacing().asRotation());
+                    });
         }
     }
 

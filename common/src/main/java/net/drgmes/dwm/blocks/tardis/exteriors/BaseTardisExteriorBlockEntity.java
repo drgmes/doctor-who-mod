@@ -18,6 +18,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
@@ -73,6 +74,10 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
         if (this.tardisId == null || this.tardisId.isEmpty()) return null;
         if (!(this.getWorld() instanceof ServerWorld serverWorld)) return null;
         return DimensionHelper.getModWorld(this.getOrCreateTardisId(), serverWorld.getServer());
+    }
+
+    public Optional<ServerWorld> getTardisWorldIfPresent() {
+        return TardisHelper.getTardisWorldIfPresent(this);
     }
 
     public ServerWorld getOrCreateTardisWorld() {

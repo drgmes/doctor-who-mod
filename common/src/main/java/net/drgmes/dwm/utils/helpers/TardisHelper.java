@@ -15,6 +15,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.DimensionOptions;
 
+import java.util.Optional;
+
 public class TardisHelper {
     public static final BlockPos TARDIS_POS = new BlockPos(0, 128, 0).toImmutable();
 
@@ -24,6 +26,18 @@ public class TardisHelper {
 
     public static boolean isTardisDimension(World world) {
         return world != null && world.getDimensionKey().equals(ModDimensionTypes.TARDIS);
+    }
+
+    public static Optional<ServerWorld> getTardisWorldIfPresent(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {
+        Optional<ServerWorld> tardisWorldOpt = Optional.ofNullable(DimensionHelper.getModWorld(id, server));
+
+        tardisWorldOpt.flatMap(TardisStateManager::get).ifPresent((tardis) -> {
+            tardis.setDimension(dimension, false);
+            tardis.setFacing(direction, false);
+            tardis.setPosition(blockPos, false);
+        });
+
+        return tardisWorldOpt;
     }
 
     public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {
@@ -36,6 +50,18 @@ public class TardisHelper {
         });
 
         return tardisWorld;
+    }
+
+    public static Optional<ServerWorld> getTardisWorldIfPresent(BaseTardisExteriorBlockEntity tile) {
+        if (tile.getWorld() == null || tile.getWorld().isClient) return Optional.empty();
+
+        return TardisHelper.getTardisWorldIfPresent(
+            tile.getOrCreateTardisId(),
+            tile.getWorld().getRegistryKey(),
+            tile.getPos(),
+            tile.getCachedState().get(BaseTardisExteriorBlock.FACING),
+            tile.getWorld().getServer()
+        );
     }
 
     public static ServerWorld getOrCreateTardisWorld(BaseTardisExteriorBlockEntity tile) {
