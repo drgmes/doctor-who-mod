@@ -27,17 +27,19 @@ public record TardisToyotaSpinnerUpdatePacket(
         TardisToyotaSpinnerUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisToyotaSpinnerUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisToyotaSpinnerBlockEntity tardisToyotaSpinnerBlockEntity) {
-            tardisToyotaSpinnerBlockEntity.inProgress = payload.inProgress;
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisToyotaSpinnerUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisToyotaSpinnerBlockEntity tardisToyotaSpinnerBlockEntity) {
+                tardisToyotaSpinnerBlockEntity.inProgress = payload.inProgress;
+            }
+        });
     }
 }

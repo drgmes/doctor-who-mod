@@ -47,29 +47,31 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
         this(blockPos, createLocationsListFromRegistry(originWorld, destinationWorld));
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
-            List<String> keys = new ArrayList<>(payload.tag.getKeys().stream().toList());
-
-            keys.sort(Comparator.comparing((key) -> key));
-            keys.forEach((key) -> {
-                locations.add(Map.entry(
-                    Identifier.of(payload.tag.getCompound(key).getString("id")),
-                    TardisTelepathicInterfaceDataType.valueOf(payload.tag.getCompound(key).getString("type"))
-                ));
-            });
-
-            mc.setScreen(new TardisConsoleUnitTelepathicInterfaceLocationsScreen(tardisConsoleUnitBlockEntity, locations));
-        }
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
+                List<String> keys = new ArrayList<>(payload.tag.getKeys().stream().toList());
+
+                keys.sort(Comparator.comparing((key) -> key));
+                keys.forEach((key) -> {
+                    locations.add(Map.entry(
+                        Identifier.of(payload.tag.getCompound(key).getString("id")),
+                        TardisTelepathicInterfaceDataType.valueOf(payload.tag.getCompound(key).getString("type"))
+                    ));
+                });
+
+                mc.setScreen(new TardisConsoleUnitTelepathicInterfaceLocationsScreen(tardisConsoleUnitBlockEntity, locations));
+            }
+        });
     }
 
     private static NbtCompound createLocationsListFromRegistry(ServerWorld world, @Nullable ServerWorld destinationWorld) {

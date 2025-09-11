@@ -28,21 +28,23 @@ public record SonicDeviceUpdatePacket(
         SonicDeviceUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(SonicDeviceUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null) return;
-
-        EquipmentSlot slot = EquipmentSlot.byName(payload.slotName);
-        ItemStack equippedStack = mc.player.getEquippedStack(slot);
-
-        if (SonicDevice.checkItemStackIsSonicDevice(equippedStack) || equippedStack.isEmpty()) {
-            mc.player.equipStack(slot, payload.itemStack);
-        }
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(SonicDeviceUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+            if (mc.player == null) return;
+
+            EquipmentSlot slot = EquipmentSlot.byName(payload.slotName);
+            ItemStack equippedStack = mc.player.getEquippedStack(slot);
+
+            if (SonicDevice.checkItemStackIsSonicDevice(equippedStack) || equippedStack.isEmpty()) {
+                mc.player.equipStack(slot, payload.itemStack);
+            }
+        });
     }
 }

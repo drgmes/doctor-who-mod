@@ -29,27 +29,29 @@ public record ArsDestroyerApplyPacket(
         ArsDestroyerApplyPacket::new
     );
 
-    public static void handle(ArsDestroyerApplyPacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        ServerWorld serverWorld = (ServerWorld) player.getWorld();
-        if (!TardisHelper.isTardisDimension(serverWorld)) return;
-
-        TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-            if (tardis.isBroken()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
-                return;
-            }
-
-            ArsStructure arsStructure = ArsStructures.STRUCTURES.get(payload.arsStructureName);
-            boolean flag = arsStructure.destroy(player, tardis, payload.blockPos);
-
-            player.sendMessage(flag ? DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_SUCCESS : DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_FAILED, true);
-        });
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(ArsDestroyerApplyPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            ServerWorld serverWorld = (ServerWorld) player.getWorld();
+            if (!TardisHelper.isTardisDimension(serverWorld)) return;
+
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
+                if (tardis.isBroken()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_BROKEN, true);
+                    return;
+                }
+
+                ArsStructure arsStructure = ArsStructures.STRUCTURES.get(payload.arsStructureName);
+                boolean flag = arsStructure.destroy(player, tardis, payload.blockPos);
+
+                player.sendMessage(flag ? DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_SUCCESS : DWM.TEXTS.ARS_SECONDARY_ROOM_DESTROY_FAILED, true);
+            });
+        });
     }
 }

@@ -44,17 +44,19 @@ public record ArsCreatorOpenPacket(
         }
     };
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(ArsCreatorOpenPacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisArsCreatorBlockEntity) {
-            mc.setScreen(new TardisArsCreatorScreen(payload.blockPos, payload.arsCategories, payload.arsStructures));
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(ArsCreatorOpenPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisArsCreatorBlockEntity) {
+                mc.setScreen(new TardisArsCreatorScreen(payload.blockPos, payload.arsCategories, payload.arsStructures));
+            }
+        });
     }
 }

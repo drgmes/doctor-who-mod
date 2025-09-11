@@ -21,7 +21,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-@EventBusSubscriber(modid = DWM.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = DWM.MODID, value = Dist.CLIENT)
 public class ModRenderers {
     public static void setup() {
     }

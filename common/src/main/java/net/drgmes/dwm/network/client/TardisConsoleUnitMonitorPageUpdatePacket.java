@@ -27,17 +27,19 @@ public record TardisConsoleUnitMonitorPageUpdatePacket(
         TardisConsoleUnitMonitorPageUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitMonitorPageUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            tardisConsoleUnitBlockEntity.monitorPage = payload.monitorPage;
-        }
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisConsoleUnitMonitorPageUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                tardisConsoleUnitBlockEntity.monitorPage = payload.monitorPage;
+            }
+        });
     }
 }

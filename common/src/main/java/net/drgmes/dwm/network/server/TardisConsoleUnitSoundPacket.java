@@ -23,16 +23,18 @@ public record TardisConsoleUnitSoundPacket(
         TardisConsoleUnitSoundPacket::new
     );
 
-    public static void handle(TardisConsoleUnitSoundPacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity) {
-            ModSounds.playTardisConsoleCrackSound(player.getWorld(), payload.blockPos);
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(TardisConsoleUnitSoundPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity) {
+                ModSounds.playTardisConsoleCrackSound(player.getWorld(), payload.blockPos);
+            }
+        });
     }
 }

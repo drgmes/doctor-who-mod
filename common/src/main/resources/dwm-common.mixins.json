@@ -5,7 +5,6 @@
   "package": "net.drgmes.dwm.mixin",
   "client": [
     "MixinEntryListWidget",
-    "MixinInGameHud",
     "MixinMinecraftClient"
   ],
   "mixins": [

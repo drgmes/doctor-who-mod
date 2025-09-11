@@ -44,37 +44,39 @@ public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
         TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::new
     );
 
-    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationApplyPacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
-            if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
-                player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
-                return;
-            }
-
-            Text message = null;
-            TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(payload.type);
-
-            if (dataType == TardisTelepathicInterfaceDataType.BIOME) {
-                String msg = findBiome(Identifier.of(payload.id), tardis) ? "found" : "not_found";
-                message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + msg);
-            }
-            else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) {
-                String msg = findStructure(Identifier.of(payload.id), tardis) ? "found" : "not_found";
-                message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + msg);
-            }
-
-            if (message != null) player.sendMessage(message, true);
-        });
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
     }
 
-    private static boolean findBiome(Identifier id, TardisStateManager tardis) {
+    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationApplyPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
+                if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                    player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                    return;
+                }
+
+                Text message = null;
+                TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(payload.type);
+
+                if (dataType == TardisTelepathicInterfaceDataType.BIOME) {
+                    String msg = tryFindBiome(Identifier.of(payload.id), tardis) ? "found" : "not_found";
+                    message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + msg);
+                }
+                else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) {
+                    String msg = tryFindStructure(Identifier.of(payload.id), tardis) ? "found" : "not_found";
+                    message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + msg);
+                }
+
+                if (message != null) player.sendMessage(message, true);
+            });
+        });
+    }
+
+    private static boolean tryFindBiome(Identifier id, TardisStateManager tardis) {
         BlockPos exteriorPos = tardis.getDestinationExteriorPosition();
         ServerWorld exteriorWorld = DimensionHelper.getWorld(tardis.getDestinationExteriorDimension(), tardis.getWorld().getServer());
         if (exteriorWorld == null) return false;
@@ -96,7 +98,7 @@ public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
         return true;
     }
 
-    private static boolean findStructure(Identifier id, TardisStateManager tardis) {
+    private static boolean tryFindStructure(Identifier id, TardisStateManager tardis) {
         BlockPos exteriorPos = tardis.getDestinationExteriorPosition();
         ServerWorld exteriorWorld = DimensionHelper.getWorld(tardis.getDestinationExteriorDimension(), tardis.getWorld().getServer());
         if (exteriorWorld == null) return false;

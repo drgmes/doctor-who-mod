@@ -1,33 +1,33 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
-license = "${mod_license}"
+license = "${modLicense}"
 
 [[mods]]
-modId = "${mod_id}"
-version = "${mod_version}"
-displayName = "${mod_name}"
-authors = "${mod_authors}"
-description = "${mod_description}"
-logoFile = "assets/${mod_id}/icon.png"
+modId = "${modId}"
+version = "${modVersion}"
+displayName = "${modName}"
+authors = "${modAuthors}"
+description = "${modDescription}"
+logoFile = "assets/${modId}/icon.png"
 
-[[dependencies.${mod_id}]]
+[[dependencies.${modId}]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21.1,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.${modId}]]
 modId = "minecraft"
 type = "required"
-versionRange = "[${minecraft_version}]"
+versionRange = "[${minecraftVersion}]"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.${mod_id}]]
+[[dependencies.${modId}]]
 modId = "architectury"
 type = "required"
-versionRange = "[${architectury_api_version},)"
+versionRange = "[${architecturyApiVersion},)"
 ordering = "AFTER"
 side = "BOTH"
 

@@ -32,26 +32,28 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
         TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::new
     );
 
-    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
-            if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
-                player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
-                return;
-            }
-
-            String color = payload.dyeColor.getName().toUpperCase().replace("_", " ");
-            player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
-
-            tardis.setDestinationDimension(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(payload.dimension)));
-            tardis.setDestinationPosition(payload.blockPos);
-            tardis.markConsoleTilesUpdated();
-        });
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
+                if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                    player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                    return;
+                }
+
+                String color = payload.dyeColor.getName().toUpperCase().replace("_", " ");
+                player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
+
+                tardis.setDestinationDimension(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(payload.dimension)));
+                tardis.setDestinationPosition(payload.blockPos);
+                tardis.markConsoleTilesUpdated();
+            });
+        });
     }
 }

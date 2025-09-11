@@ -50,21 +50,23 @@ public record TardisConsoleUnitMonitorOpenPacket(
         this(blockPos, tardisId, getOwnerName(player, tardisTag), tardisTag);
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitMonitorOpenPacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            NbtCompound tag = new NbtCompound();
-            tag.put("tardisTag", payload.tardisTag);
-            tag.put("roomsTag", payload.roomsTag);
-            mc.setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
-        }
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisConsoleUnitMonitorOpenPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                NbtCompound tag = new NbtCompound();
+                tag.put("tardisTag", payload.tardisTag);
+                tag.put("roomsTag", payload.roomsTag);
+                mc.setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
+            }
+        });
     }
 
     private static String getOwnerName(ServerPlayerEntity player, NbtCompound tardisTag) {

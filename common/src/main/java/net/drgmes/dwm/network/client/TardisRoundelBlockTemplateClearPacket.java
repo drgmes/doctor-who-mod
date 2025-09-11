@@ -24,17 +24,19 @@ public record TardisRoundelBlockTemplateClearPacket(
         TardisRoundelBlockTemplateClearPacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisRoundelBlockTemplateClearPacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.blockTemplate = null;
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisRoundelBlockTemplateClearPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+                tardisRoundelBlockEntity.blockTemplate = null;
+            }
+        });
     }
 }

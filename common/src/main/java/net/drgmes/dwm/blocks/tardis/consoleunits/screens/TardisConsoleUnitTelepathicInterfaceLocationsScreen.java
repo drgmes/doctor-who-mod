@@ -150,7 +150,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
             @Override
             public Text getText() {
-                MutableText narration = Text.translatable(CommonHelper.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                MutableText narration;
+
+                if (hasShiftDown()) {
+                    narration = Text.literal(this.entry.getKey().toString());
+                } else {
+                    narration = Text.translatable(CommonHelper.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                }
+
                 Formatting format = Formatting.WHITE;
                 if (this.entry.getValue() == TardisTelepathicInterfaceDataType.BIOME) format = Formatting.GOLD;
                 else if (this.entry.getValue() == TardisTelepathicInterfaceDataType.STRUCTURE) format = Formatting.AQUA;

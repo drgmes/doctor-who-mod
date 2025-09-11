@@ -27,6 +27,11 @@ public record DimensionAddPacket(
         DimensionAddPacket::new
     );
 
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return PACKET_ID;
+    }
+
     @Environment(EnvType.CLIENT)
     public static void handle(DimensionAddPacket payload, NetworkManager.PacketContext context) {
         final MinecraftClient mc = MinecraftClient.getInstance();
@@ -36,10 +41,5 @@ public record DimensionAddPacket(
         if (worlds == null || worlds.contains(payload.worldKey)) return;
 
         worlds.add(payload.worldKey);
-    }
-
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return PACKET_ID;
     }
 }

@@ -1,11 +1,11 @@
 plugins {
     // https://github.com/architectury/architectury-loom
-    id 'dev.architectury.loom' version '1.7-SNAPSHOT' apply false
+    id 'dev.architectury.loom' version '1.11-SNAPSHOT' apply false
 
     // https://github.com/architectury/architectury-plugin
     id 'architectury-plugin' version '3.4-SNAPSHOT'
 
-    id 'com.github.johnrengelman.shadow' version '8.1.1' apply false
+    id 'com.gradleup.shadow' version '8.3.6' apply false
 }
 
 architectury {
@@ -19,18 +19,18 @@ allprojects {
     group = rootProject.maven_group
 
     rootProject.ext.attrs = [
-        mod_id                       : rootProject.mod_id,
-        mod_version                  : rootProject.mod_version,
-        mod_license                  : rootProject.mod_license,
-        mod_authors                  : rootProject.mod_authors,
-        mod_name                     : rootProject.mod_name,
-        mod_description              : rootProject.mod_description,
-        mod_homepage                 : rootProject.mod_homepage,
-        mod_source                   : rootProject.mod_source,
-        minecraft_version            : rootProject.minecraft_version,
-        fabric_loader_version        : rootProject.fabric_loader_version,
-        architectury_api_version     : rootProject.architectury_api_version,
-        forge_config_api_port_version: rootProject.forge_config_api_port_version,
+        modId                    : rootProject.mod_id,
+        modVersion               : rootProject.mod_version,
+        modLicense               : rootProject.mod_license,
+        modAuthors               : rootProject.mod_authors,
+        modName                  : rootProject.mod_name,
+        modDescription           : rootProject.mod_description,
+        modHomepage              : rootProject.mod_homepage,
+        modSource                : rootProject.mod_source,
+        minecraftVersion         : rootProject.minecraft_version,
+        fabricLoaderVersion      : rootProject.fabric_loader_version,
+        architecturyApiVersion   : rootProject.architectury_api_version,
+        forgeConfigApiPortVersion: rootProject.forge_config_api_port_version,
     ]
 
     repositories {

@@ -29,18 +29,20 @@ public record TardisRoundelUpdatePacket(
         TardisRoundelUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisRoundelUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.uncovered = payload.uncovered;
-            tardisRoundelBlockEntity.lightMode = payload.lightMode;
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisRoundelUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+                tardisRoundelBlockEntity.uncovered = payload.uncovered;
+                tardisRoundelBlockEntity.lightMode = payload.lightMode;
+            }
+        });
     }
 }

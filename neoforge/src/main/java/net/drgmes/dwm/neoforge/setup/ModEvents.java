@@ -17,25 +17,22 @@ import net.neoforged.neoforge.client.event.RenderGuiEvent;
 public class ModEvents {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
-    public static void onRenderGuiOverlay(RenderGuiEvent.Pre event) {
-        SonicDeviceScanModeOverlay.INSTANCE.render(event.getGuiGraphics());
+    public static void registerBindings(RegisterKeyMappingsEvent event) {
+        ModKeyBindings.init();
+
+        event.register(ModKeyBindings.SONIC_DEVICE_SETTINGS);
+        event.register(ModKeyBindings.SONIC_SUNGLASSES_USAGE);
     }
 
-    @EventBusSubscriber(modid = DWM.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ModEventsSecondary {
-        @SubscribeEvent
-        @OnlyIn(Dist.CLIENT)
-        public static void registerBindings(RegisterKeyMappingsEvent event) {
-            ModKeyBindings.init();
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModInventories.TARDIS_ENGINE.get(), TardisEngineSystemsScreen::new);
+    }
 
-            event.register(ModKeyBindings.SONIC_DEVICE_SETTINGS);
-            event.register(ModKeyBindings.SONIC_SUNGLASSES_USAGE);
-        }
-
-        @SubscribeEvent
-        @OnlyIn(Dist.CLIENT)
-        public static void registerScreens(RegisterMenuScreensEvent event) {
-            event.register(ModInventories.TARDIS_ENGINE.get(), TardisEngineSystemsScreen::new);
-        }
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void onRenderGuiOverlay(RenderGuiEvent.Pre event) {
+        SonicDeviceScanModeOverlay.INSTANCE.render(event.getGuiGraphics());
     }
 }

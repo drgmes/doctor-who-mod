@@ -27,17 +27,19 @@ public record TardisConsoleUnitSonicScrewdriverSlotUpdatePacket(
         TardisConsoleUnitSonicScrewdriverSlotUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitSonicScrewdriverSlotUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            tardisConsoleUnitBlockEntity.sonicScrewdriverItemStack = payload.itemStack;
-        }
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisConsoleUnitSonicScrewdriverSlotUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                tardisConsoleUnitBlockEntity.sonicScrewdriverItemStack = payload.itemStack;
+            }
+        });
     }
 }

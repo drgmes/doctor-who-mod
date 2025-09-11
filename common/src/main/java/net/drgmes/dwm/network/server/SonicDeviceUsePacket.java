@@ -28,16 +28,18 @@ public record SonicDeviceUsePacket(
         SonicDeviceUsePacket::new
     );
 
-    public static void handle(SonicDeviceUsePacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        if (payload.itemStack.getItem() instanceof ISonicDeviceItem sonicDeviceItem) {
-            sonicDeviceItem.useSonicDevice(player.getWorld(), player, EquipmentSlot.byName(payload.slot), payload.isAlternativeAction);
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(SonicDeviceUsePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            if (payload.itemStack.getItem() instanceof ISonicDeviceItem sonicDeviceItem) {
+                sonicDeviceItem.useSonicDevice(player.getWorld(), player, EquipmentSlot.byName(payload.slot), payload.isAlternativeAction);
+            }
+        });
     }
 }

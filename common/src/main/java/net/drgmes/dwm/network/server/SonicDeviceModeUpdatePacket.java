@@ -27,20 +27,22 @@ public record SonicDeviceModeUpdatePacket(
         SonicDeviceModeUpdatePacket::new
     );
 
-    public static void handle(SonicDeviceModeUpdatePacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-        EquipmentSlot slot = EquipmentSlot.byName(payload.slotName);
-        ItemStack equippedStack = player.getEquippedStack(slot);
-
-        if (SonicDevice.checkItemStackIsSonicDevice(equippedStack)) {
-            SonicDevice.setInteractionMode(equippedStack, SonicDeviceMode.valueOf(payload.mode));
-            player.getItemCooldownManager().set(equippedStack.getItem(), 4);
-            player.equipStack(slot, equippedStack);
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(SonicDeviceModeUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+            EquipmentSlot slot = EquipmentSlot.byName(payload.slotName);
+            ItemStack equippedStack = player.getEquippedStack(slot);
+
+            if (SonicDevice.checkItemStackIsSonicDevice(equippedStack)) {
+                SonicDevice.setInteractionMode(equippedStack, SonicDeviceMode.valueOf(payload.mode));
+                player.getItemCooldownManager().set(equippedStack.getItem(), 4);
+                player.equipStack(slot, equippedStack);
+            }
+        });
     }
 }

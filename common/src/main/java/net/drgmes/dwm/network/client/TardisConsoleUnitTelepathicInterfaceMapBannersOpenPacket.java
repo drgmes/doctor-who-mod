@@ -30,17 +30,19 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(
         TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-            mc.setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(payload.tag, mc.world.getRegistryManager())));
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                mc.setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(payload.tag, mc.world.getRegistryManager())));
+            }
+        });
     }
 }

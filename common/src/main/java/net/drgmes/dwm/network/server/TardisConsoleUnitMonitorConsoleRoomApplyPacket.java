@@ -30,48 +30,50 @@ public record TardisConsoleUnitMonitorConsoleRoomApplyPacket(
         TardisConsoleUnitMonitorConsoleRoomApplyPacket::new
     );
 
-    public static void handle(TardisConsoleUnitMonitorConsoleRoomApplyPacket payload, NetworkManager.PacketContext context) {
-        PlayerEntity player = context.getPlayer();
-
-        ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, player.getServer());
-        if (tardisWorld == null) {
-            player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
-            return;
-        }
-
-        TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
-            if (!tardis.checkAccess(player, false, true)) {
-                ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
-                player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
-                return;
-            }
-
-            TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
-            if (flightSystem.inProgress()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
-                return;
-            }
-
-            TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
-            if (materializationSystem.inProgress() || !materializationSystem.isMaterialized()) {
-                player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
-                return;
-            }
-
-            TardisSystemConsoleRoom consoleRoomSystem = tardis.getSystem(TardisSystemConsoleRoom.class);
-            if (consoleRoomSystem.inProgress()) {
-                player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_IN_PROGRESS, true);
-                return;
-            }
-
-            if (!consoleRoomSystem.init(payload.consoleRoomId, player)) {
-                player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
-            }
-        });
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    public static void handle(TardisConsoleUnitMonitorConsoleRoomApplyPacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            PlayerEntity player = context.getPlayer();
+
+            ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, player.getServer());
+            if (tardisWorld == null) {
+                player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
+                return;
+            }
+
+            TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
+                if (!tardis.checkAccess(player, false, true)) {
+                    ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
+                    player.sendMessage(DWM.TEXTS.TARDIS_NOT_ALLOWED, true);
+                    return;
+                }
+
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                if (flightSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+                    return;
+                }
+
+                TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+                if (materializationSystem.inProgress() || !materializationSystem.isMaterialized()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+                    return;
+                }
+
+                TardisSystemConsoleRoom consoleRoomSystem = tardis.getSystem(TardisSystemConsoleRoom.class);
+                if (consoleRoomSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_IN_PROGRESS, true);
+                    return;
+                }
+
+                if (!consoleRoomSystem.init(payload.consoleRoomId, player)) {
+                    player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
+                }
+            });
+        });
     }
 }

@@ -37,22 +37,24 @@ public record TardisExteriorUpdatePacket(
         }
     };
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisExteriorUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            switch (payload.exteriorAction) {
-                case NORMALIZE -> tardisExteriorBlockEntity.normalize();
-                case DEMAT -> tardisExteriorBlockEntity.demat();
-                case REMAT -> tardisExteriorBlockEntity.remat();
-                case PULSE -> tardisExteriorBlockEntity.pulse();
-            }
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisExteriorUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+                switch (payload.exteriorAction) {
+                    case NORMALIZE -> tardisExteriorBlockEntity.normalize();
+                    case DEMAT -> tardisExteriorBlockEntity.demat();
+                    case REMAT -> tardisExteriorBlockEntity.remat();
+                    case PULSE -> tardisExteriorBlockEntity.pulse();
+                }
+            }
+        });
     }
 }

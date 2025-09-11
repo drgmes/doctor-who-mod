@@ -27,19 +27,21 @@ public record DimensionRemovePacket(
         DimensionRemovePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(DimensionRemovePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-        if (mc.player == null || mc.getNetworkHandler() == null) return;
-
-        Set<RegistryKey<World>> worlds = mc.getNetworkHandler().getWorldKeys();
-        if (worlds == null || !worlds.contains(payload.worldKey)) return;
-
-        worlds.remove(payload.worldKey);
-    }
-
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(DimensionRemovePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+            if (mc.player == null || mc.getNetworkHandler() == null) return;
+
+            Set<RegistryKey<World>> worlds = mc.getNetworkHandler().getWorldKeys();
+            if (worlds == null || !worlds.contains(payload.worldKey)) return;
+
+            worlds.remove(payload.worldKey);
+        });
     }
 }

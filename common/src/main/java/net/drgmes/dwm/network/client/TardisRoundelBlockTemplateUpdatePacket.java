@@ -27,17 +27,19 @@ public record TardisRoundelBlockTemplateUpdatePacket(
         TardisRoundelBlockTemplateUpdatePacket::new
     );
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisRoundelBlockTemplateUpdatePacket payload, NetworkManager.PacketContext context) {
-        final MinecraftClient mc = MinecraftClient.getInstance();
-
-        if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
-            tardisRoundelBlockEntity.blockTemplate = Identifier.of(payload.blockTemplateId);
-        }
-    }
-
     @Override
     public CustomPayload.Id<? extends CustomPayload> getId() {
         return PACKET_ID;
+    }
+
+    @Environment(EnvType.CLIENT)
+    public static void handle(TardisRoundelBlockTemplateUpdatePacket payload, NetworkManager.PacketContext context) {
+        context.queue(() -> {
+            final MinecraftClient mc = MinecraftClient.getInstance();
+
+            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+                tardisRoundelBlockEntity.blockTemplate = Identifier.of(payload.blockTemplateId);
+            }
+        });
     }
 }
