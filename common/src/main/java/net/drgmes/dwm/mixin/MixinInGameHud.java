@@ -1,4 +1,4 @@
-package net.drgmes.dwm.fabric.mixin;
+package net.drgmes.dwm.mixin;
 
 import net.drgmes.dwm.common.sonicdevice.modes.scan.SonicDeviceScanModeOverlay;
 import net.minecraft.client.MinecraftClient;

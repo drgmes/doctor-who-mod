@@ -1,8 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "compatibilityLevel": "JAVA_21",
+  "compatibilityLevel": "JAVA_17",
   "package": "net.drgmes.dwm.mixin",
+  "refmap": "dwm.refmap.json",
   "client": [
     "MixinEntryListWidget",
     "MixinMinecraftClient"

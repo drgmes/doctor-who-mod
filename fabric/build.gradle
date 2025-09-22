@@ -60,20 +60,6 @@ dependencies {
         modApi "fuzs.forgeconfigapiport:forgeconfigapiport-fabric:$rootProject.forge_config_api_port_version"
     }
 
-    if (rootProject.hasProperty('dim_lib_version')) {
-        modCompileOnlyApi("com.github.iPortalTeam:DimLib:v$rootProject.dim_lib_version") {
-            exclude(group: 'net.fabricmc.fabric-api')
-            transitive(false)
-        }
-    }
-
-    if (rootProject.hasProperty('imm_ptl_version')) {
-        modCompileOnlyApi("com.github.iPortalTeam:ImmersivePortalsMod:v$rootProject.imm_ptl_version") {
-            exclude(group: 'net.fabricmc.fabric-api')
-            transitive(false)
-        }
-    }
-
     if (rootProject.hasProperty('cloth_config_version')) {
         modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:$rootProject.cloth_config_version") {
             exclude(group: 'net.fabricmc.fabric-api')
@@ -88,6 +74,20 @@ dependencies {
         }
     }
 
+    if (rootProject.hasProperty('dim_lib_version')) {
+        modCompileOnlyApi("com.github.iPortalTeam:DimLib:v$rootProject.dim_lib_version") {
+            exclude(group: 'net.fabricmc.fabric-api')
+            transitive(false)
+        }
+    }
+
+    if (rootProject.hasProperty('imm_ptl_version')) {
+        modCompileOnlyApi("com.github.iPortalTeam:ImmersivePortalsMod:v$rootProject.imm_ptl_version") {
+            exclude(group: 'net.fabricmc.fabric-api')
+            transitive(false)
+        }
+    }
+
     if (rootProject.hasProperty('teamreborn_energy_api_version')) {
         modCompileOnlyApi("teamreborn:energy:$rootProject.teamreborn_energy_api_version") {
             exclude(group: 'net.fabricmc.fabric-api')
@@ -97,6 +97,13 @@ dependencies {
 
     if (rootProject.hasProperty('ae2_api_version')) {
         modCompileOnlyApi("appeng:appliedenergistics2-fabric:$rootProject.ae2_api_version:api") {
+            exclude(group: 'net.fabricmc.fabric-api')
+            transitive(false)
+        }
+    }
+
+    if (rootProject.hasProperty('iris_version')) {
+        modCompileOnlyApi("maven.modrinth:iris:$rootProject.iris_version+$rootProject.minecraft_version-fabric") {
             exclude(group: 'net.fabricmc.fabric-api')
             transitive(false)
         }
@@ -122,8 +129,8 @@ shadowJar {
 }
 
 remapJar {
+    inputFile.set shadowJar.archiveFile
     injectAccessWidener = true
-    input.set shadowJar.archiveFile
     dependsOn shadowJar
 }
 

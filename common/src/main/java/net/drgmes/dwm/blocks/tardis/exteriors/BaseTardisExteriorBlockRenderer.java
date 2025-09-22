@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
+import net.drgmes.dwm.compat.iris.Iris;
 import net.drgmes.dwm.enums.TardisExteriorState;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
@@ -52,6 +53,8 @@ public abstract class BaseTardisExteriorBlockRenderer<C extends BaseTardisExteri
         if (half != DoubleBlockHalf.LOWER) return;
 
         boolean hasImmersivePortals = ModCompats.immersivePortals();
+        boolean hasEnabledIrisShaders = ModCompats.iris() && Iris.isShaderPackInUse();
+
         boolean isLit = tile.getCachedState().get(BaseTardisExteriorBlock.LIT);
         boolean isOpen = tile.getCachedState().get(BaseTardisExteriorBlock.OPEN);
         float rotateDegrees = tile.getCachedState().get(BaseTardisExteriorBlock.FACING).asRotation();
@@ -75,8 +78,8 @@ public abstract class BaseTardisExteriorBlockRenderer<C extends BaseTardisExteri
         model.render(matrixStack, vertexConsumer, light, overlay, color);
         if (!hasImmersivePortals || !isOpen) model.renderDoors(matrixStack, vertexConsumer, light, overlay, color);
 
-        model.renderLamp(matrixStack, isLit ? buffer.getBuffer(RenderLayer.getEntityAlpha(this.modelLayer.getId())) : vertexConsumer, light, overlay, color);
-        if (isOpen && !hasImmersivePortals) model.renderBoti(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), light, overlay, color);
+        model.renderLamp(matrixStack, isLit && !hasEnabledIrisShaders ? buffer.getBuffer(RenderLayer.getEntityAlpha(this.modelLayer.getId())) : vertexConsumer, light, overlay, color);
+        if (isOpen && !hasImmersivePortals) model.renderBoti(matrixStack, !hasEnabledIrisShaders ? buffer.getBuffer(RenderLayer.getEndPortal()) : vertexConsumer, light, overlay, color);
 
         matrixStack.pop();
     }

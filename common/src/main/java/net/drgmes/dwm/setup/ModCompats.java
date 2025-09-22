@@ -1,6 +1,15 @@
 package net.drgmes.dwm.setup;
 
 public class ModCompats {
+    public static boolean iris() {
+        try {
+            Class.forName("net.irisshaders.iris.api.v0.IrisApi");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public static boolean clothConfig() {
         try {
             Class.forName("me.shedaniel.autoconfig.AutoConfig");

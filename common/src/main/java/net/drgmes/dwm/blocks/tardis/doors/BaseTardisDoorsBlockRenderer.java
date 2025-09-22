@@ -1,6 +1,7 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
+import net.drgmes.dwm.compat.iris.Iris;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
@@ -88,16 +89,20 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
     private void drawForeground(C tile, MatrixStack matrixStack, VertexConsumerProvider buffer) {
         if (!TardisHelper.isTardisDimension(tile.getWorld())) return;
 
+        boolean hasEnabledIrisShaders = ModCompats.iris() && Iris.isShaderPackInUse();
+
         matrixStack.push();
         matrixStack.scale(this.foregroundScale, this.foregroundScale + this.modelYScale, this.foregroundScale);
         matrixStack.translate(-0.5F, -1.25F, -0.05F);
 
-        RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getGui()), 0, 0, 1, 2, this.color);
+        if (hasEnabledIrisShaders) RenderHelper.drawTessellatorRectangle(matrixStack, 0, 0, 1, 2, this.color);
+        else RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getGui()), 0, 0, 1, 2, this.color);
 
         matrixStack.push();
         matrixStack.translate(1F, 0, 0.05F);
         matrixStack.multiply(RotationAxis.NEGATIVE_Y.rotationDegrees(180));
-        RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), 0, 0, 1, 2, 0xFF000000);
+        if (hasEnabledIrisShaders) RenderHelper.drawTessellatorRectangle(matrixStack, 0, 0, 1, 2, 0xFF000000);
+        else RenderHelper.drawRectangle(matrixStack, buffer.getBuffer(RenderLayer.getEndPortal()), 0, 0, 1, 2, 0xFF000000);
         matrixStack.pop();
 
         matrixStack.pop();

@@ -1,9 +1,10 @@
 package net.drgmes.dwm.utils.helpers;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -48,5 +49,23 @@ public class RenderHelper {
         vertexConsumer.vertex(matrix, x1, y2, 0).color(color);
         vertexConsumer.vertex(matrix, x2, y2, 0).color(color);
         vertexConsumer.vertex(matrix, x2, y1, 0).color(color);
+    }
+
+    public static void drawTessellatorRectangle(MatrixStack matrixStack, float x1, float y1, float x2, float y2, int color) {
+        Matrix4f matrix = matrixStack.peek().getPositionMatrix();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder builder = tessellator.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+
+        builder.vertex(matrix, x1, y1, 0f).color(color);
+        builder.vertex(matrix, x1, y2, 0f).color(color);
+        builder.vertex(matrix, x2, y2, 0f).color(color);
+        builder.vertex(matrix, x2, y1, 0f).color(color);
+
+        BufferRenderer.drawWithGlobalProgram(builder.end());
+        RenderSystem.disableBlend();
     }
 }
