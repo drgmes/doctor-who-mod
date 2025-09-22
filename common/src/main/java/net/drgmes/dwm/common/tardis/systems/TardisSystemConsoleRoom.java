@@ -78,7 +78,7 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
 
     @Override
     public void tick() {
-        if (!this.inProgress()) return;
+        if (!this.isEnabled() || !this.inProgress()) return;
         if (this.tick > 0) this.tick -= 1;
 
         this.playSound();

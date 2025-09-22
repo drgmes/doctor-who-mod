@@ -200,6 +200,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 if (tardis.isDoorsLocked()) {
                     player.sendMessage(DWM.TEXTS.TARDIS_LOCKED, true);
                     ModSounds.playTardisDoorsKnockSound(world, finalBlockPos);
+                    ModSounds.playTardisDoorsKnockSound(tardis.getWorld(), tardis.getEntrancePosition());
                 }
             });
         }

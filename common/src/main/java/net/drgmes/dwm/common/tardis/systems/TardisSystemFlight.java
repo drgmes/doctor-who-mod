@@ -99,8 +99,7 @@ public class TardisSystemFlight implements ITardisSystem {
     }
 
     public boolean takeoff() {
-        if (!this.isEnabled()) return false;
-        if (this.inProgress()) return false;
+        if (!this.isEnabled() || this.inProgress()) return false;
 
         if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
             ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
@@ -112,10 +111,11 @@ public class TardisSystemFlight implements ITardisSystem {
             return false;
         }
 
+        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
         this.isLaunched = true;
 
-        return this.tardis.getSystem(TardisSystemMaterialization.class).demat(() -> {
-            if (!this.isLaunched) return;
+        materializationSystem.putCallback((flag) -> {
+            if (!flag || !this.isLaunched) return;
 
             this.tardis.setFuelHarvesting(false);
             this.tardis.setEnergyHarvesting(false);
@@ -128,11 +128,12 @@ public class TardisSystemFlight implements ITardisSystem {
             this.tickInProgressGoal = timeToFly;
             this.destinationDistanceRate = timeToFly / Math.min(ModConfig.COMMON.tardisMaxFlightTime.get(), timeToFly);
         });
+
+        return materializationSystem.initDemat();
     }
 
     public boolean land() {
-        if (!this.isEnabled()) return false;
-        if (!this.inProgress()) return false;
+        if (!this.isEnabled() || !this.inProgress()) return false;
 
         if (!this.tardis.getSystem(TardisSystemMaterialization.class).isEnabled()) {
             ModSounds.playTardisFailSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
@@ -159,14 +160,15 @@ public class TardisSystemFlight implements ITardisSystem {
         this.tardis.markConsoleTilesUpdated();
         if (!isFailed) this.failConsumers.clear();
 
-        Runnable deferredConsumer = () -> {
+        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
+
+        materializationSystem.putCallback((flag) -> {
             this.isInFlight = false;
             this.tardis.markConsoleTilesUpdated();
             this.failConsumers.forEach(Runnable::run);
-        };
+        });
 
-        this.tardis.getSystem(TardisSystemMaterialization.class).onFail(deferredConsumer);
-        return this.tardis.getSystem(TardisSystemMaterialization.class).remat(deferredConsumer);
+        return materializationSystem.initRemat();
     }
 
     public void onFail(Runnable consumer) {

@@ -74,7 +74,8 @@ public record TardisConsoleUnitMonitorExternalShellApplyPacket(
                 }
 
                 tardis.setExteriorType(exteriorType);
-                materializationSystem.demat(materializationSystem::remat);
+                materializationSystem.putCallback((flag) -> { if (flag) materializationSystem.initRemat(); });
+                materializationSystem.initDemat();
 
                 BlockEntity doorsTile = tardis.getMainInteriorDoorsTile();
                 if (doorsTile == null) return;

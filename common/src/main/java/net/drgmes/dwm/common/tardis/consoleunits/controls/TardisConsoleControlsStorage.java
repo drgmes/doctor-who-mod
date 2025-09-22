@@ -96,7 +96,7 @@ public class TardisConsoleControlsStorage {
 
         this.values.put(TardisConsoleUnitControlRole.STARTER, flightSystem.inProgress());
         this.values.put(TardisConsoleUnitControlRole.MATERIALIZATION, materializationSystem.isMaterialized());
-        this.values.put(TardisConsoleUnitControlRole.VERTICAL_SCANNING, materializationSystem.verticalScanning.ordinal());
+        this.values.put(TardisConsoleUnitControlRole.VERTICAL_SCANNING, materializationSystem.getVerticalScanning().ordinal());
         this.values.put(TardisConsoleUnitControlRole.SHIELDS, shieldsSystem.inProgress());
         this.values.put(TardisConsoleUnitControlRole.SHIELDS_OXYGEN, shieldsSystem.isEnabled() && tardis.isShieldsOxygenEnabled());
         this.values.put(TardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, shieldsSystem.isEnabled() && tardis.isShieldsFireProofEnabled());

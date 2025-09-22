@@ -887,7 +887,7 @@ public class TardisStateManager extends PersistentState {
         boolean materialization = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.MATERIALIZATION);
         if (materializationSystem.isEnabled() && !this.isHandbrakeLocked()) {
             materializationSystem.setVerticalScanning(Math.abs((int) controlsStorage.get(TardisConsoleUnitControlRole.VERTICAL_SCANNING)));
-            materializationSystem.setMaterializationState(materialization);
+            materializationSystem.init(materialization, player);
             isMaterialized = materializationSystem.isMaterialized();
         }
         else {

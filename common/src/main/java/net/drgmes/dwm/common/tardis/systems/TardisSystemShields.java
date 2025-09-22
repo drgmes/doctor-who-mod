@@ -31,7 +31,7 @@ public class TardisSystemShields implements ITardisSystem {
 
     @Override
     public boolean inProgress() {
-        return this.isEnabled() && this.tardis.isShieldsEnabled();
+        return this.tardis.isShieldsEnabled();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TardisSystemShields implements ITardisSystem {
 
     @Override
     public void tick() {
-        if (!this.inProgress()) return;
+        if (!this.isEnabled() || !this.inProgress()) return;
 
         ServerWorld exteriorWorld = this.tardis.getExteriorWorld();
         if (exteriorWorld == null) return;
