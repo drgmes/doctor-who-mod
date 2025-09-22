@@ -67,9 +67,9 @@
     "subtitle": "message.dwm.sound.tardis.error",
     "sounds": ["dwm:tardis/error"]
   },
-  "tardis_fly": {
-    "subtitle": "message.dwm.sound.tardis.fly",
-    "sounds": ["dwm:tardis/fly"]
+  "tardis_flight": {
+    "subtitle": "message.dwm.sound.tardis.flight",
+    "sounds": ["dwm:tardis/flight"]
   },
   "tardis_land": {
     "subtitle": "message.dwm.sound.tardis.land",

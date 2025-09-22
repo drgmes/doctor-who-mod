@@ -55,7 +55,7 @@ public class TardisStateManager extends PersistentState {
     public static final int BATTERY_COMPONENTS_CONTAINER_SIZE = 0;
     public static final int UPGRADE_COMPONENTS_CONTAINER_SIZE = 0;
 
-    private final Map<Class<? extends ITardisSystem>, ITardisSystem> systems = new LinkedHashMap<>();
+    private final Map<Class<? extends TardisBaseSystem>, TardisBaseSystem> systems = new LinkedHashMap<>();
     private final Map<BlockPos, BaseTardisConsoleUnitBlockEntity> consoleTiles = new LinkedHashMap<>();
     private final Map<BlockPos, BaseTardisDoorsBlockEntity> doorsTiles = new LinkedHashMap<>();
 
@@ -627,7 +627,9 @@ public class TardisStateManager extends PersistentState {
     }
 
     public boolean isFuelHarvesting() {
-        return this.fuelHarvesting;
+        // return this.fuelHarvesting;
+        // TODO redone fuel system
+        return true;
     }
 
     public void setFuelHarvesting(boolean flag) {
@@ -636,7 +638,9 @@ public class TardisStateManager extends PersistentState {
     }
 
     public boolean isEnergyHarvesting() {
-        return this.energyHarvesting;
+        // return this.energyHarvesting;
+        // TODO redone fuel system
+        return true;
     }
 
     public void setEnergyHarvesting(boolean flag) {
@@ -663,7 +667,9 @@ public class TardisStateManager extends PersistentState {
     }
 
     public int getFuelAmount() {
-        return this.fuelAmount;
+        // return this.fuelAmount;
+        // TODO redone fuel system
+        return this.fuelCapacity;
     }
 
     public void setFuelAmount(int value) {
@@ -681,7 +687,9 @@ public class TardisStateManager extends PersistentState {
     }
 
     public int getEnergyAmount() {
-        return this.energyAmount;
+        // return this.energyAmount;
+        // TODO redone fuel system
+        return this.energyCapacity;
     }
 
     public void setEnergyAmount(int value) {
@@ -708,11 +716,11 @@ public class TardisStateManager extends PersistentState {
     // ////////////////////// //
 
     @SuppressWarnings("unchecked")
-    public <T extends ITardisSystem> T getSystem(Class<T> system) {
+    public <T extends TardisBaseSystem> T getSystem(Class<T> system) {
         return (T) this.systems.getOrDefault(system, null);
     }
 
-    public boolean isSystemEnabled(Class<? extends ITardisSystem> system) {
+    public boolean isSystemEnabled(Class<? extends TardisBaseSystem> system) {
         for (ItemStack itemStack : this.systemComponents) {
             if (itemStack.getItem() instanceof TardisSystemItem tardisSystemItem) {
                 if (tardisSystemItem.getSystemType() == system) return true;
@@ -874,7 +882,7 @@ public class TardisStateManager extends PersistentState {
         // Flight
         boolean starter = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.STARTER);
         if (flightSystem.isEnabled() && !this.isHandbrakeLocked()) {
-            flightSystem.setFlight(starter);
+            flightSystem.init(starter, player.getUuid());
             isInFlight = flightSystem.inProgress();
         }
         else {
@@ -887,7 +895,7 @@ public class TardisStateManager extends PersistentState {
         boolean materialization = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.MATERIALIZATION);
         if (materializationSystem.isEnabled() && !this.isHandbrakeLocked()) {
             materializationSystem.setVerticalScanning(Math.abs((int) controlsStorage.get(TardisConsoleUnitControlRole.VERTICAL_SCANNING)));
-            materializationSystem.init(materialization, player);
+            materializationSystem.init(materialization, player.getUuid());
             isMaterialized = materializationSystem.isMaterialized();
         }
         else {
@@ -909,10 +917,10 @@ public class TardisStateManager extends PersistentState {
             // Facing
             int facing = (int) controlsStorage.get(TardisConsoleUnitControlRole.FACING);
             this.destExteriorFacing = switch (facing >= 0 ? facing : TardisConsoleUnitControlRole.FACING.maxIntValue + facing) {
-                default -> Direction.NORTH;
                 case 1 -> Direction.EAST;
                 case 2 -> Direction.SOUTH;
                 case 3 -> Direction.WEST;
+                default -> Direction.NORTH;
             };
 
             // X Set
@@ -1024,7 +1032,7 @@ public class TardisStateManager extends PersistentState {
 
     @SuppressWarnings("UnstableApiUsage")
     public void tick() {
-        this.systems.values().forEach(ITardisSystem::tick);
+        this.systems.values().forEach(TardisBaseSystem::tick);
 
         if (this.updatedExterior) this.updateExterior();
         if (this.updatedDoorsTiles) this.updateDoorsTiles();
@@ -1034,7 +1042,7 @@ public class TardisStateManager extends PersistentState {
             this.validatePortals();
         }
 
-        if (this.isFuelHarvesting() && this.world.getTime() % ModConfig.COMMON.tardisFuelRefillTiming.get() == 0 && this.fuelAmount < this.fuelCapacity) {
+        if (this.isFuelHarvesting() && this.world.getTime() % 40 == 0 && this.fuelAmount < this.fuelCapacity) {
             this.setFuelAmount(this.fuelAmount + 1);
             this.markConsoleTilesUpdated();
         }
@@ -1052,7 +1060,7 @@ public class TardisStateManager extends PersistentState {
         this.updatedConsoleTiles = true;
     }
 
-    private void addSystem(ITardisSystem system) {
+    private void addSystem(TardisBaseSystem system) {
         this.systems.put(system.getClass(), system);
     }
 

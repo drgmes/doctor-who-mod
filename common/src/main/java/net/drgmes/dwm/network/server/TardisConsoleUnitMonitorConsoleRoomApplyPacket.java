@@ -70,7 +70,7 @@ public record TardisConsoleUnitMonitorConsoleRoomApplyPacket(
                     return;
                 }
 
-                if (!consoleRoomSystem.init(payload.consoleRoomId, player)) {
+                if (!consoleRoomSystem.init(payload.consoleRoomId, player.getUuid())) {
                     player.sendMessage(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, true);
                 }
             });

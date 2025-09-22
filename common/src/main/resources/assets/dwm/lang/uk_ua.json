@@ -1078,6 +1078,7 @@
   "message.dwm.tardis.removed": "ТАРДІС (%s) видалена",
 
   "message.dwm.tardis.system.materialization.not_installed": "§eДематеріалізаційна схема §cне встановлена",
+  "message.dwm.tardis.system.materialization.safe_position_not_found": "§cБезпечне місце для приземлення не виявлено",
   "message.dwm.tardis.system.flight.not_installed": "§eСпрямовуючий модуль §cне встановлено",
   "message.dwm.tardis.system.shields.not_installed": "§eГенератор щитів §cне встановлено",
   "message.dwm.tardis.system.shields.not_active": "§eГенератор щитів §cне запущено",
@@ -1166,7 +1167,7 @@
   "message.dwm.sound.tardis.doors_unlock": "Двері розблоковані",
   "message.dwm.sound.tardis.doors_open": "Двері відкрилися",
   "message.dwm.sound.tardis.error": "ТАРДІС видає помилку",
-  "message.dwm.sound.tardis.fly": "Шум польоту ТАРДІС",
+  "message.dwm.sound.tardis.flight": "Шум польоту ТАРДІС",
   "message.dwm.sound.tardis.land": "Шум матеріалізації ТАРДІС",
   "message.dwm.sound.tardis.takeoff": "Шум дематеріалізації ТАРДІС",
 
@@ -1213,15 +1214,5 @@
   "config.dwm.option.hideTheEndConditionally": "Приховувати Край за замовчуванням",
   "config.dwm.option.hideTheEndConditionally.@Tooltip": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений",
   "config.dwm.option.tardisRecallOperatorOnly": "Операторський виклик ТАРДІС",
-  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Дозволити лише операторам викликати ТАРДІС за допомогою ключа",
-  "config.dwm.option.tardisFlightDistanceRate": "Коефіцієнт дальності польоту",
-  "config.dwm.option.tardisFlightDistanceRate.@Tooltip": "Дільник співвідношення часу в тиках до пройденої відстані (він же - швидкість ТАРДІС)",
-  "config.dwm.option.tardisMaxFlightTime": "Максимальний час польоту",
-  "config.dwm.option.tardisMaxFlightTime.@Tooltip": "Максимальний час польоту ТАРДІС у тиках",
-  "config.dwm.option.tardisFuelRefillTiming": "Час заправлення паливом",
-  "config.dwm.option.tardisFuelRefillTiming.@Tooltip": "Частота відновлення 1 одиниці палива",
-  "config.dwm.option.tardisFuelConsumeTiming": "Час споживання палива",
-  "config.dwm.option.tardisFuelConsumeTiming.@Tooltip": "Частота споживання 1 одиниці палива",
-  "config.dwm.option.tardisFuelToEnergyRating": "Співвідношення палива до енергії",
-  "config.dwm.option.tardisFuelToEnergyRating.@Tooltip": "Ціна енергії за тик польоту, коли паливо закінчилося"
+  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Дозволити лише операторам викликати ТАРДІС за допомогою ключа"
 }

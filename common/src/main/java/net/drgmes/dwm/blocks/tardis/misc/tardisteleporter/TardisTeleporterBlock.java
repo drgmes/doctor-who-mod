@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisteleporter;
 
 import net.drgmes.dwm.setup.ModBlockEntities;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.EntityHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
@@ -67,7 +67,7 @@ public class TardisTeleporterBlock extends Block implements Waterloggable, Block
             if (facing == null) facing = Direction.NORTH;
 
             ModSounds.playTardisTeleporterSentSound(world, blockPos);
-            CommonHelper.teleport(entity, (ServerWorld) world, pos, facing.asRotation());
+            EntityHelper.teleport(entity, (ServerWorld) world, pos, facing.asRotation());
             ModSounds.playTardisTeleporterReceivedSound(world, BlockPos.ofFloored(pos));
         }
     }

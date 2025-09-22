@@ -141,7 +141,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
 
         String flight = DWM.TEXTS.MONITOR_STATE_NO.getString();
         TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
-        if (flightSystem.inProgress()) flight = flightSystem.getProgressPercent() + "%";
+        if (flightSystem.isInFlight()) flight = flightSystem.getProgressPercent() + "%";
 
         String materialized = DWM.TEXTS.MONITOR_STATE_YES.getString();
         TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
@@ -190,13 +190,15 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
         String shieldsMiningState = tardis.isShieldsMiningEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String shieldsGravitationState = tardis.isShieldsGravitationEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String shieldsSpecialState = tardis.isShieldsSpecialEnabled() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
-        String fuelHarvestingState = tardis.isFuelHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
+
+        // TODO redone fuel system
+        /*String fuelHarvestingState = tardis.isFuelHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
         String energyHarvestingState = tardis.isEnergyHarvesting() ? DWM.TEXTS.MONITOR_STATE_ON.getString() : DWM.TEXTS.MONITOR_STATE_OFF.getString();
 
         String fuelCapacityText = CommonHelper.formatNumberString(tardis.getFuelCapacity());
         String fuelAmountText = CommonHelper.formatNumberString(tardis.getFuelAmount());
         String energyCapacityText = CommonHelper.formatNumberString(tardis.getEnergyCapacity());
-        String energyAmountText = CommonHelper.formatNumberString(tardis.getEnergyAmount());
+        String energyAmountText = CommonHelper.formatNumberString(tardis.getEnergyAmount());*/
 
         this.printStringsToScreen(matrixStack, buffer, new String[]{
             this.buildScreenParamText("shields", !isShieldsEnabled ? NONE : shieldsState),
@@ -206,12 +208,13 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
             this.buildScreenParamText("shields_mining", !isShieldsEnabled ? NONE : shieldsMiningState),
             this.buildScreenParamText("shields_gravitation", !isShieldsEnabled ? NONE : shieldsGravitationState),
             this.buildScreenParamText("shields_special", !isShieldsEnabled ? NONE : shieldsSpecialState),
-            "",
+            // TODO redone fuel system
+            /*"",
             this.buildScreenParamText("fuel_harvesting", fuelHarvestingState),
             this.buildScreenParamText("energy_harvesting", energyHarvestingState),
             "",
             this.buildScreenParamText("fuel", fuelAmountText + " / " + fuelCapacityText + " AE"),
-            TardisEnergyManager.hasEnergyApi() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",
+            TardisEnergyManager.hasEnergyApi() ? this.buildScreenParamText("energy", energyAmountText + " / " + energyCapacityText + " E") : "",*/
         });
     }
 

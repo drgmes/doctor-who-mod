@@ -1,6 +1,6 @@
 package net.drgmes.dwm.items.tardis.systems;
 
-import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
+import net.drgmes.dwm.common.tardis.systems.TardisBaseSystem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
@@ -10,9 +10,9 @@ import net.minecraft.util.Formatting;
 import java.util.List;
 
 public class TardisSystemItem extends Item {
-    private final Class<? extends ITardisSystem> systemType;
+    private final Class<? extends TardisBaseSystem> systemType;
 
-    public TardisSystemItem(Settings props, Class<? extends ITardisSystem> systemType) {
+    public TardisSystemItem(Settings props, Class<? extends TardisBaseSystem> systemType) {
         super(props);
         this.systemType = systemType;
     }
@@ -23,7 +23,7 @@ public class TardisSystemItem extends Item {
         super.appendTooltip(itemStack, context, tooltips, type);
     }
 
-    public Class<? extends ITardisSystem> getSystemType() {
+    public Class<? extends TardisBaseSystem> getSystemType() {
         return this.systemType;
     }
 }

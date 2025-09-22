@@ -1,13 +1,13 @@
 package net.drgmes.dwm.items.tardis.systems;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.systems.ITardisSystem;
+import net.drgmes.dwm.common.tardis.systems.TardisBaseSystem;
 import net.drgmes.dwm.datagen.ItemModelDataBuilder;
 import net.drgmes.dwm.utils.builders.ItemBuilder;
 import net.minecraft.item.Item;
 
 public class TardisSystemItemBuilder extends ItemBuilder {
-    public TardisSystemItemBuilder(String name, Class<? extends ITardisSystem> systemType) {
+    public TardisSystemItemBuilder(String name, Class<? extends TardisBaseSystem> systemType) {
         super(name, () -> new TardisSystemItem(getItemSettings(), systemType));
     }
 

@@ -63,7 +63,7 @@ public class TardisKeyItem extends Item {
                             tardis.setDestinationFacing(Direction.fromRotation(player.getHeadYaw()));
                             tardis.setDestinationDimension(world.getRegistryKey());
                             tardis.setDestinationPosition(player.getBlockPos());
-                            flightSystem.setFlight(true);
+                            flightSystem.init(true, player.getUuid());
 
                             if (materializationSystem.inProgress()) {
                                 float duration = DWM.TIMINGS.DEMAT_DURATION + DWM.TIMINGS.REMAT_DURATION + flightSystem.getFlightDuration();
@@ -74,7 +74,9 @@ public class TardisKeyItem extends Item {
                                     tag.putString("tardisPos", player.getBlockPos().toShortString());
                                 });
 
-                                flightSystem.onFail(() -> {
+                                flightSystem.putCallback((flag) -> {
+                                    if (flag) return;
+
                                     String tardisPos = tardis.getDestinationExteriorPosition().toShortString();
 
                                     player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_FAILED.apply(tardisPos));

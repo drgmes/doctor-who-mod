@@ -11,18 +11,16 @@ import net.drgmes.dwm.enums.TardisVerticalScanning;
 import net.drgmes.dwm.network.client.TardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.EntityHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -35,37 +33,32 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class TardisSystemMaterialization implements ITardisSystem {
+public class TardisSystemMaterialization extends TardisBaseSystem {
     private enum EStep {
         NONE,
         INITED,
-        PROCESSING
+        PROCESSING,
     }
 
     private enum EMode {
         NONE,
         DEMAT,
-        REMAT
+        REMAT,
     }
 
-    private final TardisStateManager tardis;
     private final List<Consumer<Boolean>> callbacks = new ArrayList<>();
 
-    private UUID initiatorId;
+    private TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
     private EStep step = EStep.NONE;
     private EMode mode = EMode.NONE;
-    private TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
 
+    private UUID initiatorId;
     private boolean isMaterialized = true;
-    private float tick = -1;
+
+    private int tick = -1;
 
     public TardisSystemMaterialization(TardisStateManager tardis) {
-        this.tardis = tardis;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.tardis.isSystemEnabled(this.getClass());
+        super(tardis);
     }
 
     @Override
@@ -75,22 +68,24 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     @Override
     public void readNbt(NbtCompound tag) {
-        if (tag.contains("initiatorId")) this.initiatorId = tag.getUuid("initiatorId");
+        if (tag.contains("verticalScanning")) this.verticalScanning = TardisVerticalScanning.valueOf(tag.getString("verticalScanning"));
         if (tag.contains("step")) this.step = EStep.valueOf(tag.getString("step"));
         if (tag.contains("mode")) this.mode = EMode.valueOf(tag.getString("mode"));
-        if (tag.contains("verticalScanning")) this.verticalScanning = TardisVerticalScanning.valueOf(tag.getString("verticalScanning"));
+        if (tag.contains("initiatorId")) this.initiatorId = tag.getUuid("initiatorId");
         if (tag.contains("isMaterialized")) this.isMaterialized = tag.getBoolean("isMaterialized");
-        if (tag.contains("tick")) this.tick = tag.getFloat("tick");
+        if (tag.contains("tick")) this.tick = tag.getInt("tick");
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         if (this.initiatorId != null) tag.putUuid("initiatorId", this.initiatorId);
+
+        tag.putString("verticalScanning", this.verticalScanning.name());
         tag.putString("step", this.step.name());
         tag.putString("mode", this.mode.name());
-        tag.putString("verticalScanning", this.verticalScanning.name());
         tag.putBoolean("isMaterialized", this.isMaterialized);
-        tag.putFloat("tick", this.tick);
+        tag.putInt("tick", this.tick);
+
         return tag;
     }
 
@@ -110,6 +105,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
                 if (!isSuccessful) {
                     this.reset();
                     this.applyCallbacks(false);
+                    this.tardis.markConsoleTilesUpdated();
                 }
             }
 
@@ -127,19 +123,20 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
                     this.reset();
                     this.applyCallbacks(isSuccessful);
+                    this.tardis.markConsoleTilesUpdated();
                 }
             }
         }
     }
 
-    public boolean init(boolean flag, PlayerEntity initiator) {
+    public boolean init(boolean flag, UUID initiatorId) {
         if (!this.isEnabled() || this.inProgress() || this.isMaterialized == flag) return false;
-        if (this.tardis.getSystem(TardisSystemFlight.class).inProgress()) return false;
+        if (this.tardis.getSystem(TardisSystemFlight.class).isInFlight()) return false;
 
         this.step = EStep.INITED;
         this.mode = flag ? EMode.REMAT : EMode.DEMAT;
+        this.initiatorId = initiatorId;
         this.tick = 0;
-        this.initiatorId = initiator.getUuid();
         return true;
     }
 
@@ -198,15 +195,18 @@ public class TardisSystemMaterialization implements ITardisSystem {
             this.tardis.setDestinationPosition(initialExteriorBlockPos);
         }
 
-        boolean isValidForLandingInsideAnotherTardis = this.verticalScanning == TardisVerticalScanning.DIRECT || this.verticalScanning == TardisVerticalScanning.NONE;
+        boolean isValidForLandingInsideAnotherTardis = switch (this.verticalScanning) {
+            case NONE, DIRECT -> true;
+            default -> false;
+        };
 
-        // Try to land into another TARDIS
-        if ((isValidForLandingInsideAnotherTardis && this.tryLandToForeignTardis(exteriorWorld)) || (!isValidForLandingInsideAnotherTardis && this.tryPlaceTardisExterior())) {
+        if ((isValidForLandingInsideAnotherTardis && this.tryLandToForeignTardis(exteriorWorld)) || this.tryPlaceTardisExterior()) {
             this.isMaterialized = true;
             this.step = EStep.PROCESSING;
             this.mode = EMode.REMAT;
             this.tick = DWM.TIMINGS.REMAT_DURATION;
 
+            this.tardis.markConsoleTilesUpdated();
             this.sendExteriorUpdatePacket(TardisExteriorAction.REMAT);
             ModSounds.playTardisLandingSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
         }
@@ -231,19 +231,19 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
         List<Entity> entities = exteriorWorld.getEntitiesByClass(Entity.class, box, EntityPredicates.VALID_ENTITY);
         for (Entity entity : entities) {
-            CommonHelper.teleport(entity, this.tardis.getWorld(), pos, yaw);
+            EntityHelper.teleport(entity, this.tardis.getWorld(), pos, yaw);
         }
 
-        this.sendExteriorUpdatePacket(TardisExteriorAction.NONE);
         this.tardis.markConsoleTilesUpdated();
+        this.sendExteriorUpdatePacket(TardisExteriorAction.NONE);
         return true;
     }
 
     public void reset() {
         this.step = EStep.NONE;
         this.mode = EMode.NONE;
-        this.tick = -1;
         this.initiatorId = null;
+        this.tick = -1;
     }
 
     public void putCallback(Consumer<Boolean> callback) {
@@ -252,6 +252,10 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     public void applyCallbacks(boolean isSuccessful) {
         this.callbacks.forEach((callback) -> callback.accept(isSuccessful));
+        this.resetCallbacks();
+    }
+
+    public void resetCallbacks() {
         this.callbacks.clear();
     }
 
@@ -261,8 +265,8 @@ public class TardisSystemMaterialization implements ITardisSystem {
 
     public int getProgressPercent() {
         return switch (this.mode) {
-            case DEMAT -> (int) Math.ceil(this.tick / DWM.TIMINGS.DEMAT_DURATION * 100);
-            case REMAT -> 100 - (int) Math.ceil(this.tick / DWM.TIMINGS.REMAT_DURATION * 100);
+            case DEMAT -> (int) Math.ceil((float) this.tick / DWM.TIMINGS.DEMAT_DURATION * 100);
+            case REMAT -> 100 - (int) Math.ceil((float) this.tick / DWM.TIMINGS.REMAT_DURATION * 100);
             default -> this.isMaterialized ? 100 : 0;
         };
     }
@@ -282,13 +286,6 @@ public class TardisSystemMaterialization implements ITardisSystem {
             case 3 -> this.setVerticalScanning(TardisVerticalScanning.NONE);
             default -> this.setVerticalScanning(TardisVerticalScanning.TOP);
         }
-    }
-
-    private void notify(Text message) {
-        if (this.initiatorId == null) return;
-
-        PlayerEntity initiator = this.tardis.getWorld().getServer().getPlayerManager().getPlayer(this.initiatorId);
-        if (initiator != null) initiator.sendMessage(message, true);
     }
 
     private void playFailSound() {
@@ -375,6 +372,7 @@ public class TardisSystemMaterialization implements ITardisSystem {
             return true;
         }
 
+        this.notify(DWM.TEXTS.MATERIALIZATION_SYSTEM_SAFE_POSITION_NOT_FOUND, this.initiatorId);
         return false;
     }
 

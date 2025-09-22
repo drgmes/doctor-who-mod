@@ -1078,6 +1078,7 @@
   "message.dwm.tardis.removed": "TARDIS (%s) removed",
 
   "message.dwm.tardis.system.materialization.not_installed": "§eDematerialization Circuit §cNot Installed",
+  "message.dwm.tardis.system.materialization.safe_position_not_found": "§cNo safe landing position was found",
   "message.dwm.tardis.system.flight.not_installed": "§eDirectional Unit §cNot Installed",
   "message.dwm.tardis.system.shields.not_installed": "§eShields Generator §cNot Installed",
   "message.dwm.tardis.system.shields.not_active": "§eShields Generator §cNot Active",
@@ -1166,7 +1167,7 @@
   "message.dwm.sound.tardis.doors_unlock": "Doors unlocked",
   "message.dwm.sound.tardis.doors_open": "Doors opened",
   "message.dwm.sound.tardis.error": "TARDIS emits failure",
-  "message.dwm.sound.tardis.fly": "TARDIS flight noise",
+  "message.dwm.sound.tardis.flight": "TARDIS flight noise",
   "message.dwm.sound.tardis.land": "TARDIS landing noise",
   "message.dwm.sound.tardis.takeoff": "TARDIS takeoff noise",
 
@@ -1213,15 +1214,5 @@
   "config.dwm.option.hideTheEndConditionally": "Hide the End conditionally",
   "config.dwm.option.hideTheEndConditionally.@Tooltip": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
   "config.dwm.option.tardisRecallOperatorOnly": "Only operator can recall TARDIS",
-  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Allow only operators to recall the TARDIS by key",
-  "config.dwm.option.tardisFlightDistanceRate": "Flight distance rate",
-  "config.dwm.option.tardisFlightDistanceRate.@Tooltip": "Time ratio divider in ticks per distance traveled (aka TARDIS speed)",
-  "config.dwm.option.tardisMaxFlightTime": "Max flight time",
-  "config.dwm.option.tardisMaxFlightTime.@Tooltip": "Max flight time in ticks for TARDIS",
-  "config.dwm.option.tardisFuelRefillTiming": "Fuel refill timing",
-  "config.dwm.option.tardisFuelRefillTiming.@Tooltip": "Frequency of restoration of 1 unit of fuel",
-  "config.dwm.option.tardisFuelConsumeTiming": "Fuel consume timing",
-  "config.dwm.option.tardisFuelConsumeTiming.@Tooltip": "Frequency of consumption of 1 unit of fuel",
-  "config.dwm.option.tardisFuelToEnergyRating": "Fuel to Energy rating",
-  "config.dwm.option.tardisFuelToEnergyRating.@Tooltip": "Price of energy per flight tick when fuel is over"
+  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Allow only operators to recall the TARDIS by key"
 }

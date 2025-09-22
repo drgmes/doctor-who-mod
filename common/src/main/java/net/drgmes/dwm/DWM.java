@@ -73,6 +73,7 @@ public class DWM {
         public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message.dwm.tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
 
         public static final Text MATERIALIZATION_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.materialization.not_installed");
+        public static final Text MATERIALIZATION_SYSTEM_SAFE_POSITION_NOT_FOUND = Text.translatable("message.dwm.tardis.system.materialization.safe_position_not_found");
         public static final Text FLIGHT_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.flight.not_installed");
         public static final Text SHIELDS_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.shields.not_installed");
         public static final Text SHIELDS_SYSTEM_NOT_ACTIVE = Text.translatable("message.dwm.tardis.system.shields.not_active");

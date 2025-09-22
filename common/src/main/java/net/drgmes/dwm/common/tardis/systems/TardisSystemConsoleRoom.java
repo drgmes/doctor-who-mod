@@ -8,17 +8,15 @@ import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.enums.TardisExteriorAction;
 import net.drgmes.dwm.network.client.TardisExteriorUpdatePacket;
 import net.drgmes.dwm.setup.ModSounds;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.List;
 import java.util.UUID;
 
-public class TardisSystemConsoleRoom implements ITardisSystem {
+public class TardisSystemConsoleRoom extends TardisBaseSystem {
     private enum EStep {
         NONE,
         INITED,
@@ -31,18 +29,17 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
         FAIL,
     }
 
-    private final TardisStateManager tardis;
-
-    private UUID initiatorId;
-    private String consoleRoomId;
     private EStep step = EStep.NONE;
     private EResult result = EResult.NONE;
 
-    private float tick = -1;
-    private float soundTick = -1;
+    private UUID initiatorId;
+    private String consoleRoomId;
+
+    private int tick = -1;
+    private int soundTick = -1;
 
     public TardisSystemConsoleRoom(TardisStateManager tardis) {
-        this.tardis = tardis;
+        super(tardis);
     }
 
     @Override
@@ -57,22 +54,24 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
 
     @Override
     public void readNbt(NbtCompound tag) {
-        if (tag.contains("initiatorId")) this.initiatorId = tag.getUuid("initiatorId");
-        if (tag.contains("consoleRoomId")) this.consoleRoomId = tag.getString("consoleRoomId");
         if (tag.contains("step")) this.step = EStep.valueOf(tag.getString("step"));
         if (tag.contains("result")) this.result = EResult.valueOf(tag.getString("result"));
-        if (tag.contains("tick")) this.tick = tag.getFloat("tick");
-        if (tag.contains("soundTick")) this.soundTick = tag.getFloat("soundTick");
+        if (tag.contains("initiatorId")) this.initiatorId = tag.getUuid("initiatorId");
+        if (tag.contains("consoleRoomId")) this.consoleRoomId = tag.getString("consoleRoomId");
+        if (tag.contains("tick")) this.tick = tag.getInt("tick");
+        if (tag.contains("soundTick")) this.soundTick = tag.getInt("soundTick");
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound tag) {
         if (this.initiatorId != null) tag.putUuid("initiatorId", this.initiatorId);
         if (this.consoleRoomId != null) tag.putString("consoleRoomId", this.consoleRoomId);
+
         tag.putString("step", this.step.name());
         tag.putString("result", this.result.name());
-        tag.putFloat("tick", this.tick);
-        tag.putFloat("soundTick", this.soundTick);
+        tag.putInt("tick", this.tick);
+        tag.putInt("soundTick", this.soundTick);
+
         return tag;
     }
 
@@ -81,21 +80,22 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
         if (!this.isEnabled() || !this.inProgress()) return;
         if (this.tick > 0) this.tick -= 1;
 
-        this.playSound();
-
         switch (this.step) {
             case INITED -> {
+                this.playBellSound();
+
                 List<ServerPlayerEntity> players = this.tardis.getWorld().getPlayers();
                 if (this.tick == 0) this.tick = DWM.TIMINGS.RECONSTRUCTION_NOTIFICATION;
 
                 if (players.isEmpty()) {
                     this.step = EStep.PROCESSING;
                     this.tick = Math.max(DWM.TIMINGS.RECONSTRUCTION_DURATION, 120);
+                    this.soundTick = -1;
 
                     this.tardis.setDoorsOpenState(false);
                     this.tardis.setDoorsLockState(true, null);
                     this.sendExteriorUpdatePacket(TardisExteriorAction.PULSE);
-                    this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_STARTED);
+                    this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_STARTED, this.initiatorId);
                 }
                 else if (this.tick == DWM.TIMINGS.RECONSTRUCTION_NOTIFICATION) {
                     players.forEach((player) -> {
@@ -106,7 +106,7 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
 
             case PROCESSING -> {
                 if (this.tick % 20 == 0) {
-                    this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_TIMER.apply(this.tick / 20));
+                    this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_TIMER.apply((float) this.tick / 20), this.initiatorId);
                 }
 
                 if (this.tick == 100) {
@@ -127,8 +127,8 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
                 }
                 else if (this.tick == 0) {
                     switch (this.result) {
-                        case SUCCESS -> this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FINISHED);
-                        case FAIL -> this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED);
+                        case SUCCESS -> this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FINISHED, this.initiatorId);
+                        case FAIL -> this.notify(DWM.TEXTS.ARS_CONSOLE_ROOM_REBUILD_FAILED, this.initiatorId);
                     }
 
                     this.reset();
@@ -139,41 +139,35 @@ public class TardisSystemConsoleRoom implements ITardisSystem {
         }
     }
 
-    public boolean init(String consoleRoomId, PlayerEntity initiator) {
+    public boolean init(String consoleRoomId, UUID initiatorId) {
         if (!this.isEnabled() || this.inProgress() || consoleRoomId == null) return false;
         if (!TardisConsoleRooms.CONSOLE_ROOMS.containsKey(consoleRoomId)) return false;
 
         this.step = EStep.INITED;
         this.result = EResult.NONE;
+        this.initiatorId = initiatorId;
+        this.consoleRoomId = consoleRoomId;
         this.tick = 0;
         this.soundTick = 0;
-        this.consoleRoomId = consoleRoomId;
-        this.initiatorId = initiator.getUuid();
         return true;
     }
 
     public void reset() {
         this.step = EStep.NONE;
         this.result = EResult.NONE;
+        this.initiatorId = null;
+        this.consoleRoomId = null;
         this.tick = -1;
         this.soundTick = -1;
-        this.consoleRoomId = null;
-        this.initiatorId = null;
     }
 
-    private void notify(Text message) {
-        if (this.initiatorId == null) return;
-
-        PlayerEntity initiator = this.tardis.getWorld().getServer().getPlayerManager().getPlayer(this.initiatorId);
-        if (initiator != null) initiator.sendMessage(message, true);
-    }
-
-    private void playSound() {
-        if (this.soundTick < 0) return;
-        if (this.soundTick > 0) this.soundTick -= 1;
-        else {
+    private void playBellSound() {
+        if (this.soundTick > 0) {
+            this.soundTick -= 1;
+        }
+        else if (this.soundTick == 0) {
             this.soundTick = DWM.TIMINGS.RECONSTRUCTION_LOOP;
-            ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
+            ModSounds.playTardisBellSound(this.tardis.getWorld(), this.tardis.getMainConsolePosition());
         }
     }
 

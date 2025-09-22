@@ -6,7 +6,7 @@ import net.drgmes.dwm.enums.SonicDeviceMode;
 import net.drgmes.dwm.items.sonicdevices.ISonicDeviceItem;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
-import net.drgmes.dwm.utils.helpers.PlayerHelper;
+import net.drgmes.dwm.utils.helpers.EntityHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,7 +34,7 @@ public class SonicDevice {
         if (player.getItemCooldownManager().isCoolingDown(itemStack.getItem())) return ActionResult.CONSUME;
 
         BaseSonicDeviceMode mode = getInteractionMode(itemStack).getInstance();
-        HitResult hitResult = PlayerHelper.pick(player, getInteractionDistance(itemStack));
+        HitResult hitResult = EntityHelper.pick(player, getInteractionDistance(itemStack));
         if (hitResult == null || hitResult.getType() == HitResult.Type.MISS) return ActionResult.PASS;
 
         if (hitResult.getType() == HitResult.Type.BLOCK) {

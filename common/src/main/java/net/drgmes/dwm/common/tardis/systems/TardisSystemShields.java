@@ -8,7 +8,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -17,30 +16,14 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.List;
 
-public class TardisSystemShields implements ITardisSystem {
-    private final TardisStateManager tardis;
-
+public class TardisSystemShields extends TardisBaseSystem {
     public TardisSystemShields(TardisStateManager tardis) {
-        this.tardis = tardis;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return this.tardis.isSystemEnabled(this.getClass());
+        super(tardis);
     }
 
     @Override
     public boolean inProgress() {
         return this.tardis.isShieldsEnabled();
-    }
-
-    @Override
-    public void readNbt(NbtCompound tag) {
-    }
-
-    @Override
-    public NbtCompound writeNbt(NbtCompound tag) {
-        return tag;
     }
 
     @Override

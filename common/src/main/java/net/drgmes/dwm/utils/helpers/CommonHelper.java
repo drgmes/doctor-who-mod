@@ -6,13 +6,9 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.TeleportTarget;
 
 import java.io.IOException;
 import java.net.URL;
@@ -86,15 +82,6 @@ public class CommonHelper {
         }
 
         return null;
-    }
-
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d position, float yaw, float pitch) {
-        TeleportTarget.PostDimensionTransition transition = TeleportTarget.SEND_TRAVEL_THROUGH_PORTAL_PACKET.then(TeleportTarget.ADD_PORTAL_CHUNK_TICKET);
-        return entity.teleportTo(new TeleportTarget(destination, position, entity.getVelocity(), yaw, pitch, transition));
-    }
-
-    public static Entity teleport(Entity entity, ServerWorld destination, Vec3d position, float yaw) {
-        return CommonHelper.teleport(entity, destination, position, yaw, 0);
     }
 
     public static NbtComponent getItemStackData(ItemStack itemStack) {
