@@ -43,6 +43,18 @@ public class RenderHelper {
         return new Vector2i(0, offsetY);
     }
 
+    public static Vector2i drawTextMultilineCentered(Text text, TextRenderer textRenderer, DrawContext context, Vector2i centerPos, int lineHeight, int maxTextLength, int color) {
+        List<OrderedText> lines = Language.getInstance().reorder(textRenderer.getTextHandler().wrapLines(text, maxTextLength, Style.EMPTY));
+
+        int offsetY = 0;
+        for (OrderedText line : lines) {
+            context.drawText(textRenderer, line, centerPos.x - (int) Math.floor(textRenderer.getWidth(line) / 2F), centerPos.y + offsetY, color, true);
+            offsetY += lineHeight;
+        }
+
+        return new Vector2i(0, offsetY);
+    }
+
     public static void drawRectangle(MatrixStack matrixStack, VertexConsumer vertexConsumer, float x1, float y1, float x2, float y2, int color) {
         Matrix4f matrix = matrixStack.peek().getPositionMatrix();
         vertexConsumer.vertex(matrix, x1, y1, 0).color(color);

@@ -46,18 +46,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     @Override
-    public void tick() {
-        this.locationsListWidget.setSelected(this.selected);
-
-        if (!this.search.getText().equals(lastSearch)) {
-            this.selected = null;
-            this.reloadLocationsList();
-            this.locationsListWidget.refreshList();
-            this.update();
-        }
-    }
-
-    @Override
     public void init() {
         super.init();
 
@@ -89,6 +77,18 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
         if (!this.search.getText().isEmpty()) {
             this.reloadLocationsList();
+        }
+    }
+
+    @Override
+    public void tick() {
+        this.locationsListWidget.setSelected(this.selected);
+
+        if (!this.search.getText().equals(lastSearch)) {
+            this.selected = null;
+            this.reloadLocationsList();
+            this.locationsListWidget.refreshList();
+            this.update();
         }
     }
 

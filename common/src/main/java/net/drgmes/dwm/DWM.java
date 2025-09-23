@@ -124,6 +124,8 @@ public class DWM {
         public static final Text MONITOR_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen.dwm.monitor.console_rooms.accept");
         public static final Text MONITOR_CONSOLE_ROOMS_PREV = Text.translatable("screen.dwm.monitor.console_rooms.prev");
         public static final Text MONITOR_CONSOLE_ROOMS_NEXT = Text.translatable("screen.dwm.monitor.console_rooms.next");
+        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_1 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.1");
+        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_2 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.2");
 
         public static final Text TELEPATHIC_INTERFACE_NAME_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_NAME_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");

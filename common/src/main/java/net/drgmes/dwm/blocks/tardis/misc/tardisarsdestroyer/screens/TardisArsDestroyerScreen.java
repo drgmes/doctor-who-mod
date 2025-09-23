@@ -47,17 +47,21 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
+    @Override
     protected void init() {
         super.init();
 
-        int buttonHeight = 20;
         int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
-        int buttonOffset = this.getBackgroundSize().y / 2 - this.getBackgroundBorderSize().y / 2 - buttonHeight / 2 + BUTTON_HEIGHT;
+        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
 
-        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2 - buttonWidth / 2, buttonOffset + buttonHeight + 1);
+        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
         this.cancelButton = RenderHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
 
-        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundSize().x / 2 - buttonWidth / 2, buttonOffset);
+        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
         this.acceptButton = RenderHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_DESTROY, (b) -> this.apply());
 
         this.addDrawableChild(this.cancelButton);
@@ -68,11 +72,6 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderAdditional(context, mouseX, mouseY, delta);
         this.renderConfirmationMessage(context);
-    }
-
-    @Override
-    public boolean shouldCloseOnInventoryKey() {
-        return true;
     }
 
     protected void apply() {
@@ -86,17 +85,15 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     protected void renderConfirmationMessage(DrawContext context) {
         if (this.blockPos == null || this.arsStructure == null) return;
 
-        int textX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(DWM.TEXTS.ARS_INTERFACE_MESSAGE)) / 2F);
-        int textY = (int) Math.floor((this.getBackgroundSize().y - this.textRenderer.fontHeight * 3) / 2F) - BUTTON_HEIGHT;
-        Vector2i textPos = this.getRenderPos(textX, textY);
-
-        context.drawText(this.textRenderer, DWM.TEXTS.ARS_INTERFACE_MESSAGE, textPos.x, textPos.y, 0xE0E0E0, true);
-
         MutableText name = this.arsStructure.getTitle().copy().formatted(Formatting.GOLD);
         name.append(Text.literal("?").formatted(Formatting.WHITE));
-        int nameX = (int) Math.floor((this.getBackgroundSize().x - this.textRenderer.getWidth(name)) / 2F);
-        Vector2i namePos = this.getRenderPos(nameX, textY + this.textRenderer.fontHeight);
 
-        context.drawText(this.textRenderer, name, namePos.x, namePos.y, 0xE0E0E0, true);
+        int maxWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int textX = (int) Math.floor(this.getBackgroundSize().x / 2F);
+        int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_HEIGHT;
+        Vector2i textPos = this.getRenderPos(textX, textY);
+
+        textPos = textPos.add(RenderHelper.drawTextMultilineCentered(DWM.TEXTS.ARS_INTERFACE_MESSAGE, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0));
+        RenderHelper.drawTextMultilineCentered(name, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
     }
 }

@@ -1197,6 +1197,8 @@
   "screen.dwm.monitor.console_rooms.accept": "Обновить",
   "screen.dwm.monitor.console_rooms.prev": "Предыдущая",
   "screen.dwm.monitor.console_rooms.next": "Следующая",
+  "screen.dwm.monitor.console_rooms.confirmation.1": "Вы уверены, что хотите перестроить главную комнату?",
+  "screen.dwm.monitor.console_rooms.confirmation.2": "§6(Все блоки внутри будут уничтожены)",
 
   "screen.dwm.telepathic_interface.title.locations": "Телепатический интерфейс: Выберите локацию",
   "screen.dwm.telepathic_interface.title.banners": "Телепатический интерфейс: Выберите маркер",

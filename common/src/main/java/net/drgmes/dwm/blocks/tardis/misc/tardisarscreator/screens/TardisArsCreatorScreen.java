@@ -84,19 +84,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     @Override
-    public void tick() {
-        this.listWidget.setSelected(this.selectedArsStructureEntry);
-
-        if (!this.search.getText().equals(lastSearch)) {
-            this.selectedArsStructureEntry = null;
-            this.reloadCategoriesList();
-            this.reloadArsStructuresList();
-            this.listWidget.refreshList();
-            this.update();
-        }
-    }
-
-    @Override
     public void init() {
         super.init();
 
@@ -139,6 +126,19 @@ public class TardisArsCreatorScreen extends BaseScreen {
         if (!this.search.getText().isEmpty()) {
             this.reloadCategoriesList();
             this.reloadArsStructuresList();
+        }
+    }
+
+    @Override
+    public void tick() {
+        this.listWidget.setSelected(this.selectedArsStructureEntry);
+
+        if (!this.search.getText().equals(lastSearch)) {
+            this.selectedArsStructureEntry = null;
+            this.reloadCategoriesList();
+            this.reloadArsStructuresList();
+            this.listWidget.refreshList();
+            this.update();
         }
     }
 

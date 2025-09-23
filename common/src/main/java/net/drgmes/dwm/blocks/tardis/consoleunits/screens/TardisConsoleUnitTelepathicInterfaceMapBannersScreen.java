@@ -37,11 +37,6 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     @Override
-    public void tick() {
-        this.bannersListWidget.setSelected(this.selected);
-    }
-
-    @Override
     public void init() {
         super.init();
 
@@ -61,6 +56,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         BannersListWidget.BannerEntry selected = this.selected;
         super.resize(mc, width, height);
         this.selected = selected;
+    }
+
+    @Override
+    public void tick() {
+        this.bannersListWidget.setSelected(this.selected);
     }
 
     @Override

@@ -103,10 +103,8 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
 
         if (selectedConsoleRoom != null && !selectedConsoleRoom.name.equals(this.currentConsoleRoomId)) {
-            new TardisConsoleUnitMonitorConsoleRoomApplyPacket(this.tardisId, selectedConsoleRoom.name).sendToServer();
+            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, selectedConsoleRoom.name, this));
         }
-
-        super.apply();
     }
 
     private TardisConsoleRoomEntry getSelectedConsoleRoom() {

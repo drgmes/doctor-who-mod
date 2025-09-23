@@ -1197,6 +1197,8 @@
   "screen.dwm.monitor.console_rooms.accept": "Update",
   "screen.dwm.monitor.console_rooms.prev": "Previous room",
   "screen.dwm.monitor.console_rooms.next": "Next room",
+  "screen.dwm.monitor.console_rooms.confirmation.1": "Are you sure you want to rebuild the main room?",
+  "screen.dwm.monitor.console_rooms.confirmation.2": "§6(All blocks inside will be destroyed)",
 
   "screen.dwm.telepathic_interface.title.locations": "Telepathic Interface: Choose a Location",
   "screen.dwm.telepathic_interface.title.banners": "Telepathic Interface: Choose an Anchor",

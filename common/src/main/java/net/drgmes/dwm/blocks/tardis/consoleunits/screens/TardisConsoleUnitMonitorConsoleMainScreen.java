@@ -83,6 +83,11 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     }
 
     @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
+    @Override
     protected void init() {
         super.init();
         this.buttons.clear();
@@ -127,11 +132,6 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     public void renderElementsAfter(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderElementsAfter(context, mouseX, mouseY, delta);
         this.renderCustomButtons(context);
-    }
-
-    @Override
-    public boolean shouldCloseOnInventoryKey() {
-        return true;
     }
 
     private void renderData(DrawContext context) {
