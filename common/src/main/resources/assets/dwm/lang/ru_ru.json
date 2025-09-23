@@ -1154,6 +1154,8 @@
   "message.dwm.tardis.telepathic_interface.structure.found": "Структура §aнайдена",
   "message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне найдена",
 
+  "message.dwm.ars_destroyer.must_be_sneaking": "Для удаления комнаты взаимодействуйте с блоком, зажав Shift",
+
   "message.dwm.sonic_device.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Звук звуковой отвёртки",

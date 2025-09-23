@@ -1154,6 +1154,8 @@
   "message.dwm.tardis.telepathic_interface.structure.found": "Structure §aFound",
   "message.dwm.tardis.telepathic_interface.structure.not_found": "Structure §cNot Found",
 
+  "message.dwm.ars_destroyer.must_be_sneaking": "To destroy a room, interact with the block while holding Shift",
+
   "message.dwm.sonic_device.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Sonic Screwdriver sounds",
