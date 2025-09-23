@@ -1156,6 +1156,8 @@
 
   "message.dwm.ars_destroyer.must_be_sneaking": "To destroy a room, interact with the block while holding Shift",
 
+  "message.dwm.tardis_teleporter.must_be_sneaking": "To configure, interact with the block while holding down Shift",
+
   "message.dwm.sonic_device.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Sonic Screwdriver sounds",
@@ -1205,6 +1207,15 @@
   "screen.dwm.telepathic_interface.search": "Search",
   "screen.dwm.telepathic_interface.button.cancel": "Cancel",
   "screen.dwm.telepathic_interface.button.accept": "Find",
+
+  "screen.dwm.tardis_teleporter_interface.title": "Teleporter Settings Interface",
+  "screen.dwm.tardis_teleporter_interface.entity_types": "Allowed entities",
+  "screen.dwm.tardis_teleporter_interface.coords": "Coordinates",
+  "screen.dwm.tardis_teleporter_interface.entity_type.players": "Players",
+  "screen.dwm.tardis_teleporter_interface.entity_type.mobs": "Mobs",
+  "screen.dwm.tardis_teleporter_interface.entity_type.items": "Items",
+  "screen.dwm.tardis_teleporter_interface.button.cancel": "Cancel",
+  "screen.dwm.tardis_teleporter_interface.button.accept": "Save",
 
   "screen.dwm.sonic_device_interface.title": "Sonic Device Settings Interface",
   "screen.dwm.sonic_device_interface.button.mode": "Mode: %s",

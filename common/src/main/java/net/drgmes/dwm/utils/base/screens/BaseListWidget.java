@@ -69,7 +69,9 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         @Override
         public void render(DrawContext context, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
             MutableText text = this.getText().copy();
-            if (this.isSelected()) text = Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD)).append(text.formatted(this.selectedItemFormat));
+
+            if (this.isSelected()) text = this.getSelectedPrependText().append(text.formatted(this.selectedItemFormat));
+            else text = this.getPrependText().append(text);
 
             Vector2i pos = new Vector2i(left + padding, top + 2);
             RenderHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
@@ -108,6 +110,14 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
         public boolean isSelected() {
             return getSelectedOrNull() == this;
+        }
+
+        public MutableText getPrependText() {
+            return Text.empty();
+        }
+
+        public MutableText getSelectedPrependText() {
+            return Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD));
         }
     }
 }

@@ -1,6 +1,7 @@
 package net.drgmes.dwm;
 
 import net.drgmes.dwm.enums.SonicDeviceMode;
+import net.drgmes.dwm.enums.TardisTeleporterEntityTypes;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -98,6 +99,8 @@ public class DWM {
 
         public static final Text ARS_DESTROYER_MUST_BE_SNEAKING = Text.translatable("message.dwm.ars_destroyer.must_be_sneaking");
 
+        public static final Text TARDIS_TELEPORTER_MUST_BE_SNEAKING = Text.translatable("message.dwm.tardis_teleporter.must_be_sneaking");
+
         public static final Function<List<Text>, Text> SONIC_DEVICE_TARDIS_RELOCATED = (coords) -> Text.translatable("message.dwm.sonic_device.tardis_relocated", coords.get(0), coords.get(1), coords.get(2));
 
         public static final Text ARS_INTERFACE_NAME = Text.translatable("screen.dwm.ars_interface.title");
@@ -132,6 +135,13 @@ public class DWM {
         public static final Text TELEPATHIC_INTERFACE_SEARCH = Text.translatable("screen.dwm.telepathic_interface.search");
         public static final Text TELEPATHIC_INTERFACE_BTN_CANCEL = Text.translatable("screen.dwm.telepathic_interface.button.cancel");
         public static final Text TELEPATHIC_INTERFACE_BTN_ACCEPT = Text.translatable("screen.dwm.telepathic_interface.button.accept");
+
+        public static final Text TARDIS_TELEPORTER_INTERFACE_NAME = Text.translatable("screen.dwm.tardis_teleporter_interface.title");
+        public static final Text TARDIS_TELEPORTER_INTERFACE_ENTITY_TYPES = Text.translatable("screen.dwm.tardis_teleporter_interface.entity_types");
+        public static final Text TARDIS_TELEPORTER_INTERFACE_COORDS = Text.translatable("screen.dwm.tardis_teleporter_interface.coords");
+        public static final Text TARDIS_TELEPORTER_INTERFACE_BTN_CANCEL = Text.translatable("screen.dwm.tardis_teleporter_interface.button.cancel");
+        public static final Text TARDIS_TELEPORTER_INTERFACE_BTN_ACCEPT = Text.translatable("screen.dwm.tardis_teleporter_interface.button.accept");
+        public static final Function<TardisTeleporterEntityTypes, Text> TARDIS_TELEPORTER_INTERFACE_ENTITY_TYPE = (entityType) -> Text.translatable("screen.dwm.tardis_teleporter_interface.entity_type." + entityType.name().toLowerCase());
 
         public static final Text SONIC_DEVICE_INTERFACE_NAME = Text.translatable("screen.dwm.sonic_device_interface.title");
         public static final Function<SonicDeviceMode, Text> SONIC_DEVICE_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen.dwm.sonic_device_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
@@ -191,6 +201,11 @@ public class DWM {
                 public static class ENGINE {
                     public static final Identifier SYSTEMS_INTERFACE = DWM.getIdentifier("textures/gui/tardis/engine/systems_interface.png");
                     public static final Vector2i SYSTEMS_INTERFACE_SIZE = new Vector2i(176, 166);
+                }
+
+                public static class TELEPORTER {
+                    public static final Identifier INTERFACE = DWM.getIdentifier("textures/gui/tardis/teleporter/interface.png");
+                    public static final Vector2i INTERFACE_SIZE = new Vector2i(371, 297);
                 }
             }
 

@@ -1156,6 +1156,8 @@
 
   "message.dwm.ars_destroyer.must_be_sneaking": "Для удаления комнаты взаимодействуйте с блоком, зажав Shift",
 
+  "message.dwm.tardis_teleporter.must_be_sneaking": "Для настройки взаимодействуйте с блоком, зажав Shift",
+
   "message.dwm.sonic_device.tardis_relocated": "Координаты ТАРДИС установлены на %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Звук звуковой отвёртки",
@@ -1205,6 +1207,15 @@
   "screen.dwm.telepathic_interface.search": "Поиск",
   "screen.dwm.telepathic_interface.button.cancel": "Отмена",
   "screen.dwm.telepathic_interface.button.accept": "Найти",
+
+  "screen.dwm.tardis_teleporter_interface.title": "Интерфейс настройки телепортера",
+  "screen.dwm.tardis_teleporter_interface.entity_types": "Разрешенные сущности",
+  "screen.dwm.tardis_teleporter_interface.coords": "Координаты",
+  "screen.dwm.tardis_teleporter_interface.entity_type.players": "Игроки",
+  "screen.dwm.tardis_teleporter_interface.entity_type.mobs": "Мобы",
+  "screen.dwm.tardis_teleporter_interface.entity_type.items": "Предметы",
+  "screen.dwm.tardis_teleporter_interface.button.cancel": "Отмена",
+  "screen.dwm.tardis_teleporter_interface.button.accept": "Сохранить",
 
   "screen.dwm.sonic_device_interface.title": "Интерфейс настройки звукового устройства",
   "screen.dwm.sonic_device_interface.button.mode": "Режим: %s",

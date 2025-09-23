@@ -23,6 +23,7 @@ public class ModNetwork {
         Registration.registerPacket(NetworkManager.Side.S2C, TardisRoundelBlockTemplateUpdatePacket.PACKET_ID, TardisRoundelBlockTemplateUpdatePacket.PACKET_CODEC, () -> TardisRoundelBlockTemplateUpdatePacket::handle);
         Registration.registerPacket(NetworkManager.Side.S2C, TardisRoundelUpdatePacket.PACKET_ID, TardisRoundelUpdatePacket.PACKET_CODEC, () -> TardisRoundelUpdatePacket::handle);
         Registration.registerPacket(NetworkManager.Side.S2C, TardisToyotaSpinnerUpdatePacket.PACKET_ID, TardisToyotaSpinnerUpdatePacket.PACKET_CODEC, () -> TardisToyotaSpinnerUpdatePacket::handle);
+        Registration.registerPacket(NetworkManager.Side.S2C, TardisTeleporterOpenPacket.PACKET_ID, TardisTeleporterOpenPacket.PACKET_CODEC, () -> TardisTeleporterOpenPacket::handle);
 
         Registration.registerPacket(NetworkManager.Side.C2S, ArsCreatorApplyPacket.PACKET_ID, ArsCreatorApplyPacket.PACKET_CODEC, () -> ArsCreatorApplyPacket::handle);
         Registration.registerPacket(NetworkManager.Side.C2S, ArsDestroyerApplyPacket.PACKET_ID, ArsDestroyerApplyPacket.PACKET_CODEC, () -> ArsDestroyerApplyPacket::handle);
@@ -33,5 +34,6 @@ public class ModNetwork {
         Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitSoundPacket.PACKET_ID, TardisConsoleUnitSoundPacket.PACKET_CODEC, () -> TardisConsoleUnitSoundPacket::handle);
         Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceLocationApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceLocationApplyPacket::handle);
         Registration.registerPacket(NetworkManager.Side.C2S, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket.PACKET_ID, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket.PACKET_CODEC, () -> TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::handle);
+        Registration.registerPacket(NetworkManager.Side.C2S, TardisTeleporterApplyPacket.PACKET_ID, TardisTeleporterApplyPacket.PACKET_CODEC, () -> TardisTeleporterApplyPacket::handle);
     }
 }

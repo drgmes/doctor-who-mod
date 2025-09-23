@@ -79,12 +79,12 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         context.getMatrices().pop();
     }
 
-    private Vector2i getModesListSize() {
-        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
-    }
-
     private Vector2i getModesListPos() {
         return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundBorderSize().y);
+    }
+
+    private Vector2i getModesListSize() {
+        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
     }
 
     protected void setSelected(SonicDeviceModesListWidget.SonicDeviceModeEntry entry) {

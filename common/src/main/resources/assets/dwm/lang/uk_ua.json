@@ -1154,7 +1154,9 @@
   "message.dwm.tardis.telepathic_interface.structure.found": "Структура §aзнайдена",
   "message.dwm.tardis.telepathic_interface.structure.not_found": "Структура §cне знайдена",
 
-  "message.dwm.ars_destroyer.must_be_sneaking": "Для видалення кімнати, взаємодійте з блоком, затиснувши Shift",
+  "message.dwm.ars_destroyer.must_be_sneaking": "Для видалення кімнати взаємодійте з блоком, затиснувши Shift",
+
+  "message.dwm.tardis_teleporter.must_be_sneaking": "Для налаштування взаємодійте з блоком, затиснувши Shift",
 
   "message.dwm.sonic_device.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
 
@@ -1205,6 +1207,15 @@
   "screen.dwm.telepathic_interface.search": "Пошук",
   "screen.dwm.telepathic_interface.button.cancel": "Скасувати",
   "screen.dwm.telepathic_interface.button.accept": "Знайти",
+
+  "screen.dwm.tardis_teleporter_interface.title": "Інтерфейс налаштування телепортера",
+  "screen.dwm.tardis_teleporter_interface.entity_types": "Дозволені сутності",
+  "screen.dwm.tardis_teleporter_interface.coords": "Координати",
+  "screen.dwm.tardis_teleporter_interface.entity_type.players": "Гравці",
+  "screen.dwm.tardis_teleporter_interface.entity_type.mobs": "Моби",
+  "screen.dwm.tardis_teleporter_interface.entity_type.items": "Предмети",
+  "screen.dwm.tardis_teleporter_interface.button.cancel": "Скасувати",
+  "screen.dwm.tardis_teleporter_interface.button.accept": "Зберегти",
 
   "screen.dwm.sonic_device_interface.title": "Інтерфейс налаштування звукового пристрою",
   "screen.dwm.sonic_device_interface.button.mode": "Режим: %s",
