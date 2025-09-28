@@ -7,17 +7,14 @@ import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlockEntity;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
-import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleControlsStorage;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
 import net.drgmes.dwm.common.tardis.systems.*;
 import net.drgmes.dwm.compat.immersiveportals.ImmersivePortals;
-import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.drgmes.dwm.items.tardis.keys.TardisKeyItem;
 import net.drgmes.dwm.items.tardis.systems.TardisSystemItem;
 import net.drgmes.dwm.network.client.TardisConsoleUnitUpdatePacket;
 import net.drgmes.dwm.setup.ModCompats;
-import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
@@ -26,7 +23,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.datafixer.DataFixTypes;
-import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
@@ -772,7 +768,7 @@ public class TardisStateManager extends PersistentState {
 
         this.consoleTiles.forEach((id, tile) -> {
             if (tile == null) return;
-            tile.controlsStorage.applyData(this);
+            tile.controlsStorage.applyDataFromTardis(this);
 
             NbtCompound tag = new NbtCompound();
             tag.put("controlsState", tile.controlsStorage.writeNbt(new NbtCompound()));
@@ -859,176 +855,6 @@ public class TardisStateManager extends PersistentState {
     // /////////////////// //
     // Tardis Data methods //
     // /////////////////// //
-
-    public void applyData(TardisConsoleControlsStorage controlsStorage, PlayerEntity player) {
-        TardisSystemFlight flightSystem = this.getSystem(TardisSystemFlight.class);
-        TardisSystemMaterialization materializationSystem = this.getSystem(TardisSystemMaterialization.class);
-        TardisSystemShields shieldsSystem = this.getSystem(TardisSystemShields.class);
-
-        boolean isInFlight = flightSystem.inProgress();
-        boolean isMaterialized = materializationSystem.isMaterialized();
-
-        if (this.destExteriorDimension == null) this.destExteriorDimension = this.currExteriorDimension;
-        if (this.destExteriorFacing == null) this.destExteriorFacing = this.currExteriorFacing;
-        if (this.destExteriorPosition == null) this.destExteriorPosition = this.currExteriorPosition;
-
-        // Handbrake
-        boolean handbrake = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.HANDBRAKE);
-        if (!this.setHandbrakeLockState(handbrake, player)) {
-            controlsStorage.values.put(TardisConsoleUnitControlRole.HANDBRAKE, this.isHandbrakeLocked());
-            if (handbrake != this.isHandbrakeLocked()) ModSounds.playTardisBellSound(this.world, this.getMainConsolePosition());
-        }
-
-        // Flight
-        boolean starter = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.STARTER);
-        if (flightSystem.isEnabled() && !this.isHandbrakeLocked()) {
-            flightSystem.init(starter, player.getUuid());
-            isInFlight = flightSystem.inProgress();
-        }
-        else {
-            controlsStorage.values.put(TardisConsoleUnitControlRole.STARTER, isInFlight);
-            if (isInFlight && !starter) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
-            else if (!isInFlight && starter) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
-        }
-
-        // Materialization
-        boolean materialization = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.MATERIALIZATION);
-        if (materializationSystem.isEnabled() && !this.isHandbrakeLocked()) {
-            materializationSystem.setVerticalScanning(Math.abs((int) controlsStorage.get(TardisConsoleUnitControlRole.VERTICAL_SCANNING)));
-            materializationSystem.init(materialization, player.getUuid());
-            isMaterialized = materializationSystem.isMaterialized();
-        }
-        else {
-            controlsStorage.values.put(TardisConsoleUnitControlRole.STARTER, isInFlight);
-            controlsStorage.values.put(TardisConsoleUnitControlRole.MATERIALIZATION, isMaterialized);
-            if (isMaterialized && !materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
-            else if (!isMaterialized && materialization) ModSounds.playTardisFailSound(this.world, this.getMainConsolePosition());
-        }
-
-        // If Tardis has a fight system
-        if (flightSystem.isEnabled()) {
-            // XYZ Step
-            int xyzStep = (int) controlsStorage.get(TardisConsoleUnitControlRole.XYZSTEP);
-            if (xyzStep != 0) this.setXYZStep((int) Math.round(this.xyzStep * (xyzStep > 0 ? 10 : 0.1)));
-        }
-
-        // If Tardis has a fight system and it is not in flight
-        if (flightSystem.isEnabled() && !isInFlight) {
-            // Facing
-            int facing = (int) controlsStorage.get(TardisConsoleUnitControlRole.FACING);
-            this.destExteriorFacing = switch (facing >= 0 ? facing : TardisConsoleUnitControlRole.FACING.maxIntValue + facing) {
-                case 1 -> Direction.EAST;
-                case 2 -> Direction.SOUTH;
-                case 3 -> Direction.WEST;
-                default -> Direction.NORTH;
-            };
-
-            // X Set
-            int xSet = (int) controlsStorage.get(TardisConsoleUnitControlRole.XSET);
-            if (xSet != 0) this.destExteriorPosition = xSet > 0 ? this.destExteriorPosition.east(this.xyzStep) : this.destExteriorPosition.west(this.xyzStep);
-
-            // Y Set
-            int ySet = (int) controlsStorage.get(TardisConsoleUnitControlRole.YSET);
-            if (ySet != 0) this.destExteriorPosition = ySet > 0 ? this.destExteriorPosition.up(this.xyzStep) : this.destExteriorPosition.down(this.xyzStep);
-
-            // Z Set
-            int zSet = (int) controlsStorage.get(TardisConsoleUnitControlRole.ZSET);
-            if (zSet != 0) this.destExteriorPosition = zSet > 0 ? this.destExteriorPosition.south(this.xyzStep) : this.destExteriorPosition.north(this.xyzStep);
-
-            // Randomizer
-            if ((int) controlsStorage.get(TardisConsoleUnitControlRole.RANDOMIZER) != 0) {
-                boolean facingRandom = Math.random() * 10 > 5;
-
-                if (facingRandom) this.destExteriorPosition = this.destExteriorPosition.east((int) Math.round(Math.random() * 10 * this.xyzStep));
-                else this.destExteriorPosition = this.destExteriorPosition.west((int) Math.round(Math.random() * 10 * this.xyzStep));
-
-                if (facingRandom) this.destExteriorPosition = this.destExteriorPosition.south((int) Math.round(Math.random() * 10 * this.xyzStep));
-                else this.destExteriorPosition = this.destExteriorPosition.north((int) Math.round(Math.random() * 10 * this.xyzStep));
-            }
-
-            // Dimension
-            int dimPrev = (int) controlsStorage.get(TardisConsoleUnitControlRole.DIM_PREV);
-            int dimNext = (int) controlsStorage.get(TardisConsoleUnitControlRole.DIM_NEXT);
-            if (dimPrev != 0 || dimNext != 0) {
-                Iterable<ServerWorld> worlds = this.world.getServer().getWorlds();
-                List<RegistryKey<World>> worldKeys = new ArrayList<>();
-
-                worlds.forEach((world) -> {
-                    if (TardisHelper.isTardisDimension(world)) return;
-                    if (!world.getServer().isWorldAllowed(world)) return;
-                    if (world.getRegistryKey() == this.world.getRegistryKey()) return;
-                    if (ModConfig.COMMON.dimensionsBlacklist.get().contains(world.getRegistryKey().getValue().toString())) return;
-
-                    if (world.getRegistryKey() == World.END) {
-                        EnderDragonFight enderDragonFight = world.getEnderDragonFight();
-                        boolean enderDragonWasKilled = enderDragonFight != null && enderDragonFight.hasPreviouslyKilled() && !enderDragonFight.toData().needsStateScanning();
-                        if (!enderDragonWasKilled && ModConfig.COMMON.hideTheEndConditionally.get()) return;
-                    }
-
-                    worldKeys.add(world.getRegistryKey());
-                });
-
-                if (!worldKeys.isEmpty()) {
-                    int index = worldKeys.contains(this.destExteriorDimension) ? worldKeys.indexOf(this.destExteriorDimension) : 0;
-                    index = index + (dimPrev != 0 ? -1 : 1);
-                    index %= worldKeys.size();
-                    index = index < 0 ? worldKeys.size() - 1 : index;
-
-                    this.destExteriorDimension = worldKeys.get(index);
-                }
-            }
-
-            // Reset to Prev
-            int resetToPrev = (int) controlsStorage.get(TardisConsoleUnitControlRole.RESET_TO_PREV);
-            if (resetToPrev != 0) this.destExteriorDimension = this.getPreviousExteriorDimension();
-            if (resetToPrev != 0) this.destExteriorFacing = this.getPreviousExteriorFacing();
-            if (resetToPrev != 0) this.destExteriorPosition = this.getPreviousExteriorPosition();
-
-            // Reset to Current
-            int resetToCurr = (int) controlsStorage.get(TardisConsoleUnitControlRole.RESET_TO_CURR);
-            if (resetToCurr != 0) this.destExteriorDimension = this.getCurrentExteriorDimension();
-            if (resetToCurr != 0) this.destExteriorFacing = this.getCurrentExteriorFacing();
-            if (resetToCurr != 0) this.destExteriorPosition = this.getCurrentExteriorPosition();
-        }
-
-        // Only if Tardis is not in flight
-        if (!isInFlight) {
-            this.setFuelHarvesting((boolean) controlsStorage.get(TardisConsoleUnitControlRole.FUEL_HARVESTING));
-            this.setEnergyHarvesting((boolean) controlsStorage.get(TardisConsoleUnitControlRole.ENERGY_HARVESTING));
-        }
-
-        // Only if Tardis materialized
-        if (isMaterialized) {
-            // Shields
-            boolean shields = (boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS);
-            if (shieldsSystem.isEnabled()) {
-                shieldsSystem.setState(shields);
-
-                this.setShieldsOxygenState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_OXYGEN) && shields);
-                this.setShieldsFireProofState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF) && shields);
-                this.setShieldsMedicalState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_MEDICAL) && shields);
-                this.setShieldsMiningState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_MINING) && shields);
-                this.setShieldsGravitationState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_GRAVITATION) && shields);
-                this.setShieldsSpecialState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.SHIELDS_SPECIAL) && shields);
-            }
-            else {
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_OXYGEN, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_FIRE_PROOF, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_MEDICAL, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_MINING, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_GRAVITATION, false);
-                controlsStorage.values.put(TardisConsoleUnitControlRole.SHIELDS_SPECIAL, false);
-            }
-
-            // Other
-            this.setDoorsOpenState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.DOORS));
-            this.setLightState((boolean) controlsStorage.get(TardisConsoleUnitControlRole.LIGHT));
-        }
-
-        this.markDirty();
-        this.markConsoleTilesUpdated();
-    }
 
     @SuppressWarnings("UnstableApiUsage")
     public void tick() {

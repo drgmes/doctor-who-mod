@@ -155,7 +155,8 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
                 if (hasShiftDown()) {
                     narration = Text.literal(this.entry.getKey().toString());
-                } else {
+                }
+                else {
                     narration = Text.translatable(CommonHelper.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
                 }
 

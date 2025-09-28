@@ -1,7 +1,10 @@
 package net.drgmes.dwm.enums;
 
 import net.drgmes.dwm.setup.ModSounds;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -23,8 +26,8 @@ public enum TardisConsoleUnitControlRole {
     FUEL_HARVESTING(TardisConsoleUnitControlValueType.BOOLEAN, "fuel", "fuel", 0, ModSounds.TARDIS_CONTROL_2, Set.of(TardisConsoleUnitControlFlags.MUST_BE_LANDED)),
     ENERGY_HARVESTING(TardisConsoleUnitControlValueType.BOOLEAN, "energy", "energy", 0, ModSounds.TARDIS_CONTROL_2, Set.of(TardisConsoleUnitControlFlags.MUST_BE_LANDED)),
     HANDBRAKE(TardisConsoleUnitControlValueType.BOOLEAN_DIRECT, "handbrake", "handbrake", 0, Set.of(TardisConsoleUnitControlFlags.DEPENDS_ON_OWNER)),
-    STARTER(TardisConsoleUnitControlValueType.BOOLEAN_DIRECT, "starter", null, 0, Set.of(TardisConsoleUnitControlFlags.REQUIRED_MATERIALIZING_SYSTEM, TardisConsoleUnitControlFlags.REQUIRED_FLIGHT_SYSTEM, TardisConsoleUnitControlFlags.DEPENDS_ON_HANDBRAKE_OFF)),
-    MATERIALIZATION(TardisConsoleUnitControlValueType.BOOLEAN_DIRECT, "materialization", null, 0, Set.of(TardisConsoleUnitControlFlags.REQUIRED_MATERIALIZING_SYSTEM, TardisConsoleUnitControlFlags.DEPENDS_ON_HANDBRAKE_OFF)),
+    STARTER(TardisConsoleUnitControlValueType.BOOLEAN_DIRECT, "starter", null, 0, ModSounds.TARDIS_CONTROL_3, Set.of(TardisConsoleUnitControlFlags.REQUIRED_MATERIALIZING_SYSTEM, TardisConsoleUnitControlFlags.REQUIRED_FLIGHT_SYSTEM, TardisConsoleUnitControlFlags.DEPENDS_ON_HANDBRAKE_OFF)),
+    MATERIALIZATION(TardisConsoleUnitControlValueType.BOOLEAN_DIRECT, "materialization", null, 0, ModSounds.TARDIS_CONTROL_2, Set.of(TardisConsoleUnitControlFlags.REQUIRED_MATERIALIZING_SYSTEM, TardisConsoleUnitControlFlags.DEPENDS_ON_HANDBRAKE_OFF)),
     VERTICAL_SCANNING(TardisConsoleUnitControlValueType.NUMBER_DIRECT_LIMITED, "vertical_scanning", "vertical_scanning", 4, ModSounds.TARDIS_CONTROL_3, Set.of(TardisConsoleUnitControlFlags.REQUIRED_MATERIALIZING_SYSTEM)),
     FACING(TardisConsoleUnitControlValueType.NUMBER_DIRECT, "facing", "facing", 4, ModSounds.TARDIS_CONTROL_4, Set.of(TardisConsoleUnitControlFlags.REQUIRED_FLIGHT_SYSTEM, TardisConsoleUnitControlFlags.MUST_BE_LANDED)),
     DIM_PREV(TardisConsoleUnitControlValueType.ANIMATION, "dim_prev", "dimension", 5, ModSounds.TARDIS_CONTROL_1, Set.of(TardisConsoleUnitControlFlags.REQUIRED_FLIGHT_SYSTEM, TardisConsoleUnitControlFlags.MUST_BE_LANDED)),
@@ -77,5 +80,10 @@ public enum TardisConsoleUnitControlRole {
 
     TardisConsoleUnitControlRole(TardisConsoleUnitControlValueType type) {
         this(type, null);
+    }
+
+    public void playSound(World world, BlockPos blockPos) {
+        if (this.soundEventSupplier == null || !(world instanceof ServerWorld)) return;
+        ModSounds.playSound(world, blockPos, this.soundEventSupplier.get(), 1.0F, 1.0F);
     }
 }

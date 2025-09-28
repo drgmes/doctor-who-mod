@@ -153,9 +153,11 @@ public class TardisSystemFlight extends TardisBaseSystem {
 
         if (!materializationSystem.isMaterialized()) {
             materializationSystem.applyCallbacks(true);
-        } else if (materializationSystem.init(false, this.initiatorId)) {
+        }
+        else if (materializationSystem.init(false, this.initiatorId)) {
             this.step = EStep.WAIT_FOR_DEMAT;
-        } else {
+        }
+        else {
             materializationSystem.reset();
             materializationSystem.applyCallbacks(false);
             return false;

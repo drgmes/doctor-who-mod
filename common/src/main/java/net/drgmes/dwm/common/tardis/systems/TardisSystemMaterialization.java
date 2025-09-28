@@ -263,6 +263,10 @@ public class TardisSystemMaterialization extends TardisBaseSystem {
         return !this.inProgress() && this.isMaterialized;
     }
 
+    public boolean isInMaterializationProcess() {
+        return this.inProgress() && this.mode == EMode.REMAT;
+    }
+
     public int getProgressPercent() {
         return switch (this.mode) {
             case DEMAT -> (int) Math.ceil((float) this.tick / DWM.TIMINGS.DEMAT_DURATION * 100);

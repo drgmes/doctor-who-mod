@@ -83,8 +83,4 @@ public class TardisSystemShields extends TardisBaseSystem {
             }
         }
     }
-
-    public void setState(boolean flag) {
-        this.tardis.setShieldsState(this.isEnabled() && flag);
-    }
 }

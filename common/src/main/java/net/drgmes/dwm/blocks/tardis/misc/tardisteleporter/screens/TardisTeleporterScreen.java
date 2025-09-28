@@ -126,7 +126,8 @@ public class TardisTeleporterScreen extends BaseScreen {
             this.addDrawable(this.xField);
             this.addDrawable(this.yField);
             this.addDrawable(this.zField);
-        } else {
+        }
+        else {
             this.addDrawableChild(this.xField);
             this.addDrawableChild(this.yField);
             this.addDrawableChild(this.zField);
