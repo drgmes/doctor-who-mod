@@ -9,6 +9,7 @@
     "MixinMinecraftClient"
   ],
   "mixins": [
+    "MixinEntity",
     "MixinLivingEntity",
     "MixinPortal",
     "MixinServerTeleportationManager"
