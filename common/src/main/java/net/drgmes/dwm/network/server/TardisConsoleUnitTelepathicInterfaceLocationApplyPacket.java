@@ -58,8 +58,21 @@ public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
             if (!TardisHelper.isTardisDimension(serverWorld)) return;
 
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+
+                if (!flightSystem.isEnabled()) {
                     player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                    return;
+                }
+
+                if (flightSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+                    return;
+                }
+
+                if (materializationSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
                     return;
                 }
 

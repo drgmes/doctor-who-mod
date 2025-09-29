@@ -20,6 +20,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.text.SimpleDateFormat;
@@ -88,8 +89,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
         Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
-            else this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.historyListWidget);
@@ -103,6 +103,21 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
     public void resize(MinecraftClient mc, int width, int height) {
         super.resize(mc, width, height);
         this.historyListWidget.refreshList();
+    }
+
+    @Override
+    public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(context, mouseX, mouseY, delta);
+
+        int color = this.getTitleBackgroundColor();
+        int titleWidth = this.textRenderer.getWidth(this.getCounterTitle().getString());
+
+        Vector2i pos = this.getCounterRenderPos().add(-titleWidth, 0);
+        Vector2i pos1 = new Vector2i(-4, 2).add(pos);
+        Vector2i pos2 = new Vector2i(titleWidth + 9, 5).add(pos1);
+
+        context.fillGradient(pos1.x, pos1.y, pos2.x, pos2.y, color, color);
+        context.drawText(this.textRenderer, this.getCounterTitle(), pos.x, pos.y, 0xE0E0E0, true);
     }
 
     @Override
@@ -120,12 +135,26 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
         super.apply();
     }
 
+    @Override
+    public void back() {
+        if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+        else super.back();
+    }
+
+    private Text getCounterTitle() {
+        return Text.literal(this.history.size() + " / " + TardisSystemFlight.HISTORY_SIZE);
+    }
+
+    private Vector2i getCounterRenderPos() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x - 24, 0).add(this.getTitleRenderPos());
+    }
+
     private Vector2i getHistoryListPos() {
         return this.getLeftTopRenderPos(0, 0);
     }
 
     private Vector2i getHistoryListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 3);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
     }
 
     private void setSelected(HistoryListWidget.HistoryEntry entry) {
@@ -148,6 +177,12 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
             this.parent.history.forEach((entry) -> this.addEntry(new HistoryEntry(entry)));

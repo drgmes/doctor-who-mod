@@ -44,8 +44,7 @@ public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardi
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
-            else this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.acceptButton);
@@ -62,6 +61,12 @@ public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardi
     public void apply() {
         new TardisConsoleUnitMonitorHistoryClearPacket(this.tardisId).sendToServer();
         super.apply();
+    }
+
+    @Override
+    public void back() {
+        if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+        else super.back();
     }
 
     private void renderConfirmationMessage(DrawContext context) {

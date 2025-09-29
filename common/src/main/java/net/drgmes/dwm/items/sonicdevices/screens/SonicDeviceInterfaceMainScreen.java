@@ -13,6 +13,7 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.List;
@@ -102,6 +103,12 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
 

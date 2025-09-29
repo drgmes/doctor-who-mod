@@ -14,6 +14,7 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.Collections;
@@ -46,21 +47,31 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     @Override
     public void drawMenuListBackground(DrawContext context) {
         if (!this.shouldDrawBackground) return;
-        int color = 0x40000000;
 
-        context.fillGradient(this.getX() - 1, this.getY() - 1, this.getX() + this.getWidth() + 1, this.getBottom() + 1, color, color);
+        int marginX = -1;
+        int marginY = -1;
+        int color = 0x40000000;
+        context.fillGradient(this.getX() + marginX, this.getY() + marginY, this.getX() + this.getWidth() - marginX, this.getBottom() - marginY, color, color);
     }
 
     @Override
     public void drawHeaderAndFooterSeparators(DrawContext context) {
+        Vector2f scale = this.getScale();
+        float width = scale.x;
+        float height = scale.y;
+        float offsetX = -1 / scale.x;
+        float offsetY = -1 / scale.y;
         int color = 0xFF231F26;
-        float width = 0.795F;
-        float margin = 1 - width;
 
-        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - margin, this.getY() - width - margin, this.getX() + this.getWidth() + margin, this.getY() - margin, color);
-        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - margin, this.getBottom() + margin, this.getX() + this.getWidth() + margin, this.getBottom() + width + margin, color);
-        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - width - margin, this.getY() - width - margin, this.getX() - margin, this.getBottom() + width + margin, color);
-        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() + this.getWidth() + margin, this.getY() - width - margin, this.getX() + this.getWidth() + width + margin, this.getBottom() + width + margin, color);
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() + offsetX, this.getY() + offsetY, this.getX() + offsetX + width, this.getBottom() - offsetY, color); // Left
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getRight() - offsetX - width, this.getY() + offsetY, this.getRight() - offsetX, this.getBottom() - offsetY, color); // Right
+
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() + offsetX, this.getY() + offsetY, this.getX() + this.getWidth() - offsetX, this.getY() + offsetY + height, color); // Top
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() + offsetX, this.getBottom() - offsetY - height, this.getX() + this.getWidth() - offsetX, this.getBottom() - offsetY, color); // Bottom
+    }
+
+    public Vector2f getScale() {
+        return new Vector2f(1, 1);
     }
 
     public void init() {

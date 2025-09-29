@@ -12,12 +12,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.Window;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.Arrays;
@@ -58,22 +58,18 @@ public class TardisTeleporterScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        int padding = 5;
-        Window window = MinecraftClient.getInstance().getWindow();
-        return new Vector2i(window.getScaledWidth() - padding, window.getScaledHeight() - padding);
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.TARDIS.TELEPORTER.INTERFACE_SIZE;
     }
 
     @Override
-    public Vector2i getBackgroundBorderSize() {
-        Vector2i size = this.getBackgroundSize();
-        Vector2i originSize = DWM.TEXTURES.GUI.TARDIS.TELEPORTER.INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
-        return new Vector2i((int) Math.floor(12 * ((float) size.x / originSize.x)), (int) Math.floor(22 * ((float) size.y / originSize.y)));
+    public Vector2i getBackgroundBorderOriginSize() {
+        return new Vector2i(14, 27);
     }
 
     @Override
     public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(20, 7);
+        return this.getRenderPos(12, 7);
     }
 
     @Override
@@ -113,7 +109,7 @@ public class TardisTeleporterScreen extends BaseScreen {
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.entityTypesListWidget);
@@ -170,7 +166,7 @@ public class TardisTeleporterScreen extends BaseScreen {
     }
 
     private Vector2i getEntityTypesListSize() {
-        return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - MARGIN * 3 - this.client.textRenderer.fontHeight - 3);
+        return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - MARGIN * 3 - this.client.textRenderer.fontHeight - 2);
     }
 
     private int getAvailableBodyWidth() {
@@ -186,6 +182,12 @@ public class TardisTeleporterScreen extends BaseScreen {
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
             Arrays.stream(TardisTeleporterEntityTypes.values()).forEach((entityType) -> this.addEntry(new EntityTypeEntry(entityType)));

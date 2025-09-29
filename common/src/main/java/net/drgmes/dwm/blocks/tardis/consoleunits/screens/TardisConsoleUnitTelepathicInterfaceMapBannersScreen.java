@@ -13,6 +13,7 @@ import net.minecraft.item.map.MapState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.world.World;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.Collection;
@@ -75,7 +76,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     private Vector2i getBannersListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 3);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
     }
 
     private void setSelected(BannersListWidget.BannerEntry entry) {
@@ -92,6 +93,12 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
             this.parent.banners.forEach((banner) -> this.addEntry(new BannerEntry(banner)));

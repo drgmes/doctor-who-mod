@@ -7,12 +7,18 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
 public abstract class BaseScreen extends Screen implements IBaseScreen {
     protected static final int BUTTON_SIZE = 20;
     protected static final int BUTTON_PADDING = 3;
+
+    protected Vector2f cachedScale;
+
+    private Vector2i cachedBackgroundSize;
+    private Vector2i cachedBackgroundBorderSize;
 
     protected BaseScreen(Text title) {
         super(title);
@@ -34,8 +40,28 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
+    public Vector2f getScale() {
+        if (this.cachedScale != null) return this.cachedScale;
+        return IBaseScreen.super.getScale();
+    }
+
+    @Override
+    public Vector2i getBackgroundSize() {
+        if (this.cachedBackgroundSize != null) return this.cachedBackgroundSize;
+
+        Vector2i size = IBaseScreen.super.getBackgroundSize();
+        Vector2i originSize = this.getBackgroundOriginSize();
+
+        this.cachedScale = new Vector2f((float) size.x / originSize.x, (float) size.y / originSize.y);
+        this.cachedBackgroundSize = size;
+        return size;
+    }
+
+    @Override
     public Vector2i getBackgroundBorderSize() {
-        return new Vector2i(24, 24);
+        if (this.cachedBackgroundBorderSize != null) return this.cachedBackgroundBorderSize;
+        this.cachedBackgroundBorderSize = IBaseScreen.super.getBackgroundBorderSize();
+        return this.cachedBackgroundBorderSize;
     }
 
     @Override
@@ -65,7 +91,11 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
 
     @Override
     public void resize(MinecraftClient mc, int width, int height) {
-        this.init(mc, width, height);
+        this.cachedScale = null;
+        this.cachedBackgroundSize = null;
+        this.cachedBackgroundBorderSize = null;
+
+        super.resize(mc, width, height);
     }
 
     @Override
@@ -93,9 +123,13 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
         }
 
         if (this.shouldCloseOnInventoryKey() && this.client != null && this.client.options.inventoryKey.matchesKey(keyCode, scanCode)) {
-            this.close();
+            this.back();
         }
 
         return true;
+    }
+
+    public void back() {
+        this.close();
     }
 }

@@ -49,13 +49,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen instanceof TardisConsoleUnitMonitorConsoleRoomsScreen tardisConsoleUnitMonitorConsoleRoomsScreen) {
-                this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selectedConsoleRoomId, this.tag, tardisConsoleUnitMonitorConsoleRoomsScreen.parentScreen));
-                return;
-            }
-
-            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
-            else this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.acceptButton);
@@ -72,6 +66,17 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
     public void apply() {
         new TardisConsoleUnitMonitorConsoleRoomApplyPacket(this.tardisId, this.selectedConsoleRoomId).sendToServer();
         super.apply();
+    }
+
+    @Override
+    public void back() {
+        if (this.parentScreen instanceof TardisConsoleUnitMonitorConsoleRoomsScreen tardisConsoleUnitMonitorConsoleRoomsScreen) {
+            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selectedConsoleRoomId, this.tag, tardisConsoleUnitMonitorConsoleRoomsScreen.parentScreen));
+            return;
+        }
+
+        if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+        else super.back();
     }
 
     private void renderConfirmationMessage(DrawContext context) {

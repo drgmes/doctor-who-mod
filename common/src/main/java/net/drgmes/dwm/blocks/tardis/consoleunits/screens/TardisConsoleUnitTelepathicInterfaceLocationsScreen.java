@@ -14,6 +14,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.Collections;
@@ -119,11 +120,11 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     private Vector2i getLocationsListPos() {
-        return this.getLeftTopRenderPos(0, 21);
+        return this.getLeftTopRenderPos(0, 22);
     }
 
     private Vector2i getLocationsListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 21 - 3);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
     }
 
     private void setSelected(LocationsListWidget.LocationEntry entry) {
@@ -140,6 +141,12 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
             this.parent.filteredLocations.forEach((location) -> this.addEntry(new LocationEntry(location)));

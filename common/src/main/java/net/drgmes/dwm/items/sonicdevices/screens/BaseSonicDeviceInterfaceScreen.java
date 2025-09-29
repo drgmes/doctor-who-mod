@@ -34,13 +34,8 @@ public abstract class BaseSonicDeviceInterfaceScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        return DWM.TEXTURES.GUI.SONIC_DEVICE.INTERFACE_MAIN_SIZE.div(1 / 0.795F, new Vector2i());
-    }
-
-    @Override
-    public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(23, 8);
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.SONIC_DEVICE.INTERFACE_MAIN_SIZE;
     }
 
     @Override

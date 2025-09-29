@@ -18,6 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.net.URI;
@@ -80,8 +81,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
-            else this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.consoleRoomsListWidget);
@@ -101,14 +101,14 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         super.renderAdditional(context, mouseX, mouseY, delta);
         if (this.selected == null) return;
 
-        int listWidth = this.getConsoleRoomsListSize().x + 1;
+        int listWidth = this.getConsoleRoomsListSize().x;
         int imageWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - listWidth - 2;
         int imageHeight = (int) Math.floor(imageWidth * 0.595F);
 
-        Vector2i imagePos = this.getLeftTopRenderPos(listWidth + 1, 1);
+        Vector2i imagePos = this.getLeftTopRenderPos(listWidth + 2, 0);
         Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + this.selected.consoleRoom.name + ".png");
 
-        RenderHelper.drawTessellatorRectangle(context.getMatrices(), imagePos.x - 1, imagePos.y + imageHeight + 1, imagePos.x + imageWidth + 2, imagePos.y + imageHeight + 1.795F, 0xFF231F26);
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), imagePos.x - 1, imagePos.y + imageHeight + 1, imagePos.x + imageWidth + 1, imagePos.y + imageHeight + 1.795F, 0xFF231F26);
 
         if (!this.selected.consoleRoom.imageUrl.isEmpty()) {
             if (!LOADED_CONSOLE_ROOMS_IMAGES.containsKey(this.selected.consoleRoom.name)) {
@@ -145,6 +145,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         }
     }
 
+    @Override
+    public void back() {
+        if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+        else super.back();
+    }
+
     private Vector2i getConsoleRoomsListPos() {
         return this.getLeftTopRenderPos(0, 0);
     }
@@ -171,6 +177,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
 

@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec2f;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.Objects;
@@ -73,8 +74,7 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_EXTERNAL_SHELLS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
-            else this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.externalShellsListWidget);
@@ -137,6 +137,12 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
         super.apply();
     }
 
+    @Override
+    public void back() {
+        if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+        else super.back();
+    }
+
     private Vector2i getExternalShellsListPos() {
         return this.getLeftTopRenderPos(0, 0);
     }
@@ -163,6 +169,12 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
 

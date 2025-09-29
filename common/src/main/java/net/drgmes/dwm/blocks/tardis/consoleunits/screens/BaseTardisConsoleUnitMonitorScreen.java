@@ -20,7 +20,7 @@ public abstract class BaseTardisConsoleUnitMonitorScreen extends BaseTardisConso
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.MONITOR_SIZE.div(1 / 0.795F, new Vector2i());
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.MONITOR_SIZE;
     }
 }

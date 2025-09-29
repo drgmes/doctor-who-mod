@@ -27,8 +27,8 @@ public abstract class BaseTardisConsoleUnitTelepathicInterfaceScreen extends Bas
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.TARDIS.CONSOLE.TELEPATHIC_INTERFACE_SIZE;
     }
 
     @Override
@@ -42,7 +42,7 @@ public abstract class BaseTardisConsoleUnitTelepathicInterfaceScreen extends Bas
 
         Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.acceptButton);

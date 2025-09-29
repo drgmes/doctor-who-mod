@@ -12,12 +12,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.Window;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import org.joml.Vector2f;
 import org.joml.Vector2i;
 
 import java.util.*;
@@ -60,22 +60,18 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        int padding = 5;
-        Window window = MinecraftClient.getInstance().getWindow();
-        return new Vector2i(window.getScaledWidth() - padding, window.getScaledHeight() - padding);
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.TARDIS.ARS.CREATOR_INTERFACE_SIZE;
     }
 
     @Override
-    public Vector2i getBackgroundBorderSize() {
-        Vector2i size = this.getBackgroundSize();
-        Vector2i originSize = DWM.TEXTURES.GUI.TARDIS.ARS.CREATOR_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
-        return new Vector2i((int) Math.floor(12 * ((float) size.x / originSize.x)), (int) Math.floor(22 * ((float) size.y / originSize.y)));
+    public Vector2i getBackgroundBorderOriginSize() {
+        return new Vector2i(14, 27);
     }
 
     @Override
     public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(20, 7);
+        return this.getRenderPos(12, 7);
     }
 
     @Override
@@ -99,7 +95,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
         Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.listWidget);
@@ -114,7 +110,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         String search = this.search.getText();
         ListWidget.ListEntry selectedArsStructureEntry = this.selectedArsStructureEntry;
 
-        this.init(mc, width, height);
+        super.resize(mc, width, height);
         this.search.setText(search);
         this.selectedArsStructureEntry = selectedArsStructureEntry;
 
@@ -212,11 +208,11 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     private Vector2i getListPos() {
-        return this.getLeftTopRenderPos(0, 21);
+        return this.getLeftTopRenderPos(0, 22);
     }
 
     private Vector2i getListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 21 - 3);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
     }
 
     private static class ListWidget extends BaseListWidget {
@@ -228,6 +224,12 @@ public class TardisArsCreatorScreen extends BaseScreen {
             this.init();
         }
 
+        @Override
+        public Vector2f getScale() {
+            return this.parent.cachedScale;
+        }
+
+        @Override
         public void refreshList() {
             super.refreshList();
 

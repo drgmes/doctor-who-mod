@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,8 +47,21 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
             if (!TardisHelper.isTardisDimension(serverWorld)) return;
 
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+
+                if (!flightSystem.isEnabled()) {
                     player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                    return;
+                }
+
+                if (flightSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+                    return;
+                }
+
+                if (materializationSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
                     return;
                 }
 

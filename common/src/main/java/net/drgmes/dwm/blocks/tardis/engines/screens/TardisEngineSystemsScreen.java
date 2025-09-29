@@ -22,12 +22,12 @@ public class TardisEngineSystemsScreen extends BaseContainerScreen<TardisEngineS
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
+    public Vector2i getBackgroundOriginSize() {
         return DWM.TEXTURES.GUI.TARDIS.ENGINE.SYSTEMS_INTERFACE_SIZE;
     }
 
     @Override
     public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(10, 5);
+        return this.getRenderPos(8, 6);
     }
 }

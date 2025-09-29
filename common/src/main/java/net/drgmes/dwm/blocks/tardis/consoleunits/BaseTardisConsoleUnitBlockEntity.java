@@ -158,6 +158,25 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 if (hand != Hand.OFF_HAND) return;
                 if (tardisHolder.isEmpty() || this.throwNotifyIfLocked(tardisHolder.get(), player)) return;
 
+                TardisStateManager tardis = tardisHolder.get();
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+
+                if (!flightSystem.isEnabled()) {
+                    player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                    return;
+                }
+
+                if (flightSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
+                    return;
+                }
+
+                if (materializationSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+                    return;
+                }
+
                 ItemStack mainHandItemStack = player.getMainHandStack();
                 ItemStack offHandItemStack = player.getOffHandStack();
 
@@ -166,16 +185,9 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                     MapState mapData = FilledMapItem.getMapState(itemStack, serverWorld);
                     if (mapData == null) return;
 
-                    if (mapData.dimension == tardisHolder.get().getWorld().getRegistryKey()) return;
-                    if (tardisHolder.get().getSystem(TardisSystemFlight.class).inProgress()) return;
-                    if (tardisHolder.get().getSystem(TardisSystemMaterialization.class).inProgress()) return;
+                    if (mapData.dimension == tardis.getWorld().getRegistryKey()) return;
 
-                    if (!tardisHolder.get().getSystem(TardisSystemFlight.class).isEnabled()) {
-                        player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
-                        return;
-                    }
-
-                    BlockPos destExteriorPosition = tardisHolder.get().getDestinationExteriorPosition();
+                    BlockPos destExteriorPosition = tardis.getDestinationExteriorPosition();
                     BlockPos blockPos = new BlockPos(mapData.centerX, destExteriorPosition.getY(), mapData.centerZ);
 
                     if (mapData.getBanners().size() > 1) {
@@ -191,9 +203,9 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                         player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_COORDS_LOADED, true);
                     }
 
-                    tardisHolder.get().setDestinationDimension(mapData.dimension);
-                    tardisHolder.get().setDestinationPosition(blockPos);
-                    tardisHolder.get().markConsoleTilesUpdated();
+                    tardis.setDestinationDimension(mapData.dimension);
+                    tardis.setDestinationPosition(blockPos);
+                    tardis.markConsoleTilesUpdated();
                     return;
                 }
 

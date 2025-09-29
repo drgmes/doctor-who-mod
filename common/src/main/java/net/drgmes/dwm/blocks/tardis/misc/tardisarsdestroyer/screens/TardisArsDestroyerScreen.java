@@ -38,13 +38,8 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getBackgroundSize() {
-        return DWM.TEXTURES.GUI.TARDIS.ARS.DESTROYER_INTERFACE_SIZE.div(1 / 0.795F, new Vector2i());
-    }
-
-    @Override
-    public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(23, 8);
+    public Vector2i getBackgroundOriginSize() {
+        return DWM.TEXTURES.GUI.TARDIS.ARS.DESTROYER_INTERFACE_SIZE;
     }
 
     @Override
@@ -63,7 +58,7 @@ public class TardisArsDestroyerScreen extends BaseScreen {
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            this.close();
+            this.back();
         });
 
         this.addDrawableChild(this.acceptButton);
