@@ -1,5 +1,6 @@
 package net.drgmes.dwm.utils.base.screens;
 
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
@@ -26,6 +27,22 @@ public interface IBaseScreen {
 
     default Vector2i getRenderPos(int offsetX, int offsetY) {
         return new Vector2i(offsetX, offsetY).add(this.getRenderStartPos());
+    }
+
+    default Vector2i getLeftTopRenderPos(int offsetX, int offsetY) {
+        return this.getRenderPos(this.getBackgroundBorderSize().x + offsetX, this.getBackgroundBorderSize().y + offsetY);
+    }
+
+    default Vector2i getLeftBottomRenderPos(int offsetX, int offsetY) {
+        return this.getRenderPos(this.getBackgroundBorderSize().x + offsetX, this.getBackgroundSize().y - this.getBackgroundBorderSize().y - offsetY);
+    }
+
+    default Vector2i getRightTopRenderPos(int offsetX, int offsetY) {
+        return this.getRenderPos(this.getBackgroundSize().x - this.getBackgroundBorderSize().x - offsetX, this.getBackgroundBorderSize().y + offsetY);
+    }
+
+    default Vector2i getRightBottomRenderPos(int offsetX, int offsetY) {
+        return this.getRenderPos(this.getBackgroundSize().x - this.getBackgroundBorderSize().x - offsetX, this.getBackgroundSize().y - this.getBackgroundBorderSize().y - offsetY);
     }
 
     default Vector2i getTitleRenderPos() {
@@ -60,14 +77,10 @@ public interface IBaseScreen {
     }
 
     default void renderBackgroundImage(DrawContext context) {
-        this.drawImage(context, this.getRenderStartPos(), this.getBackgroundSize(), this.getBackground());
+        RenderHelper.drawImage(context, this.getRenderStartPos(), this.getBackgroundSize(), this.getBackground());
     }
 
     default void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
-    }
-
-    default void drawImage(DrawContext context, Vector2i pos, Vector2i size, Identifier image) {
-        context.drawTexture(image, pos.x, pos.y, 0, 0, 0, size.x, size.y, size.x, size.y);
     }
 
     default boolean shouldCloseOnInventoryKey() {

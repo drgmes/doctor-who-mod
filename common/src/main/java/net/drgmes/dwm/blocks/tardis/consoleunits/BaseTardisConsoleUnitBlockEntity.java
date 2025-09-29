@@ -121,20 +121,16 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         if (this.inited) return;
         this.inited = true;
 
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
+        if (this.getWorld() instanceof ServerWorld) {
             this.createControls();
-
-            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
-                tardis.addConsoleTile(this);
-
-                this.controlsStorage.applyDataFromTardis(tardis);
-                this.tardisStateManager.readNbt(tardis.writeNbt(new NbtCompound(), serverWorld.getRegistryManager()), serverWorld.getRegistryManager());
-            });
+            this.updateTardisData();
         }
     }
 
     public void remove() {
         if (this.getWorld() instanceof ServerWorld serverWorld) {
+            this.removeControls();
+
             TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 tardis.removeConsoleTile(this);
             });
@@ -151,6 +147,8 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
             case MONITOR -> {
                 if (hand != Hand.OFF_HAND) return;
                 if (tardisHolder.isEmpty() || this.throwNotifyIfLocked(tardisHolder.get(), player)) return;
+
+                this.updateTardisData();
 
                 controlRole.playSound(this.getWorld(), this.getPos());
                 this.sendMonitorOpenPacket(player, tardisHolder.get());
@@ -299,6 +297,20 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 this.controlsStorage.applyDataToTardis(tardisHolder.get(), controlRole, player);
             }
         }
+    }
+
+    private void updateTardisData() {
+        if (!(this.getWorld() instanceof ServerWorld serverWorld)) return;
+
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
+        if (tardisHolder.isEmpty()) return;
+
+        TardisStateManager tardis = tardisHolder.get();
+        tardis.addConsoleTile(this);
+        tardis.markConsoleTilesUpdated();
+
+        this.controlsStorage.applyDataFromTardis(tardis);
+        this.tardisStateManager.readNbt(tardis.writeNbt(new NbtCompound(), serverWorld.getRegistryManager()), serverWorld.getRegistryManager());
     }
 
     private void createControls() {

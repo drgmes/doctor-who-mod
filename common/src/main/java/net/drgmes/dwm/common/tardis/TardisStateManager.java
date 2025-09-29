@@ -154,13 +154,13 @@ public class TardisStateManager extends PersistentState {
         if (this.currExteriorDimension != null) tag.putString("currExteriorDimension", this.currExteriorDimension.getValue().toString());
         if (this.destExteriorDimension != null) tag.putString("destExteriorDimension", this.destExteriorDimension.getValue().toString());
 
-        if (this.prevExteriorFacing != null) tag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
-        if (this.currExteriorFacing != null) tag.putString("currExteriorFacing", this.currExteriorFacing.getName());
-        if (this.destExteriorFacing != null) tag.putString("destExteriorFacing", this.destExteriorFacing.getName());
-
         if (this.prevExteriorPosition != null) tag.putLong("prevExteriorPosition", this.prevExteriorPosition.asLong());
         if (this.currExteriorPosition != null) tag.putLong("currExteriorPosition", this.currExteriorPosition.asLong());
         if (this.destExteriorPosition != null) tag.putLong("destExteriorPosition", this.destExteriorPosition.asLong());
+
+        if (this.prevExteriorFacing != null) tag.putString("prevExteriorFacing", this.prevExteriorFacing.getName());
+        if (this.currExteriorFacing != null) tag.putString("currExteriorFacing", this.currExteriorFacing.getName());
+        if (this.destExteriorFacing != null) tag.putString("destExteriorFacing", this.destExteriorFacing.getName());
 
         tag.putBoolean("inited", this.inited);
         tag.putBoolean("broken", this.broken);
@@ -185,7 +185,7 @@ public class TardisStateManager extends PersistentState {
         tag.putInt("energyAmount", this.energyAmount);
 
         this.systems.values().forEach((system) -> {
-            tag.put(system.getClass().getName(), system.writeNbt(new NbtCompound()));
+            tag.put(system.getClass().getSimpleName(), system.writeNbt(new NbtCompound()));
         });
 
         AtomicInteger i1 = new AtomicInteger();
@@ -219,13 +219,13 @@ public class TardisStateManager extends PersistentState {
         if (tag.contains("currExteriorDimension")) this.currExteriorDimension = DimensionHelper.getWorldKey(tag.getString("currExteriorDimension"));
         if (tag.contains("destExteriorDimension")) this.destExteriorDimension = DimensionHelper.getWorldKey(tag.getString("destExteriorDimension"));
 
-        if (tag.contains("prevExteriorFacing")) this.prevExteriorFacing = getDirectionByKey(tag, "prevExteriorFacing");
-        if (tag.contains("currExteriorFacing")) this.currExteriorFacing = getDirectionByKey(tag, "currExteriorFacing");
-        if (tag.contains("destExteriorFacing")) this.destExteriorFacing = getDirectionByKey(tag, "destExteriorFacing");
-
         if (tag.contains("prevExteriorPosition")) this.prevExteriorPosition = BlockPos.fromLong(tag.getLong("prevExteriorPosition"));
         if (tag.contains("currExteriorPosition")) this.currExteriorPosition = BlockPos.fromLong(tag.getLong("currExteriorPosition"));
         if (tag.contains("destExteriorPosition")) this.destExteriorPosition = BlockPos.fromLong(tag.getLong("destExteriorPosition"));
+
+        if (tag.contains("prevExteriorFacing")) this.prevExteriorFacing = Direction.byName(tag.getString("prevExteriorFacing"));
+        if (tag.contains("currExteriorFacing")) this.currExteriorFacing = Direction.byName(tag.getString("currExteriorFacing"));
+        if (tag.contains("destExteriorFacing")) this.destExteriorFacing = Direction.byName(tag.getString("destExteriorFacing"));
 
         this.inited = tag.getBoolean("inited");
         this.broken = tag.getBoolean("broken");
@@ -250,7 +250,10 @@ public class TardisStateManager extends PersistentState {
         this.energyAmount = Math.min(tag.getInt("energyAmount"), this.energyCapacity);
 
         this.systems.values().forEach((system) -> {
-            if (tag.contains(system.getClass().getName())) {
+            // TODO remove getName after few releases (for fallback)
+            if (tag.contains(system.getClass().getSimpleName())) {
+                system.readNbt(tag.getCompound(system.getClass().getSimpleName()));
+            } else if (tag.contains(system.getClass().getName())) {
                 system.readNbt(tag.getCompound(system.getClass().getName()));
             }
         });
@@ -744,11 +747,15 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void addConsoleTile(BaseTardisConsoleUnitBlockEntity consoleTile) {
+        boolean hasConsoleTile = this.consoleTiles.containsKey(consoleTile.getPos());
         this.consoleTiles.put(consoleTile.getPos(), consoleTile);
-        this.markDirty();
+        if (!hasConsoleTile) this.markDirty();
     }
 
     public void removeConsoleTile(BaseTardisConsoleUnitBlockEntity consoleTile) {
+        boolean hasConsoleTile = this.consoleTiles.containsKey(consoleTile.getPos());
+        if (!hasConsoleTile) return;
+
         this.consoleTiles.remove(consoleTile.getPos());
         this.markDirty();
     }
@@ -789,11 +796,15 @@ public class TardisStateManager extends PersistentState {
     }
 
     public void addInteriorDoorsTile(BaseTardisDoorsBlockEntity doorsTile) {
+        boolean hasDoorTile = this.doorsTiles.containsKey(doorsTile.getPos());
         this.doorsTiles.put(doorsTile.getPos(), doorsTile);
-        this.markDirty();
+        if (!hasDoorTile) this.markDirty();
     }
 
     public void removeInteriorDoorsTile(BaseTardisDoorsBlockEntity doorsTile) {
+        boolean hasDoorTile = this.doorsTiles.containsKey(doorsTile.getPos());
+        if (!hasDoorTile) return;
+
         this.doorsTiles.remove(doorsTile.getPos());
         this.markDirty();
     }
@@ -937,9 +948,5 @@ public class TardisStateManager extends PersistentState {
                 exteriorWorld.setBlockState(exteriorBlockPos.up(), exteriorBlockState, Block.NOTIFY_ALL);
             }
         }
-    }
-
-    private static Direction getDirectionByKey(NbtCompound tag, String key) {
-        return Direction.byName(tag.getString(key));
     }
 }

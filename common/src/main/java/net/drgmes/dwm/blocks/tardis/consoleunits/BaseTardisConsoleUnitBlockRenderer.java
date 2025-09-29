@@ -1,7 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.consoleunits;
 
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.common.tardis.TardisEnergyManager;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.consoleunits.TardisConsoleUnitEntry;
 import net.drgmes.dwm.common.tardis.consoleunits.controls.TardisConsoleUnitControlEntry;
@@ -11,7 +10,6 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlType;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlValueType;
-import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.model.ModelPart;

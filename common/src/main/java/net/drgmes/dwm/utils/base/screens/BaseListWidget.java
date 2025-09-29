@@ -23,12 +23,14 @@ import java.util.List;
 public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
     private final Vector2i pos;
     private final int padding;
+    private boolean shouldDrawBackground;
 
-    public BaseListWidget(MinecraftClient mc, int width, int height, int padding, Vector2i pos) {
-        super(mc, width, height, pos.y, mc.textRenderer.fontHeight + padding * 2);
+    public BaseListWidget(MinecraftClient mc, Vector2i pos, Vector2i size, int padding) {
+        super(mc, size.x, size.y, pos.y, mc.textRenderer.fontHeight + padding * 2);
 
         this.pos = pos;
         this.padding = padding;
+        this.shouldDrawBackground = true;
     }
 
     @Override
@@ -41,6 +43,26 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         return this.getRowRight() - 8;
     }
 
+    @Override
+    public void drawMenuListBackground(DrawContext context) {
+        if (!this.shouldDrawBackground) return;
+        int color = 0x40000000;
+
+        context.fillGradient(this.getX() - 1, this.getY() - 1, this.getX() + this.getWidth() + 1, this.getBottom() + 1, color, color);
+    }
+
+    @Override
+    public void drawHeaderAndFooterSeparators(DrawContext context) {
+        int color = 0xFF231F26;
+        float width = 0.795F;
+        float margin = 1 - width;
+
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - margin, this.getY() - width - margin, this.getX() + this.getWidth() + margin, this.getY() - margin, color);
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - margin, this.getBottom() + margin, this.getX() + this.getWidth() + margin, this.getBottom() + width + margin, color);
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() - width - margin, this.getY() - width - margin, this.getX() - margin, this.getBottom() + width + margin, color);
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), this.getX() + this.getWidth() + margin, this.getY() - width - margin, this.getX() + this.getWidth() + width + margin, this.getBottom() + width + margin, color);
+    }
+
     public void init() {
         this.refreshList();
         this.setX(this.pos.x);
@@ -49,6 +71,10 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     public void refreshList() {
         this.setScrollAmount(0);
         this.clearEntries();
+    }
+
+    public void setShouldDrawBackground(boolean flag) {
+        this.shouldDrawBackground = flag;
     }
 
     public abstract class BaseListEntry extends Entry<BaseListEntry> {

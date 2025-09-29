@@ -367,11 +367,11 @@
   "title.dwm.monitor.state.energy_harvesting": "Сбор энергии",
 
   "title.dwm.console_room.imperial_abandoned": "Имперская (заброшенная)",
-  "title.dwm.console_room.imperial_classic": "Имперская (классическая)",
+  "title.dwm.console_room.imperial_classic": "Имперская",
   "title.dwm.console_room.aquatic_abandoned": "Акватическая (заброшенная)",
-  "title.dwm.console_room.aquatic_classic": "Акватическая (классическая)",
-  "title.dwm.console_room.toyota_abandoned": "Toyota (заброшенная)",
-  "title.dwm.console_room.toyota_classic": "Toyota (классическая)",
+  "title.dwm.console_room.aquatic_classic": "Акватическая",
+  "title.dwm.console_room.toyota_abandoned": "Тойота (заброшенная)",
+  "title.dwm.console_room.toyota_classic": "Тойота",
 
   "title.dwm.ars.categories.back": "[Назад]",
 
@@ -1146,6 +1146,9 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Координаты были сброшены на §eтекущую§r позицию",
   "message.dwm.tardis.control.role.randomizer": "Координаты были случайно обновлены",
 
+  "message.dwm.tardis.history.loaded": "Координаты §aзагружены",
+  "message.dwm.tardis.history.cleared": "История полетов §aочищена",
+
   "message.dwm.tardis.telepathic_interface.map.loaded": "Координаты карты §aзагружены",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координаты маркера %s загружены",
 
@@ -1187,20 +1190,26 @@
   "screen.dwm.monitor.data.owner": "Владелец",
   "screen.dwm.monitor.data.exterior": "Внешняя оболочка",
   "screen.dwm.monitor.action.exterior": "Внешняя оболочка",
-  "screen.dwm.monitor.action.waypoints": "Путевые точки (WIP)",
-  "screen.dwm.monitor.action.researcher": "Исследователь (WIP)",
   "screen.dwm.monitor.action.console_rooms": "Консольные комнаты",
-  "screen.dwm.monitor.action.external_monitor": "Внешний монитор (WIP)",
+  "screen.dwm.monitor.action.waypoints": "Путевые точки",
+  "screen.dwm.monitor.action.history": "История полетов",
 
+  "screen.dwm.monitor.external_shells.title": "Внешняя оболочка",
   "screen.dwm.monitor.external_shells.cancel": "Отмена",
   "screen.dwm.monitor.external_shells.accept": "Обновить",
 
+  "screen.dwm.monitor.console_rooms.title": "Консольные комнаты",
   "screen.dwm.monitor.console_rooms.cancel": "Отмена",
   "screen.dwm.monitor.console_rooms.accept": "Обновить",
-  "screen.dwm.monitor.console_rooms.prev": "Предыдущая",
-  "screen.dwm.monitor.console_rooms.next": "Следующая",
-  "screen.dwm.monitor.console_rooms.confirmation.1": "Вы уверены, что хотите перестроить главную комнату?",
-  "screen.dwm.monitor.console_rooms.confirmation.2": "§6(Все блоки внутри будут уничтожены)",
+  "screen.dwm.monitor.console_rooms.confirmation.text.1": "Вы уверены, что хотите перестроить главную комнату?",
+  "screen.dwm.monitor.console_rooms.confirmation.text.2": "§6(Все блоки внутри будут уничтожены)",
+
+  "screen.dwm.monitor.history.title": "История полетов",
+  "screen.dwm.monitor.history.cancel": "Отмена",
+  "screen.dwm.monitor.history.accept": "Применить координаты",
+  "screen.dwm.monitor.history.clear": "Очистить всю историю",
+  "screen.dwm.monitor.history.confirmation.text": "Вы уверены, что хотите очистить историю полетов?",
+  "screen.dwm.monitor.history.confirmation.accept": "Подтвердить",
 
   "screen.dwm.telepathic_interface.title.locations": "Телепатический интерфейс: Выберите локацию",
   "screen.dwm.telepathic_interface.title.banners": "Телепатический интерфейс: Выберите маркер",

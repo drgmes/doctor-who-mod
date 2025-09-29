@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -35,16 +35,17 @@ public abstract class BaseTardisConsoleUnitTelepathicInterfaceScreen extends Bas
     protected void init() {
         super.init();
 
-        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
-        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+            this.apply();
+        });
 
-        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
-        this.cancelButton = RenderHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, (b) -> this.close());
+        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+            this.close();
+        });
 
-        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
-        this.acceptButton = RenderHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_BTN_ACCEPT, (b) -> this.apply());
-
-        this.addDrawableChild(this.cancelButton);
         this.addDrawableChild(this.acceptButton);
+        this.addDrawableChild(this.cancelButton);
     }
 }

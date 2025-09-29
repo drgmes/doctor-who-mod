@@ -1,0 +1,193 @@
+package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
+
+import net.drgmes.dwm.DWM;
+import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightHistoryEntry;
+import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorHistoryApplyPacket;
+import net.drgmes.dwm.utils.base.screens.BaseListWidget;
+import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+@Environment(EnvType.CLIENT)
+public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnitMonitorScreen {
+    protected static final int LINE_PADDING = 3;
+
+    private final Screen parentScreen;
+    private final String tardisId;
+    private final List<TardisFlightHistoryEntry> history = new ArrayList<>();
+
+    private int tick = 180;
+    private ButtonWidget acceptButton;
+    private ButtonWidget returnButton;
+    private ButtonWidget cancelButton;
+
+    private HistoryListWidget historyListWidget;
+    private HistoryListWidget.HistoryEntry selected = null;
+
+    public TardisConsoleUnitMonitorHistoryScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
+        super(DWM.TEXTS.MONITOR_HISTORY_TITLE, tardisConsoleUnitBlockEntity);
+
+        this.parentScreen = parentScreen;
+        this.tardisId = tardisId;
+
+        NbtCompound tardisTag = tag.getCompound("tardisTag");
+        if (tardisTag.contains(TardisSystemFlight.class.getSimpleName())) {
+            NbtCompound tardisSystemFlightTag = tardisTag.getCompound(TardisSystemFlight.class.getSimpleName());
+
+            if (tardisSystemFlightTag.contains("history")) {
+                this.history.clear();
+
+                NbtCompound historyTag = tardisSystemFlightTag.getCompound("history");
+                List<String> keys = new ArrayList<>(historyTag.getKeys());
+
+                keys.sort(Comparator.comparing((key) -> key));
+                keys.forEach((key) -> this.history.add(TardisFlightHistoryEntry.createFromNbt(historyTag.getCompound(key))));
+            }
+        }
+    }
+
+    @Override
+    public boolean shouldCloseOnInventoryKey() {
+        return true;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+
+        this.historyListWidget = new HistoryListWidget(this, this.getHistoryListPos(), this.getHistoryListSize());
+
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+            this.apply();
+        });
+
+        Vector2i returnButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        this.returnButton = new BaseButton(returnButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CLEAR, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CLEAR, (b) -> {
+            this.client.setScreen(new TardisConsoleUnitMonitorHistoryConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this));
+        });
+
+        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+            if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
+            else this.close();
+        });
+
+        this.addDrawableChild(this.historyListWidget);
+        this.addDrawableChild(this.acceptButton);
+        this.addDrawableChild(this.returnButton);
+        this.addDrawableChild(this.cancelButton);
+        this.update();
+    }
+
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        super.resize(mc, width, height);
+        this.historyListWidget.refreshList();
+    }
+
+    @Override
+    public void tick() {
+        this.tick = (this.tick + 1) % 360;
+        this.historyListWidget.setSelected(this.selected);
+    }
+
+    @Override
+    public void apply() {
+        if (this.selected != null) {
+            new TardisConsoleUnitMonitorHistoryApplyPacket(this.tardisId, this.selected.entry.dimension(), this.selected.entry.blockPos(), this.selected.entry.facing()).sendToServer();
+        }
+
+        super.apply();
+    }
+
+    private Vector2i getHistoryListPos() {
+        return this.getLeftTopRenderPos(0, 0);
+    }
+
+    private Vector2i getHistoryListSize() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 3);
+    }
+
+    private void setSelected(HistoryListWidget.HistoryEntry entry) {
+        if (this.selected == entry) this.selected = null;
+        else this.selected = entry;
+        this.update();
+    }
+
+    private void update() {
+        this.acceptButton.active = this.selected != null;
+        this.returnButton.active = !this.history.isEmpty();
+    }
+
+    private static class HistoryListWidget extends BaseListWidget {
+        private final TardisConsoleUnitMonitorHistoryScreen parent;
+
+        public HistoryListWidget(TardisConsoleUnitMonitorHistoryScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
+            this.parent = parent;
+            this.init();
+        }
+
+        public void refreshList() {
+            super.refreshList();
+            this.parent.history.forEach((entry) -> this.addEntry(new HistoryEntry(entry)));
+        }
+
+        private class HistoryEntry extends BaseListEntry {
+            private final TardisFlightHistoryEntry entry;
+
+            public HistoryEntry(TardisFlightHistoryEntry entry) {
+                super(Formatting.WHITE, Formatting.GOLD);
+                this.entry = entry;
+            }
+
+            @Override
+            public Text getText() {
+                String dimensionName = CommonHelper.capitaliseAllWords(this.entry.dimension().getValue().getPath().replace("_", " "));
+                MutableText dimensionText = Text.literal(String.format("[%s] ", dimensionName)).formatted(Formatting.AQUA);
+                MutableText posText = Text.literal(this.entry.blockPos().toShortString());
+                return Text.empty().append(dimensionText).append(posText);
+            }
+
+            @Override
+            public void render(DrawContext context, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
+                super.render(context, entryIdx, top, left, entryWidth, height, mouseX, mouseY, flag, partialTick);
+
+                TextRenderer textRenderer = HistoryListWidget.this.parent.textRenderer;
+                int offset = LINE_PADDING * (HistoryListWidget.this.getMaxScroll() > 0 ? 4 : 2);
+                int startPosX = HistoryListWidget.this.parent.getHistoryListSize().x + left - offset;
+
+                SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
+                Text timeText = Text.literal(localDateFormat.format(this.entry.timestamp())).formatted(Formatting.DARK_GRAY);
+                Vector2i timePos = new Vector2i(startPosX - textRenderer.getWidth(timeText), top + 2);
+                context.drawText(textRenderer, timeText, timePos.x, timePos.y, 0xE0E0E0, true);
+            }
+
+            @Override
+            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+                HistoryListWidget.this.parent.setSelected(this);
+                return super.mouseClicked(mouseX, mouseY, delta);
+            }
+        }
+    }
+}

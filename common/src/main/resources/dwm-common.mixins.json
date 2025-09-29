@@ -5,7 +5,6 @@
   "package": "net.drgmes.dwm.mixin",
   "refmap": "dwm.refmap.json",
   "client": [
-    "MixinEntryListWidget",
     "MixinMinecraftClient"
   ],
   "mixins": [

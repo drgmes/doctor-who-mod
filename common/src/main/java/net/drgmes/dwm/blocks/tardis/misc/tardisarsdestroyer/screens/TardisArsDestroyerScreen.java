@@ -4,6 +4,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.network.server.ArsDestroyerApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
+import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +26,7 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     private ButtonWidget cancelButton;
 
     public TardisArsDestroyerScreen(BlockPos blockPos, ArsStructure arsStructure) {
-        super(DWM.TEXTS.ARS_INTERFACE_NAME);
+        super(DWM.TEXTS.ARS_INTERFACE_TITLE);
 
         this.blockPos = blockPos;
         this.arsStructure = arsStructure;
@@ -55,17 +56,18 @@ public class TardisArsDestroyerScreen extends BaseScreen {
     protected void init() {
         super.init();
 
-        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
-        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_DESTROY, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+            this.apply();
+        });
 
-        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
-        this.cancelButton = RenderHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+            this.close();
+        });
 
-        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
-        this.acceptButton = RenderHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_DESTROY, (b) -> this.apply());
-
-        this.addDrawableChild(this.cancelButton);
         this.addDrawableChild(this.acceptButton);
+        this.addDrawableChild(this.cancelButton);
     }
 
     @Override
@@ -90,7 +92,7 @@ public class TardisArsDestroyerScreen extends BaseScreen {
 
         int maxWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
         int textX = (int) Math.floor(this.getBackgroundSize().x / 2F);
-        int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_HEIGHT;
+        int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
         Vector2i textPos = this.getRenderPos(textX, textY);
 
         textPos = textPos.add(RenderHelper.drawTextMultilineCentered(DWM.TEXTS.ARS_INTERFACE_MESSAGE, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0));

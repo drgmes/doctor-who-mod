@@ -70,7 +70,7 @@ public class SonicDeviceScanModeOverlay {
         int maxTextLength = (int) Math.floor((screenWidth - 192) / 2F - PADDING * 1.5F);
         Text title = Text.Serialization.fromJson(tag.getString("title"), DynamicRegistryManager.EMPTY);
         List<Text> lines = new ArrayList<>();
-        List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys().stream().toList());
+        List<String> keys = new ArrayList<>(tag.getCompound("linesTag").getKeys());
         List<OrderedText> titleLines = Language.getInstance().reorder(mc.textRenderer.getTextHandler().wrapLines(title, maxTextLength, Style.EMPTY));
 
         keys.sort(Comparator.comparing((key) -> key));

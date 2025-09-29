@@ -367,11 +367,11 @@
   "title.dwm.monitor.state.energy_harvesting": "Energy Harvesting",
 
   "title.dwm.console_room.imperial_abandoned": "Imperial Abandoned",
-  "title.dwm.console_room.imperial_classic": "Imperial Classic",
+  "title.dwm.console_room.imperial_classic": "Imperial",
   "title.dwm.console_room.aquatic_abandoned": "Aquatic Abandoned",
-  "title.dwm.console_room.aquatic_classic": "Aquatic Classic",
+  "title.dwm.console_room.aquatic_classic": "Aquatic",
   "title.dwm.console_room.toyota_abandoned": "Toyota Abandoned",
-  "title.dwm.console_room.toyota_classic": "Toyota Classic",
+  "title.dwm.console_room.toyota_classic": "Toyota",
 
   "title.dwm.ars.categories.back": "[Go Back]",
 
@@ -1146,6 +1146,9 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Coords have been reset to the §eCurrent§r position",
   "message.dwm.tardis.control.role.randomizer": "Coords were randomly updated",
 
+  "message.dwm.tardis.history.loaded": "Coords §aLoaded",
+  "message.dwm.tardis.history.cleared": "Flight History §aCleared",
+
   "message.dwm.tardis.telepathic_interface.map.loaded": "Map Coords §aLoaded",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "%s Banner Coords §aLoaded",
 
@@ -1187,20 +1190,26 @@
   "screen.dwm.monitor.data.owner": "Owner",
   "screen.dwm.monitor.data.exterior": "External Shell",
   "screen.dwm.monitor.action.exterior": "External Shell",
-  "screen.dwm.monitor.action.waypoints": "Waypoints (WIP)",
-  "screen.dwm.monitor.action.researcher": "Researcher (WIP)",
   "screen.dwm.monitor.action.console_rooms": "Console Rooms",
-  "screen.dwm.monitor.action.external_monitor": "External Monitor (WIP)",
+  "screen.dwm.monitor.action.waypoints": "Waypoints",
+  "screen.dwm.monitor.action.history": "Flight History",
 
+  "screen.dwm.monitor.external_shells.title": "External Shell",
   "screen.dwm.monitor.external_shells.cancel": "Cancel",
   "screen.dwm.monitor.external_shells.accept": "Update",
 
+  "screen.dwm.monitor.console_rooms.title": "Console Rooms",
   "screen.dwm.monitor.console_rooms.cancel": "Cancel",
   "screen.dwm.monitor.console_rooms.accept": "Update",
-  "screen.dwm.monitor.console_rooms.prev": "Previous room",
-  "screen.dwm.monitor.console_rooms.next": "Next room",
-  "screen.dwm.monitor.console_rooms.confirmation.1": "Are you sure you want to rebuild the main room?",
-  "screen.dwm.monitor.console_rooms.confirmation.2": "§6(All blocks inside will be destroyed)",
+  "screen.dwm.monitor.console_rooms.confirmation.text.1": "Are you sure you want to rebuild the main room?",
+  "screen.dwm.monitor.console_rooms.confirmation.text.2": "§6(All blocks inside will be destroyed)",
+
+  "screen.dwm.monitor.history.title": "Flight History",
+  "screen.dwm.monitor.history.cancel": "Cancel",
+  "screen.dwm.monitor.history.accept": "Apply coords",
+  "screen.dwm.monitor.history.clear": "Clear all history",
+  "screen.dwm.monitor.history.confirmation.text": "Are you sure you want to clear your flight history?",
+  "screen.dwm.monitor.history.confirmation.accept": "Confirm",
 
   "screen.dwm.telepathic_interface.title.locations": "Telepathic Interface: Choose a Location",
   "screen.dwm.telepathic_interface.title.banners": "Telepathic Interface: Choose an Anchor",

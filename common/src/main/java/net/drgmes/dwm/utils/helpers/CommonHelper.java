@@ -71,6 +71,14 @@ public class CommonHelper {
         return str.replace(",", ".");
     }
 
+    public static String formatIndexString(int index, int length) {
+        return String.format("%1$" + length + "s", index).replace(' ', '0');
+    }
+
+    public static String formatIndexString(int index) {
+        return formatIndexString(index, 5);
+    }
+
     public static Identifier loadRemoteImage(String id, URL url) {
         try {
             URLConnection uc = url.openConnection();

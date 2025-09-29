@@ -11,7 +11,8 @@ import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
 public abstract class BaseScreen extends Screen implements IBaseScreen {
-    protected static final int BUTTON_HEIGHT = 20;
+    protected static final int BUTTON_SIZE = 20;
+    protected static final int BUTTON_PADDING = 3;
 
     protected BaseScreen(Text title) {
         super(title);
@@ -49,12 +50,12 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
 
     @Override
     protected void init() {
-//        if (this.client != null) this.client.keyboard.setRepeatEvents(true);
+        //if (this.client != null) this.client.keyboard.setRepeatEvents(true);
     }
 
     @Override
     public void removed() {
-//        if (this.client != null) this.client.keyboard.setRepeatEvents(false);
+        //if (this.client != null) this.client.keyboard.setRepeatEvents(false);
     }
 
     @Override

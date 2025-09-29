@@ -367,11 +367,11 @@
   "title.dwm.monitor.state.energy_harvesting": "Збір енергії",
 
   "title.dwm.console_room.imperial_abandoned": "Імперська (занедбана)",
-  "title.dwm.console_room.imperial_classic": "Імперська (класична)",
+  "title.dwm.console_room.imperial_classic": "Імперська",
   "title.dwm.console_room.aquatic_abandoned": "Акватична (занедбана)",
-  "title.dwm.console_room.aquatic_classic": "Акватична (класична)",
-  "title.dwm.console_room.toyota_abandoned": "Toyota (занедбана)",
-  "title.dwm.console_room.toyota_classic": "Toyota (класична)",
+  "title.dwm.console_room.aquatic_classic": "Акватична",
+  "title.dwm.console_room.toyota_abandoned": "Тойота (занедбана)",
+  "title.dwm.console_room.toyota_classic": "Тойота",
 
   "title.dwm.ars.categories.back": "[Назад]",
 
@@ -1146,6 +1146,9 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Координати були скинуті на §eпоточну§r позицію",
   "message.dwm.tardis.control.role.randomizer": "Координати були випадково оновлені",
 
+  "message.dwm.tardis.history.loaded": "Координати §aзавантажені",
+  "message.dwm.tardis.history.cleared": "Історія польотів §aочищена",
+
   "message.dwm.tardis.telepathic_interface.map.loaded": "Координати мапи §aзавантажені",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координати маркера %s завантажені",
 
@@ -1187,20 +1190,26 @@
   "screen.dwm.monitor.data.owner": "Власник",
   "screen.dwm.monitor.data.exterior": "Зовнішня оболонка",
   "screen.dwm.monitor.action.exterior": "Зовнішня оболонка",
-  "screen.dwm.monitor.action.waypoints": "Шляхові точки (WIP)",
-  "screen.dwm.monitor.action.researcher": "Дослідник (WIP)",
   "screen.dwm.monitor.action.console_rooms": "Консольні кімнати",
-  "screen.dwm.monitor.action.external_monitor": "Зовнішній монітор (WIP)",
+  "screen.dwm.monitor.action.waypoints": "Шляхові точки",
+  "screen.dwm.monitor.action.history": "Історія польотів",
 
+  "screen.dwm.monitor.external_shells.title": "Зовнішня оболонка",
   "screen.dwm.monitor.external_shells.cancel": "Скасувати",
   "screen.dwm.monitor.external_shells.accept": "Оновити",
 
+  "screen.dwm.monitor.console_rooms.title": "Консольні кімнати",
   "screen.dwm.monitor.console_rooms.cancel": "Скасувати",
   "screen.dwm.monitor.console_rooms.accept": "Оновити",
-  "screen.dwm.monitor.console_rooms.prev": "Попередня",
-  "screen.dwm.monitor.console_rooms.next": "Наступна",
-  "screen.dwm.monitor.console_rooms.confirmation.1": "Ви впевнені, що бажаєте перебудувати головну кімнату?",
-  "screen.dwm.monitor.console_rooms.confirmation.2": "§6(Всі блоки всередині будуть знищені)",
+  "screen.dwm.monitor.console_rooms.confirmation.text.1": "Ви впевнені, що бажаєте перебудувати головну кімнату?",
+  "screen.dwm.monitor.console_rooms.confirmation.text.2": "§6(Всі блоки всередині будуть знищені)",
+
+  "screen.dwm.monitor.history.title": "Історія польотів",
+  "screen.dwm.monitor.history.cancel": "Скасувати",
+  "screen.dwm.monitor.history.accept": "Застосувати координати",
+  "screen.dwm.monitor.history.clear": "Очистити всю історію",
+  "screen.dwm.monitor.history.confirmation.text": "Ви впевнені, що хочете очистити історію польотів?",
+  "screen.dwm.monitor.history.confirmation.accept": "Підтвердити",
 
   "screen.dwm.telepathic_interface.title.locations": "Телепатичний інтерфейс: Виберіть локацію",
   "screen.dwm.telepathic_interface.title.banners": "Телепатичний інтерфейс: Виберіть маркер",

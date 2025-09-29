@@ -5,10 +5,10 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.network.IPacket;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -16,9 +16,10 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
-    String dimension,
+    RegistryKey<World> dimension,
     DyeColor dyeColor,
     BlockPos blockPos
 ) implements IPacket {
@@ -26,7 +27,7 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
     public static final CustomPayload.Id<TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket> PACKET_ID = new CustomPayload.Id<>(ID);
 
     public static final PacketCodec<PacketByteBuf, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket> PACKET_CODEC = PacketCodec.tuple(
-        PacketCodecs.STRING, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::dimension,
+        RegistryKey.createPacketCodec(RegistryKeys.WORLD), TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::dimension,
         DyeColor.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::dyeColor,
         BlockPos.PACKET_CODEC, TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::blockPos,
         TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket::new
@@ -41,7 +42,10 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
         context.queue(() -> {
             PlayerEntity player = context.getPlayer();
 
-            TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
+            ServerWorld serverWorld = (ServerWorld) player.getWorld();
+            if (!TardisHelper.isTardisDimension(serverWorld)) return;
+
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
                     player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
                     return;
@@ -50,7 +54,7 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
                 String color = payload.dyeColor.getName().toUpperCase().replace("_", " ");
                 player.sendMessage(DWM.TEXTS.TELEPATHIC_INTERFACE_MAP_BANNER_LOADED.apply(color), true);
 
-                tardis.setDestinationDimension(RegistryKey.of(RegistryKeys.WORLD, Identifier.of(payload.dimension)));
+                tardis.setDestinationDimension(payload.dimension);
                 tardis.setDestinationPosition(payload.blockPos);
                 tardis.markConsoleTilesUpdated();
             });

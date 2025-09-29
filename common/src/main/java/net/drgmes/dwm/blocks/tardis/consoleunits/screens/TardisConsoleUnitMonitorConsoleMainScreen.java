@@ -8,7 +8,6 @@ import net.drgmes.dwm.setup.ModBlocks;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -35,17 +34,15 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
             screen.client.setScreen(new TardisConsoleUnitMonitorExternalShellScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
-        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
-        }),
-
-        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_RESEARCHER, true, (screen) -> Items.SPYGLASS, (screen) -> {
-        }),
-
         ROOMS(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, (screen) -> ModBlocks.TARDIS_ARS_CREATOR.getBlockItem(), (screen) -> {
             screen.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
-        EXTERNAL_MONITOR(DWM.TEXTS.MONITOR_ACTION_EXTERNAL_MONITOR, true, (screen) -> Blocks.OBSERVER, (screen) -> {
+        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
+        }),
+
+        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_HISTORY, false, (screen) -> Items.WRITABLE_BOOK, (screen) -> {
+            screen.client.setScreen(new TardisConsoleUnitMonitorHistoryScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         });
 
         private final Text title;
@@ -78,8 +75,8 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         this.owner = owner;
         this.tag = tag;
 
-        String exteriorTypeId = this.tag.getCompound("tardisTag").getString("exteriorType");
-        this.exteriorType = TardisExteriors.getExteriorType(exteriorTypeId);
+        NbtCompound tardisTag = this.tag.getCompound("tardisTag");
+        this.exteriorType = TardisExteriors.getExteriorType(tardisTag.getString("exteriorType"));
     }
 
     @Override

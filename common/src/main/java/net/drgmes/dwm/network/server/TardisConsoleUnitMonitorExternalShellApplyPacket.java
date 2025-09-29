@@ -44,8 +44,8 @@ public record TardisConsoleUnitMonitorExternalShellApplyPacket(
 
     public static void handle(TardisConsoleUnitMonitorExternalShellApplyPacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, context.getPlayer().getServer());
             PlayerEntity player = context.getPlayer();
+            ServerWorld tardisWorld = DimensionHelper.getModWorld(payload.tardisId, player.getServer());
 
             TardisStateManager.get(tardisWorld).ifPresent((tardis) -> {
                 if (!tardis.checkAccess(player, false, true)) {
@@ -73,8 +73,14 @@ public record TardisConsoleUnitMonitorExternalShellApplyPacket(
                     return;
                 }
 
+                materializationSystem.putCallback((flag) -> {
+                    if (!flag) return;
+
+                    materializationSystem.initRemat();
+                    tardis.markConsoleTilesUpdated();
+                });
+
                 tardis.setExteriorType(exteriorType);
-                materializationSystem.putCallback((flag) -> { if (flag) materializationSystem.initRemat(); });
                 materializationSystem.initDemat();
 
                 BlockEntity doorsTile = tardis.getMainInteriorDoorsTile();

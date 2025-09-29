@@ -10,6 +10,7 @@ import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.enums.TardisVerticalScanning;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -53,7 +54,10 @@ public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
         context.queue(() -> {
             PlayerEntity player = context.getPlayer();
 
-            TardisStateManager.get((ServerWorld) player.getWorld()).ifPresent((tardis) -> {
+            ServerWorld serverWorld = (ServerWorld) player.getWorld();
+            if (!TardisHelper.isTardisDimension(serverWorld)) return;
+
+            TardisStateManager.get(serverWorld).ifPresent((tardis) -> {
                 if (!tardis.getSystem(TardisSystemFlight.class).isEnabled()) {
                     player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
                     return;

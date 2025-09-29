@@ -3,50 +3,63 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
-import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorConsoleRoomApplyPacket;
+import net.drgmes.dwm.utils.base.screens.BaseListWidget;
+import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsoleUnitMonitorScreen {
+    protected static final int LINE_PADDING = 3;
+    protected final Screen parentScreen;
+    protected final NbtCompound tag;
+
     private static final Map<String, Identifier> LOADED_CONSOLE_ROOMS_IMAGES = new HashMap<>();
 
-    private final Screen parentScreen;
     private final String tardisId;
+    private final String presetConsoleRoomId;
     private final String currentConsoleRoomId;
-
     private final List<TardisConsoleRoomEntry> consoleRooms = new ArrayList<>();
-    private int selectedConsoleRoomIndex = 0;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
-    private ButtonWidget prevButton;
-    private ButtonWidget nextButton;
 
-    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
-        super(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, tardisConsoleUnitBlockEntity);
+    private ConsoleRoomsListWidget consoleRoomsListWidget;
+    private ConsoleRoomsListWidget.ConsoleRoomEntry selected = null;
+
+    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String presetConsoleRoomId, NbtCompound tag, @Nullable Screen parentScreen) {
+        super(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
+        this.presetConsoleRoomId = presetConsoleRoomId;
         this.currentConsoleRoomId = tag.getCompound("tardisTag").getString("consoleRoom");
+        this.tag = tag;
 
         NbtCompound roomsTag = tag.getCompound("roomsTag");
-        List<String> keys = new ArrayList<>(roomsTag.getKeys().stream().toList());
+        List<String> keys = new ArrayList<>(roomsTag.getKeys());
 
         keys.sort(Comparator.comparing((key) -> key));
         keys.forEach((key) -> this.consoleRooms.add(TardisConsoleRoomEntry.fromNbt(roomsTag.getCompound(key))));
+    }
+
+    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
+        this(tardisConsoleUnitBlockEntity, tardisId, null, tag, parentScreen);
     }
 
     @Override
@@ -58,97 +71,138 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     protected void init() {
         super.init();
 
-        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
-        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
+        this.consoleRoomsListWidget = new ConsoleRoomsListWidget(this, this.getConsoleRoomsListPos(), this.getConsoleRoomsListSize());
 
-        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset);
-        this.cancelButton = RenderHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, (b) -> {
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+            this.apply();
+        });
+
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
             else this.close();
         });
 
-        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset);
-        this.acceptButton = RenderHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, (b) -> {
-            this.apply();
-        });
-
-        Vector2i prevButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, buttonOffset - BUTTON_HEIGHT - 1);
-        this.prevButton = RenderHelper.getButtonWidget(prevButtonPos.x, prevButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_PREV, (b) -> {
-            this.selectedConsoleRoomIndex = this.selectedConsoleRoomIndex + 1 < this.consoleRooms.size() ? this.selectedConsoleRoomIndex + 1 : 0;
-            this.updateAcceptButton();
-        });
-
-        Vector2i nextButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 2, buttonOffset - BUTTON_HEIGHT - 1);
-        this.nextButton = RenderHelper.getButtonWidget(nextButtonPos.x, nextButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_NEXT, (b) -> {
-            this.selectedConsoleRoomIndex = this.selectedConsoleRoomIndex - 1 >= 0 ? this.selectedConsoleRoomIndex - 1 : this.consoleRooms.size() - 1;
-            this.updateAcceptButton();
-        });
-
-        this.addDrawableChild(this.cancelButton);
+        this.addDrawableChild(this.consoleRoomsListWidget);
         this.addDrawableChild(this.acceptButton);
-        this.addDrawableChild(this.prevButton);
-        this.addDrawableChild(this.nextButton);
+        this.addDrawableChild(this.cancelButton);
+        this.update();
+    }
 
-        this.updateAcceptButton();
+    @Override
+    public void resize(MinecraftClient mc, int width, int height) {
+        super.resize(mc, width, height);
+        this.consoleRoomsListWidget.refreshList();
     }
 
     @Override
     public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderAdditional(context, mouseX, mouseY, delta);
-        this.renderImage(context);
-    }
+        if (this.selected == null) return;
 
-    @Override
-    public void apply() {
-        TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
+        int listWidth = this.getConsoleRoomsListSize().x + 1;
+        int imageWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - listWidth - 2;
+        int imageHeight = (int) Math.floor(imageWidth * 0.595F);
 
-        if (selectedConsoleRoom != null && !selectedConsoleRoom.name.equals(this.currentConsoleRoomId)) {
-            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, selectedConsoleRoom.name, this));
-        }
-    }
+        Vector2i imagePos = this.getLeftTopRenderPos(listWidth + 1, 1);
+        Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + this.selected.consoleRoom.name + ".png");
 
-    private TardisConsoleRoomEntry getSelectedConsoleRoom() {
-        return this.consoleRooms.size() > this.selectedConsoleRoomIndex ? this.consoleRooms.get(this.selectedConsoleRoomIndex) : null;
-    }
+        RenderHelper.drawTessellatorRectangle(context.getMatrices(), imagePos.x - 1, imagePos.y + imageHeight + 1, imagePos.x + imageWidth + 2, imagePos.y + imageHeight + 1.795F, 0xFF231F26);
 
-    private void updateAcceptButton() {
-        TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
-        this.acceptButton.active = selectedConsoleRoom != null && !selectedConsoleRoom.name.equals(this.currentConsoleRoomId);
-    }
+        if (!this.selected.consoleRoom.imageUrl.isEmpty()) {
+            if (!LOADED_CONSOLE_ROOMS_IMAGES.containsKey(this.selected.consoleRoom.name)) {
+                LOADED_CONSOLE_ROOMS_IMAGES.put(this.selected.consoleRoom.name, null);
 
-    private void renderImage(DrawContext context) {
-        TardisConsoleRoomEntry selectedConsoleRoom = this.getSelectedConsoleRoom();
-        int paddingX = (int) Math.floor(this.getBackgroundBorderSize().x * 1.25F);
-        int paddingY = (int) Math.floor(this.getBackgroundBorderSize().y * 1.25F);
-
-        if (selectedConsoleRoom == null) return;
-
-        Vector2i titlePos = this.getRenderPos(paddingX, paddingY);
-        context.drawText(this.textRenderer, selectedConsoleRoom.getTitle(), titlePos.x, titlePos.y, 0xE0E0E0, true);
-
-        Vector2i imagePos = this.getRenderPos(paddingX, (int) Math.floor(paddingY + this.getTextRenderer().fontHeight * 1.5F));
-        Identifier localConsoleRoomImage = DWM.getIdentifier("images/tardis/console_rooms/" + selectedConsoleRoom.name + ".png");
-
-        if (!selectedConsoleRoom.imageUrl.isEmpty()) {
-            if (!LOADED_CONSOLE_ROOMS_IMAGES.containsKey(selectedConsoleRoom.name)) {
-                LOADED_CONSOLE_ROOMS_IMAGES.put(selectedConsoleRoom.name, null);
-
-                CommonHelper.runInThread("loadRemoteImage_" + selectedConsoleRoom.name, () -> {
+                CommonHelper.runInThread("loadRemoteImage_" + this.selected.consoleRoom.name, () -> {
                     try {
-                        LOADED_CONSOLE_ROOMS_IMAGES.put(selectedConsoleRoom.name, CommonHelper.loadRemoteImage(selectedConsoleRoom.name, new URL(selectedConsoleRoom.imageUrl)));
+                        LOADED_CONSOLE_ROOMS_IMAGES.put(this.selected.consoleRoom.name, CommonHelper.loadRemoteImage(this.selected.consoleRoom.name, new URI(this.selected.consoleRoom.imageUrl).toURL()));
                     } catch (Exception ignored) {
-                        LOADED_CONSOLE_ROOMS_IMAGES.remove(selectedConsoleRoom.name);
+                        LOADED_CONSOLE_ROOMS_IMAGES.remove(this.selected.consoleRoom.name);
                     }
                 });
 
                 return;
             }
 
-            Identifier remoteConsoleRoomImage = LOADED_CONSOLE_ROOMS_IMAGES.get(selectedConsoleRoom.name);
-            if (remoteConsoleRoomImage != null) this.drawImage(context, imagePos, new Vector2i(this.getBackgroundSize().x - paddingX * 2, 120), remoteConsoleRoomImage);
+            Identifier remoteConsoleRoomImage = LOADED_CONSOLE_ROOMS_IMAGES.get(this.selected.consoleRoom.name);
+            if (remoteConsoleRoomImage != null) RenderHelper.drawImage(context, imagePos, new Vector2i(imageWidth, imageHeight), remoteConsoleRoomImage);
             return;
         }
 
-        this.drawImage(context, imagePos, new Vector2i(this.getBackgroundSize().x - paddingX * 2, 120), localConsoleRoomImage);
+        RenderHelper.drawImage(context, imagePos, new Vector2i(imageWidth, imageHeight), localConsoleRoomImage);
+    }
+
+    @Override
+    public void tick() {
+        this.consoleRoomsListWidget.setSelected(this.selected);
+    }
+
+    @Override
+    public void apply() {
+        if (this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId)) {
+            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this.tag, this));
+        }
+    }
+
+    private Vector2i getConsoleRoomsListPos() {
+        return this.getLeftTopRenderPos(0, 0);
+    }
+
+    private Vector2i getConsoleRoomsListSize() {
+        return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
+    }
+
+    private void setSelected(ConsoleRoomsListWidget.ConsoleRoomEntry entry) {
+        this.selected = entry;
+        this.update();
+    }
+
+    private void update() {
+        this.acceptButton.active = this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId);
+    }
+
+    private static class ConsoleRoomsListWidget extends BaseListWidget {
+        private final TardisConsoleUnitMonitorConsoleRoomsScreen parent;
+
+        public ConsoleRoomsListWidget(TardisConsoleUnitMonitorConsoleRoomsScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
+            this.parent = parent;
+            this.init();
+        }
+
+        public void refreshList() {
+            super.refreshList();
+
+            this.parent.consoleRooms.forEach((consoleRoom) -> {
+                ConsoleRoomEntry entry = new ConsoleRoomEntry(consoleRoom);
+                this.addEntry(entry);
+
+                if (Objects.equals(consoleRoom.name, this.parent.presetConsoleRoomId) || Objects.equals(consoleRoom.name, this.parent.currentConsoleRoomId)) {
+                    this.setSelected(entry);
+                    this.parent.selected = entry;
+                }
+            });
+        }
+
+        private class ConsoleRoomEntry extends BaseListEntry {
+            private final TardisConsoleRoomEntry consoleRoom;
+
+            public ConsoleRoomEntry(TardisConsoleRoomEntry consoleRoom) {
+                super(Formatting.WHITE, Formatting.GOLD);
+                this.consoleRoom = consoleRoom;
+            }
+
+            @Override
+            public Text getText() {
+                return this.consoleRoom.getTitle();
+            }
+
+            @Override
+            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+                ConsoleRoomsListWidget.this.parent.setSelected(this);
+                return super.mouseClicked(mouseX, mouseY, delta);
+            }
+        }
     }
 }

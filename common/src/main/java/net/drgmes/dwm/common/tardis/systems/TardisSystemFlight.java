@@ -2,15 +2,21 @@ package net.drgmes.dwm.common.tardis.systems;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightHistoryEntry;
 import net.drgmes.dwm.setup.ModSounds;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.nbt.NbtCompound;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class TardisSystemFlight extends TardisBaseSystem {
+    public static final int HISTORY_SIZE = 100;
+
     private enum EStep {
         NONE,
         INITED,
@@ -19,6 +25,7 @@ public class TardisSystemFlight extends TardisBaseSystem {
     }
 
     private final List<Consumer<Boolean>> callbacks = new ArrayList<>();
+    private List<TardisFlightHistoryEntry> history = new ArrayList<>();
 
     private EStep step = EStep.NONE;
     private UUID initiatorId;
@@ -41,6 +48,16 @@ public class TardisSystemFlight extends TardisBaseSystem {
         if (tag.contains("initiatorId")) this.initiatorId = tag.getUuid("initiatorId");
         if (tag.contains("tick")) this.tick = tag.getInt("tick");
         if (tag.contains("soundTick")) this.soundTick = tag.getInt("soundTick");
+
+        if (tag.contains("history")) {
+            this.history.clear();
+
+            NbtCompound historyTag = tag.getCompound("history");
+            List<String> keys = new ArrayList<>(historyTag.getKeys());
+
+            keys.sort(Comparator.comparing((key) -> key));
+            keys.forEach((key) -> this.history.add(TardisFlightHistoryEntry.createFromNbt(historyTag.getCompound(key))));
+        }
     }
 
     @Override
@@ -50,6 +67,11 @@ public class TardisSystemFlight extends TardisBaseSystem {
         tag.putString("step", this.step.name());
         tag.putInt("tick", this.tick);
         tag.putInt("soundTick", this.soundTick);
+
+        AtomicInteger i = new AtomicInteger();
+        NbtCompound historyTag = new NbtCompound();
+        this.history.forEach((entry) -> historyTag.put(CommonHelper.formatIndexString(i.incrementAndGet()), entry.writeNbt(new NbtCompound())));
+        tag.put("history", historyTag);
 
         return tag;
     }
@@ -137,6 +159,24 @@ public class TardisSystemFlight extends TardisBaseSystem {
         return DWM.TIMINGS.FLIGHT_LOOP;
     }
 
+    public List<TardisFlightHistoryEntry> getHistory() {
+        return this.history;
+    }
+
+    public void addHistory(TardisFlightHistoryEntry historyEntry) {
+        this.history.addFirst(historyEntry);
+        if (this.history.size() > HISTORY_SIZE) this.history = this.history.subList(0, HISTORY_SIZE);
+
+        this.tardis.markDirty();
+        this.tardis.markConsoleTilesUpdated();
+    }
+
+    public void clearHistory() {
+        this.history.clear();
+        this.tardis.markDirty();
+        this.tardis.markConsoleTilesUpdated();
+    }
+
     private boolean takeoff() {
         if (!this.isEnabled() || !this.inProgress() || this.tick > 0) return false;
 
@@ -173,13 +213,18 @@ public class TardisSystemFlight extends TardisBaseSystem {
         if (!materializationSystem.isEnabled() || materializationSystem.inProgress()) return false;
 
         this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
-        this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
         this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
-        this.tardis.markConsoleTilesUpdated();
+        this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
 
         materializationSystem.putCallback((flag) -> {
             this.reset();
             this.applyCallbacks(flag);
+
+            this.addHistory(new TardisFlightHistoryEntry(
+                this.tardis.getCurrentExteriorDimension(),
+                this.tardis.getCurrentExteriorPosition(),
+                this.tardis.getCurrentExteriorFacing()
+            ));
         });
 
         if (!materializationSystem.init(true, this.initiatorId)) {

@@ -69,7 +69,7 @@ public class TardisConsoleControlEntity extends Entity {
 
     @Override
     public void tick() {
-        if (!this.getWorld().isClient && this.consoleUnit == null) this.discard();
+        if (!this.getWorld().isClient && (this.consoleUnit == null || this.consoleUnit.isRemoved())) this.discard();
         else super.tick();
     }
 

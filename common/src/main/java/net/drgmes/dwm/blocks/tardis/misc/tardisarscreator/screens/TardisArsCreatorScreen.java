@@ -6,7 +6,7 @@ import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.network.server.ArsCreatorApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.base.screens.BaseScreen;
-import net.drgmes.dwm.utils.helpers.RenderHelper;
+import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -44,7 +44,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
     private String lastSearch;
 
     public TardisArsCreatorScreen(BlockPos blockPos, Map<String, ArsCategory> arsCategories, Map<String, ArsStructure> arsStructures) {
-        super(DWM.TEXTS.ARS_INTERFACE_NAME);
+        super(DWM.TEXTS.ARS_INTERFACE_TITLE);
 
         this.blockPos = blockPos;
         this.arsCategories = arsCategories;
@@ -87,30 +87,25 @@ public class TardisArsCreatorScreen extends BaseScreen {
     public void init() {
         super.init();
 
-        int buttonWidth = this.getBackgroundSize().x / 2 - this.getBackgroundBorderSize().x - 1;
-        int buttonOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 1;
+        this.listWidget = new ListWidget(this, this.getListPos(), this.getListSize());
 
-        Vector2i cancelButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x, buttonOffset);
-        this.cancelButton = RenderHelper.getButtonWidget(cancelButtonPos.x, cancelButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, (b) -> this.close());
+        Vector2i searchPos = this.getLeftTopRenderPos(1, 1);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, 18, DWM.TEXTS.ARS_INTERFACE_SEARCH);
 
-        Vector2i acceptButtonPos = this.getRenderPos(this.getBackgroundBorderSize().x + buttonWidth + 1, buttonOffset);
-        this.acceptButton = RenderHelper.getButtonWidget(acceptButtonPos.x, acceptButtonPos.y, buttonWidth, BUTTON_HEIGHT, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, (b) -> this.apply());
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+            this.apply();
+        });
 
-        int listWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
-        int listHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
-        int listOffset = this.getBackgroundSize().y - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - listHeight - 2;
-
-        Vector2i categoriesListPos = this.getRenderPos(this.getBackgroundBorderSize().x, listOffset);
-        this.listWidget = new ListWidget(this, listWidth, listHeight, categoriesListPos);
-
-        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 2);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, listWidth - 2, 18, DWM.TEXTS.ARS_INTERFACE_SEARCH);
+        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+            this.close();
+        });
 
         this.addDrawableChild(this.listWidget);
         this.addDrawableChild(this.search);
-        this.addDrawableChild(this.cancelButton);
         this.addDrawableChild(this.acceptButton);
-
+        this.addDrawableChild(this.cancelButton);
         this.update();
     }
 
@@ -184,7 +179,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
             list = this.arsCategories.values().stream().filter((arsCategory) -> arsCategory.parent.equals(this.selectedArsCategory != null ? this.selectedArsCategory.name : "")).toList();
         }
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             list = new ArrayList<>(list);
             list.sort(Comparator.comparing((arsCategory) -> arsCategory.name));
         }
@@ -204,7 +199,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
             list = this.arsStructures.values().stream().filter((arsStructure) -> arsStructure.category.equals(this.selectedArsCategory != null ? this.selectedArsCategory.name : "")).toList();
         }
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             list = new ArrayList<>(list);
             list.sort(Comparator.comparing((arsStructure) -> arsStructure.name));
         }
@@ -216,17 +211,26 @@ public class TardisArsCreatorScreen extends BaseScreen {
         return this.search != null && !Objects.equals(this.search.getText(), "");
     }
 
+    private Vector2i getListPos() {
+        return this.getLeftTopRenderPos(0, 21);
+    }
+
+    private Vector2i getListSize() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 21 - 3);
+    }
+
     private static class ListWidget extends BaseListWidget {
         public final TardisArsCreatorScreen parent;
 
-        public ListWidget(TardisArsCreatorScreen parent, int width, int height, Vector2i pos) {
-            super(parent.client, width, height, LINE_PADDING, pos);
+        public ListWidget(TardisArsCreatorScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
             this.parent = parent;
             this.init();
         }
 
         public void refreshList() {
             super.refreshList();
+
             if (this.parent.selectedArsCategory != null && !ListWidget.this.parent.hasSearch()) this.addEntry(new ListEntry());
             this.parent.filteredArsCategories.forEach((arsCategory) -> this.addEntry(new ListEntry(arsCategory)));
             this.parent.filteredArsStructures.forEach((arsStructure) -> this.addEntry(new ListEntry(arsStructure)));

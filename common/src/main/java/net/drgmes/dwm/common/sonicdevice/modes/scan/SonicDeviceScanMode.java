@@ -3,6 +3,7 @@ package net.drgmes.dwm.common.sonicdevice.modes.scan;
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
 import net.drgmes.dwm.network.client.SonicDeviceUpdatePacket;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -135,7 +136,7 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
 
             AtomicInteger i = new AtomicInteger();
             NbtCompound linesTag = new NbtCompound();
-            for (Text line : lines) linesTag.putString(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), Text.Serialization.toJsonString(line, DynamicRegistryManager.EMPTY));
+            lines.forEach((line) -> linesTag.putString(CommonHelper.formatIndexString(i.incrementAndGet()), Text.Serialization.toJsonString(line, DynamicRegistryManager.EMPTY)));
             tag.put("linesTag", linesTag);
         });
 

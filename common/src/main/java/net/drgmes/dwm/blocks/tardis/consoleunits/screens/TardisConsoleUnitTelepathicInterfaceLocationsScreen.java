@@ -34,7 +34,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     private String lastSearch;
 
     public TardisConsoleUnitTelepathicInterfaceLocationsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations) {
-        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_LOCATIONS, tardisConsoleUnitBlockEntity);
+        super(DWM.TEXTS.TELEPATHIC_INTERFACE_TITLE_LOCATIONS, tardisConsoleUnitBlockEntity);
 
         this.locations = Collections.unmodifiableList(locations);
         this.filteredLocations = this.locations;
@@ -49,15 +49,10 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     public void init() {
         super.init();
 
-        int locationsListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
-        int locationsListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - 20 - BUTTON_HEIGHT - 3;
-        int locationsListOffset = this.getBackgroundSize().y - locationsListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
+        this.locationsListWidget = new LocationsListWidget(this, this.getLocationsListPos(), this.getLocationsListSize());
 
-        Vector2i searchPos = this.getRenderPos(this.getBackgroundBorderSize().x + 1, this.getBackgroundBorderSize().y + 1);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, locationsListWidth - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
-
-        Vector2i locationsListPos = this.getRenderPos(this.getBackgroundBorderSize().x, locationsListOffset);
-        this.locationsListWidget = new LocationsListWidget(this, locationsListWidth, locationsListHeight, locationsListPos);
+        Vector2i searchPos = this.getLeftTopRenderPos(1, 1);
+        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
 
         this.addDrawableChild(this.locationsListWidget);
         this.addDrawableChild(this.search);
@@ -106,11 +101,6 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         this.acceptButton.active = this.selected != null;
     }
 
-    protected void setSelected(LocationsListWidget.LocationEntry entry) {
-        this.selected = entry == this.selected ? null : entry;
-        this.update();
-    }
-
     protected void reloadLocationsList() {
         if (this.hasSearch()) {
             this.lastSearch = this.search.getText();
@@ -128,11 +118,24 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         return this.search != null && !Objects.equals(this.search.getText(), "");
     }
 
+    private Vector2i getLocationsListPos() {
+        return this.getLeftTopRenderPos(0, 21);
+    }
+
+    private Vector2i getLocationsListSize() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 21 - 3);
+    }
+
+    private void setSelected(LocationsListWidget.LocationEntry entry) {
+        this.selected = entry == this.selected ? null : entry;
+        this.update();
+    }
+
     private static class LocationsListWidget extends BaseListWidget {
         private final TardisConsoleUnitTelepathicInterfaceLocationsScreen parent;
 
-        public LocationsListWidget(TardisConsoleUnitTelepathicInterfaceLocationsScreen parent, int width, int height, Vector2i pos) {
-            super(parent.client, width, height, LINE_PADDING, pos);
+        public LocationsListWidget(TardisConsoleUnitTelepathicInterfaceLocationsScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
             this.parent = parent;
             this.init();
         }

@@ -7,6 +7,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitMonito
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.network.IPacket;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -88,7 +89,7 @@ public record TardisConsoleUnitMonitorOpenPacket(
 
         list.forEach((entry) -> {
             int index = entry.name.equals(currentConsoleRoomId) ? 0 : i.incrementAndGet();
-            tag.put(String.format("%1$" + 5 + "s", index).replace(' ', '0'), entry.toNbt());
+            tag.put(CommonHelper.formatIndexString(index), entry.toNbt());
         });
 
         return tag;

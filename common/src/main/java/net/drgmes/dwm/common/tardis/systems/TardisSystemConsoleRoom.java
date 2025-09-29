@@ -118,7 +118,6 @@ public class TardisSystemConsoleRoom extends TardisBaseSystem {
                     if (consoleRoom.place(tardis)) {
                         this.result = EResult.SUCCESS;
                         this.tardis.setConsoleRoom(consoleRoom);
-                        this.tardis.markConsoleTilesUpdated();
                         this.tardis.updateRoomEntrancePortals();
                     }
                     else {
@@ -134,6 +133,7 @@ public class TardisSystemConsoleRoom extends TardisBaseSystem {
                     this.reset();
                     this.sendExteriorUpdatePacket(TardisExteriorAction.NORMALIZE);
                     this.tardis.setDoorsLockState(false, null);
+                    this.tardis.markConsoleTilesUpdated();
                 }
             }
         }

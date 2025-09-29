@@ -23,7 +23,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
     private SonicDeviceModesListWidget.SonicDeviceModeEntry selected = null;
 
     public SonicDeviceInterfaceMainScreen(ItemStack sonicDeviceItemStack, String slot) {
-        super(DWM.TEXTS.SONIC_DEVICE_INTERFACE_NAME, sonicDeviceItemStack, slot);
+        super(DWM.TEXTS.SONIC_DEVICE_INTERFACE_TITLE, sonicDeviceItemStack, slot);
     }
 
     @Override
@@ -35,10 +35,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
     protected void init() {
         super.init();
 
-        Vector2i modesListSize = this.getModesListSize();
-        Vector2i modesListPos = this.getModesListPos();
-        this.modesListWidget = new SonicDeviceModesListWidget(this, modesListSize.x, modesListSize.y, modesListPos);
-
+        this.modesListWidget = new SonicDeviceModesListWidget(this, this.getModesListPos(), this.getModesListSize());
         this.addDrawableChild(this.modesListWidget);
     }
 
@@ -51,15 +48,11 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
     @Override
     public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderAdditional(context, mouseX, mouseY, delta);
-
-        int modesListBackgroundColor = 0x40000000;
-        Vector2i modesListPos1 = this.getModesListPos();
-        Vector2i modesListPos2 = this.getModesListSize();
-        context.fillGradient(modesListPos1.x, modesListPos1.y, modesListPos1.x + modesListPos2.x, modesListPos1.y + modesListPos2.y, modesListBackgroundColor, modesListBackgroundColor);
-
         if (this.selected == null) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
+        Vector2i modesListPos1 = this.getModesListPos();
+        Vector2i modesListPos2 = this.getModesListSize();
         int padding = 5;
         int lineHeight = mc.textRenderer.fontHeight;
         int maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
@@ -79,19 +72,6 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         context.getMatrices().pop();
     }
 
-    private Vector2i getModesListPos() {
-        return this.getRenderPos(this.getBackgroundBorderSize().x, this.getBackgroundBorderSize().y);
-    }
-
-    private Vector2i getModesListSize() {
-        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
-    }
-
-    protected void setSelected(SonicDeviceModesListWidget.SonicDeviceModeEntry entry) {
-        this.selected = entry;
-        this.apply();
-    }
-
     protected void apply() {
         if (this.selected == null) return;
 
@@ -100,11 +80,24 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         new SonicDeviceModeUpdatePacket(this.selected.mode.name(), this.slot).sendToServer();
     }
 
+    private Vector2i getModesListPos() {
+        return this.getLeftTopRenderPos(0, 0);
+    }
+
+    private Vector2i getModesListSize() {
+        return new Vector2i(100, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
+    }
+
+    private void setSelected(SonicDeviceModesListWidget.SonicDeviceModeEntry entry) {
+        this.selected = entry;
+        this.apply();
+    }
+
     private static class SonicDeviceModesListWidget extends BaseListWidget {
         private final SonicDeviceInterfaceMainScreen parent;
 
-        public SonicDeviceModesListWidget(SonicDeviceInterfaceMainScreen parent, int width, int height, Vector2i pos) {
-            super(parent.client, width, height, LINE_PADDING, pos);
+        public SonicDeviceModesListWidget(SonicDeviceInterfaceMainScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
             this.parent = parent;
             this.init();
         }

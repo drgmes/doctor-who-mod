@@ -7,6 +7,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepa
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModDimensions;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -59,7 +60,7 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
 
             if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
                 List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
-                List<String> keys = new ArrayList<>(payload.tag.getKeys().stream().toList());
+                List<String> keys = new ArrayList<>(payload.tag.getKeys());
 
                 keys.sort(Comparator.comparing((key) -> key));
                 keys.forEach((key) -> {
@@ -123,7 +124,7 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
             NbtCompound pair = new NbtCompound();
             pair.putString("id", entry.getKey().toString());
             pair.putString("type", entry.getValue().name());
-            tag.put(String.format("%1$" + 5 + "s", i.incrementAndGet()).replace(' ', '0'), pair);
+            tag.put(CommonHelper.formatIndexString(i.incrementAndGet()), pair);
         });
 
         return tag;

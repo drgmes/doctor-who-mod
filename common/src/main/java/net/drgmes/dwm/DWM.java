@@ -94,6 +94,9 @@ public class DWM {
         public static final Text ARS_SECONDARY_ROOM_DESTROY_SUCCESS = Text.translatable("message.dwm.tardis.ars.secondary_room.destroy.success");
         public static final Text ARS_SECONDARY_ROOM_DESTROY_FAILED = Text.translatable("message.dwm.tardis.ars.secondary_room.destroy.failed");
 
+        public static final Text MONITOR_HISTORY_COORDS_LOADED = Text.translatable("message.dwm.tardis.history.loaded");
+        public static final Text MONITOR_HISTORY_COORDS_CLEARED = Text.translatable("message.dwm.tardis.history.cleared");
+
         public static final Text TELEPATHIC_INTERFACE_MAP_COORDS_LOADED = Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded");
         public static final Function<String, Text> TELEPATHIC_INTERFACE_MAP_BANNER_LOADED = (color) -> Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded.banner", Text.literal(color).formatted(Formatting.GOLD));
 
@@ -103,7 +106,7 @@ public class DWM {
 
         public static final Function<List<Text>, Text> SONIC_DEVICE_TARDIS_RELOCATED = (coords) -> Text.translatable("message.dwm.sonic_device.tardis_relocated", coords.get(0), coords.get(1), coords.get(2));
 
-        public static final Text ARS_INTERFACE_NAME = Text.translatable("screen.dwm.ars_interface.title");
+        public static final Text ARS_INTERFACE_TITLE = Text.translatable("screen.dwm.ars_interface.title");
         public static final Text ARS_INTERFACE_SEARCH = Text.translatable("screen.dwm.ars_interface.search");
         public static final Text ARS_INTERFACE_MESSAGE = Text.translatable("screen.dwm.ars_interface.message");
         public static final Text ARS_INTERFACE_BTN_CANCEL = Text.translatable("screen.dwm.ars_interface.button.cancel");
@@ -115,35 +118,41 @@ public class DWM {
         public static final Text MONITOR_DATA_OWNER = Text.translatable("screen.dwm.monitor.data.owner");
         public static final Text MONITOR_DATA_EXTERIOR = Text.translatable("screen.dwm.monitor.data.exterior");
         public static final Text MONITOR_ACTION_EXTERIOR = Text.translatable("screen.dwm.monitor.action.exterior");
-        public static final Text MONITOR_ACTION_WAYPOINTS = Text.translatable("screen.dwm.monitor.action.waypoints");
-        public static final Text MONITOR_ACTION_RESEARCHER = Text.translatable("screen.dwm.monitor.action.researcher");
         public static final Text MONITOR_ACTION_CONSOLE_ROOMS = Text.translatable("screen.dwm.monitor.action.console_rooms");
-        public static final Text MONITOR_ACTION_EXTERNAL_MONITOR = Text.translatable("screen.dwm.monitor.action.external_monitor");
+        public static final Text MONITOR_ACTION_WAYPOINTS = Text.translatable("screen.dwm.monitor.action.waypoints");
+        public static final Text MONITOR_ACTION_HISTORY = Text.translatable("screen.dwm.monitor.action.history");
 
+        public static final Text MONITOR_EXTERNAL_SHELLS_TITLE = Text.translatable("screen.dwm.monitor.external_shells.title");
         public static final Text MONITOR_EXTERNAL_SHELLS_CANCEL = Text.translatable("screen.dwm.monitor.external_shells.cancel");
         public static final Text MONITOR_EXTERNAL_SHELLS_ACCEPT = Text.translatable("screen.dwm.monitor.external_shells.accept");
 
+        public static final Text MONITOR_CONSOLE_ROOMS_TITLE = Text.translatable("screen.dwm.monitor.console_rooms.title");
         public static final Text MONITOR_CONSOLE_ROOMS_CANCEL = Text.translatable("screen.dwm.monitor.console_rooms.cancel");
         public static final Text MONITOR_CONSOLE_ROOMS_ACCEPT = Text.translatable("screen.dwm.monitor.console_rooms.accept");
-        public static final Text MONITOR_CONSOLE_ROOMS_PREV = Text.translatable("screen.dwm.monitor.console_rooms.prev");
-        public static final Text MONITOR_CONSOLE_ROOMS_NEXT = Text.translatable("screen.dwm.monitor.console_rooms.next");
-        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_1 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.1");
-        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_2 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.2");
+        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_1 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.text.1");
+        public static final Text MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_2 = Text.translatable("screen.dwm.monitor.console_rooms.confirmation.text.2");
 
-        public static final Text TELEPATHIC_INTERFACE_NAME_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
-        public static final Text TELEPATHIC_INTERFACE_NAME_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");
+        public static final Text MONITOR_HISTORY_TITLE = Text.translatable("screen.dwm.monitor.history.title");
+        public static final Text MONITOR_HISTORY_CANCEL = Text.translatable("screen.dwm.monitor.history.cancel");
+        public static final Text MONITOR_HISTORY_ACCEPT = Text.translatable("screen.dwm.monitor.history.accept");
+        public static final Text MONITOR_HISTORY_CLEAR = Text.translatable("screen.dwm.monitor.history.clear");
+        public static final Text MONITOR_HISTORY_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.confirmation.text");
+        public static final Text MONITOR_HISTORY_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.confirmation.accept");
+
+        public static final Text TELEPATHIC_INTERFACE_TITLE_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
+        public static final Text TELEPATHIC_INTERFACE_TITLE_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");
         public static final Text TELEPATHIC_INTERFACE_SEARCH = Text.translatable("screen.dwm.telepathic_interface.search");
         public static final Text TELEPATHIC_INTERFACE_BTN_CANCEL = Text.translatable("screen.dwm.telepathic_interface.button.cancel");
         public static final Text TELEPATHIC_INTERFACE_BTN_ACCEPT = Text.translatable("screen.dwm.telepathic_interface.button.accept");
 
-        public static final Text TARDIS_TELEPORTER_INTERFACE_NAME = Text.translatable("screen.dwm.tardis_teleporter_interface.title");
+        public static final Text TARDIS_TELEPORTER_INTERFACE_TITLE = Text.translatable("screen.dwm.tardis_teleporter_interface.title");
         public static final Text TARDIS_TELEPORTER_INTERFACE_ENTITY_TYPES = Text.translatable("screen.dwm.tardis_teleporter_interface.entity_types");
         public static final Text TARDIS_TELEPORTER_INTERFACE_COORDS = Text.translatable("screen.dwm.tardis_teleporter_interface.coords");
         public static final Text TARDIS_TELEPORTER_INTERFACE_BTN_CANCEL = Text.translatable("screen.dwm.tardis_teleporter_interface.button.cancel");
         public static final Text TARDIS_TELEPORTER_INTERFACE_BTN_ACCEPT = Text.translatable("screen.dwm.tardis_teleporter_interface.button.accept");
         public static final Function<TardisTeleporterEntityTypes, Text> TARDIS_TELEPORTER_INTERFACE_ENTITY_TYPE = (entityType) -> Text.translatable("screen.dwm.tardis_teleporter_interface.entity_type." + entityType.name().toLowerCase());
 
-        public static final Text SONIC_DEVICE_INTERFACE_NAME = Text.translatable("screen.dwm.sonic_device_interface.title");
+        public static final Text SONIC_DEVICE_INTERFACE_TITLE = Text.translatable("screen.dwm.sonic_device_interface.title");
         public static final Function<SonicDeviceMode, Text> SONIC_DEVICE_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen.dwm.sonic_device_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
 
         public static final Text ARGUMENT_PLAYER_PRESENT = Text.translatable("argument.dwm.tardis.player_present");
@@ -181,6 +190,14 @@ public class DWM {
 
     public static class TEXTURES {
         public static class GUI {
+            public static class COMMON {
+                public static class ELEMENTS {
+                    public static final Identifier ACCEPT = DWM.getIdentifier("textures/gui/common/elements/accept.png");
+                    public static final Identifier CANCEL = DWM.getIdentifier("textures/gui/common/elements/cancel.png");
+                    public static final Identifier CLEAR = DWM.getIdentifier("textures/gui/common/elements/clear.png");
+                }
+            }
+
             public static class TARDIS {
                 public static class ARS {
                     public static final Identifier CREATOR_INTERFACE = DWM.getIdentifier("textures/gui/tardis/ars/creator_interface.png");

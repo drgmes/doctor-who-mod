@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorConsoleRoomApplyPacket;
+import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorHistoryClearPacket;
 import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
@@ -10,27 +10,22 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.nbt.NbtCompound;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
-public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
+public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
     private final Screen parentScreen;
     private final String tardisId;
-    private final String selectedConsoleRoomId;
-    private final NbtCompound tag;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    public TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String selectedConsoleRoomId, NbtCompound tag, @Nullable Screen parentScreen) {
-        super(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_TITLE, tardisConsoleUnitBlockEntity);
+    public TardisConsoleUnitMonitorHistoryConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, @Nullable Screen parentScreen) {
+        super(DWM.TEXTS.MONITOR_HISTORY_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
-        this.selectedConsoleRoomId = selectedConsoleRoomId;
-        this.tag = tag;
     }
 
     @Override
@@ -43,17 +38,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
         super.init();
 
         Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
-        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CONFIRMATION_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
-        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
-            if (this.parentScreen instanceof TardisConsoleUnitMonitorConsoleRoomsScreen tardisConsoleUnitMonitorConsoleRoomsScreen) {
-                this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selectedConsoleRoomId, this.tag, tardisConsoleUnitMonitorConsoleRoomsScreen.parentScreen));
-                return;
-            }
-
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
             else this.close();
         });
@@ -70,7 +60,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
 
     @Override
     public void apply() {
-        new TardisConsoleUnitMonitorConsoleRoomApplyPacket(this.tardisId, this.selectedConsoleRoomId).sendToServer();
+        new TardisConsoleUnitMonitorHistoryClearPacket(this.tardisId).sendToServer();
         super.apply();
     }
 
@@ -80,7 +70,6 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
         int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
         Vector2i textPos = this.getRenderPos(textX, textY);
 
-        textPos = textPos.add(RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_1, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0));
-        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_2, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
+        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_HISTORY_CONFIRMATION_TEXT, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
     }
 }

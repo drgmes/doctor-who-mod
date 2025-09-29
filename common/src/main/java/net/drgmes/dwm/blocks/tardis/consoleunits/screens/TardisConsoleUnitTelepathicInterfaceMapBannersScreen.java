@@ -26,7 +26,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     private BannersListWidget.BannerEntry selected = null;
 
     public TardisConsoleUnitTelepathicInterfaceMapBannersScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, MapState mapData) {
-        super(DWM.TEXTS.TELEPATHIC_INTERFACE_NAME_BANNERS, tardisConsoleUnitBlockEntity);
+        super(DWM.TEXTS.TELEPATHIC_INTERFACE_TITLE_BANNERS, tardisConsoleUnitBlockEntity);
         this.banners = mapData.getBanners();
         this.dimension = mapData.dimension;
     }
@@ -40,14 +40,8 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     public void init() {
         super.init();
 
-        int bannersListWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
-        int bannersListHeight = this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_HEIGHT - 3;
-        int bannersListOffset = this.getBackgroundSize().y - bannersListHeight - this.getBackgroundBorderSize().y - BUTTON_HEIGHT - 2;
-
-        Vector2i bannersListPos = this.getRenderPos(this.getBackgroundBorderSize().x, bannersListOffset);
-        this.bannersListWidget = new BannersListWidget(this, bannersListWidth, bannersListHeight, bannersListPos);
+        this.bannersListWidget = new BannersListWidget(this, this.getBannersListPos(), this.getBannersListSize());
         this.addDrawableChild(this.bannersListWidget);
-
         this.update();
     }
 
@@ -66,11 +60,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     @Override
     public void apply() {
         if (this.selected != null) {
-            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(
-                this.dimension.getValue().toString(),
-                this.selected.banner.color(),
-                this.selected.banner.pos()
-            ).sendToServer();
+            new TardisConsoleUnitTelepathicInterfaceMapBannerApplyPacket(this.dimension, this.selected.banner.color(), this.selected.banner.pos()).sendToServer();
         }
 
         this.close();
@@ -80,7 +70,15 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         this.acceptButton.active = this.selected != null;
     }
 
-    protected void setSelected(BannersListWidget.BannerEntry entry) {
+    private Vector2i getBannersListPos() {
+        return this.getLeftTopRenderPos(0, 0);
+    }
+
+    private Vector2i getBannersListSize() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 3);
+    }
+
+    private void setSelected(BannersListWidget.BannerEntry entry) {
         this.selected = entry == this.selected ? null : entry;
         this.update();
     }
@@ -88,8 +86,8 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     private static class BannersListWidget extends BaseListWidget {
         private final TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent;
 
-        public BannersListWidget(TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent, int width, int height, Vector2i pos) {
-            super(parent.client, width, height, LINE_PADDING, pos);
+        public BannersListWidget(TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_PADDING);
             this.parent = parent;
             this.init();
         }
