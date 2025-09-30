@@ -28,11 +28,13 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     private final List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations;
     private List<Entry<Identifier, TardisTelepathicInterfaceDataType>> filteredLocations;
 
+    private boolean isInited;
+
+    private TextFieldWidget searchField;
+    private String lastSearch;
+
     private LocationsListWidget locationsListWidget;
     private LocationsListWidget.LocationEntry selected = null;
-
-    private TextFieldWidget search;
-    private String lastSearch;
 
     public TardisConsoleUnitTelepathicInterfaceLocationsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, List<Entry<Identifier, TardisTelepathicInterfaceDataType>> locations) {
         super(DWM.TEXTS.TELEPATHIC_INTERFACE_TITLE_LOCATIONS, tardisConsoleUnitBlockEntity);
@@ -43,7 +45,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     @Override
     public boolean shouldCloseOnInventoryKey() {
-        return !this.search.isFocused();
+        return !this.searchField.isFocused();
     }
 
     @Override
@@ -52,26 +54,27 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
         this.locationsListWidget = new LocationsListWidget(this, this.getLocationsListPos(), this.getLocationsListSize());
 
-        Vector2i searchPos = this.getLeftTopRenderPos(1, 1);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, 18, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
+        Vector2i searchFieldPos = this.getLeftTopRenderPos(1, 1);
+        this.searchField = new TextFieldWidget(this.textRenderer, searchFieldPos.x, searchFieldPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, INPUT_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
 
         this.addDrawableChild(this.locationsListWidget);
-        this.addDrawableChild(this.search);
+        this.addDrawableChild(this.searchField);
 
-        this.setInitialFocus(this.search);
+        this.isInited = true;
+        this.setInitialFocus(this.searchField);
         this.update();
     }
 
     @Override
     public void resize(MinecraftClient mc, int width, int height) {
-        String search = this.search.getText();
+        String search = this.searchField.getText();
         LocationsListWidget.LocationEntry selected = this.selected;
 
         super.resize(mc, width, height);
-        this.search.setText(search);
+        this.searchField.setText(search);
         this.selected = selected;
 
-        if (!this.search.getText().isEmpty()) {
+        if (!this.searchField.getText().isEmpty()) {
             this.reloadLocationsList();
         }
     }
@@ -80,7 +83,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     public void tick() {
         this.locationsListWidget.setSelected(this.selected);
 
-        if (!this.search.getText().equals(lastSearch)) {
+        if (!this.searchField.getText().equals(lastSearch)) {
             this.selected = null;
             this.reloadLocationsList();
             this.locationsListWidget.refreshList();
@@ -98,19 +101,21 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     }
 
     private boolean hasSearch() {
-        return this.search != null && !Objects.equals(this.search.getText(), "");
+        return this.searchField != null && !Objects.equals(this.searchField.getText(), "");
     }
 
     private Vector2i getLocationsListPos() {
-        return this.getLeftTopRenderPos(0, 22);
+        return this.getLeftTopRenderPos(0, INPUT_HEIGHT + 4);
     }
 
     private Vector2i getLocationsListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - INPUT_HEIGHT - BUTTON_SIZE - 6);
     }
 
     private void update() {
-        this.lastSearch = this.search.getText();
+        if (!this.isInited) return;
+
+        this.lastSearch = this.searchField.getText();
         this.acceptButton.active = this.selected != null;
     }
 
@@ -121,9 +126,9 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
 
     private void reloadLocationsList() {
         if (this.hasSearch()) {
-            this.lastSearch = this.search.getText();
+            this.lastSearch = this.searchField.getText();
             this.filteredLocations = this.locations.stream().filter((str) -> (
-                str.getKey().getPath().toLowerCase().contains(this.search.getText().toLowerCase())
+                str.getKey().getPath().toLowerCase().contains(this.searchField.getText().toLowerCase())
             )).toList();
 
             return;
@@ -136,7 +141,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         private final TardisConsoleUnitTelepathicInterfaceLocationsScreen parent;
 
         public LocationsListWidget(TardisConsoleUnitTelepathicInterfaceLocationsScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }

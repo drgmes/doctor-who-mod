@@ -23,14 +23,14 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
     private final Vector2i pos;
-    private final int padding;
+    private final int lineHeight;
     private boolean shouldDrawBackground;
 
-    public BaseListWidget(MinecraftClient mc, Vector2i pos, Vector2i size, int padding) {
-        super(mc, size.x, size.y, pos.y, mc.textRenderer.fontHeight + padding * 2);
+    public BaseListWidget(MinecraftClient mc, Vector2i pos, Vector2i size, int lineHeight) {
+        super(mc, size.x, size.y, pos.y, mc.textRenderer.fontHeight + lineHeight * 2);
 
         this.pos = pos;
-        this.padding = padding;
+        this.lineHeight = lineHeight;
         this.shouldDrawBackground = true;
     }
 
@@ -110,7 +110,7 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
             if (this.isSelected()) text = this.getSelectedPrependText().append(text.formatted(this.selectedItemFormat));
             else text = this.getPrependText().append(text);
 
-            Vector2i pos = new Vector2i(left + padding, top + 2);
+            Vector2i pos = new Vector2i(left + lineHeight, top + 2);
             RenderHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 

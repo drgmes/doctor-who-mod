@@ -52,24 +52,22 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         if (this.selected == null) return;
 
         MinecraftClient mc = MinecraftClient.getInstance();
-        Vector2i modesListPos1 = this.getModesListPos();
-        Vector2i modesListPos2 = this.getModesListSize();
-        int padding = 5;
+        Vector2i modesListSize = this.getModesListSize();
+
         int lineHeight = mc.textRenderer.fontHeight;
-        int maxTextLength = this.getBackgroundSize().x - modesListPos2.x - padding * 2 - this.getBackgroundBorderSize().x * 2;
+        int maxTextWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - SCREEN_MARGIN * 2 - modesListSize.x - 2;
 
-        Vector2i modeTextPos = new Vector2i(modesListPos1.x + modesListPos2.x + padding, (int) Math.floor(modesListPos1.y + padding + 1.5F));
         Text modeText = DWM.TEXTS.SONIC_DEVICE_INTERFACE_BTN_MODE.apply(this.selected.mode).copy();
-
-        modeTextPos = modeTextPos.add(RenderHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextLength, 0xFFFFFF));
+        Vector2i modeTextPos = this.getLeftTopRenderPos(modesListSize.x + SCREEN_MARGIN + 2, SCREEN_MARGIN + 2);
+        modeTextPos = modeTextPos.add(RenderHelper.drawTextMultiline(modeText, mc.textRenderer, context, modeTextPos, lineHeight, maxTextWidth, 0xFFFFFF));
 
         float modeDescriptionScale = 0.75F;
-        Vector2i modeDescriptionPos = new Vector2i((int) Math.floor(modeTextPos.x / modeDescriptionScale), (int) Math.floor((modeTextPos.y + padding * 2 - 0.5F) / modeDescriptionScale));
         Text modeDescription = this.selected.mode.getDescription();
+        Vector2i modeDescriptionPos = modeTextPos.div(modeDescriptionScale).add(0, lineHeight + 2);
 
         context.getMatrices().push();
         context.getMatrices().scale(modeDescriptionScale, modeDescriptionScale, modeDescriptionScale);
-        RenderHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, lineHeight, (int) Math.floor(maxTextLength / modeDescriptionScale), 0xFFFFFF);
+        RenderHelper.drawTextMultiline(modeDescription, mc.textRenderer, context, modeDescriptionPos, lineHeight, (int) Math.floor(maxTextWidth / modeDescriptionScale), 0xFFFFFF);
         context.getMatrices().pop();
     }
 
@@ -98,7 +96,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
         private final SonicDeviceInterfaceMainScreen parent;
 
         public SonicDeviceModesListWidget(SonicDeviceInterfaceMainScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }
@@ -118,7 +116,7 @@ public class SonicDeviceInterfaceMainScreen extends BaseSonicDeviceInterfaceScre
 
                 if (mode == this.parent.mode) {
                     this.setSelected(entry);
-                    this.parent.selected = entry;
+                    this.parent.setSelected(entry);
                 }
             });
         }

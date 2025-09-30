@@ -31,14 +31,14 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnitMonitorScreen {
-    protected static final int LINE_PADDING = 3;
-
     private final Screen parentScreen;
     private final String tardisId;
     private final List<TardisFlightHistoryEntry> history = new ArrayList<>();
 
-    private int tick = 180;
+    private boolean isInited;
+
     private ButtonWidget acceptButton;
+    private ButtonWidget saveButton;
     private ButtonWidget removeButton;
     private ButtonWidget clearButton;
     private ButtonWidget cancelButton;
@@ -79,32 +79,41 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
         this.historyListWidget = new HistoryListWidget(this, this.getHistoryListPos(), this.getHistoryListSize());
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i removeButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        Vector2i saveButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
+        this.saveButton = new BaseButton(saveButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_SAVE, DWM.TEXTURES.GUI.COMMON.ELEMENTS.SAVE, (b) -> {
+            if (this.selected == null) return;
+            this.client.setScreen(new TardisConsoleUnitMonitorWaypointCreateScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.historyEntry.dimension(), this.selected.historyEntry.blockPos(), this.selected.historyEntry.facing(), this));
+        });
+
+        Vector2i removeButtonPos = saveButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
         this.removeButton = new BaseButton(removeButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_REMOVE, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CROSS, (b) -> {
             if (this.selected == null) return;
             this.client.setScreen(new TardisConsoleUnitMonitorHistoryRemoveConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.historyEntry, this));
         });
 
-        Vector2i clearButtonPos = removeButtonPos.add(-BUTTON_SIZE - 1, 0);
+        Vector2i clearButtonPos = removeButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
         this.clearButton = new BaseButton(clearButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CLEAR, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CLEAR, (b) -> {
             this.client.setScreen(new TardisConsoleUnitMonitorHistoryClearConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this));
         });
 
-        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
+        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
 
         this.addDrawableChild(this.historyListWidget);
         this.addDrawableChild(this.acceptButton);
+        this.addDrawableChild(this.saveButton);
         this.addDrawableChild(this.removeButton);
         this.addDrawableChild(this.clearButton);
         this.addDrawableChild(this.cancelButton);
+
+        this.isInited = true;
         this.update();
     }
 
@@ -131,7 +140,6 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
     @Override
     public void tick() {
-        this.tick = (this.tick + 1) % 360;
         this.historyListWidget.setSelected(this.selected);
     }
 
@@ -171,11 +179,14 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
     }
 
     private Vector2i getHistoryListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - BUTTON_SIZE - 2);
     }
 
     private void update() {
+        if (!this.isInited) return;
+
         this.acceptButton.active = this.selected != null;
+        this.saveButton.active = this.selected != null;
         this.removeButton.active = this.selected != null;
         this.clearButton.active = !this.history.isEmpty();
     }
@@ -190,7 +201,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
         private final TardisConsoleUnitMonitorHistoryScreen parent;
 
         public HistoryListWidget(TardisConsoleUnitMonitorHistoryScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }
@@ -210,7 +221,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
                 if (this.parent.selected != null && entry.historyEntry.equals(this.parent.selected.historyEntry)) {
                     this.setSelected(entry);
-                    this.parent.selected = entry;
+                    this.parent.setSelected(entry);
                 }
             });
         }
@@ -236,7 +247,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
                 super.render(context, entryIdx, top, left, entryWidth, height, mouseX, mouseY, flag, partialTick);
 
                 TextRenderer textRenderer = HistoryListWidget.this.parent.textRenderer;
-                int offset = LINE_PADDING * (HistoryListWidget.this.getMaxScroll() > 0 ? 4 : 2);
+                int offset = LINE_HEIGHT * (HistoryListWidget.this.getMaxScroll() > 0 ? 4 : 2);
                 int startPosX = HistoryListWidget.this.parent.getHistoryListSize().x + left - offset;
 
                 SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");

@@ -26,14 +26,14 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsoleUnitMonitorScreen {
-    protected static final int LINE_PADDING = 3;
-
     private static final Map<String, Identifier> LOADED_CONSOLE_ROOMS_IMAGES = new HashMap<>();
 
     private final Screen parentScreen;
     private final String tardisId;
     private final String currentConsoleRoomId;
     private final List<TardisConsoleRoomEntry> consoleRooms = new ArrayList<>();
+
+    private boolean isInited;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
@@ -66,12 +66,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
         this.consoleRoomsListWidget = new ConsoleRoomsListWidget(this, this.getConsoleRoomsListPos(), this.getConsoleRoomsListSize());
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
@@ -79,6 +79,8 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         this.addDrawableChild(this.consoleRoomsListWidget);
         this.addDrawableChild(this.acceptButton);
         this.addDrawableChild(this.cancelButton);
+
+        this.isInited = true;
         this.update();
     }
 
@@ -133,7 +135,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     @Override
     public void apply() {
         if (this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId)) {
-            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this));
+            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this));
         }
     }
 
@@ -152,6 +154,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     }
 
     private void update() {
+        if (!this.isInited) return;
         this.acceptButton.active = this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId);
     }
 
@@ -164,7 +167,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         private final TardisConsoleUnitMonitorConsoleRoomsScreen parent;
 
         public ConsoleRoomsListWidget(TardisConsoleUnitMonitorConsoleRoomsScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }
@@ -187,7 +190,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
                 if (isEqualCurrent || isEqualSelected) {
                     this.setSelected(entry);
-                    this.parent.selected = entry;
+                    this.parent.setSelected(entry);
                 }
             });
         }

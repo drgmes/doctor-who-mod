@@ -12,6 +12,7 @@ import net.minecraft.item.map.MapBannerMarker;
 import net.minecraft.item.map.MapState;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.World;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
@@ -22,6 +23,8 @@ import java.util.Collection;
 public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTardisConsoleUnitTelepathicInterfaceScreen {
     private final Collection<MapBannerMarker> banners;
     private final RegistryKey<World> dimension;
+
+    private boolean isInited;
 
     private BannersListWidget bannersListWidget;
     private BannersListWidget.BannerEntry selected = null;
@@ -43,6 +46,8 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
 
         this.bannersListWidget = new BannersListWidget(this, this.getBannersListPos(), this.getBannersListSize());
         this.addDrawableChild(this.bannersListWidget);
+
+        this.isInited = true;
         this.update();
     }
 
@@ -72,10 +77,11 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
     }
 
     private Vector2i getBannersListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - BUTTON_SIZE - 2);
     }
 
     private void update() {
+        if (!this.isInited) return;
         this.acceptButton.active = this.selected != null;
     }
 
@@ -88,7 +94,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         private final TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent;
 
         public BannersListWidget(TardisConsoleUnitTelepathicInterfaceMapBannersScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }
@@ -108,6 +114,7 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
             private final MapBannerMarker banner;
 
             public BannerEntry(MapBannerMarker banner) {
+                super(Formatting.WHITE, Formatting.GOLD);
                 this.banner = banner;
             }
 

@@ -2,7 +2,8 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorConsoleRoomApplyPacket;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightWaypointEntry;
+import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorWaypointDeletePacket;
 import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
@@ -14,20 +15,20 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
-public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
+public class TardisConsoleUnitMonitorWaypointRemoveConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
     private final Screen parentScreen;
     private final String tardisId;
-    private final String selectedConsoleRoomId;
+    private final TardisFlightWaypointEntry waypointEntry;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    public TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String selectedConsoleRoomId, @Nullable Screen parentScreen) {
-        super(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_TITLE, tardisConsoleUnitBlockEntity);
+    public TardisConsoleUnitMonitorWaypointRemoveConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, TardisFlightWaypointEntry waypointEntry, @Nullable Screen parentScreen) {
+        super(DWM.TEXTS.MONITOR_WAYPOINTS_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
-        this.selectedConsoleRoomId = selectedConsoleRoomId;
+        this.waypointEntry = waypointEntry;
     }
 
     @Override
@@ -39,13 +40,13 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
     protected void init() {
         super.init();
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
-        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_WAYPOINTS_REMOVE_CONFIRMATION_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
-        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_WAYPOINTS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
 
@@ -61,8 +62,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
 
     @Override
     public void apply() {
-        new TardisConsoleUnitMonitorConsoleRoomApplyPacket(this.tardisId, this.selectedConsoleRoomId).sendToServer();
-        super.apply();
+        if (this.parentScreen instanceof TardisConsoleUnitMonitorWaypointsScreen tardisConsoleUnitMonitorWaypointsScreen) {
+            tardisConsoleUnitMonitorWaypointsScreen.deleteWaypointEntry(this.waypointEntry);
+        }
+
+        new TardisConsoleUnitMonitorWaypointDeletePacket(this.tardisId, this.waypointEntry).sendToServer();
+        this.back();
     }
 
     @Override
@@ -77,7 +82,6 @@ public class TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen extends Base
         int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
         Vector2i textPos = this.getRenderPos(textX, textY);
 
-        textPos = textPos.add(RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_1, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0));
-        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_2, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
+        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_WAYPOINTS_REMOVE_CONFIRMATION_TEXT, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
     }
 }

@@ -95,8 +95,13 @@ public class DWM {
         public static final Text ARS_SECONDARY_ROOM_DESTROY_FAILED = Text.translatable("message.dwm.tardis.ars.secondary_room.destroy.failed");
 
         public static final Text MONITOR_HISTORY_CLEARED = Text.translatable("message.dwm.tardis.history.cleared");
-        public static final Text MONITOR_HISTORY_COORDS_LOADED = Text.translatable("message.dwm.tardis.history.coords.loaded");
-        public static final Text MONITOR_HISTORY_COORDS_REMOVED = Text.translatable("message.dwm.tardis.history.coords.removed");
+        public static final Text MONITOR_HISTORY_LOADED = Text.translatable("message.dwm.tardis.history.loaded");
+        public static final Text MONITOR_HISTORY_REMOVED = Text.translatable("message.dwm.tardis.history.removed");
+
+        public static final Text MONITOR_WAYPOINT_LOADED = Text.translatable("message.dwm.tardis.waypoint.loaded");
+        public static final Text MONITOR_WAYPOINT_CREATED = Text.translatable("message.dwm.tardis.waypoint.created");
+        public static final Text MONITOR_WAYPOINT_REMOVED = Text.translatable("message.dwm.tardis.waypoint.removed");
+        public static final Text MONITOR_WAYPOINT_UPDATED = Text.translatable("message.dwm.tardis.waypoint.updated");
 
         public static final Text TELEPATHIC_INTERFACE_MAP_COORDS_LOADED = Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded");
         public static final Function<String, Text> TELEPATHIC_INTERFACE_MAP_BANNER_LOADED = (color) -> Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded.banner", Text.literal(color).formatted(Formatting.GOLD));
@@ -136,12 +141,30 @@ public class DWM {
         public static final Text MONITOR_HISTORY_TITLE = Text.translatable("screen.dwm.monitor.history.title");
         public static final Text MONITOR_HISTORY_CANCEL = Text.translatable("screen.dwm.monitor.history.cancel");
         public static final Text MONITOR_HISTORY_ACCEPT = Text.translatable("screen.dwm.monitor.history.accept");
+        public static final Text MONITOR_HISTORY_SAVE = Text.translatable("screen.dwm.monitor.history.save");
         public static final Text MONITOR_HISTORY_REMOVE = Text.translatable("screen.dwm.monitor.history.remove");
         public static final Text MONITOR_HISTORY_REMOVE_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.remove.confirmation.text");
         public static final Text MONITOR_HISTORY_REMOVE_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.remove.confirmation.accept");
         public static final Text MONITOR_HISTORY_CLEAR = Text.translatable("screen.dwm.monitor.history.clear");
         public static final Text MONITOR_HISTORY_CLEAR_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.clear.confirmation.text");
         public static final Text MONITOR_HISTORY_CLEAR_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.clear.confirmation.accept");
+
+        public static final Text MONITOR_WAYPOINTS_TITLE = Text.translatable("screen.dwm.monitor.waypoints.title");
+        public static final Text MONITOR_WAYPOINTS_NAME = Text.translatable("screen.dwm.monitor.waypoints.name");
+        public static final Text MONITOR_WAYPOINTS_COORDS = Text.translatable("screen.dwm.monitor.waypoints.coords");
+        public static final Text MONITOR_WAYPOINTS_CANCEL = Text.translatable("screen.dwm.monitor.waypoints.cancel");
+        public static final Text MONITOR_WAYPOINTS_ACCEPT = Text.translatable("screen.dwm.monitor.waypoints.accept");
+        public static final Text MONITOR_WAYPOINTS_REMOVE = Text.translatable("screen.dwm.monitor.waypoints.remove");
+        public static final Text MONITOR_WAYPOINTS_REMOVE_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.waypoints.remove.confirmation.text");
+        public static final Text MONITOR_WAYPOINTS_REMOVE_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.waypoints.remove.confirmation.accept");
+        public static final Text MONITOR_WAYPOINTS_UPDATE = Text.translatable("screen.dwm.monitor.waypoints.update");
+        public static final Text MONITOR_WAYPOINTS_CREATE = Text.translatable("screen.dwm.monitor.waypoints.create");
+
+        public static final Text MONITOR_WAYPOINTS_CREATE_TITLE = Text.translatable("screen.dwm.monitor.waypoints.create.title");
+        public static final Text MONITOR_WAYPOINTS_CREATE_NAME = Text.translatable("screen.dwm.monitor.waypoints.create.name");
+        public static final Text MONITOR_WAYPOINTS_CREATE_BTN_CANCEL = Text.translatable("screen.dwm.monitor.waypoints.create.button.cancel");
+        public static final Text MONITOR_WAYPOINTS_CREATE_BTN_ACCEPT = Text.translatable("screen.dwm.monitor.waypoints.create.button.accept");
+        public static final Text MONITOR_WAYPOINTS_CREATE_BTN_RESET = Text.translatable("screen.dwm.monitor.waypoints.create.button.reset");
 
         public static final Text TELEPATHIC_INTERFACE_TITLE_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_TITLE_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");
@@ -200,6 +223,9 @@ public class DWM {
                     public static final Identifier CANCEL = DWM.getIdentifier("textures/gui/common/elements/cancel.png");
                     public static final Identifier CLEAR = DWM.getIdentifier("textures/gui/common/elements/clear.png");
                     public static final Identifier CROSS = DWM.getIdentifier("textures/gui/common/elements/cross.png");
+                    public static final Identifier PLUS = DWM.getIdentifier("textures/gui/common/elements/plus.png");
+                    public static final Identifier RESET = DWM.getIdentifier("textures/gui/common/elements/reset.png");
+                    public static final Identifier SAVE = DWM.getIdentifier("textures/gui/common/elements/save.png");
                 }
             }
 

@@ -31,14 +31,15 @@ import java.util.function.Function;
 public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsoleUnitMonitorScreen {
     private enum EActions {
         EXTERIOR(DWM.TEXTS.MONITOR_ACTION_EXTERIOR, (screen) -> screen.exteriorType.getBlock(), (screen) -> {
-            screen.client.setScreen(new TardisConsoleUnitMonitorExternalShellScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
+            screen.client.setScreen(new TardisConsoleUnitMonitorExternalShellsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
         ROOMS(DWM.TEXTS.MONITOR_ACTION_CONSOLE_ROOMS, (screen) -> ModBlocks.TARDIS_ARS_CREATOR.getBlockItem(), (screen) -> {
             screen.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
-        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
+        WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, (screen) -> Items.FILLED_MAP, (screen) -> {
+            screen.client.setScreen(new TardisConsoleUnitMonitorWaypointsScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         }),
 
         RESEARCHER(DWM.TEXTS.MONITOR_ACTION_HISTORY, new Vector2i(0, 1), (screen) -> Items.WRITABLE_BOOK, (screen) -> {
@@ -126,23 +127,19 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
                 }
             );
 
-            button.active = !action.disabled;
             button.setTooltip(Tooltip.of(action.title));
-            this.addDrawableChild(button);
-            buttons.put(action, button);
-        }
-    }
+            button.active = !action.disabled;
 
-    @Override
-    public void renderElements(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderElements(context, mouseX, mouseY, delta);
-        this.renderData(context);
+            buttons.put(action, button);
+            this.addDrawableChild(button);
+        }
     }
 
     @Override
     public void renderElementsAfter(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderElementsAfter(context, mouseX, mouseY, delta);
         this.renderCustomButtons(context);
+        this.renderData(context);
     }
 
     private void renderData(DrawContext context) {
@@ -152,18 +149,17 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         lines.add(Text.empty().append(DWM.TEXTS.MONITOR_DATA_EXTERIOR.copy().append(": ").formatted(Formatting.AQUA)).append(this.exteriorType.getTitle()));
 
         float scale = 0.915F;
-        int padding = 10;
-        int lineHeight = 5;
-        int maxTextLength = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - padding * 2;
-        Vector2i pos = this.getRenderPos(this.getBackgroundBorderSize().x + padding, this.getBackgroundBorderSize().y + padding);
-        Vector2i scaledPos = pos.div(scale, new Vector2i());
+        int maxTextLength = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - SCREEN_MARGIN * 2;
+
+        Vector2i contentPos = this.getRenderPos(this.getBackgroundBorderSize().x + SCREEN_MARGIN, this.getBackgroundBorderSize().y + SCREEN_MARGIN + 2);
+        contentPos = contentPos.div(scale);
 
         context.getMatrices().push();
         context.getMatrices().scale(scale, scale, scale);
 
         for (Text line : lines) {
-            scaledPos.add(RenderHelper.drawTextMultiline(line, this.textRenderer, context, scaledPos, this.textRenderer.fontHeight, (int) Math.floor(maxTextLength / scale), 0xE0E0E0));
-            scaledPos.add(0, lineHeight);
+            contentPos.add(RenderHelper.drawTextMultiline(line, this.textRenderer, context, contentPos, this.textRenderer.fontHeight, (int) Math.floor(maxTextLength / scale), 0xE0E0E0));
+            contentPos.add(0, LINE_HEIGHT);
         }
 
         context.getMatrices().pop();

@@ -63,23 +63,20 @@ public class TardisKeyItem extends Item {
                             tardis.setDestinationFacing(Direction.fromRotation(player.getHeadYaw()));
                             tardis.setDestinationDimension(world.getRegistryKey());
                             tardis.setDestinationPosition(player.getBlockPos());
-                            flightSystem.init(true, player.getUuid());
 
-                            if (materializationSystem.inProgress()) {
+                            if (flightSystem.init(true, player.getUuid())) {
                                 float duration = DWM.TIMINGS.DEMAT_DURATION + DWM.TIMINGS.REMAT_DURATION + flightSystem.getFlightDuration();
-                                player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_TIMER.apply(duration / 20), true);
-                                player.getItemCooldownManager().set(itemStack.getItem(), (int) (DWM.TIMINGS.DEMAT_DURATION + DWM.TIMINGS.REMAT_DURATION + DWM.TIMINGS.FLIGHT_LOOP));
+                                player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_TIMER.apply((float) Math.ceil(duration / 20)), true);
+                                player.getItemCooldownManager().set(itemStack.getItem(), (int) duration);
 
                                 CommonHelper.updateItemStackData(itemStack, (tag) -> {
                                     tag.putString("tardisPos", player.getBlockPos().toShortString());
                                 });
 
                                 flightSystem.putCallback((flag) -> {
-                                    if (flag) return;
-
                                     String tardisPos = tardis.getDestinationExteriorPosition().toShortString();
 
-                                    player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_FAILED.apply(tardisPos));
+                                    if (!flag) player.sendMessage(DWM.TEXTS.TARDIS_ARRIVE_FAILED.apply(tardisPos));
                                     player.getItemCooldownManager().remove(itemStack.getItem());
 
                                     CommonHelper.updateItemStackData(itemStack, (tag) -> {

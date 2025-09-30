@@ -24,24 +24,24 @@ import java.util.*;
 
 @Environment(EnvType.CLIENT)
 public class TardisArsCreatorScreen extends BaseScreen {
-    private static final int LINE_PADDING = 3;
-
     private final BlockPos blockPos;
     private final Map<String, ArsCategory> arsCategories;
     private final Map<String, ArsStructure> arsStructures;
+
+    private boolean isInited;
 
     private ArsCategory selectedArsCategory = null;
     private List<ArsCategory> filteredArsCategories = new ArrayList<>();
     private List<ArsStructure> filteredArsStructures = new ArrayList<>();
 
-    private ListWidget listWidget;
-    private ListWidget.ListEntry selectedArsStructureEntry = null;
-
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    private TextFieldWidget search;
+    private TextFieldWidget searchField;
     private String lastSearch;
+
+    private ListWidget listWidget;
+    private ListWidget.ListEntry selectedArsStructureEntry = null;
 
     public TardisArsCreatorScreen(BlockPos blockPos, Map<String, ArsCategory> arsCategories, Map<String, ArsStructure> arsStructures) {
         super(DWM.TEXTS.ARS_INTERFACE_TITLE);
@@ -76,7 +76,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
     @Override
     public boolean shouldCloseOnInventoryKey() {
-        return !this.search.isFocused();
+        return !this.searchField.isFocused();
     }
 
     @Override
@@ -85,36 +85,38 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
         this.listWidget = new ListWidget(this, this.getListPos(), this.getListSize());
 
-        Vector2i searchPos = this.getLeftTopRenderPos(1, 1);
-        this.search = new TextFieldWidget(this.textRenderer, searchPos.x, searchPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, 18, DWM.TEXTS.ARS_INTERFACE_SEARCH);
+        Vector2i searchFieldPos = this.getLeftTopRenderPos(1, 1);
+        this.searchField = new TextFieldWidget(this.textRenderer, searchFieldPos.x, searchFieldPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, INPUT_HEIGHT, DWM.TEXTS.ARS_INTERFACE_SEARCH);
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_GENERATE, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
+        Vector2i cancelButtonPos = this.getLeftBottomRenderPos(SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.ARS_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
 
         this.addDrawableChild(this.listWidget);
-        this.addDrawableChild(this.search);
+        this.addDrawableChild(this.searchField);
         this.addDrawableChild(this.acceptButton);
         this.addDrawableChild(this.cancelButton);
+
+        this.isInited = true;
         this.update();
     }
 
     @Override
     public void resize(MinecraftClient mc, int width, int height) {
-        String search = this.search.getText();
+        String search = this.searchField.getText();
         ListWidget.ListEntry selectedArsStructureEntry = this.selectedArsStructureEntry;
 
         super.resize(mc, width, height);
-        this.search.setText(search);
+        this.searchField.setText(search);
         this.selectedArsStructureEntry = selectedArsStructureEntry;
 
-        if (!this.search.getText().isEmpty()) {
+        if (!this.searchField.getText().isEmpty()) {
             this.reloadCategoriesList();
             this.reloadArsStructuresList();
         }
@@ -124,7 +126,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
     public void tick() {
         this.listWidget.setSelected(this.selectedArsStructureEntry);
 
-        if (!this.search.getText().equals(lastSearch)) {
+        if (!this.searchField.getText().equals(lastSearch)) {
             this.selectedArsStructureEntry = null;
             this.reloadCategoriesList();
             this.reloadArsStructuresList();
@@ -144,7 +146,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
     protected void setSelectedArsCategory(ListWidget.ListEntry entry) {
         this.selectedArsCategory = entry.arsCategory != null ? entry.arsCategory : this.arsCategories.getOrDefault(this.selectedArsCategory.parent, null);
         this.selectedArsStructureEntry = null;
-        this.search.setText("");
+        this.searchField.setText("");
 
         this.reloadCategoriesList();
         this.reloadArsStructuresList();
@@ -162,8 +164,8 @@ public class TardisArsCreatorScreen extends BaseScreen {
         List<ArsCategory> list;
 
         if (this.hasSearch()) {
-            String search = this.search.getText().toLowerCase();
-            this.lastSearch = this.search.getText();
+            String search = this.searchField.getText().toLowerCase();
+            this.lastSearch = this.searchField.getText();
             list = this.arsCategories.values().stream().filter((arsCategory) -> arsCategory.getTitle().getString().toLowerCase().contains(search)).toList();
         }
         else {
@@ -182,8 +184,8 @@ public class TardisArsCreatorScreen extends BaseScreen {
         List<ArsStructure> list;
 
         if (this.hasSearch()) {
-            String search = this.search.getText().toLowerCase();
-            this.lastSearch = this.search.getText();
+            String search = this.searchField.getText().toLowerCase();
+            this.lastSearch = this.searchField.getText();
             list = this.arsStructures.values().stream().filter((arsStructure) -> arsStructure.getTitle().getString().toLowerCase().contains(search)).toList();
         }
         else {
@@ -199,19 +201,21 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     protected boolean hasSearch() {
-        return this.search != null && !Objects.equals(this.search.getText(), "");
+        return this.searchField != null && !Objects.equals(this.searchField.getText(), "");
     }
 
     private Vector2i getListPos() {
-        return this.getLeftTopRenderPos(0, 22);
+        return this.getLeftTopRenderPos(0, INPUT_HEIGHT + 4);
     }
 
     private Vector2i getListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - INPUT_HEIGHT - BUTTON_SIZE - 6);
     }
 
     private void update() {
-        this.lastSearch = this.search.getText();
+        if (!this.isInited) return;
+
+        this.lastSearch = this.searchField.getText();
         this.acceptButton.active = this.selectedArsStructureEntry != null;
     }
 
@@ -219,7 +223,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         public final TardisArsCreatorScreen parent;
 
         public ListWidget(TardisArsCreatorScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }

@@ -3,6 +3,7 @@ package net.drgmes.dwm.common.tardis.systems;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightHistoryEntry;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightWaypointEntry;
 import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.nbt.NbtCompound;
@@ -23,6 +24,7 @@ public class TardisSystemFlight extends TardisBaseSystem {
 
     private final List<Consumer<Boolean>> callbacks = new ArrayList<>();
     private List<TardisFlightHistoryEntry> history = new ArrayList<>();
+    private List<TardisFlightWaypointEntry> waypoints = new ArrayList<>();
 
     private EStep step = EStep.NONE;
     private UUID initiatorId;
@@ -55,6 +57,16 @@ public class TardisSystemFlight extends TardisBaseSystem {
             keys.sort(Comparator.comparing((key) -> key));
             keys.forEach((key) -> this.history.add(TardisFlightHistoryEntry.createFromNbt(historyTag.getCompound(key))));
         }
+
+        if (tag.contains("waypoints")) {
+            this.waypoints.clear();
+
+            NbtCompound waypointsTag = tag.getCompound("waypoints");
+            List<String> keys = new ArrayList<>(waypointsTag.getKeys());
+
+            keys.sort(Comparator.comparing((key) -> key));
+            keys.forEach((key) -> this.waypoints.add(TardisFlightWaypointEntry.createFromNbt(waypointsTag.getCompound(key))));
+        }
     }
 
     @Override
@@ -69,6 +81,11 @@ public class TardisSystemFlight extends TardisBaseSystem {
         NbtCompound historyTag = new NbtCompound();
         this.history.forEach((entry) -> historyTag.put(CommonHelper.formatIndexString(i.incrementAndGet()), entry.writeNbt(new NbtCompound())));
         tag.put("history", historyTag);
+
+        AtomicInteger j = new AtomicInteger();
+        NbtCompound waypointsTag = new NbtCompound();
+        this.waypoints.forEach((entry) -> waypointsTag.put(CommonHelper.formatIndexString(j.incrementAndGet()), entry.writeNbt(new NbtCompound())));
+        tag.put("waypoints", waypointsTag);
 
         return tag;
     }
@@ -95,11 +112,11 @@ public class TardisSystemFlight extends TardisBaseSystem {
                 }
 
                 if (this.tick == 0) {
-                    if (!this.land()) {
-                        this.reset();
-                        this.applyCallbacks(false);
-                        this.tardis.markConsoleTilesUpdated();
-                    }
+                    boolean isSuccessful = this.land();
+
+                    this.reset();
+                    this.applyCallbacks(isSuccessful);
+                    this.tardis.markConsoleTilesUpdated();
                 }
             }
         }
@@ -121,6 +138,65 @@ public class TardisSystemFlight extends TardisBaseSystem {
         this.initiatorId = initiatorId;
         this.tick = 0;
         this.soundTick = 0;
+        return true;
+    }
+
+    public boolean takeoff() {
+        if (!this.isEnabled() || !this.inProgress() || this.tick > 0) return false;
+
+        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
+        if (!materializationSystem.isEnabled() || materializationSystem.inProgress()) return false;
+
+        materializationSystem.putCallback((flag) -> {
+            if (!flag || this.step == EStep.NONE) return;
+
+            this.step = EStep.PROCESSING;
+            this.tick = this.getFlightDuration();
+            this.tardis.markConsoleTilesUpdated();
+        });
+
+        if (!materializationSystem.isMaterialized()) {
+            materializationSystem.applyCallbacks(true);
+        }
+        else if (materializationSystem.init(false, this.initiatorId)) {
+            this.step = EStep.WAIT_FOR_DEMAT;
+        }
+        else {
+            materializationSystem.reset();
+            materializationSystem.applyCallbacks(false);
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean land() {
+        if (!this.isEnabled() || !this.inProgress() || this.tick > 0) return false;
+
+        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
+        if (!materializationSystem.isEnabled() || materializationSystem.inProgress()) return false;
+
+        this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
+        this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
+        this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
+
+        materializationSystem.putCallback((flag) -> {
+            this.reset();
+            this.applyCallbacks(flag);
+
+            this.addHistoryEntry(new TardisFlightHistoryEntry(
+                this.tardis.getCurrentExteriorDimension(),
+                this.tardis.getCurrentExteriorPosition(),
+                this.tardis.getCurrentExteriorFacing()
+            ));
+        });
+
+        if (!materializationSystem.init(true, this.initiatorId)) {
+            materializationSystem.reset();
+            materializationSystem.applyCallbacks(false);
+            return false;
+        }
+
         return true;
     }
 
@@ -156,90 +232,61 @@ public class TardisSystemFlight extends TardisBaseSystem {
         return DWM.TIMINGS.FLIGHT_LOOP;
     }
 
-    public List<TardisFlightHistoryEntry> getHistory() {
-        return this.history;
-    }
+    // ////////////////////// //
+    // Flight History methods //
+    // ////////////////////// //
 
-    public void addHistory(TardisFlightHistoryEntry historyEntry) {
+    public void addHistoryEntry(TardisFlightHistoryEntry historyEntry) {
         this.history.addFirst(historyEntry);
         if (this.history.size() > HISTORY_SIZE) this.history = this.history.subList(0, HISTORY_SIZE);
 
-        this.tardis.markDirty();
         this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
     }
 
     public boolean deleteHistoryEntry(TardisFlightHistoryEntry historyEntry) {
         Optional<TardisFlightHistoryEntry> foundEntryHolder = this.history.stream().filter((entry) -> entry.equals(historyEntry)).findFirst();
-        if (!foundEntryHolder.isPresent()) return false;
+        if (foundEntryHolder.isEmpty()) return false;
 
         this.history.remove(foundEntryHolder.get());
-        this.tardis.markDirty();
         this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
         return true;
     }
 
     public void clearHistory() {
         this.history.clear();
-        this.tardis.markDirty();
         this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
     }
 
-    private boolean takeoff() {
-        if (!this.isEnabled() || !this.inProgress() || this.tick > 0) return false;
+    // ///////////////// //
+    // Waypoints methods //
+    // ///////////////// //
 
-        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
-        if (!materializationSystem.isEnabled() || materializationSystem.inProgress()) return false;
+    public void addWaypointEntry(TardisFlightWaypointEntry waypointEntry) {
+        this.waypoints.add(waypointEntry);
+        this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
+    }
 
-        materializationSystem.putCallback((flag) -> {
-            if (!flag || this.step == EStep.NONE) return;
+    public boolean updateWaypointEntry(TardisFlightWaypointEntry oldWaypointEntry, TardisFlightWaypointEntry newWaypointEntry) {
+        int index = this.waypoints.indexOf(oldWaypointEntry);
+        if (index < 0) return false;
 
-            this.step = EStep.PROCESSING;
-            this.tick = this.getFlightDuration();
-            this.tardis.markConsoleTilesUpdated();
-        });
-
-        if (!materializationSystem.isMaterialized()) {
-            materializationSystem.applyCallbacks(true);
-        }
-        else if (materializationSystem.init(false, this.initiatorId)) {
-            this.step = EStep.WAIT_FOR_DEMAT;
-        }
-        else {
-            materializationSystem.reset();
-            materializationSystem.applyCallbacks(false);
-            return false;
-        }
-
+        this.waypoints.set(index, newWaypointEntry);
+        this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
         return true;
     }
 
-    private boolean land() {
-        if (!this.isEnabled() || !this.inProgress() || this.tick > 0) return false;
+    public boolean deleteWaypointEntry(TardisFlightWaypointEntry waypointEntry) {
+        Optional<TardisFlightWaypointEntry> foundEntryHolder = this.waypoints.stream().filter((entry) -> entry.equals(waypointEntry)).findFirst();
+        if (foundEntryHolder.isEmpty()) return false;
 
-        TardisSystemMaterialization materializationSystem = this.tardis.getSystem(TardisSystemMaterialization.class);
-        if (!materializationSystem.isEnabled() || materializationSystem.inProgress()) return false;
-
-        this.tardis.setDimension(this.tardis.getDestinationExteriorDimension(), true);
-        this.tardis.setPosition(this.tardis.getDestinationExteriorPosition(), true);
-        this.tardis.setFacing(this.tardis.getDestinationExteriorFacing(), true);
-
-        materializationSystem.putCallback((flag) -> {
-            this.reset();
-            this.applyCallbacks(flag);
-
-            this.addHistory(new TardisFlightHistoryEntry(
-                this.tardis.getCurrentExteriorDimension(),
-                this.tardis.getCurrentExteriorPosition(),
-                this.tardis.getCurrentExteriorFacing()
-            ));
-        });
-
-        if (!materializationSystem.init(true, this.initiatorId)) {
-            materializationSystem.reset();
-            materializationSystem.applyCallbacks(false);
-            return false;
-        }
-
+        this.waypoints.remove(foundEntryHolder.get());
+        this.tardis.markConsoleTilesUpdated();
+        this.tardis.markDirty();
         return true;
     }
 

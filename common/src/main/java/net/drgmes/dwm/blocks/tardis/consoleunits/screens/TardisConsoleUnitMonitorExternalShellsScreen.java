@@ -34,21 +34,21 @@ import org.joml.Vector2i;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConsoleUnitMonitorScreen {
-    protected static final int LINE_PADDING = 3;
-
+public class TardisConsoleUnitMonitorExternalShellsScreen extends BaseTardisConsoleUnitMonitorScreen {
     private final Screen parentScreen;
     private final String tardisId;
     private final String currentExteriorTypeId;
 
+    private boolean isInited;
     private int tick = 180;
+
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
     private ExternalShellsListWidget externalShellsListWidget;
     private ExternalShellsListWidget.ExternalShellEntry selected = null;
 
-    public TardisConsoleUnitMonitorExternalShellScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
+    public TardisConsoleUnitMonitorExternalShellsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
         super(DWM.TEXTS.MONITOR_EXTERNAL_SHELLS_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
@@ -67,12 +67,12 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
 
         this.externalShellsListWidget = new ExternalShellsListWidget(this, this.getExternalShellsListPos(), this.getExternalShellsListSize());
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_EXTERNAL_SHELLS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_EXTERNAL_SHELLS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
@@ -80,6 +80,8 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
         this.addDrawableChild(this.externalShellsListWidget);
         this.addDrawableChild(this.acceptButton);
         this.addDrawableChild(this.cancelButton);
+
+        this.isInited = true;
         this.update();
     }
 
@@ -100,7 +102,7 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
 
         float scale = 40F;
         int modelX = externalShellsListSize.x + (this.getBackgroundSize().x - externalShellsListSize.x) / 2;
-        int modelY = this.getBackgroundBorderSize().y + (externalShellsListSize.y - BUTTON_SIZE) / 2;
+        int modelY = this.getBackgroundBorderSize().y + (externalShellsListSize.y - BUTTON_SIZE - SCREEN_MARGIN * 2) / 2;
 
         Vector2i modelOffset = this.getRenderPos(modelX, modelY);
         Vec2f pos = new Vec2f(modelOffset.x, modelOffset.y).multiply(1 / scale);
@@ -152,6 +154,7 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
     }
 
     private void update() {
+        if (!this.isInited) return;
         this.acceptButton.active = this.selected != null && !this.selected.exterior.name.equals(this.currentExteriorTypeId);
     }
 
@@ -161,10 +164,10 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
     }
 
     private static class ExternalShellsListWidget extends BaseListWidget {
-        private final TardisConsoleUnitMonitorExternalShellScreen parent;
+        private final TardisConsoleUnitMonitorExternalShellsScreen parent;
 
-        public ExternalShellsListWidget(TardisConsoleUnitMonitorExternalShellScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+        public ExternalShellsListWidget(TardisConsoleUnitMonitorExternalShellsScreen parent, Vector2i pos, Vector2i size) {
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }
@@ -184,7 +187,7 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
 
                 if (Objects.equals(key, this.parent.currentExteriorTypeId)) {
                     this.setSelected(entry);
-                    this.parent.selected = entry;
+                    this.parent.setSelected(entry);
                 }
             });
         }

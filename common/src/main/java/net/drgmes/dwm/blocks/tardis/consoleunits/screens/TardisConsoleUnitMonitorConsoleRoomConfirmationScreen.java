@@ -2,7 +2,7 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorHistoryClearPacket;
+import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorConsoleRoomApplyPacket;
 import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
@@ -14,18 +14,20 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
-public class TardisConsoleUnitMonitorHistoryClearConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
+public class TardisConsoleUnitMonitorConsoleRoomConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
     private final Screen parentScreen;
     private final String tardisId;
+    private final String selectedConsoleRoomId;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    public TardisConsoleUnitMonitorHistoryClearConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, @Nullable Screen parentScreen) {
-        super(DWM.TEXTS.MONITOR_HISTORY_TITLE, tardisConsoleUnitBlockEntity);
+    public TardisConsoleUnitMonitorConsoleRoomConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String selectedConsoleRoomId, @Nullable Screen parentScreen) {
+        super(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
+        this.selectedConsoleRoomId = selectedConsoleRoomId;
     }
 
     @Override
@@ -38,12 +40,12 @@ public class TardisConsoleUnitMonitorHistoryClearConfirmationScreen extends Base
         super.init();
 
         Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
-        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CLEAR_CONFIRMATION_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
         Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
-        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
+        this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
 
@@ -59,7 +61,7 @@ public class TardisConsoleUnitMonitorHistoryClearConfirmationScreen extends Base
 
     @Override
     public void apply() {
-        new TardisConsoleUnitMonitorHistoryClearPacket(this.tardisId).sendToServer();
+        new TardisConsoleUnitMonitorConsoleRoomApplyPacket(this.tardisId, this.selectedConsoleRoomId).sendToServer();
         super.apply();
     }
 
@@ -75,6 +77,7 @@ public class TardisConsoleUnitMonitorHistoryClearConfirmationScreen extends Base
         int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
         Vector2i textPos = this.getRenderPos(textX, textY);
 
-        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_HISTORY_CLEAR_CONFIRMATION_TEXT, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
+        textPos = textPos.add(RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_1, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0));
+        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_CONFIRMATION_TEXT_2, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
     }
 }

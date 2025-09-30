@@ -13,8 +13,6 @@ import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
 public abstract class BaseSonicDeviceInterfaceScreen extends BaseScreen {
-    protected static final int LINE_PADDING = 3;
-
     protected final ItemStack sonicDeviceItemStack;
     protected final String slot;
 

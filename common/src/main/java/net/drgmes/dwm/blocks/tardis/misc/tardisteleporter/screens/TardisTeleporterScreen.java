@@ -25,9 +25,6 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class TardisTeleporterScreen extends BaseScreen {
-    protected static final int LINE_PADDING = 3;
-    protected static final int MARGIN = 4;
-
     private BlockPos blockPos;
     private BlockPos destinationBlockPos;
     private boolean isLocked;
@@ -79,35 +76,33 @@ public class TardisTeleporterScreen extends BaseScreen {
 
     @Override
     protected void init() {
+        int coordsFieldWidth = this.getCoordsFieldWidth();
+
         Vector2i entityTypesListPos = this.getEntityTypesListPos();
         Vector2i entityTypesListSize = this.getEntityTypesListSize();
         this.entityTypesListWidget = new EntityTypesListWidget(this, entityTypesListPos, entityTypesListSize);
 
-        int inputWidth = this.getAvailableBodyWidth() / 3 - MARGIN / 2 - 1;
-        int inputOffsetY = this.getBackgroundBorderSize().y + this.textRenderer.fontHeight * 4 - 2;
-        int inputOffsetX = entityTypesListPos.x + entityTypesListSize.x + MARGIN;
-
-        Vector2i xFieldPos = this.getRenderPos(inputOffsetX, inputOffsetY);
-        this.xField = new TextFieldWidget(this.textRenderer, xFieldPos.x, xFieldPos.y, inputWidth, 18, Text.literal("X"));
+        Vector2i xFieldPos = entityTypesListPos.add(entityTypesListSize.x + SCREEN_MARGIN + 1, this.textRenderer.fontHeight + SCREEN_MARGIN);
+        this.xField = new TextFieldWidget(this.textRenderer, xFieldPos.x, xFieldPos.y, coordsFieldWidth, INPUT_HEIGHT, Text.literal("X"));
         this.xField.setText(String.valueOf(this.destinationBlockPos.getX()));
         this.xField.setEditable(!this.isLocked);
 
-        Vector2i yFieldPos = xFieldPos.add(inputWidth + MARGIN, 0);
-        this.yField = new TextFieldWidget(this.textRenderer, yFieldPos.x, yFieldPos.y, inputWidth, 18, Text.literal("Y"));
+        Vector2i yFieldPos = xFieldPos.add(coordsFieldWidth + INPUT_MARGIN, 0);
+        this.yField = new TextFieldWidget(this.textRenderer, yFieldPos.x, yFieldPos.y, coordsFieldWidth, INPUT_HEIGHT, Text.literal("Y"));
         this.yField.setText(String.valueOf(this.destinationBlockPos.getY()));
         this.yField.setEditable(!this.isLocked);
 
-        Vector2i zFieldPos = yFieldPos.add(inputWidth + MARGIN, 0);
-        this.zField = new TextFieldWidget(this.textRenderer, zFieldPos.x, zFieldPos.y, inputWidth, 18, Text.literal("Z"));
+        Vector2i zFieldPos = yFieldPos.add(coordsFieldWidth + INPUT_MARGIN, 0);
+        this.zField = new TextFieldWidget(this.textRenderer, zFieldPos.x, zFieldPos.y, coordsFieldWidth, INPUT_HEIGHT, Text.literal("Z"));
         this.zField.setText(String.valueOf(this.destinationBlockPos.getZ()));
         this.zField.setEditable(!this.isLocked);
 
-        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + MARGIN, BUTTON_SIZE + MARGIN);
+        Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + SCREEN_MARGIN, BUTTON_SIZE + SCREEN_MARGIN);
         this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_BTN_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
-        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        Vector2i cancelButtonPos = acceptButtonPos.add(-BUTTON_SIZE - BUTTON_MARGIN, 0);
         this.cancelButton = new BaseButton(cancelButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_BTN_CANCEL, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CANCEL, (b) -> {
             this.back();
         });
@@ -138,21 +133,21 @@ public class TardisTeleporterScreen extends BaseScreen {
     public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderAdditional(context, mouseX, mouseY, delta);
 
-        int inputWidth = this.getAvailableBodyWidth() / 3 - MARGIN / 2 - 1;
+        int coordsFieldWidth = this.getCoordsFieldWidth();
 
-        Vector2i entityTypesTitlePos = this.getLeftTopRenderPos(MARGIN, MARGIN + 2);
+        Vector2i entityTypesTitlePos = this.getLeftTopRenderPos(SCREEN_MARGIN, SCREEN_MARGIN + 2);
         context.drawText(this.textRenderer, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_ENTITY_TYPES, entityTypesTitlePos.x, entityTypesTitlePos.y, 0xE0E0E0, true);
 
-        Vector2i coordsTitlePos = this.getLeftTopRenderPos(this.getEntityTypesListSize().x + MARGIN * 2 + 2, MARGIN + 2);
-        context.drawText(this.textRenderer, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_COORDS, coordsTitlePos.x, coordsTitlePos.y, 0xE0E0E0, true);
+        Vector2i coordsTitlePos = this.getEntityTypesListPos().add(this.getEntityTypesListSize().x + SCREEN_MARGIN + 1, 0);
+        context.drawText(this.textRenderer, DWM.TEXTS.TARDIS_TELEPORTER_INTERFACE_COORDS, coordsTitlePos.x, entityTypesTitlePos.y, 0xE0E0E0, true);
 
-        Vector2i xTitlePos = coordsTitlePos.add(0, this.textRenderer.fontHeight * 2);
+        Vector2i xTitlePos = coordsTitlePos.add(0, 3);
         context.drawText(this.textRenderer, Text.literal("X"), xTitlePos.x, xTitlePos.y, 0xE0E0E0, true);
 
-        Vector2i yTitlePos = xTitlePos.add(inputWidth + MARGIN, 0);
+        Vector2i yTitlePos = xTitlePos.add(coordsFieldWidth + INPUT_MARGIN, 0);
         context.drawText(this.textRenderer, Text.literal("Y"), yTitlePos.x, yTitlePos.y, 0xE0E0E0, true);
 
-        Vector2i zTitlePos = yTitlePos.add(inputWidth + MARGIN, 0);
+        Vector2i zTitlePos = yTitlePos.add(coordsFieldWidth + INPUT_MARGIN, 0);
         context.drawText(this.textRenderer, Text.literal("Z"), zTitlePos.x, zTitlePos.y, 0xE0E0E0, true);
     }
 
@@ -162,22 +157,23 @@ public class TardisTeleporterScreen extends BaseScreen {
     }
 
     private Vector2i getEntityTypesListPos() {
-        return this.getLeftTopRenderPos(MARGIN, this.client.textRenderer.fontHeight + 10);
+        return this.getLeftTopRenderPos(SCREEN_MARGIN, this.client.textRenderer.fontHeight + 10);
     }
 
     private Vector2i getEntityTypesListSize() {
-        return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - MARGIN * 3 - this.client.textRenderer.fontHeight - 2);
+        return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - this.client.textRenderer.fontHeight - 10 - SCREEN_MARGIN);
     }
 
-    private int getAvailableBodyWidth() {
-        return this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - this.getEntityTypesListSize().x - MARGIN * 3;
+    private int getCoordsFieldWidth() {
+        int availableBodyWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - this.getEntityTypesListSize().x - SCREEN_MARGIN * 3;
+        return availableBodyWidth / 3 - INPUT_MARGIN / 2;
     }
 
     private static class EntityTypesListWidget extends BaseListWidget {
         private final TardisTeleporterScreen parent;
 
         public EntityTypesListWidget(TardisTeleporterScreen parent, Vector2i pos, Vector2i size) {
-            super(parent.client, pos, size, LINE_PADDING);
+            super(parent.client, pos, size, LINE_HEIGHT);
             this.parent = parent;
             this.init();
         }

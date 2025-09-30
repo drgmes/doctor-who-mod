@@ -12,8 +12,15 @@ import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
 public abstract class BaseScreen extends Screen implements IBaseScreen {
+    protected static final int SCREEN_MARGIN = 4;
+    protected static final int LINE_HEIGHT = 3;
+
+    protected static final int INPUT_HEIGHT = 18;
+    protected static final int INPUT_MARGIN = 2;
+
     protected static final int BUTTON_SIZE = 20;
     protected static final int BUTTON_PADDING = 3;
+    protected static final int BUTTON_MARGIN = 1;
 
     protected Vector2f cachedScale;
 
