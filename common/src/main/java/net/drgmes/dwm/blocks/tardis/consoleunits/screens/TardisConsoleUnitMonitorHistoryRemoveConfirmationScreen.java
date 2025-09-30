@@ -2,7 +2,8 @@ package net.drgmes.dwm.blocks.tardis.consoleunits.screens;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorHistoryClearPacket;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightHistoryEntry;
+import net.drgmes.dwm.network.server.TardisConsoleUnitMonitorHistoryDeletePacket;
 import net.drgmes.dwm.utils.base.screens.elements.BaseButton;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
@@ -14,18 +15,20 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 @Environment(EnvType.CLIENT)
-public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
+public class TardisConsoleUnitMonitorHistoryRemoveConfirmationScreen extends BaseTardisConsoleUnitMonitorScreen {
     private final Screen parentScreen;
     private final String tardisId;
+    private final TardisFlightHistoryEntry historyEntry;
 
     private ButtonWidget acceptButton;
     private ButtonWidget cancelButton;
 
-    public TardisConsoleUnitMonitorHistoryConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, @Nullable Screen parentScreen) {
+    public TardisConsoleUnitMonitorHistoryRemoveConfirmationScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, TardisFlightHistoryEntry historyEntry, @Nullable Screen parentScreen) {
         super(DWM.TEXTS.MONITOR_HISTORY_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
+        this.historyEntry = historyEntry;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardi
         super.init();
 
         Vector2i acceptButtonPos = this.getRightBottomRenderPos(BUTTON_SIZE + 1, BUTTON_SIZE + 1);
-        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CONFIRMATION_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
+        this.acceptButton = new BaseButton(acceptButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_REMOVE_CONFIRMATION_ACCEPT, DWM.TEXTURES.GUI.COMMON.ELEMENTS.ACCEPT, (b) -> {
             this.apply();
         });
 
@@ -59,8 +62,12 @@ public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardi
 
     @Override
     public void apply() {
-        new TardisConsoleUnitMonitorHistoryClearPacket(this.tardisId).sendToServer();
-        super.apply();
+        if (this.parentScreen instanceof TardisConsoleUnitMonitorHistoryScreen tardisConsoleUnitMonitorHistoryScreen) {
+            tardisConsoleUnitMonitorHistoryScreen.deleteHistoryEntry(this.historyEntry);
+        }
+
+        new TardisConsoleUnitMonitorHistoryDeletePacket(this.tardisId, this.historyEntry).sendToServer();
+        this.back();
     }
 
     @Override
@@ -75,6 +82,6 @@ public class TardisConsoleUnitMonitorHistoryConfirmationScreen extends BaseTardi
         int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
         Vector2i textPos = this.getRenderPos(textX, textY);
 
-        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_HISTORY_CONFIRMATION_TEXT, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
+        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.MONITOR_HISTORY_REMOVE_CONFIRMATION_TEXT, this.textRenderer, context, textPos, this.textRenderer.fontHeight, maxWidth, 0xE0E0E0);
     }
 }

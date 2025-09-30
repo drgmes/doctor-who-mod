@@ -1146,8 +1146,9 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Coords have been reset to the §eCurrent§r position",
   "message.dwm.tardis.control.role.randomizer": "Coords were randomly updated",
 
-  "message.dwm.tardis.history.loaded": "Coords §aLoaded",
   "message.dwm.tardis.history.cleared": "Flight History §aCleared",
+  "message.dwm.tardis.history.coords.loaded": "Coords §aLoaded",
+  "message.dwm.tardis.history.coords.removed": "Coords §aDeleted",
 
   "message.dwm.tardis.telepathic_interface.map.loaded": "Map Coords §aLoaded",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "%s Banner Coords §aLoaded",
@@ -1207,9 +1208,12 @@
   "screen.dwm.monitor.history.title": "Flight History",
   "screen.dwm.monitor.history.cancel": "Cancel",
   "screen.dwm.monitor.history.accept": "Apply coords",
+  "screen.dwm.monitor.history.remove": "Remove coords",
+  "screen.dwm.monitor.history.remove.confirmation.text": "Are you sure you want to delete this stored point?",
+  "screen.dwm.monitor.history.remove.confirmation.accept": "Confirm",
   "screen.dwm.monitor.history.clear": "Clear all history",
-  "screen.dwm.monitor.history.confirmation.text": "Are you sure you want to clear your flight history?",
-  "screen.dwm.monitor.history.confirmation.accept": "Confirm",
+  "screen.dwm.monitor.history.clear.confirmation.text": "Are you sure you want to clear your flight history?",
+  "screen.dwm.monitor.history.clear.confirmation.accept": "Confirm",
 
   "screen.dwm.telepathic_interface.title.locations": "Telepathic Interface: Choose a Location",
   "screen.dwm.telepathic_interface.title.banners": "Telepathic Interface: Choose an Anchor",

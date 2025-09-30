@@ -97,25 +97,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         super.apply();
     }
 
-    protected void update() {
-        this.lastSearch = this.search.getText();
-        this.acceptButton.active = this.selected != null;
-    }
-
-    protected void reloadLocationsList() {
-        if (this.hasSearch()) {
-            this.lastSearch = this.search.getText();
-            this.filteredLocations = this.locations.stream().filter((str) -> (
-                str.getKey().getPath().toLowerCase().contains(this.search.getText().toLowerCase())
-            )).toList();
-
-            return;
-        }
-
-        this.filteredLocations = this.locations;
-    }
-
-    protected boolean hasSearch() {
+    private boolean hasSearch() {
         return this.search != null && !Objects.equals(this.search.getText(), "");
     }
 
@@ -127,9 +109,27 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
     }
 
+    private void update() {
+        this.lastSearch = this.search.getText();
+        this.acceptButton.active = this.selected != null;
+    }
+
     private void setSelected(LocationsListWidget.LocationEntry entry) {
         this.selected = entry == this.selected ? null : entry;
         this.update();
+    }
+
+    private void reloadLocationsList() {
+        if (this.hasSearch()) {
+            this.lastSearch = this.search.getText();
+            this.filteredLocations = this.locations.stream().filter((str) -> (
+                str.getKey().getPath().toLowerCase().contains(this.search.getText().toLowerCase())
+            )).toList();
+
+            return;
+        }
+
+        this.filteredLocations = this.locations;
     }
 
     private static class LocationsListWidget extends BaseListWidget {

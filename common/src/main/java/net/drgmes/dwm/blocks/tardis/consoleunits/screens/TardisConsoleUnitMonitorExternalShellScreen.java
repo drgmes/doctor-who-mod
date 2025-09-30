@@ -151,13 +151,13 @@ public class TardisConsoleUnitMonitorExternalShellScreen extends BaseTardisConso
         return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
     }
 
+    private void update() {
+        this.acceptButton.active = this.selected != null && !this.selected.exterior.name.equals(this.currentExteriorTypeId);
+    }
+
     private void setSelected(ExternalShellsListWidget.ExternalShellEntry entry) {
         this.selected = entry;
         this.update();
-    }
-
-    private void update() {
-        this.acceptButton.active = this.selected != null && !this.selected.exterior.name.equals(this.currentExteriorTypeId);
     }
 
     private static class ExternalShellsListWidget extends BaseListWidget {

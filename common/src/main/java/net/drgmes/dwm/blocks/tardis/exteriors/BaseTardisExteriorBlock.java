@@ -151,7 +151,6 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
                 String tardisId = tardis.getId();
 
                 tardis.init();
-                tardisExteriorBlockEntity.update();
                 if (tardis.getExteriorType() == null) tardis.setExteriorType(this.exteriorType);
 
                 if (heldItemStack.getItem() instanceof TardisKeyItem) {

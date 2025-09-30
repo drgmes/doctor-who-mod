@@ -7,10 +7,7 @@ import net.drgmes.dwm.setup.ModSounds;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.nbt.NbtCompound;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -169,6 +166,16 @@ public class TardisSystemFlight extends TardisBaseSystem {
 
         this.tardis.markDirty();
         this.tardis.markConsoleTilesUpdated();
+    }
+
+    public boolean deleteHistoryEntry(TardisFlightHistoryEntry historyEntry) {
+        Optional<TardisFlightHistoryEntry> foundEntryHolder = this.history.stream().filter((entry) -> entry.equals(historyEntry)).findFirst();
+        if (!foundEntryHolder.isPresent()) return false;
+
+        this.history.remove(foundEntryHolder.get());
+        this.tardis.markDirty();
+        this.tardis.markConsoleTilesUpdated();
+        return true;
     }
 
     public void clearHistory() {

@@ -67,16 +67,16 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
         this.close();
     }
 
-    protected void update() {
-        this.acceptButton.active = this.selected != null;
-    }
-
     private Vector2i getBannersListPos() {
         return this.getLeftTopRenderPos(0, 0);
     }
 
     private Vector2i getBannersListSize() {
         return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
+    }
+
+    private void update() {
+        this.acceptButton.active = this.selected != null;
     }
 
     private void setSelected(BannersListWidget.BannerEntry entry) {

@@ -41,20 +41,30 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         WAYPOINTS(DWM.TEXTS.MONITOR_ACTION_WAYPOINTS, true, (screen) -> Items.COMPASS, (screen) -> {
         }),
 
-        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_HISTORY, false, (screen) -> Items.WRITABLE_BOOK, (screen) -> {
+        RESEARCHER(DWM.TEXTS.MONITOR_ACTION_HISTORY, new Vector2i(0, 1), (screen) -> Items.WRITABLE_BOOK, (screen) -> {
             screen.client.setScreen(new TardisConsoleUnitMonitorHistoryScreen(screen.tardisConsoleUnitBlockEntity, screen.tardisId, screen.tag, screen));
         });
 
         private final Text title;
         private final boolean disabled;
+        private final Vector2i offset;
         private final Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier;
         private final Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress;
 
-        EActions(Text title, boolean disabled, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+        EActions(Text title, boolean disabled, Vector2i offset, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
             this.title = title;
             this.disabled = disabled;
+            this.offset = offset;
             this.iconSupplier = iconSupplier;
             this.onPress = onPress;
+        }
+
+        EActions(Text title, Vector2i offset, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+            this(title, false, offset, iconSupplier, onPress);
+        }
+
+        EActions(Text title, boolean disabled, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
+            this(title, disabled, new Vector2i(0, 0), iconSupplier, onPress);
         }
 
         EActions(Text title, Function<TardisConsoleUnitMonitorConsoleMainScreen, ItemConvertible> iconSupplier, Consumer<TardisConsoleUnitMonitorConsoleMainScreen> onPress) {
@@ -62,11 +72,12 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         }
     }
 
-    private final NbtCompound tag;
     private final String tardisId;
     private final String owner;
     private final TardisExteriorEntry exteriorType;
     private final Map<EActions, ButtonWidget> buttons = new LinkedHashMap<>();
+
+    private NbtCompound tag;
 
     public TardisConsoleUnitMonitorConsoleMainScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String owner, NbtCompound tag) {
         super(DWM.TEXTS.MONITOR_TITLE, tardisConsoleUnitBlockEntity);
@@ -109,7 +120,10 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
                 buttonSize,
                 buttonSize,
                 Text.empty(),
-                (b) -> action.onPress.accept(this)
+                (b) -> {
+                    if (this.client != null && this.client.player != null) this.tag.put("tardisTag", this.tardisConsoleUnitBlockEntity.getSavedTardisTag(this.client.player));
+                    action.onPress.accept(this);
+                }
             );
 
             button.active = !action.disabled;
@@ -166,11 +180,11 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
 
             float scale = 1.25F;
             Vector2i iconPos = new Vector2i((int) Math.floor(entry.getValue().getX() / scale), (int) Math.floor(entry.getValue().getY() / scale));
-            Vec2f iconOffset = new Vec2f((float) entry.getValue().getWidth() / 2 - 9, (float) entry.getValue().getHeight() / 2 - 9);
+            Vec2f iconOffset = new Vec2f((float) entry.getValue().getWidth() / 2 - 10, (float) entry.getValue().getHeight() / 2 - 10);
 
             context.getMatrices().push();
             context.getMatrices().scale(scale, scale, 1);
-            context.getMatrices().translate(iconOffset.x / scale, iconOffset.y / scale, 0);
+            context.getMatrices().translate((iconOffset.x + entry.getKey().offset.x) / scale, (iconOffset.y + entry.getKey().offset.y) / scale, 0);
             context.drawItem(new ItemStack(entry.getKey().iconSupplier.apply(this)), iconPos.x, iconPos.y);
             context.getMatrices().pop();
         }

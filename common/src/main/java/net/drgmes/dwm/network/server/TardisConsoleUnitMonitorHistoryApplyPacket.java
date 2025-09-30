@@ -4,6 +4,7 @@ import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
+import net.drgmes.dwm.common.tardis.systems.flight.TardisFlightHistoryEntry;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,28 +12,19 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
 
 public record TardisConsoleUnitMonitorHistoryApplyPacket(
     String tardisId,
-    RegistryKey<World> dimension,
-    BlockPos blockPos,
-    Direction facing
+    TardisFlightHistoryEntry historyEntry
 ) implements IPacket {
     public static final Identifier ID = DWM.getIdentifier("tardis_console_unit_monitor_history_apply");
     public static final Id<TardisConsoleUnitMonitorHistoryApplyPacket> PACKET_ID = new Id<>(ID);
 
     public static final PacketCodec<PacketByteBuf, TardisConsoleUnitMonitorHistoryApplyPacket> PACKET_CODEC = PacketCodec.tuple(
         PacketCodecs.STRING, TardisConsoleUnitMonitorHistoryApplyPacket::tardisId,
-        RegistryKey.createPacketCodec(RegistryKeys.WORLD), TardisConsoleUnitMonitorHistoryApplyPacket::dimension,
-        BlockPos.PACKET_CODEC, TardisConsoleUnitMonitorHistoryApplyPacket::blockPos,
-        Direction.PACKET_CODEC, TardisConsoleUnitMonitorHistoryApplyPacket::facing,
+        TardisFlightHistoryEntry.PACKET_CODEC, TardisConsoleUnitMonitorHistoryApplyPacket::historyEntry,
         TardisConsoleUnitMonitorHistoryApplyPacket::new
     );
 
@@ -60,9 +52,9 @@ public record TardisConsoleUnitMonitorHistoryApplyPacket(
                 }
 
                 player.sendMessage(DWM.TEXTS.MONITOR_HISTORY_COORDS_LOADED, true);
-                tardis.setDestinationDimension(payload.dimension);
-                tardis.setDestinationPosition(payload.blockPos);
-                tardis.setDestinationFacing(payload.facing);
+                tardis.setDestinationDimension(payload.historyEntry.dimension());
+                tardis.setDestinationPosition(payload.historyEntry.blockPos());
+                tardis.setDestinationFacing(payload.historyEntry.facing());
                 tardis.markConsoleTilesUpdated();
             });
         });

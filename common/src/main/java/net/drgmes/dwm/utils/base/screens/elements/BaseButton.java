@@ -23,15 +23,20 @@ public class BaseButton extends ButtonWidget {
     @Override
     protected void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
         super.renderWidget(context, mouseX, mouseY, delta);
+        this.renderGradientOverlay(context);
+        this.renderIcon(context);
+    }
 
-        // Render gradient overlay
-        if (this.active) {
-            int padding = 2;
-            Vector2i bgPos1 = new Vector2i(this.getX() + padding, this.getY() + padding);
-            Vector2i bgPos2 = new Vector2i(bgPos1.x + this.getWidth() - padding * 2, bgPos1.y + this.getHeight() - padding * 2);
-            context.fillGradient(bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, 0x40000000, 0x20000000);
-        }
+    private void renderGradientOverlay(DrawContext context) {
+        if (!this.active) return;
 
+        int padding = 2;
+        Vector2i bgPos1 = new Vector2i(this.getX() + padding, this.getY() + padding);
+        Vector2i bgPos2 = new Vector2i(bgPos1.x + this.getWidth() - padding * 2, bgPos1.y + this.getHeight() - padding * 2);
+        context.fillGradient(bgPos1.x, bgPos1.y, bgPos2.x, bgPos2.y, 0x40000000, 0x20000000);
+    }
+
+    private void renderIcon(DrawContext context) {
         Vector2i pos = new Vector2i(this.getX() + this.padding, this.getY() + this.padding);
         Vector2i size = new Vector2i(this.getWidth() - this.padding * 2, this.getHeight() - this.padding * 2);
 

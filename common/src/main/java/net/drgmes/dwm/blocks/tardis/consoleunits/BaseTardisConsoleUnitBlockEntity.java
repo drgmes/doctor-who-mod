@@ -105,6 +105,10 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         return ((BaseTardisConsoleUnitBlock<?>) this.getCachedState().getBlock()).consoleUnitType;
     }
 
+    public NbtCompound getSavedTardisTag(PlayerEntity player) {
+        return this.tardisStateManager.writeNbt(new NbtCompound(), player.getRegistryManager());
+    }
+
     public void tick() {
         TardisSystemMaterialization materializationSystem = this.tardisStateManager.getSystem(TardisSystemMaterialization.class);
         TardisSystemFlight flightSystem = this.tardisStateManager.getSystem(TardisSystemFlight.class);
@@ -392,7 +396,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     private void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
-        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.tardisStateManager.writeNbt(new NbtCompound(), player.getRegistryManager()))
+        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.getSavedTardisTag(player))
             .sendTo(player);
     }
 

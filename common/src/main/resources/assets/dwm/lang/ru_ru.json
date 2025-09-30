@@ -1146,8 +1146,9 @@
   "message.dwm.tardis.control.role.reset_to_curr": "Координаты были сброшены на §eтекущую§r позицию",
   "message.dwm.tardis.control.role.randomizer": "Координаты были случайно обновлены",
 
-  "message.dwm.tardis.history.loaded": "Координаты §aзагружены",
   "message.dwm.tardis.history.cleared": "История полетов §aочищена",
+  "message.dwm.tardis.history.coords.loaded": "Координаты §aзагружены",
+  "message.dwm.tardis.history.coords.removed": "Координаты §aудалены",
 
   "message.dwm.tardis.telepathic_interface.map.loaded": "Координаты карты §aзагружены",
   "message.dwm.tardis.telepathic_interface.map.loaded.banner": "Координаты маркера %s загружены",
@@ -1207,9 +1208,12 @@
   "screen.dwm.monitor.history.title": "История полетов",
   "screen.dwm.monitor.history.cancel": "Отмена",
   "screen.dwm.monitor.history.accept": "Применить координаты",
+  "screen.dwm.monitor.history.remove": "Удалить координаты",
+  "screen.dwm.monitor.history.remove.confirmation.text": "Вы уверены, что хотите удалить эту сохраненную точку?",
+  "screen.dwm.monitor.history.remove.confirmation.accept": "Подтвердить",
   "screen.dwm.monitor.history.clear": "Очистить всю историю",
-  "screen.dwm.monitor.history.confirmation.text": "Вы уверены, что хотите очистить историю полетов?",
-  "screen.dwm.monitor.history.confirmation.accept": "Подтвердить",
+  "screen.dwm.monitor.history.clear.confirmation.text": "Вы уверены, что хотите очистить историю полетов?",
+  "screen.dwm.monitor.history.clear.confirmation.accept": "Подтвердить",
 
   "screen.dwm.telepathic_interface.title.locations": "Телепатический интерфейс: Выберите локацию",
   "screen.dwm.telepathic_interface.title.banners": "Телепатический интерфейс: Выберите маркер",

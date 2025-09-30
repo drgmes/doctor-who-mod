@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnitMonitorScreen {
@@ -38,7 +39,8 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
     private int tick = 180;
     private ButtonWidget acceptButton;
-    private ButtonWidget returnButton;
+    private ButtonWidget removeButton;
+    private ButtonWidget clearButton;
     private ButtonWidget cancelButton;
 
     private HistoryListWidget historyListWidget;
@@ -82,9 +84,15 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
             this.apply();
         });
 
-        Vector2i returnButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
-        this.returnButton = new BaseButton(returnButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CLEAR, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CLEAR, (b) -> {
-            this.client.setScreen(new TardisConsoleUnitMonitorHistoryConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this));
+        Vector2i removeButtonPos = acceptButtonPos.add(-BUTTON_SIZE - 1, 0);
+        this.removeButton = new BaseButton(removeButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_REMOVE, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CROSS, (b) -> {
+            if (this.selected == null) return;
+            this.client.setScreen(new TardisConsoleUnitMonitorHistoryRemoveConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.historyEntry, this));
+        });
+
+        Vector2i clearButtonPos = removeButtonPos.add(-BUTTON_SIZE - 1, 0);
+        this.clearButton = new BaseButton(clearButtonPos, BUTTON_SIZE, BUTTON_PADDING, DWM.TEXTS.MONITOR_HISTORY_CLEAR, DWM.TEXTURES.GUI.COMMON.ELEMENTS.CLEAR, (b) -> {
+            this.client.setScreen(new TardisConsoleUnitMonitorHistoryClearConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this));
         });
 
         Vector2i cancelButtonPos = this.getLeftBottomRenderPos(1, BUTTON_SIZE + 1);
@@ -94,7 +102,8 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
         this.addDrawableChild(this.historyListWidget);
         this.addDrawableChild(this.acceptButton);
-        this.addDrawableChild(this.returnButton);
+        this.addDrawableChild(this.removeButton);
+        this.addDrawableChild(this.clearButton);
         this.addDrawableChild(this.cancelButton);
         this.update();
     }
@@ -129,7 +138,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
     @Override
     public void apply() {
         if (this.selected != null) {
-            new TardisConsoleUnitMonitorHistoryApplyPacket(this.tardisId, this.selected.entry.dimension(), this.selected.entry.blockPos(), this.selected.entry.facing()).sendToServer();
+            new TardisConsoleUnitMonitorHistoryApplyPacket(this.tardisId, this.selected.historyEntry).sendToServer();
         }
 
         super.apply();
@@ -139,6 +148,14 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
     public void back() {
         if (this.parentScreen != null) this.client.setScreen(this.parentScreen);
         else super.back();
+    }
+
+    protected void deleteHistoryEntry(TardisFlightHistoryEntry historyEntry) {
+        Optional<TardisFlightHistoryEntry> foundEntryHolder = this.history.stream().filter((entry) -> entry.equals(historyEntry)).findFirst();
+        foundEntryHolder.ifPresent(this.history::remove);
+
+        this.selected = null;
+        this.historyListWidget.refreshList();
     }
 
     private Text getCounterTitle() {
@@ -157,15 +174,16 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
         return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 4);
     }
 
+    private void update() {
+        this.acceptButton.active = this.selected != null;
+        this.removeButton.active = this.selected != null;
+        this.clearButton.active = !this.history.isEmpty();
+    }
+
     private void setSelected(HistoryListWidget.HistoryEntry entry) {
         if (this.selected == entry) this.selected = null;
         else this.selected = entry;
         this.update();
-    }
-
-    private void update() {
-        this.acceptButton.active = this.selected != null;
-        this.returnButton.active = !this.history.isEmpty();
     }
 
     private static class HistoryListWidget extends BaseListWidget {
@@ -185,22 +203,31 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
         @Override
         public void refreshList() {
             super.refreshList();
-            this.parent.history.forEach((entry) -> this.addEntry(new HistoryEntry(entry)));
+
+            this.parent.history.forEach((historyEntry) -> {
+                HistoryEntry entry = new HistoryEntry(historyEntry);
+                this.addEntry(entry);
+
+                if (this.parent.selected != null && entry.historyEntry.equals(this.parent.selected.historyEntry)) {
+                    this.setSelected(entry);
+                    this.parent.selected = entry;
+                }
+            });
         }
 
         private class HistoryEntry extends BaseListEntry {
-            private final TardisFlightHistoryEntry entry;
+            private final TardisFlightHistoryEntry historyEntry;
 
-            public HistoryEntry(TardisFlightHistoryEntry entry) {
+            public HistoryEntry(TardisFlightHistoryEntry historyEntry) {
                 super(Formatting.WHITE, Formatting.GOLD);
-                this.entry = entry;
+                this.historyEntry = historyEntry;
             }
 
             @Override
             public Text getText() {
-                String dimensionName = CommonHelper.capitaliseAllWords(this.entry.dimension().getValue().getPath().replace("_", " "));
+                String dimensionName = CommonHelper.capitaliseAllWords(this.historyEntry.dimension().getValue().getPath().replace("_", " "));
                 MutableText dimensionText = Text.literal(String.format("[%s] ", dimensionName)).formatted(Formatting.AQUA);
-                MutableText posText = Text.literal(this.entry.blockPos().toShortString());
+                MutableText posText = Text.literal(this.historyEntry.blockPos().toShortString());
                 return Text.empty().append(dimensionText).append(posText);
             }
 
@@ -213,7 +240,7 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
                 int startPosX = HistoryListWidget.this.parent.getHistoryListSize().x + left - offset;
 
                 SimpleDateFormat localDateFormat = new SimpleDateFormat("HH:mm:ss");
-                Text timeText = Text.literal(localDateFormat.format(this.entry.timestamp())).formatted(Formatting.DARK_GRAY);
+                Text timeText = Text.literal(localDateFormat.format(this.historyEntry.timestamp())).formatted(Formatting.DARK_GRAY);
                 Vector2i timePos = new Vector2i(startPosX - textRenderer.getWidth(timeText), top + 2);
                 context.drawText(textRenderer, timeText, timePos.x, timePos.y, 0xE0E0E0, true);
             }

@@ -152,7 +152,4 @@ public abstract class BaseTardisExteriorBlockEntity extends BlockEntity {
         if (this.tick > 0) this.tick -= 1;
         else this.reset();
     }
-
-    protected void update() {
-    }
 }

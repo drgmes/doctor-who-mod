@@ -141,11 +141,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.close();
     }
 
-    protected void update() {
-        this.lastSearch = this.search.getText();
-        this.acceptButton.active = this.selectedArsStructureEntry != null;
-    }
-
     protected void setSelectedArsCategory(ListWidget.ListEntry entry) {
         this.selectedArsCategory = entry.arsCategory != null ? entry.arsCategory : this.arsCategories.getOrDefault(this.selectedArsCategory.parent, null);
         this.selectedArsStructureEntry = null;
@@ -215,6 +210,11 @@ public class TardisArsCreatorScreen extends BaseScreen {
         return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - BUTTON_SIZE - 22 - 4);
     }
 
+    private void update() {
+        this.lastSearch = this.search.getText();
+        this.acceptButton.active = this.selectedArsStructureEntry != null;
+    }
+
     private static class ListWidget extends BaseListWidget {
         public final TardisArsCreatorScreen parent;
 
@@ -238,7 +238,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
             this.parent.filteredArsStructures.forEach((arsStructure) -> this.addEntry(new ListEntry(arsStructure)));
         }
 
-        public class ListEntry extends BaseListEntry {
+        private class ListEntry extends BaseListEntry {
             private final boolean isCategory;
             private final ArsCategory arsCategory;
             private final ArsStructure arsStructure;

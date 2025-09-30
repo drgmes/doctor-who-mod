@@ -94,8 +94,9 @@ public class DWM {
         public static final Text ARS_SECONDARY_ROOM_DESTROY_SUCCESS = Text.translatable("message.dwm.tardis.ars.secondary_room.destroy.success");
         public static final Text ARS_SECONDARY_ROOM_DESTROY_FAILED = Text.translatable("message.dwm.tardis.ars.secondary_room.destroy.failed");
 
-        public static final Text MONITOR_HISTORY_COORDS_LOADED = Text.translatable("message.dwm.tardis.history.loaded");
-        public static final Text MONITOR_HISTORY_COORDS_CLEARED = Text.translatable("message.dwm.tardis.history.cleared");
+        public static final Text MONITOR_HISTORY_CLEARED = Text.translatable("message.dwm.tardis.history.cleared");
+        public static final Text MONITOR_HISTORY_COORDS_LOADED = Text.translatable("message.dwm.tardis.history.coords.loaded");
+        public static final Text MONITOR_HISTORY_COORDS_REMOVED = Text.translatable("message.dwm.tardis.history.coords.removed");
 
         public static final Text TELEPATHIC_INTERFACE_MAP_COORDS_LOADED = Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded");
         public static final Function<String, Text> TELEPATHIC_INTERFACE_MAP_BANNER_LOADED = (color) -> Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded.banner", Text.literal(color).formatted(Formatting.GOLD));
@@ -135,9 +136,12 @@ public class DWM {
         public static final Text MONITOR_HISTORY_TITLE = Text.translatable("screen.dwm.monitor.history.title");
         public static final Text MONITOR_HISTORY_CANCEL = Text.translatable("screen.dwm.monitor.history.cancel");
         public static final Text MONITOR_HISTORY_ACCEPT = Text.translatable("screen.dwm.monitor.history.accept");
+        public static final Text MONITOR_HISTORY_REMOVE = Text.translatable("screen.dwm.monitor.history.remove");
+        public static final Text MONITOR_HISTORY_REMOVE_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.remove.confirmation.text");
+        public static final Text MONITOR_HISTORY_REMOVE_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.remove.confirmation.accept");
         public static final Text MONITOR_HISTORY_CLEAR = Text.translatable("screen.dwm.monitor.history.clear");
-        public static final Text MONITOR_HISTORY_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.confirmation.text");
-        public static final Text MONITOR_HISTORY_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.confirmation.accept");
+        public static final Text MONITOR_HISTORY_CLEAR_CONFIRMATION_TEXT = Text.translatable("screen.dwm.monitor.history.clear.confirmation.text");
+        public static final Text MONITOR_HISTORY_CLEAR_CONFIRMATION_ACCEPT = Text.translatable("screen.dwm.monitor.history.clear.confirmation.accept");
 
         public static final Text TELEPATHIC_INTERFACE_TITLE_LOCATIONS = Text.translatable("screen.dwm.telepathic_interface.title.locations");
         public static final Text TELEPATHIC_INTERFACE_TITLE_BANNERS = Text.translatable("screen.dwm.telepathic_interface.title.banners");
@@ -195,6 +199,7 @@ public class DWM {
                     public static final Identifier ACCEPT = DWM.getIdentifier("textures/gui/common/elements/accept.png");
                     public static final Identifier CANCEL = DWM.getIdentifier("textures/gui/common/elements/cancel.png");
                     public static final Identifier CLEAR = DWM.getIdentifier("textures/gui/common/elements/clear.png");
+                    public static final Identifier CROSS = DWM.getIdentifier("textures/gui/common/elements/cross.png");
                 }
             }
 

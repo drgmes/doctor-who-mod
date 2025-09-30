@@ -27,13 +27,11 @@ import java.util.*;
 @Environment(EnvType.CLIENT)
 public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsoleUnitMonitorScreen {
     protected static final int LINE_PADDING = 3;
-    protected final Screen parentScreen;
-    protected final NbtCompound tag;
 
     private static final Map<String, Identifier> LOADED_CONSOLE_ROOMS_IMAGES = new HashMap<>();
 
+    private final Screen parentScreen;
     private final String tardisId;
-    private final String presetConsoleRoomId;
     private final String currentConsoleRoomId;
     private final List<TardisConsoleRoomEntry> consoleRooms = new ArrayList<>();
 
@@ -43,24 +41,18 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     private ConsoleRoomsListWidget consoleRoomsListWidget;
     private ConsoleRoomsListWidget.ConsoleRoomEntry selected = null;
 
-    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String presetConsoleRoomId, NbtCompound tag, @Nullable Screen parentScreen) {
+    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
         super(DWM.TEXTS.MONITOR_CONSOLE_ROOMS_TITLE, tardisConsoleUnitBlockEntity);
 
         this.parentScreen = parentScreen;
         this.tardisId = tardisId;
-        this.presetConsoleRoomId = presetConsoleRoomId;
         this.currentConsoleRoomId = tag.getCompound("tardisTag").getString("consoleRoom");
-        this.tag = tag;
 
         NbtCompound roomsTag = tag.getCompound("roomsTag");
         List<String> keys = new ArrayList<>(roomsTag.getKeys());
 
         keys.sort(Comparator.comparing((key) -> key));
         keys.forEach((key) -> this.consoleRooms.add(TardisConsoleRoomEntry.fromNbt(roomsTag.getCompound(key))));
-    }
-
-    public TardisConsoleUnitMonitorConsoleRoomsScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, NbtCompound tag, @Nullable Screen parentScreen) {
-        this(tardisConsoleUnitBlockEntity, tardisId, null, tag, parentScreen);
     }
 
     @Override
@@ -141,7 +133,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
     @Override
     public void apply() {
         if (this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId)) {
-            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this.tag, this));
+            this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomsConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this));
         }
     }
 
@@ -159,13 +151,13 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
         return new Vector2i(125, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2);
     }
 
+    private void update() {
+        this.acceptButton.active = this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId);
+    }
+
     private void setSelected(ConsoleRoomsListWidget.ConsoleRoomEntry entry) {
         this.selected = entry;
         this.update();
-    }
-
-    private void update() {
-        this.acceptButton.active = this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId);
     }
 
     private static class ConsoleRoomsListWidget extends BaseListWidget {
@@ -190,7 +182,10 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
                 ConsoleRoomEntry entry = new ConsoleRoomEntry(consoleRoom);
                 this.addEntry(entry);
 
-                if (Objects.equals(consoleRoom.name, this.parent.presetConsoleRoomId) || Objects.equals(consoleRoom.name, this.parent.currentConsoleRoomId)) {
+                boolean isEqualCurrent = this.parent.selected == null && Objects.equals(consoleRoom.name, this.parent.currentConsoleRoomId);
+                boolean isEqualSelected = this.parent.selected != null && Objects.equals(consoleRoom.name, this.parent.selected.consoleRoom.name);
+
+                if (isEqualCurrent || isEqualSelected) {
                     this.setSelected(entry);
                     this.parent.selected = entry;
                 }
