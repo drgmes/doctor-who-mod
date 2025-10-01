@@ -108,7 +108,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
             if (!LOADED_CONSOLE_ROOMS_IMAGES.containsKey(this.selected.consoleRoom.name)) {
                 LOADED_CONSOLE_ROOMS_IMAGES.put(this.selected.consoleRoom.name, null);
 
-                CommonHelper.runInThread("loadRemoteImage_" + this.selected.consoleRoom.name, () -> {
+                CommonHelper.runInThread("loadRemoteImage-" + this.selected.consoleRoom.name, () -> {
                     try {
                         LOADED_CONSOLE_ROOMS_IMAGES.put(this.selected.consoleRoom.name, CommonHelper.loadRemoteImage(this.selected.consoleRoom.name, new URI(this.selected.consoleRoom.imageUrl).toURL()));
                     } catch (Exception ignored) {

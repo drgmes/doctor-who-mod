@@ -127,8 +127,12 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
     private void reloadLocationsList() {
         if (this.hasSearch()) {
             this.lastSearch = this.searchField.getText();
+            if (this.lastSearch == null) this.lastSearch = "";
+            final String search = this.lastSearch.toLowerCase().replaceAll("@", "");
+
             this.filteredLocations = this.locations.stream().filter((str) -> (
-                str.getKey().getPath().toLowerCase().contains(this.searchField.getText().toLowerCase())
+                (!this.lastSearch.startsWith("@") && str.getKey().getPath().toLowerCase().contains(search)) ||
+                (this.lastSearch.startsWith("@") && str.getKey().getNamespace().toLowerCase().contains(search))
             )).toList();
 
             return;
@@ -167,12 +171,14 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
             @Override
             public Text getText() {
                 MutableText narration;
+                Identifier id = this.entry.getKey();
 
-                if (hasShiftDown()) {
-                    narration = Text.literal(this.entry.getKey().toString());
+                if (hasShiftDown() && hasControlDown()) {
+                    narration = Text.literal(id.toString());
                 }
                 else {
-                    narration = Text.translatable(CommonHelper.capitaliseAllWords(this.entry.getKey().getPath().replace("_", " ")));
+                    narration = Text.literal(CommonHelper.capitaliseAllWords(id.getPath().replace("_", " ")));
+                    if (!id.getNamespace().equals("minecraft")) narration = narration.append(Text.literal(String.format(" (%s)", id.getNamespace())).formatted(Formatting.DARK_GRAY));
                 }
 
                 Formatting format = Formatting.WHITE;

@@ -9,6 +9,7 @@ import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.enums.TardisVerticalScanning;
 import net.drgmes.dwm.network.IPacket;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.DimensionHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -76,78 +77,125 @@ public record TardisConsoleUnitTelepathicInterfaceLocationApplyPacket(
                     return;
                 }
 
-                Text message = null;
                 TardisTelepathicInterfaceDataType dataType = TardisTelepathicInterfaceDataType.valueOf(payload.type);
-
-                if (dataType == TardisTelepathicInterfaceDataType.BIOME) {
-                    String msg = tryFindBiome(Identifier.of(payload.id), tardis) ? "found" : "not_found";
-                    message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + msg);
-                }
-                else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) {
-                    String msg = tryFindStructure(Identifier.of(payload.id), tardis) ? "found" : "not_found";
-                    message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + msg);
-                }
-
-                if (message != null) player.sendMessage(message, true);
+                if (dataType == TardisTelepathicInterfaceDataType.BIOME) tryFindBiome(Identifier.of(payload.id), player, tardis);
+                else if (dataType == TardisTelepathicInterfaceDataType.STRUCTURE) tryFindStructure(Identifier.of(payload.id), player, tardis);
             });
         });
     }
 
-    private static boolean tryFindBiome(Identifier id, TardisStateManager tardis) {
-        BlockPos exteriorPos = tardis.getDestinationExteriorPosition();
+    private static boolean tryFindBiome(Identifier id, PlayerEntity player, TardisStateManager tardis) {
         ServerWorld exteriorWorld = DimensionHelper.getWorld(tardis.getDestinationExteriorDimension(), tardis.getWorld().getServer());
-        if (exteriorWorld == null) return false;
+        if (exteriorWorld == null) return throwBiomeNotify(player, false);
 
-        Pair<BlockPos, RegistryEntry<Biome>> pair = exteriorWorld.locateBiome((entry) -> entry.matchesId(id), exteriorPos, 6400, 32, 64);
-        if (pair == null) return false;
+        CommonHelper.runInThread("tryFindBiome-" + tardis.getId(), () -> {
+            BlockPos exteriorPos = new BlockPos(tardis.getDestinationExteriorPosition()).withY(exteriorWorld.getBottomY() + 1);
+            Pair<BlockPos, RegistryEntry<Biome>> pair = null;
 
-        boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
+            try {
+                pair = exteriorWorld.locateBiome(
+                    (entry) -> entry.matchesId(id),
+                    exteriorPos,
+                    6400,
+                    32,
+                    64
+                );
+            } catch (Exception ignored) {
+            }
 
-        TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
-        if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
 
-        BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
-        if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
+            if (pair == null) {
+                throwBiomeNotify(player, false);
+                return;
+            }
 
-        tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
-        tardis.setDestinationPosition(blockPos);
-        tardis.markConsoleTilesUpdated();
+            boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
+
+            TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
+            if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+
+            BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
+            if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
+
+            throwBiomeNotify(player, true);
+            tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
+            tardis.setDestinationPosition(blockPos);
+            tardis.markConsoleTilesUpdated();
+        });
+
         return true;
     }
 
-    private static boolean tryFindStructure(Identifier id, TardisStateManager tardis) {
-        BlockPos exteriorPos = tardis.getDestinationExteriorPosition();
+    private static boolean tryFindStructure(Identifier id, PlayerEntity player, TardisStateManager tardis) {
         ServerWorld exteriorWorld = DimensionHelper.getWorld(tardis.getDestinationExteriorDimension(), tardis.getWorld().getServer());
-        if (exteriorWorld == null) return false;
+        if (exteriorWorld == null) return throwStructureNotify(player, false);
 
         Registry<Structure> registry = exteriorWorld.getRegistryManager().get(RegistryKeys.STRUCTURE);
-
         Structure structure = registry.get(id);
-        if (structure == null) return false;
+        if (structure == null) return throwStructureNotify(player, false);
 
         Optional<RegistryKey<Structure>> structureKeyHolder = registry.getKey(structure);
-        if (structureKeyHolder.isEmpty()) return false;
+        if (structureKeyHolder.isEmpty()) return throwStructureNotify(player, false);
 
         Optional<RegistryEntry.Reference<Structure>> structureEntry = registry.getEntry(structureKeyHolder.get());
-        if (structureEntry.isEmpty()) return false;
+        if (structureEntry.isEmpty()) return throwStructureNotify(player, false);
 
-        Pair<BlockPos, RegistryEntry<Structure>> pair = exteriorWorld.getChunkManager().getChunkGenerator().locateStructure(exteriorWorld, RegistryEntryList.of(structureEntry.get()), exteriorPos, 512, false);
-        if (pair == null) return false;
+        CommonHelper.runInThread("tryFindStructure-" + tardis.getId(), () -> {
+            BlockPos exteriorPos = new BlockPos(tardis.getDestinationExteriorPosition()).withY(exteriorWorld.getBottomY() + 1);
+            Pair<BlockPos, RegistryEntry<Structure>> pair = null;
 
-        boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
-        if (structure.getFeatureGenerationStep() == GenerationStep.Feature.STRONGHOLDS) isUnderground = true;
-        else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_DECORATION) isUnderground = true;
-        else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_STRUCTURES) isUnderground = true;
+            try {
+                pair = exteriorWorld.getChunkManager().getChunkGenerator().locateStructure(
+                    exteriorWorld,
+                    RegistryEntryList.of(structureEntry.get()),
+                    exteriorPos,
+                    256,
+                    false
+                );
+            } catch (Exception ignored) {
+            }
 
-        TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
-        if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
 
-        BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
-        if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
+            if (pair == null) {
+                throwStructureNotify(player, false);
+                return;
+            }
 
-        tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
-        tardis.setDestinationPosition(blockPos);
-        tardis.markConsoleTilesUpdated();
+            boolean isUnderground = exteriorWorld.getRegistryKey() == World.NETHER;
+            if (structure.getFeatureGenerationStep() == GenerationStep.Feature.STRONGHOLDS) isUnderground = true;
+            else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_DECORATION) isUnderground = true;
+            else if (structure.getFeatureGenerationStep() == GenerationStep.Feature.UNDERGROUND_STRUCTURES) isUnderground = true;
+
+            TardisVerticalScanning verticalScanning = TardisVerticalScanning.TOP;
+            if (isUnderground) verticalScanning = TardisVerticalScanning.BOTTOM;
+
+            BlockPos blockPos = pair.getFirst().withY(exteriorWorld.getTopY() - 2);
+            if (isUnderground) blockPos = blockPos.withY(exteriorWorld.getBottomY());
+
+            throwStructureNotify(player, true);
+            tardis.getSystem(TardisSystemMaterialization.class).setVerticalScanning(verticalScanning);
+            tardis.setDestinationPosition(blockPos);
+            tardis.markConsoleTilesUpdated();
+        });
+
         return true;
+    }
+
+    private static boolean throwBiomeNotify(PlayerEntity player, boolean flag) {
+        Text message = Text.translatable("message.dwm.tardis.telepathic_interface.biome." + (flag ? "found" : "not_found"));
+        player.sendMessage(message, true);
+        return flag;
+    }
+
+    private static boolean throwStructureNotify(PlayerEntity player, boolean flag) {
+        Text message = Text.translatable("message.dwm.tardis.telepathic_interface.structure." + (flag ? "found" : "not_found"));
+        player.sendMessage(message, true);
+        return flag;
     }
 }
