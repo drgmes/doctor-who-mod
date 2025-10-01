@@ -294,14 +294,12 @@ public class TardisArsCreatorScreen extends BaseScreen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
-                if (this.isCategory) {
-                    ListWidget.this.parent.setSelectedArsCategory(this);
-                    return false;
-                }
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
 
-                ListWidget.this.parent.setSelectedArsStructure(this);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                if (this.isCategory) ListWidget.this.parent.setSelectedArsCategory(this);
+                else ListWidget.this.parent.setSelectedArsStructure(this);
+                return true;
             }
         }
     }

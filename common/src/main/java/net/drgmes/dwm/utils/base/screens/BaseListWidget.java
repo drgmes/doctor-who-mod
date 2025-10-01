@@ -22,6 +22,9 @@ import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.BaseListEntry> {
+    public static final int SCROLLBAR_WIDTH = 12;
+    public static final int SCROLLBAR_OFFSET = 4;
+
     private final Vector2i pos;
     private final int lineHeight;
     private boolean shouldDrawBackground;
@@ -36,12 +39,17 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
     @Override
     public int getRowWidth() {
-        return this.width;
+        return this.width - SCROLLBAR_WIDTH;
+    }
+
+    @Override
+    public int getRowLeft() {
+        return this.getX() + 2;
     }
 
     @Override
     protected int getDefaultScrollbarX() {
-        return this.getRowRight() - 8;
+        return this.getRowLeft() + this.getRowWidth() + SCROLLBAR_OFFSET;
     }
 
     @Override
@@ -135,9 +143,9 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int delta) {
-            setSelected(this);
-            return false;
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            BaseListWidget.this.setSelected(this);
+            return true;
         }
 
         @Override

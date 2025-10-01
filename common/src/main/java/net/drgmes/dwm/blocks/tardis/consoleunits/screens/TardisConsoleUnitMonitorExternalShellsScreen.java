@@ -206,9 +206,10 @@ public class TardisConsoleUnitMonitorExternalShellsScreen extends BaseTardisCons
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
                 ExternalShellsListWidget.this.parent.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                return true;
             }
         }
     }

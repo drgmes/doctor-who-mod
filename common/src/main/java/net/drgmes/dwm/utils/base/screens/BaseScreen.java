@@ -118,9 +118,9 @@ public abstract class BaseScreen extends Screen implements IBaseScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
-        return super.mouseClicked(mouseX, mouseY, frame);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override

@@ -124,9 +124,10 @@ public class TardisConsoleUnitTelepathicInterfaceMapBannersScreen extends BaseTa
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
                 BannersListWidget.this.parent.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                return true;
             }
         }
     }

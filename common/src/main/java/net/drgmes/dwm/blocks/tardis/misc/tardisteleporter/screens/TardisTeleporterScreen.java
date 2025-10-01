@@ -203,10 +203,12 @@ public class TardisTeleporterScreen extends BaseScreen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
+
                 if (this.isSelected()) EntityTypesListWidget.this.parent.allowedEntityTypes.remove(this.entityType);
                 else EntityTypesListWidget.this.parent.allowedEntityTypes.add(this.entityType);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                return true;
             }
 
             @Override

@@ -209,9 +209,10 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
                 ConsoleRoomsListWidget.this.parent.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                return true;
             }
         }
     }

@@ -108,9 +108,9 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int frame) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
-        return super.mouseClicked(mouseX, mouseY, frame);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     public void back() {

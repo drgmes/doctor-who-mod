@@ -421,9 +421,10 @@ public class TardisConsoleUnitMonitorWaypointsScreen extends BaseTardisConsoleUn
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int delta) {
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
                 WaypointsListWidget.this.parent.setSelected(this);
-                return super.mouseClicked(mouseX, mouseY, delta);
+                return true;
             }
         }
     }
