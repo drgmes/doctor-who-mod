@@ -70,11 +70,6 @@ public class TardisArsCreatorScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(12, 7);
-    }
-
-    @Override
     public boolean shouldCloseOnInventoryKey() {
         return !this.searchField.isFocused();
     }

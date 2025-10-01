@@ -106,7 +106,8 @@ public interface IBaseScreen {
     }
 
     default Vector2i getTitleRenderPos() {
-        return this.getRenderPos(24, 9);
+        Vector2i offset = this.getBackgroundBorderSize();
+        return this.getRenderPos(offset.x - 1, offset.y / 2 - this.getTextRenderer().fontHeight / 2);
     }
 
     default int getTitleBackgroundColor() {
@@ -124,10 +125,12 @@ public interface IBaseScreen {
     }
 
     default void renderTitleBackground(DrawContext context) {
+        TextRenderer textRenderer = this.getTextRenderer();
+        int titleWidth = textRenderer.getWidth(this.getTitleComponent().getString());
         int color = this.getTitleBackgroundColor();
-        int titleWidth = this.getTextRenderer().getWidth(this.getTitleComponent().getString());
-        Vector2i pos1 = new Vector2i(-4, 2).add(this.getTitleRenderPos());
-        Vector2i pos2 = new Vector2i(titleWidth + 9, 5).add(pos1);
+
+        Vector2i pos1 = new Vector2i(-4, 0).add(this.getTitleRenderPos());
+        Vector2i pos2 = new Vector2i(titleWidth + 4 * 2, textRenderer.fontHeight).add(pos1);
         context.fillGradient(pos1.x, pos1.y, pos2.x, pos2.y, color, color);
     }
 

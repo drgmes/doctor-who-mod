@@ -65,11 +65,6 @@ public class TardisTeleporterScreen extends BaseScreen {
     }
 
     @Override
-    public Vector2i getTitleRenderPos() {
-        return this.getRenderPos(12, 7);
-    }
-
-    @Override
     public boolean shouldCloseOnInventoryKey() {
         return !this.xField.isFocused() && !this.yField.isFocused() && !this.zField.isFocused();
     }

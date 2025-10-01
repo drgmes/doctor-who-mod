@@ -108,6 +108,10 @@ public abstract class BaseContainerScreen<C extends ScreenHandler> extends Abstr
     }
 
     @Override
+    public void renderTitleBackground(DrawContext context) {
+    }
+
+    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.onButtonCloseClick(mouseX, mouseY)) this.close();
         return super.mouseClicked(mouseX, mouseY, button);
