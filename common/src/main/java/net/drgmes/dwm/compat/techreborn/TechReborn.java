@@ -21,8 +21,8 @@ public class TechReborn {
         EnergyStorage.SIDED.registerForBlockEntity((blockEntity, direction) -> {
             World world = blockEntity.getWorld();
 
-            if (blockEntity instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                world = tardisExteriorBlockEntity.getOrCreateTardisWorld();
+            if (blockEntity instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity && tardisExteriorBlockEntity.getTardisWorld() instanceof ServerWorld tardisWorld) {
+                world = tardisWorld;
             }
 
             return TechReborn.getOrCreateTardisEnergyStorage(world);

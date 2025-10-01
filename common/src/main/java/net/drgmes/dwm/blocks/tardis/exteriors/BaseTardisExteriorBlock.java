@@ -214,7 +214,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (world.isClient || !entity.canUsePortals(false)) return;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld()).ifPresent((tardis) -> {
+            TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld()).ifPresent((tardis) -> {
                 if (!tardis.isDoorsOpened()) return;
                 entity.tryUsePortal(this, blockPos);
             });
@@ -227,7 +227,7 @@ public abstract class BaseTardisExteriorBlock<C extends BaseTardisExteriorBlockE
         if (!entity.canUsePortals(false)) return null;
 
         if (world.getBlockEntity(blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisExteriorBlockEntity.getOrCreateTardisWorld());
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(tardisExteriorBlockEntity.getTardisWorld());
             if (tardisHolder.isEmpty() || !tardisHolder.get().isDoorsOpened()) return null;
 
             Direction facing = tardisHolder.get().getEntranceFacing();
