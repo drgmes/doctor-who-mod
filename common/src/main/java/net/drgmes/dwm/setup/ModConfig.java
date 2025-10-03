@@ -34,6 +34,10 @@ public class ModConfig {
         public ForgeConfigSpec.ConfigValue<List<? extends String>> dimensionsBlacklist;
         public ForgeConfigSpec.BooleanValue hideTheEndConditionally;
         public ForgeConfigSpec.BooleanValue tardisRecallOperatorOnly;
+        public ForgeConfigSpec.BooleanValue dimensionsAlwaysAvailable;
+        public ForgeConfigSpec.BooleanValue biomesAlwaysAvailable;
+        public ForgeConfigSpec.BooleanValue structuresAlwaysAvailable;
+        public ForgeConfigSpec.BooleanValue filterStructuresByVisitedBiomes;
 
         public Common(ForgeConfigSpec.Builder builder) {
             builder.push("CommonSettings");
@@ -48,7 +52,8 @@ public class ModConfig {
                             "immersive_portals:alternate2",
                             "immersive_portals:alternate3",
                             "immersive_portals:alternate4",
-                            "immersive_portals:alternate5"
+                            "immersive_portals:alternate5",
+                            "ae2:spatial_storage"
                         ), String.class::isInstance);
 
                     hideTheEndConditionally = builder
@@ -60,6 +65,26 @@ public class ModConfig {
                         .comment("Allow only operators to recall the TARDIS by key")
                         .translation("config.dwm.option.tardisRecallOperatorOnly.@Tooltip")
                         .define("tardisRecallOperatorOnly", false);
+
+                    dimensionsAlwaysAvailable = builder
+                        .comment("Allows you to visit any dimension without having to visit them first")
+                        .translation("config.dwm.option.dimensionsAlwaysAvailable.@Tooltip")
+                        .define("dimensionsAlwaysAvailable", false);
+
+                    biomesAlwaysAvailable = builder
+                        .comment("Allows you to visit any biome without having to visit them first")
+                        .translation("config.dwm.option.biomesAlwaysAvailable.@Tooltip")
+                        .define("biomesAlwaysAvailable", false);
+
+                    structuresAlwaysAvailable = builder
+                        .comment("Allows you to visit any structure without having to visit them first")
+                        .translation("config.dwm.option.structuresAlwaysAvailable.@Tooltip")
+                        .define("structuresAlwaysAvailable", false);
+
+                    filterStructuresByVisitedBiomes = builder
+                        .comment("Allows you to visit any structure without having to visit them first")
+                        .translation("config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip")
+                        .define("filterStructuresByVisitedBiomes", true);
                 }
                 builder.pop();
             }

@@ -52,15 +52,15 @@ public record TardisConsoleUnitMonitorConsoleRoomApplyPacket(
                     return;
                 }
 
-                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
-                if (flightSystem.inProgress()) {
-                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
-                    return;
-                }
-
                 TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
                 if (materializationSystem.inProgress() || !materializationSystem.isMaterialized()) {
                     player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+                    return;
+                }
+
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                if (flightSystem.inProgress()) {
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
                     return;
                 }
 

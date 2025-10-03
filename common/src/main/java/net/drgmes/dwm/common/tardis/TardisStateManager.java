@@ -105,6 +105,7 @@ public class TardisStateManager extends PersistentState {
 
     public TardisStateManager() {
         this.addSystem(new TardisSystemConsoleRoom(this));
+        this.addSystem(new TardisSystemResearch(this));
         this.addSystem(new TardisSystemMaterialization(this));
         this.addSystem(new TardisSystemFlight(this));
         this.addSystem(new TardisSystemShields(this));

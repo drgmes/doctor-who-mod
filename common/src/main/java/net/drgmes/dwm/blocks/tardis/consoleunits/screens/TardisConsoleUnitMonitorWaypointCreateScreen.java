@@ -181,7 +181,7 @@ public class TardisConsoleUnitMonitorWaypointCreateScreen extends BaseTardisCons
     }
 
     private String getGeneratedWaypointName() {
-        String dimensionName = CommonHelper.capitaliseAllWords(this.dimension.getValue().getPath().replace("_", " "));
+        String dimensionName = CommonHelper.formatRegistryKey(this.dimension);
         if (this.blockPos == null) return String.format("[%s]", dimensionName);
         return String.format("[%s] %s", dimensionName, this.blockPos.toShortString());
     }

@@ -35,6 +35,18 @@ public record TardisFlightWaypointEntry(
         this(MathHelper.randomUuid(Random.create()).toString(), dimension, blockPos, facing, name, System.currentTimeMillis());
     }
 
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TardisFlightWaypointEntry other)) return false;
+        return this.id.equals(other.id);
+    }
+
     public static TardisFlightWaypointEntry createFromNbt(NbtCompound tag) {
         return new TardisFlightWaypointEntry(
             tag.contains("id") ? tag.getString("id") : MathHelper.randomUuid(Random.create()).toString(),
@@ -55,9 +67,5 @@ public record TardisFlightWaypointEntry(
         tag.putLong("timestamp", this.timestamp);
 
         return tag;
-    }
-
-    public boolean equals(TardisFlightWaypointEntry entry) {
-        return this.id.equals(entry.id);
     }
 }

@@ -1077,9 +1077,16 @@
   "message.dwm.tardis.handbrake.activated": "§cАктивне ручне гальмо",
   "message.dwm.tardis.removed": "ТАРДІС (%s) видалена",
 
+  "message.dwm.tardis.system.research.learned": "§aВивчено нові локації",
+  "message.dwm.tardis.system.research.dimension.learned": "§aВивчено новий вимір: %s",
+  "message.dwm.tardis.system.research.biome.learned": "§aВивчено новий біом: %s",
+  "message.dwm.tardis.system.research.structure.learned": "§aВивчено нову структуру: %s",
+
   "message.dwm.tardis.system.materialization.not_installed": "§eДематеріалізаційна схема §cне встановлена",
   "message.dwm.tardis.system.materialization.safe_position_not_found": "§cБезпечне місце для приземлення не виявлено",
+
   "message.dwm.tardis.system.flight.not_installed": "§eСпрямовуючий модуль §cне встановлено",
+
   "message.dwm.tardis.system.shields.not_installed": "§eГенератор щитів §cне встановлено",
   "message.dwm.tardis.system.shields.not_active": "§eГенератор щитів §cне запущено",
 
@@ -1167,6 +1174,10 @@
 
   "message.dwm.tardis_teleporter.must_be_sneaking": "Для налаштування взаємодійте з блоком, затиснувши Shift",
 
+  "message.dwm.sonic_device.locations.discovered": "§aЗнайдено нові локації",
+  "message.dwm.sonic_device.dimension.discovered": "§aЗнайдено новий вимір: %s",
+  "message.dwm.sonic_device.biome.discovered": "§aЗнайдено новий біом: %s",
+  "message.dwm.sonic_device.structure.discovered": "§aЗнайдено нову структуру: %s",
   "message.dwm.sonic_device.tardis_relocated": "Координати ТАРДІС встановлені на %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Звук звукової викрутки",
@@ -1255,15 +1266,26 @@
 
   "screen.dwm.sonic_device_interface.title": "Інтерфейс налаштування звукового пристрою",
   "screen.dwm.sonic_device_interface.button.mode": "Режим: %s",
+  "screen.dwm.sonic_device_interface.scan.dimensions.title": "Знайдені виміри",
+  "screen.dwm.sonic_device_interface.scan.biomes.title": "Знайдені біоми",
+  "screen.dwm.sonic_device_interface.scan.structures.title": "Знайдені структури",
 
   "argument.dwm.tardis.invalid": "Невірний ідентифікатор ТАРДІС",
   "argument.dwm.tardis.player_present": "Ви знаходитесь всередині",
 
   "config.dwm.title": "Doctor Who Mod - Конфігурація",
   "config.dwm.option.dimensionsBlacklist": "Чорний список вимірів",
-  "config.dwm.option.dimensionsBlacklist.@Tooltip": "Список вимірів, які не будуть доступні у списку вибору вимірів ТАРДІС",
+  "config.dwm.option.dimensionsBlacklist.@Tooltip": "Список вимірів, які не будуть доступні у списку вибору вимірів ТАРДІС.",
   "config.dwm.option.hideTheEndConditionally": "Приховувати Край за замовчуванням",
-  "config.dwm.option.hideTheEndConditionally.@Tooltip": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений",
+  "config.dwm.option.hideTheEndConditionally.@Tooltip": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений.",
   "config.dwm.option.tardisRecallOperatorOnly": "Операторський виклик ТАРДІС",
-  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Дозволити лише операторам викликати ТАРДІС за допомогою ключа"
+  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Дозволити лише операторам викликати ТАРДІС за допомогою ключа.",
+  "config.dwm.option.dimensionsAlwaysAvailable": "Всі виміри завжди в наявності",
+  "config.dwm.option.dimensionsAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-який вимір без необхідності їхнього попереднього відвідування.",
+  "config.dwm.option.biomesAlwaysAvailable": "Всі біоми завжди в наявності",
+  "config.dwm.option.biomesAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-який біом без необхідності їхнього попереднього відвідування.",
+  "config.dwm.option.structuresAlwaysAvailable": "Всі структури завжди в наявності",
+  "config.dwm.option.structuresAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-яку структуру без необхідності їхнього попереднього відвідування.",
+  "config.dwm.option.filterStructuresByVisitedBiomes": "Показувати структури лише вже відвіданих біомів",
+  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Показує структури лише вже відвіданих біомів (якщо structuresAlwaysAvailable = false, то структуру все ще необхідно відвідати окремо. Якщо structuresAlwaysAvailable = true, то відразу показує всі структури, які відносяться до відвіданих біомів)."
 }

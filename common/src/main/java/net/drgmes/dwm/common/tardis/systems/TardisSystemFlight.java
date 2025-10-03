@@ -53,9 +53,12 @@ public class TardisSystemFlight extends TardisBaseSystem {
 
             NbtCompound historyTag = tag.getCompound("history");
             List<String> keys = new ArrayList<>(historyTag.getKeys());
-
             keys.sort(Comparator.comparing((key) -> key));
-            keys.forEach((key) -> this.history.add(TardisFlightHistoryEntry.createFromNbt(historyTag.getCompound(key))));
+
+            keys.forEach((key) -> {
+                TardisFlightHistoryEntry entry = TardisFlightHistoryEntry.createFromNbt(historyTag.getCompound(key));
+                if (!this.history.contains(entry)) this.history.add(entry);
+            });
         }
 
         if (tag.contains("waypoints")) {
@@ -63,9 +66,12 @@ public class TardisSystemFlight extends TardisBaseSystem {
 
             NbtCompound waypointsTag = tag.getCompound("waypoints");
             List<String> keys = new ArrayList<>(waypointsTag.getKeys());
-
             keys.sort(Comparator.comparing((key) -> key));
-            keys.forEach((key) -> this.waypoints.add(TardisFlightWaypointEntry.createFromNbt(waypointsTag.getCompound(key))));
+
+            keys.forEach((key) -> {
+                TardisFlightWaypointEntry entry = TardisFlightWaypointEntry.createFromNbt(waypointsTag.getCompound(key));
+                if (!this.waypoints.contains(entry)) this.waypoints.add(entry);
+            });
         }
     }
 
@@ -77,14 +83,14 @@ public class TardisSystemFlight extends TardisBaseSystem {
         tag.putInt("tick", this.tick);
         tag.putInt("soundTick", this.soundTick);
 
-        AtomicInteger i = new AtomicInteger();
+        AtomicInteger i1 = new AtomicInteger();
         NbtCompound historyTag = new NbtCompound();
-        this.history.forEach((entry) -> historyTag.put(CommonHelper.formatIndexString(i.incrementAndGet()), entry.writeNbt(new NbtCompound())));
+        this.history.forEach((entry) -> historyTag.put(CommonHelper.formatIndexString(i1.incrementAndGet()), entry.writeNbt(new NbtCompound())));
         tag.put("history", historyTag);
 
-        AtomicInteger j = new AtomicInteger();
+        AtomicInteger i2 = new AtomicInteger();
         NbtCompound waypointsTag = new NbtCompound();
-        this.waypoints.forEach((entry) -> waypointsTag.put(CommonHelper.formatIndexString(j.incrementAndGet()), entry.writeNbt(new NbtCompound())));
+        this.waypoints.forEach((entry) -> waypointsTag.put(CommonHelper.formatIndexString(i2.incrementAndGet()), entry.writeNbt(new NbtCompound())));
         tag.put("waypoints", waypointsTag);
 
         return tag;
@@ -183,6 +189,11 @@ public class TardisSystemFlight extends TardisBaseSystem {
         materializationSystem.putCallback((flag) -> {
             this.reset();
             this.applyCallbacks(flag);
+
+            TardisSystemResearch researchSystem = this.tardis.getSystem(TardisSystemResearch.class);
+            researchSystem.updateVisitedStructures(this.initiatorId);
+            researchSystem.updateVisitedBiomes(this.initiatorId);
+            researchSystem.updateVisitedWorlds(this.initiatorId);
 
             this.addHistoryEntry(new TardisFlightHistoryEntry(
                 this.tardis.getCurrentExteriorDimension(),

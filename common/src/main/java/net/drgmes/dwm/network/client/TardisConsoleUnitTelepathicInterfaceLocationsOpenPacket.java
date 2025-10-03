@@ -4,10 +4,13 @@ import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemResearch;
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.network.IPacket;
-import net.drgmes.dwm.setup.ModDimensions;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.TardisHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -29,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 
 public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
     BlockPos blockPos,
@@ -45,7 +47,7 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
     );
 
     public TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(BlockPos blockPos, ServerWorld originWorld, @Nullable ServerWorld destinationWorld) {
-        this(blockPos, createLocationsListFromRegistry(originWorld, destinationWorld));
+        this(blockPos, createLocationsListTag(originWorld, destinationWorld));
     }
 
     @Override
@@ -75,51 +77,52 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
         });
     }
 
-    private static NbtCompound createLocationsListFromRegistry(ServerWorld world, @Nullable ServerWorld destinationWorld) {
-        List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> list = new ArrayList<>();
+    private static NbtCompound createLocationsListTag(ServerWorld world, @Nullable ServerWorld destinationWorld) {
+        NbtCompound tag = new NbtCompound();
+        if (!TardisHelper.isTardisDimension(world)) return tag;
 
-        List<Identifier> biomeIds;
-        Registry<Structure> structureRegistry;
+        Optional<TardisStateManager> tardisHolder = TardisStateManager.get(world);
+        if (tardisHolder.isEmpty()) return tag;
+
+        TardisStateManager tardis = tardisHolder.get();
+        TardisSystemResearch researchSystem = tardis.getSystem(TardisSystemResearch.class);
+
+        List<RegistryKey<Biome>> biomeKeys = researchSystem.getAvailableBiomes();
+        List<RegistryKey<Biome>> biomesByDimensionKeys = null;
 
         if (destinationWorld != null) {
-            Set<RegistryEntry<Biome>> biomeEntries = destinationWorld.getChunkManager().getChunkGenerator().getBiomeSource().getBiomes();
-            biomeIds = biomeEntries.stream().filter((b) -> b.getKey().isPresent()).map((b) -> b.getKey().get().getValue()).toList();
-            structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
-        }
-        else {
-            biomeIds = null;
-            structureRegistry = null;
+            Set<RegistryEntry<Biome>> biomesByDimensionEntries = destinationWorld.getChunkManager().getChunkGenerator().getBiomeSource().getBiomes();
+            biomesByDimensionKeys = biomesByDimensionEntries.stream().filter((entry) -> entry.getKey().isPresent()).map((entry) -> entry.getKey().get()).toList();
+            biomeKeys = biomeKeys.stream().filter(biomesByDimensionKeys::contains).toList();
         }
 
-        list.addAll(getLocationsForRegistry(
-            TardisTelepathicInterfaceDataType.BIOME,
-            RegistryKeys.BIOME,
-            world,
-            (entry) -> (
-                !entry.getValue().equals(ModDimensions.ModDimensionTypes.TARDIS.getValue()) && (biomeIds == null || biomeIds.contains(entry.getValue()))
-            )
-        ));
+        final List<RegistryKey<Biome>> finalBiomeKeys = biomeKeys;
+        final List<RegistryKey<Biome>> finalBiomesByDimensionKeys = biomesByDimensionKeys;
+        Registry<Structure> structureRegistry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
 
-        list.addAll(getLocationsForRegistry(
-            TardisTelepathicInterfaceDataType.STRUCTURE,
-            RegistryKeys.STRUCTURE,
-            world,
-            (entry) -> {
-                boolean flag = false;
+        List<RegistryKey<Structure>> structureKeys = researchSystem.getAvailableStructures().stream().filter((key) -> {
+            Structure structure = structureRegistry.get(key);
+            if (structure == null) return false;
 
-                if (structureRegistry != null) {
-                    Structure structure = structureRegistry.get(entry.getValue());
-                    if (structure != null) {
-                        flag = structure.getValidBiomes().stream().anyMatch((b) -> b.getKey().isPresent() && biomeIds.contains(b.getKey().get().getValue()));
-                    }
-                }
+            return structure.getValidBiomes().stream().anyMatch((biome) -> {
+                if (biome.getKey().isEmpty()) return false;
+                if (ModConfig.COMMON.filterStructuresByVisitedBiomes.get()) return finalBiomeKeys.contains(biome.getKey().get());
+                if (destinationWorld != null) return finalBiomesByDimensionKeys.contains(biome.getKey().get());
+                return false;
+            });
+        }).toList();
 
-                return flag;
-            }
-        ));
+        biomeKeys = new ArrayList<>(biomeKeys);
+        biomeKeys.sort(Comparator.comparing((key) -> key.getValue().getPath()));
+
+        structureKeys = new ArrayList<>(structureKeys);
+        structureKeys.sort(Comparator.comparing((key) -> key.getValue().getPath()));
+
+        List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> list = new ArrayList<>();
+        list.addAll(biomeKeys.stream().map((entry) -> Map.entry(entry.getValue(), TardisTelepathicInterfaceDataType.BIOME)).toList());
+        list.addAll(structureKeys.stream().map((entry) -> Map.entry(entry.getValue(), TardisTelepathicInterfaceDataType.STRUCTURE)).toList());
 
         AtomicInteger i = new AtomicInteger();
-        NbtCompound tag = new NbtCompound();
         list.forEach((entry) -> {
             NbtCompound pair = new NbtCompound();
             pair.putString("id", entry.getKey().toString());
@@ -128,19 +131,5 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
         });
 
         return tag;
-    }
-
-    private static <T> List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> getLocationsForRegistry(TardisTelepathicInterfaceDataType dataType, RegistryKey<Registry<T>> registryKey, ServerWorld world, Function<RegistryKey<T>, Boolean> entryChecker) {
-        Registry<T> registry = world.getRegistryManager().get(registryKey);
-
-        List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> list = new ArrayList<>(
-            registry.getKeys().stream().filter(entryChecker::apply).map((res) -> Map.entry(res.getValue(), dataType)).toList()
-        );
-
-        if (!list.isEmpty()) {
-            list.sort(Comparator.comparing(a -> a.getKey().getPath()));
-        }
-
-        return list;
     }
 }

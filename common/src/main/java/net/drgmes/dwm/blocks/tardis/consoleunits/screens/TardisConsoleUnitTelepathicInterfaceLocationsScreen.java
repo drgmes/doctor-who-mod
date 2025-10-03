@@ -61,7 +61,7 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         this.addDrawableChild(this.searchField);
 
         this.isInited = true;
-        this.setInitialFocus(this.searchField);
+        if (!this.locations.isEmpty()) this.setInitialFocus(this.searchField);
         this.update();
     }
 

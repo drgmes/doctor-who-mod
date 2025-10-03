@@ -4,25 +4,25 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemResearch;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemShields;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlFlags;
 import net.drgmes.dwm.enums.TardisConsoleUnitControlRole;
-import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.setup.ModSounds;
-import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.minecraft.entity.boss.dragon.EnderDragonFight;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 
 public class TardisConsoleControlsStorage {
     public final Map<TardisConsoleUnitControlRole, Object> values = new HashMap<>();
@@ -76,7 +76,7 @@ public class TardisConsoleControlsStorage {
         Object initialValue = this.values.get(controlRole);
 
         Object value = switch (controlRole.type) {
-            case BOOLEAN ->  this.getUpdatedBoolean(controlRole, hand, initialValue);
+            case BOOLEAN -> this.getUpdatedBoolean(controlRole, hand, initialValue);
             case BOOLEAN_DIRECT -> this.getUpdatedBooleanDirect(controlRole, hand, initialValue);
             case NUMBER -> this.getUpdatedNumber(controlRole, hand, initialValue);
             case NUMBER_DIRECT -> this.getUpdatedNumberDirect(controlRole, hand, initialValue);
@@ -92,8 +92,8 @@ public class TardisConsoleControlsStorage {
     }
 
     public void applyDataFromTardis(TardisStateManager tardis) {
-        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
         TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
         TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
 
         this.values.put(TardisConsoleUnitControlRole.STARTER, flightSystem.inProgress());
@@ -122,8 +122,9 @@ public class TardisConsoleControlsStorage {
     public boolean applyDataToTardis(TardisStateManager tardis, TardisConsoleUnitControlRole controlRole, PlayerEntity player) {
         Object value = this.get(controlRole);
 
-        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+        TardisSystemResearch researchSystem = tardis.getSystem(TardisSystemResearch.class);
         TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+        TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
         TardisSystemShields shieldsSystem = tardis.getSystem(TardisSystemShields.class);
 
         boolean isUpdated = switch (controlRole) {
@@ -177,7 +178,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case FACING -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) {
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) {
                     this.values.put(TardisConsoleUnitControlRole.FACING, switch (tardis.getDestinationExteriorFacing()) {
                         case EAST -> 1;
                         case SOUTH -> 2;
@@ -208,7 +209,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case XSET -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int xSet = (int) value;
                 if (xSet != 0) tardis.setDestinationPosition(xSet > 0 ? tardis.getDestinationExteriorPosition().east(tardis.getXYZStep()) : tardis.getDestinationExteriorPosition().west(tardis.getXYZStep()));
@@ -216,7 +217,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case YSET -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int ySet = (int) value;
                 if (ySet != 0) tardis.setDestinationPosition(ySet > 0 ? tardis.getDestinationExteriorPosition().up(tardis.getXYZStep()) : tardis.getDestinationExteriorPosition().down(tardis.getXYZStep()));
@@ -224,7 +225,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case ZSET -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int zSet = (int) value;
                 if (zSet != 0) tardis.setDestinationPosition(zSet > 0 ? tardis.getDestinationExteriorPosition().south(tardis.getXYZStep()) : tardis.getDestinationExteriorPosition().north(tardis.getXYZStep()));
@@ -232,7 +233,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case RANDOMIZER -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int randomizer = (int) value;
                 if (randomizer == 0) yield false;
@@ -249,43 +250,25 @@ public class TardisConsoleControlsStorage {
             }
 
             case DIM_PREV, DIM_NEXT -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int dim = (int) value;
                 if (dim == 0) yield false;
 
-                Iterable<ServerWorld> worlds = tardis.getWorld().getServer().getWorlds();
-                List<RegistryKey<World>> worldKeys = new ArrayList<>();
+                List<RegistryKey<World>> worldKeys = researchSystem.getAvailableDimensions();
+                if (worldKeys.isEmpty()) yield false;
 
-                worlds.forEach((world) -> {
-                    if (TardisHelper.isTardisDimension(world)) return;
-                    if (!world.getServer().isWorldAllowed(world)) return;
-                    if (world.getRegistryKey() == tardis.getWorld().getRegistryKey()) return;
-                    if (ModConfig.COMMON.dimensionsBlacklist.get().contains(world.getRegistryKey().getValue().toString())) return;
+                int index = worldKeys.contains(tardis.getDestinationExteriorDimension()) ? worldKeys.indexOf(tardis.getDestinationExteriorDimension()) : 0;
+                index = index + (controlRole == TardisConsoleUnitControlRole.DIM_PREV ? -1 : 1);
+                index %= worldKeys.size();
+                index = index < 0 ? worldKeys.size() - 1 : index;
 
-                    if (world.getRegistryKey() == World.END) {
-                        EnderDragonFight enderDragonFight = world.getEnderDragonFight();
-                        boolean enderDragonWasKilled = enderDragonFight != null && enderDragonFight.hasPreviouslyKilled() && !enderDragonFight.toData().needsStateScanning();
-                        if (!enderDragonWasKilled && ModConfig.COMMON.hideTheEndConditionally.get()) return;
-                    }
-
-                    worldKeys.add(world.getRegistryKey());
-                });
-
-                if (!worldKeys.isEmpty()) {
-                    int index = worldKeys.contains(tardis.getDestinationExteriorDimension()) ? worldKeys.indexOf(tardis.getDestinationExteriorDimension()) : 0;
-                    index = index + (controlRole == TardisConsoleUnitControlRole.DIM_PREV ? -1 : 1);
-                    index %= worldKeys.size();
-                    index = index < 0 ? worldKeys.size() - 1 : index;
-
-                    tardis.setDestinationDimension(worldKeys.get(index));
-                }
-
+                tardis.setDestinationDimension(worldKeys.get(index));
                 yield true;
             }
 
             case RESET_TO_PREV -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int resetToPrev = (int) value;
                 if (resetToPrev == 0) yield false;
@@ -297,7 +280,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case RESET_TO_CURR -> {
-                if (!flightSystem.isEnabled() || flightSystem.isInFlight()) yield false;
+                if (!flightSystem.isEnabled() || flightSystem.inProgress()) yield false;
 
                 int resetToCurr = (int) value;
                 if (resetToCurr == 0) yield false;
@@ -309,7 +292,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case FUEL_HARVESTING -> {
-                if (flightSystem.isInFlight()) {
+                if (flightSystem.inProgress()) {
                     this.values.put(TardisConsoleUnitControlRole.FUEL_HARVESTING, tardis.isFuelHarvesting());
                     yield false;
                 }
@@ -319,7 +302,7 @@ public class TardisConsoleControlsStorage {
             }
 
             case ENERGY_HARVESTING -> {
-                if (flightSystem.isInFlight()) {
+                if (flightSystem.inProgress()) {
                     this.values.put(TardisConsoleUnitControlRole.ENERGY_HARVESTING, tardis.isEnergyHarvesting());
                     yield false;
                 }

@@ -97,14 +97,24 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
     }
 
     public abstract class BaseListEntry extends Entry<BaseListEntry> {
-        public Formatting chevronFormat;
-        public Formatting selectedItemFormat;
+        public final Vector2i offset;
+        public final Formatting chevronFormat;
+        public final Formatting selectedItemFormat;
 
         public abstract Text getText();
 
-        public BaseListEntry(Formatting chevronFormat, Formatting selectedItemFormat) {
+        public BaseListEntry(Vector2i offset, Formatting chevronFormat, Formatting selectedItemFormat) {
+            this.offset = offset;
             this.chevronFormat = chevronFormat;
             this.selectedItemFormat = selectedItemFormat;
+        }
+
+        public BaseListEntry(Formatting chevronFormat, Formatting selectedItemFormat) {
+            this(new Vector2i(0, 0), chevronFormat, selectedItemFormat);
+        }
+
+        public BaseListEntry(Vector2i offset) {
+            this(offset, Formatting.WHITE, Formatting.RESET);
         }
 
         public BaseListEntry() {
@@ -112,14 +122,13 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         }
 
         @Override
-        public void render(DrawContext context, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
-            MutableText text = this.getText().copy();
+        public boolean isFocused() {
+            return false;
+        }
 
-            if (this.isSelected()) text = this.getSelectedPrependText().append(text.formatted(this.selectedItemFormat));
-            else text = this.getPrependText().append(text);
-
-            Vector2i pos = new Vector2i(left + lineHeight, top + 2);
-            RenderHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
+        @Override
+        public List<? extends Element> children() {
+            return Collections.emptyList();
         }
 
         @Override
@@ -138,23 +147,28 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
         }
 
         @Override
-        public List<? extends Element> children() {
-            return Collections.emptyList();
-        }
-
-        @Override
         public boolean mouseClicked(double mouseX, double mouseY, int button) {
             BaseListWidget.this.setSelected(this);
             return true;
         }
 
         @Override
-        public boolean isFocused() {
-            return false;
+        public void render(DrawContext context, int entryIdx, int top, int left, int entryWidth, int height, int mouseX, int mouseY, boolean flag, float partialTick) {
+            MutableText text = this.getText().copy();
+
+            if (this.isSelected()) text = this.getSelectedPrependText().append(text.formatted(this.selectedItemFormat));
+            else text = this.getPrependText().append(text);
+
+            Vector2i pos = new Vector2i(left + lineHeight, top + 2);
+            RenderHelper.drawTextClipped(text, client.textRenderer, context, pos, width, 0xFFFFFF);
         }
 
-        public boolean isSelected() {
-            return getSelectedOrNull() == this;
+        public int getHeight() {
+            return BaseListWidget.this.itemHeight;
+        }
+
+        public Vector2i getOffset() {
+            return this.offset;
         }
 
         public MutableText getPrependText() {
@@ -163,6 +177,10 @@ public abstract class BaseListWidget extends ElementListWidget<BaseListWidget.Ba
 
         public MutableText getSelectedPrependText() {
             return Text.empty().append(Text.literal("> ").formatted(this.chevronFormat, Formatting.BOLD));
+        }
+
+        public boolean isSelected() {
+            return getSelectedOrNull() == this;
         }
     }
 }

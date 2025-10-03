@@ -2,8 +2,13 @@ package net.drgmes.dwm.common.sonicdevice.modes.scan;
 
 import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.common.sonicdevice.modes.BaseSonicDeviceMode;
+import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemResearch;
 import net.drgmes.dwm.network.client.SonicDeviceUpdatePacket;
+import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.DimensionHelper;
+import net.drgmes.dwm.utils.helpers.WorldHelper;
 import net.minecraft.block.BeehiveBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
@@ -19,7 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -29,9 +36,12 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.structure.Structure;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SonicDeviceScanMode extends BaseSonicDeviceMode {
@@ -40,11 +50,15 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
     @Override
     public ActionResult interactWithBlockNative(World world, PlayerEntity player, EquipmentSlot slot, BlockHitResult hitResult) {
         if (!checkIsValidHitBlock(world.getBlockState(hitResult.getBlockPos()))) return ActionResult.PASS;
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (!(world instanceof ServerWorld serverWorld)) return ActionResult.SUCCESS;
 
         BlockPos blockPos = hitResult.getBlockPos();
         BlockState blockState = world.getBlockState(blockPos);
         BlockEntity blockEntity = world.getBlockEntity(blockPos);
+
+        this.discoverDimensions(serverWorld, blockPos, player, slot);
+        this.discoverBiomes(serverWorld, blockPos, player, slot);
+        this.discoverStructures(serverWorld, blockPos, player, slot);
 
         List<Text> lines = new ArrayList<>();
         MutableText title = blockState.getBlock().getName().copy().formatted(Formatting.AQUA);
@@ -124,6 +138,54 @@ public class SonicDeviceScanMode extends BaseSonicDeviceMode {
 
         updateSonicDeviceData((ServerPlayerEntity) player, slot, title, lines);
         return ActionResult.SUCCESS;
+    }
+
+    private void discoverDimensions(ServerWorld serverWorld, BlockPos blockPos, PlayerEntity player, EquipmentSlot slot) {
+        if (ModConfig.COMMON.dimensionsAlwaysAvailable.get()) return;
+
+        ItemStack itemStack = player.getEquippedStack(slot);
+        String tardisId = SonicDevice.getTardisId(player.getEquippedStack(slot));
+
+        if (tardisId != null && !tardisId.isEmpty()) {
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(DimensionHelper.getModWorld(tardisId, player.getServer()));
+            if (tardisHolder.isEmpty() || tardisHolder.get().getSystem(TardisSystemResearch.class).hasVisitedWorld(serverWorld.getRegistryKey())) return;
+        }
+
+        SonicDevice.addDiscoveredWorld(itemStack, player, serverWorld.getRegistryKey());
+    }
+
+    private void discoverBiomes(ServerWorld serverWorld, BlockPos blockPos, PlayerEntity player, EquipmentSlot slot) {
+        if (ModConfig.COMMON.biomesAlwaysAvailable.get()) return;
+
+        Optional<RegistryKey<Biome>> biomeKeyHolder = WorldHelper.locateBiome(serverWorld, blockPos);
+        if (biomeKeyHolder.isEmpty()) return;
+
+        ItemStack itemStack = player.getEquippedStack(slot);
+        String tardisId = SonicDevice.getTardisId(player.getEquippedStack(slot));
+
+        if (tardisId != null && !tardisId.isEmpty()) {
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(DimensionHelper.getModWorld(tardisId, player.getServer()));
+            if (tardisHolder.isEmpty() || tardisHolder.get().getSystem(TardisSystemResearch.class).hasVisitedBiome(biomeKeyHolder.get())) return;
+        }
+
+        SonicDevice.addDiscoveredBiome(itemStack, player, biomeKeyHolder.get());
+    }
+
+    private void discoverStructures(ServerWorld serverWorld, BlockPos blockPos, PlayerEntity player, EquipmentSlot slot) {
+        if (ModConfig.COMMON.structuresAlwaysAvailable.get()) return;
+
+        Optional<RegistryKey<Structure>> structureKeyHolder = WorldHelper.locateStructure(serverWorld, blockPos);
+        if (structureKeyHolder.isEmpty()) return;
+
+        ItemStack itemStack = player.getEquippedStack(slot);
+        String tardisId = SonicDevice.getTardisId(player.getEquippedStack(slot));
+
+        if (tardisId != null && !tardisId.isEmpty()) {
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(DimensionHelper.getModWorld(tardisId, player.getServer()));
+            if (tardisHolder.isEmpty() || tardisHolder.get().getSystem(TardisSystemResearch.class).hasVisitedStructure(structureKeyHolder.get())) return;
+        }
+
+        SonicDevice.addDiscoveredStructure(itemStack, player, structureKeyHolder.get());
     }
 
     private void updateSonicDeviceData(ServerPlayerEntity player, EquipmentSlot slot, Text title, List<Text> lines) {

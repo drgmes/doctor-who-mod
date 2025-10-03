@@ -46,12 +46,4 @@ public record TardisFlightHistoryEntry(
 
         return tag;
     }
-
-    public boolean equals(TardisFlightHistoryEntry entry) {
-        if (!this.dimension.toString().equals(entry.dimension.toString())) return false;
-        if (!this.blockPos.equals(entry.blockPos)) return false;
-        if (!this.facing.equals(entry.facing)) return false;
-        if (this.timestamp != entry.timestamp) return false;
-        return true;
-    }
 }

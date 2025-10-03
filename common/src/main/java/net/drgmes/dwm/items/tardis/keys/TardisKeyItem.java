@@ -120,8 +120,6 @@ public class TardisKeyItem extends Item {
 
         if (keyTag.contains("tardisId")) {
             String tardisId = keyTag.getString("tardisId");
-
-            tooltips.add(Text.empty());
             tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tardisId.substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
 
             if (keyTag.contains("tardisPos")) {

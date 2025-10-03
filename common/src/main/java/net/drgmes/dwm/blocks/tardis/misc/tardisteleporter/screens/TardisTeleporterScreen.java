@@ -198,12 +198,13 @@ public class TardisTeleporterScreen extends BaseScreen {
             }
 
             @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
-                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
+            public MutableText getPrependText() {
+                return Text.empty().append(Text.literal("[ ] ").formatted(this.chevronFormat, Formatting.BOLD));
+            }
 
-                if (this.isSelected()) EntityTypesListWidget.this.parent.allowedEntityTypes.remove(this.entityType);
-                else EntityTypesListWidget.this.parent.allowedEntityTypes.add(this.entityType);
-                return true;
+            @Override
+            public MutableText getSelectedPrependText() {
+                return Text.empty().append(Text.literal("[X] ").formatted(this.chevronFormat, Formatting.BOLD));
             }
 
             @Override
@@ -212,13 +213,12 @@ public class TardisTeleporterScreen extends BaseScreen {
             }
 
             @Override
-            public MutableText getPrependText() {
-                return Text.empty().append(Text.literal("[ ] ").formatted(this.chevronFormat, Formatting.BOLD));
-            }
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
 
-            @Override
-            public MutableText getSelectedPrependText() {
-                return Text.empty().append(Text.literal("[X] ").formatted(this.chevronFormat, Formatting.BOLD));
+                if (this.isSelected()) EntityTypesListWidget.this.parent.allowedEntityTypes.remove(this.entityType);
+                else EntityTypesListWidget.this.parent.allowedEntityTypes.add(this.entityType);
+                return true;
             }
         }
     }

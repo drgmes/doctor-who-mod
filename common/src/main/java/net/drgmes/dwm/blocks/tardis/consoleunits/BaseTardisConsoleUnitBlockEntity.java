@@ -163,8 +163,8 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 if (tardisHolder.isEmpty() || this.throwNotifyIfLocked(tardisHolder.get(), player)) return;
 
                 TardisStateManager tardis = tardisHolder.get();
-                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
                 TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
 
                 if (!flightSystem.isEnabled()) {
                     player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
@@ -219,8 +219,6 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
             case SONIC_SCREWDRIVER_SLOT -> {
                 if (hand != Hand.OFF_HAND) return;
-                SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
-
                 boolean isChanged = false;
 
                 if (this.sonicScrewdriverItemStack.isEmpty()) {
@@ -253,7 +251,15 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
                 }
 
                 if (isChanged) {
-                    SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
+                    String currentTardisId = DimensionHelper.getWorldId(player.getWorld());
+                    String tardisId = SonicDevice.getTardisId(this.sonicScrewdriverItemStack);
+
+                    if (tardisId == null || tardisId.isEmpty()) {
+                        SonicDevice.setTardisId(this.sonicScrewdriverItemStack, serverWorld);
+                        tardisId = currentTardisId;
+                    }
+
+                    SonicDevice.loadDiscoveredLocations(this.sonicScrewdriverItemStack, player, tardisId, currentTardisId);
                     this.sendSonicScrewdriverSlotUpdatePacket(serverWorld);
                     this.markDirty();
                 }

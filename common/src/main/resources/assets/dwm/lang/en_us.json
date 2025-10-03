@@ -1077,9 +1077,16 @@
   "message.dwm.tardis.handbrake.activated": "§cHandbrake is active",
   "message.dwm.tardis.removed": "TARDIS (%s) removed",
 
+  "message.dwm.tardis.system.research.learned": "§aNew locations learned",
+  "message.dwm.tardis.system.research.dimension.learned": "§aNew dimension learned: %s",
+  "message.dwm.tardis.system.research.biome.learned": "§aNew biome learned: %s",
+  "message.dwm.tardis.system.research.structure.learned": "§aNew structure learned: %s",
+
   "message.dwm.tardis.system.materialization.not_installed": "§eDematerialization Circuit §cNot Installed",
   "message.dwm.tardis.system.materialization.safe_position_not_found": "§cNo safe landing position was found",
+
   "message.dwm.tardis.system.flight.not_installed": "§eDirectional Unit §cNot Installed",
+
   "message.dwm.tardis.system.shields.not_installed": "§eShields Generator §cNot Installed",
   "message.dwm.tardis.system.shields.not_active": "§eShields Generator §cNot Active",
 
@@ -1167,6 +1174,10 @@
 
   "message.dwm.tardis_teleporter.must_be_sneaking": "To configure, interact with the block while holding down Shift",
 
+  "message.dwm.sonic_device.locations.discovered": "§aNew locations discovered",
+  "message.dwm.sonic_device.dimension.discovered": "§aNew dimension discovered: %s",
+  "message.dwm.sonic_device.biome.discovered": "§aNew biome discovered: %s",
+  "message.dwm.sonic_device.structure.discovered": "§aNew structure discovered: %s",
   "message.dwm.sonic_device.tardis_relocated": "TARDIS Destinated to %s %s %s",
 
   "message.dwm.sound.sonic_screwdriver.main": "Sonic Screwdriver sounds",
@@ -1255,15 +1266,26 @@
 
   "screen.dwm.sonic_device_interface.title": "Sonic Device Settings Interface",
   "screen.dwm.sonic_device_interface.button.mode": "Mode: %s",
+  "screen.dwm.sonic_device_interface.scan.dimensions.title": "Discovered Dimensions",
+  "screen.dwm.sonic_device_interface.scan.biomes.title": "Discovered Biomes",
+  "screen.dwm.sonic_device_interface.scan.structures.title": "Discovered Structures",
 
   "argument.dwm.tardis.invalid": "Invalid TARDIS ID",
   "argument.dwm.tardis.player_present": "You are inside",
 
   "config.dwm.title": "Doctor Who Mod - Config",
   "config.dwm.option.dimensionsBlacklist": "Dimensions Blacklist",
-  "config.dwm.option.dimensionsBlacklist.@Tooltip": "List of Dimensions that will not be displayed in the TARDIS Dimensions List",
+  "config.dwm.option.dimensionsBlacklist.@Tooltip": "List of Dimensions that will not be displayed in the TARDIS Dimensions List.",
   "config.dwm.option.hideTheEndConditionally": "Hide the End conditionally",
-  "config.dwm.option.hideTheEndConditionally.@Tooltip": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated",
+  "config.dwm.option.hideTheEndConditionally.@Tooltip": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated.",
   "config.dwm.option.tardisRecallOperatorOnly": "Only operator can recall TARDIS",
-  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Allow only operators to recall the TARDIS by key"
+  "config.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Allow only operators to recall the TARDIS by key.",
+  "config.dwm.option.dimensionsAlwaysAvailable": "All Dimensions always available",
+  "config.dwm.option.dimensionsAlwaysAvailable.@Tooltip": "Allows you to visit any dimension without having to visit them first.",
+  "config.dwm.option.biomesAlwaysAvailable": "All Biomes always available",
+  "config.dwm.option.biomesAlwaysAvailable.@Tooltip": "Allows you to visit any biome without having to visit them first.",
+  "config.dwm.option.structuresAlwaysAvailable": "All Structures always available",
+  "config.dwm.option.structuresAlwaysAvailable.@Tooltip": "Allows you to visit any structure without having to visit them first.",
+  "config.dwm.option.filterStructuresByVisitedBiomes": "Show structures only for biomes that have already been visited",
+  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Shows only structures of already visited biomes (if structuresAlwaysAvailable = false, the structure still needs to be visited separately. If structuresAlwaysAvailable = true, all structures related to visited biomes are immediately shown)."
 }

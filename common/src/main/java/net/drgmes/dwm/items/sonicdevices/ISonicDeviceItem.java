@@ -64,16 +64,12 @@ public interface ISonicDeviceItem {
     }
 
     default void fillTooltip(ItemStack itemStack, List<Text> tooltips) {
-        tooltips.add(Text.empty());
+        String tardisId = SonicDevice.getTardisId(itemStack);
+        if (!tardisId.isEmpty()) tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tardisId.substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
 
         MutableText mode = SonicDevice.getInteractionMode(itemStack).getTitle().copy();
         MutableText modeText = DWM.TEXTS.SONIC_DEVICE_MODE_TITLE.apply(mode.formatted(Formatting.GOLD)).copy();
         tooltips.add(modeText.formatted(Formatting.GRAY));
-
-        String tardisId = SonicDevice.getTardisId(itemStack);
-        if (!tardisId.isEmpty()) {
-            tooltips.add(DWM.TEXTS.TARDIS_ID.apply(tardisId.substring(0, 8), Formatting.GOLD).copy().formatted(Formatting.GRAY));
-        }
     }
 
     default TypedActionResult<ItemStack> useSonicDevice(World world, PlayerEntity player, EquipmentSlot slot, boolean isAlternativeAction) {

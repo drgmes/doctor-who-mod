@@ -32,6 +32,11 @@ public class TardisHelper {
         return dimensionTypeRegistryKey.isPresent() && dimensionTypeRegistryKey.get().equals(ModDimensionTypes.TARDIS);
     }
 
+    public static boolean isTardisDimension(RegistryKey<World> worldKey) {
+        if (worldKey == null) return false;
+        return worldKey.getValue().getNamespace().equals(DWM.MODID);
+    }
+
     public static ServerWorld getOrCreateTardisWorld(String id, RegistryKey<World> dimension, BlockPos blockPos, Direction direction, MinecraftServer server) {
         ServerWorld tardisWorld = DimensionHelper.getOrCreateWorld(id, server, TardisHelper::tardisDimensionBuilder);
 

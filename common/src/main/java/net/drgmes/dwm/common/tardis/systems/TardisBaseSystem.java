@@ -34,6 +34,6 @@ public abstract class TardisBaseSystem {
 
     protected void notify(Text message, UUID playerId) {
         EntityHelper.sendMessage(this.tardis.getWorld(), this.tardis.getOwner(), message);
-        if (this.tardis.getOwner() != playerId) EntityHelper.sendMessage(this.tardis.getWorld(), playerId, message);
+        if (playerId != null && playerId != this.tardis.getOwner()) EntityHelper.sendMessage(this.tardis.getWorld(), playerId, message);
     }
 }

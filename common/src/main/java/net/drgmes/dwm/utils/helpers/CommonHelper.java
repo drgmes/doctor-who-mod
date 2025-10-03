@@ -8,6 +8,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 
 import java.io.IOException;
@@ -77,6 +78,10 @@ public class CommonHelper {
 
     public static String formatIndexString(int index) {
         return formatIndexString(index, 5);
+    }
+
+    public static String formatRegistryKey(RegistryKey<?> key) {
+        return CommonHelper.capitaliseAllWords(key.getValue().getPath().replace("_", " "));
     }
 
     public static Identifier loadRemoteImage(String id, URL url) {

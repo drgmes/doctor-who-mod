@@ -1,19 +1,28 @@
 package net.drgmes.dwm.utils.helpers;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.FluidTags;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
+import net.minecraft.structure.StructurePiece;
+import net.minecraft.structure.StructureStart;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockBox;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.structure.Structure;
 
+import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class WorldHelper {
@@ -99,5 +108,51 @@ public class WorldHelper {
 
     public static void clearArea(World world, BlockBox aabb) {
         fillArea(world, aabb, Blocks.AIR.getDefaultState());
+    }
+
+    public static Optional<RegistryKey<Biome>> locateBiome(ServerWorld world, BlockPos blockPos) {
+        if (world == null || blockPos == null) return Optional.empty();
+        Pair<BlockPos, RegistryEntry<Biome>> result = world.locateBiome((entry) -> true, blockPos, 1, 1, 1);
+        return result == null ? Optional.empty() : result.getSecond().getKey();
+    }
+
+    public static Optional<RegistryKey<Structure>> locateStructure(ServerWorld world, BlockPos blockPos) {
+        if (world == null || blockPos == null) return Optional.empty();
+
+        int radius = 3;
+        Registry<Structure> registry = world.getRegistryManager().get(RegistryKeys.STRUCTURE);
+        ChunkPos centerChunkPos = new ChunkPos(new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()));
+
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                ChunkPos chunkPos = new ChunkPos(centerChunkPos.x + x, centerChunkPos.z + z);
+                Collection<StructureStart> structureStarts = world.getChunk(chunkPos.x, chunkPos.z).getStructureStarts().values();
+                if (structureStarts.isEmpty()) continue;
+
+                for (StructureStart structureStart : structureStarts) {
+                    if (structureStart == null || !structureStart.hasChildren()) continue;
+
+                    BlockBox structureBox = structureStart.getBoundingBox();
+                    if (structureBox == null) continue;
+
+                    if (blockPos.getY() >= structureBox.getMinY() && blockPos.getY() <= structureBox.getMaxY()) {
+                        for (StructurePiece piece : structureStart.getChildren()) {
+                            BlockBox pieceBox = piece.getBoundingBox();
+                            if (pieceBox == null) continue;
+
+                            if (blockPos.getY() >= pieceBox.getMinY() && blockPos.getY() <= pieceBox.getMaxY()) {
+                                Structure structure = structureStart.getStructure();
+                                if (structure == null) continue;
+
+                                Optional<RegistryKey<Structure>> structureKeyHolder = registry.getKey(structure);
+                                if (structureKeyHolder.isPresent()) return structureKeyHolder;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return Optional.empty();
     }
 }

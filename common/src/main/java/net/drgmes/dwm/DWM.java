@@ -73,9 +73,16 @@ public class DWM {
         public static final Text TARDIS_DOORS_UNLOCKED = Text.translatable("message.dwm.tardis.control.role.doors.unlocked");
         public static final Function<String, Text> TARDIS_REMOVED = (id) -> Text.translatable("message.dwm.tardis.removed", Text.literal(id).formatted(Formatting.AQUA));
 
+        public static final Text RESEARCH_SYSTEM_LEARNED = Text.translatable("message.dwm.tardis.system.research.learned");
+        public static final Function<String, Text> RESEARCH_SYSTEM_DIMENSION_LEARNED = (name) -> Text.translatable("message.dwm.tardis.system.research.dimension.learned", Text.literal(name).formatted(Formatting.AQUA));
+        public static final Function<String, Text> RESEARCH_SYSTEM_BIOME_LEARNED = (name) -> Text.translatable("message.dwm.tardis.system.research.biome.learned", Text.literal(name).formatted(Formatting.AQUA));
+        public static final Function<String, Text> RESEARCH_SYSTEM_STRUCTURE_LEARNED = (name) -> Text.translatable("message.dwm.tardis.system.research.structure.learned", Text.literal(name).formatted(Formatting.AQUA));
+
         public static final Text MATERIALIZATION_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.materialization.not_installed");
         public static final Text MATERIALIZATION_SYSTEM_SAFE_POSITION_NOT_FOUND = Text.translatable("message.dwm.tardis.system.materialization.safe_position_not_found");
+
         public static final Text FLIGHT_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.flight.not_installed");
+
         public static final Text SHIELDS_SYSTEM_NOT_INSTALLED = Text.translatable("message.dwm.tardis.system.shields.not_installed");
         public static final Text SHIELDS_SYSTEM_NOT_ACTIVE = Text.translatable("message.dwm.tardis.system.shields.not_active");
 
@@ -110,6 +117,10 @@ public class DWM {
 
         public static final Text TARDIS_TELEPORTER_MUST_BE_SNEAKING = Text.translatable("message.dwm.tardis_teleporter.must_be_sneaking");
 
+        public static final Text SONIC_DEVICE_LOCATIONS_DISCOVERED = Text.translatable("message.dwm.sonic_device.locations.discovered");
+        public static final Function<String, Text> SONIC_DEVICE_DIMENSION_DISCOVERED = (name) -> Text.translatable("message.dwm.sonic_device.dimension.discovered", Text.literal(name).formatted(Formatting.AQUA));
+        public static final Function<String, Text> SONIC_DEVICE_BIOME_DISCOVERED = (name) -> Text.translatable("message.dwm.sonic_device.biome.discovered", Text.literal(name).formatted(Formatting.AQUA));
+        public static final Function<String, Text> SONIC_DEVICE_STRUCTURE_DISCOVERED = (name) -> Text.translatable("message.dwm.sonic_device.structure.discovered", Text.literal(name).formatted(Formatting.AQUA));
         public static final Function<List<Text>, Text> SONIC_DEVICE_TARDIS_RELOCATED = (coords) -> Text.translatable("message.dwm.sonic_device.tardis_relocated", coords.get(0), coords.get(1), coords.get(2));
 
         public static final Text ARS_INTERFACE_TITLE = Text.translatable("screen.dwm.ars_interface.title");
@@ -181,6 +192,9 @@ public class DWM {
 
         public static final Text SONIC_DEVICE_INTERFACE_TITLE = Text.translatable("screen.dwm.sonic_device_interface.title");
         public static final Function<SonicDeviceMode, Text> SONIC_DEVICE_INTERFACE_BTN_MODE = (mode) -> Text.translatable("screen.dwm.sonic_device_interface.button.mode", mode.getTitle().copy().formatted(Formatting.AQUA));
+        public static final Text SONIC_DEVICE_INTERFACE_SCAN_DIMENSIONS_TITLE = Text.translatable("screen.dwm.sonic_device_interface.scan.dimensions.title");
+        public static final Text SONIC_DEVICE_INTERFACE_SCAN_BIOMES_TITLE = Text.translatable("screen.dwm.sonic_device_interface.scan.biomes.title");
+        public static final Text SONIC_DEVICE_INTERFACE_SCAN_STRUCTURES_TITLE = Text.translatable("screen.dwm.sonic_device_interface.scan.structures.title");
 
         public static final Text ARGUMENT_PLAYER_PRESENT = Text.translatable("argument.dwm.tardis.player_present");
         public static final Text ARGUMENT_INVALID_TARDIS = Text.translatable("argument.dwm.tardis.invalid");

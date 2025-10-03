@@ -236,10 +236,16 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
 
             @Override
             public Text getText() {
-                String dimensionName = CommonHelper.capitaliseAllWords(this.historyEntry.dimension().getValue().getPath().replace("_", " "));
-                MutableText dimensionText = Text.literal(String.format("[%s] ", dimensionName)).formatted(Formatting.AQUA);
+                MutableText dimensionText = Text.literal(String.format("[%s] ", CommonHelper.formatRegistryKey(this.historyEntry.dimension()))).formatted(Formatting.AQUA);
                 MutableText posText = Text.literal(this.historyEntry.blockPos().toShortString());
                 return Text.empty().append(dimensionText).append(posText);
+            }
+
+            @Override
+            public boolean mouseClicked(double mouseX, double mouseY, int button) {
+                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
+                HistoryListWidget.this.parent.setSelected(this);
+                return true;
             }
 
             @Override
@@ -254,13 +260,6 @@ public class TardisConsoleUnitMonitorHistoryScreen extends BaseTardisConsoleUnit
                 Text timeText = Text.literal(localDateFormat.format(this.historyEntry.timestamp())).formatted(Formatting.DARK_GRAY);
                 Vector2i timePos = new Vector2i(startPosX - textRenderer.getWidth(timeText), top + 2);
                 context.drawText(textRenderer, timeText, timePos.x, timePos.y, 0xE0E0E0, true);
-            }
-
-            @Override
-            public boolean mouseClicked(double mouseX, double mouseY, int button) {
-                if (!super.mouseClicked(mouseX, mouseY, button)) return false;
-                HistoryListWidget.this.parent.setSelected(this);
-                return true;
             }
         }
     }
