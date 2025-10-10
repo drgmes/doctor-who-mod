@@ -1252,6 +1252,7 @@
   "screen.dwm.telepathic_interface.title.locations": "Телепатический интерфейс: Выберите локацию",
   "screen.dwm.telepathic_interface.title.banners": "Телепатический интерфейс: Выберите маркер",
   "screen.dwm.telepathic_interface.search": "Поиск",
+  "screen.dwm.telepathic_interface.no_results": "Записей не найдено. Открывайте новые измерения, биомы или структуры, приземлившись в них или просканировав их звуковой отвёрткой.",
   "screen.dwm.telepathic_interface.button.cancel": "Отмена",
   "screen.dwm.telepathic_interface.button.accept": "Найти",
 

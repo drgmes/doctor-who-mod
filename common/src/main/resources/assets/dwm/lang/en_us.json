@@ -1252,6 +1252,7 @@
   "screen.dwm.telepathic_interface.title.locations": "Telepathic Interface: Choose a Location",
   "screen.dwm.telepathic_interface.title.banners": "Telepathic Interface: Choose an Anchor",
   "screen.dwm.telepathic_interface.search": "Search",
+  "screen.dwm.telepathic_interface.no_results": "No records found. Discover new dimensions, biomes, or structures by landing into them or scanning them with the sonic screwdriver.",
   "screen.dwm.telepathic_interface.button.cancel": "Cancel",
   "screen.dwm.telepathic_interface.button.accept": "Find",
 

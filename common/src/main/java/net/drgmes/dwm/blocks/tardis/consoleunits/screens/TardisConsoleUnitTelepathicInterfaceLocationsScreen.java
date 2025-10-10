@@ -6,9 +6,11 @@ import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
 import net.drgmes.dwm.network.server.TardisConsoleUnitTelepathicInterfaceLocationApplyPacket;
 import net.drgmes.dwm.utils.base.screens.BaseListWidget;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
+import net.drgmes.dwm.utils.helpers.RenderHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
@@ -58,10 +60,16 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         this.searchField = new TextFieldWidget(this.textRenderer, searchFieldPos.x, searchFieldPos.y, this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2 - 2, INPUT_HEIGHT, DWM.TEXTS.TELEPATHIC_INTERFACE_SEARCH);
 
         this.addDrawableChild(this.locationsListWidget);
-        this.addDrawableChild(this.searchField);
+
+        if (this.locations.isEmpty()) {
+            this.addDrawable(this.searchField);
+        }
+        else {
+            this.addDrawableChild(this.searchField);
+            this.setInitialFocus(this.searchField);
+        }
 
         this.isInited = true;
-        if (!this.locations.isEmpty()) this.setInitialFocus(this.searchField);
         this.update();
     }
 
@@ -98,6 +106,19 @@ public class TardisConsoleUnitTelepathicInterfaceLocationsScreen extends BaseTar
         }
 
         super.apply();
+    }
+
+    @Override
+    public void renderAdditional(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.renderAdditional(context, mouseX, mouseY, delta);
+        if (!this.locations.isEmpty()) return;
+
+        int maxWidth = this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2;
+        int textX = (int) Math.floor(this.getBackgroundSize().x / 2F);
+        int textY = (int) Math.floor(this.getBackgroundSize().y / 2F) - BUTTON_SIZE;
+        Vector2i textPos = this.getRenderPos(textX, textY);
+
+        RenderHelper.drawTextMultilineCentered(DWM.TEXTS.TELEPATHIC_INTERFACE_NO_RESULTS.copy().formatted(Formatting.GRAY, Formatting.ITALIC), this.textRenderer, context, textPos, this.textRenderer.fontHeight + 2, maxWidth, 0xE0E0E0);
     }
 
     private boolean hasSearch() {
