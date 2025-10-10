@@ -6,6 +6,7 @@ import net.drgmes.dwm.blocks.tardis.doors.BaseTardisDoorsBlock;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriorEntry;
 import net.drgmes.dwm.common.tardis.exteriors.TardisExteriors;
+import net.drgmes.dwm.common.tardis.systems.TardisSystemFlight;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemMaterialization;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModSounds;
@@ -70,6 +71,13 @@ public record TardisConsoleUnitMonitorExternalShellApplyPacket(
                 if (materializationSystem.inProgress()) {
                     ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
                     player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_MATERIALIZED, true);
+                    return;
+                }
+
+                TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                if (flightSystem.inProgress()) {
+                    ModSounds.playTardisBellSound(tardis.getWorld(), tardis.getMainConsolePosition());
+                    player.sendMessage(DWM.TEXTS.TARDIS_MUST_BE_LANDED, true);
                     return;
                 }
 

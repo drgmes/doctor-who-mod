@@ -56,7 +56,17 @@ public class TardisKeyItem extends Item {
 
                         if (!ModConfig.COMMON.tardisRecallOperatorOnly.get() || player.hasPermissionLevel(2)) {
                             TardisSystemMaterialization materializationSystem = tardis.getSystem(TardisSystemMaterialization.class);
+                            if (!materializationSystem.isEnabled()) {
+                                player.sendMessage(DWM.TEXTS.MATERIALIZATION_SYSTEM_NOT_INSTALLED, true);
+                                return;
+                            }
+
                             TardisSystemFlight flightSystem = tardis.getSystem(TardisSystemFlight.class);
+                            if (!flightSystem.isEnabled()) {
+                                player.sendMessage(DWM.TEXTS.FLIGHT_SYSTEM_NOT_INSTALLED, true);
+                                return;
+                            }
+
                             if (flightSystem.inProgress() || materializationSystem.inProgress()) return;
 
                             materializationSystem.setVerticalScanning(TardisVerticalScanning.TOP);
