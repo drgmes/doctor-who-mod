@@ -79,7 +79,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
         DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(1, ItemStack.EMPTY);
         if (tag.contains("Items", 9)) {
             Inventories.readNbt(tag, itemStacks, registryLookup);
-            this.sonicScrewdriverItemStack = itemStacks.get(0);
+            this.sonicScrewdriverItemStack = itemStacks.getFirst();
         }
     }
 
@@ -106,11 +106,6 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     public NbtCompound getSavedTardisTag(PlayerEntity player) {
-        if (this.getWorld() instanceof ServerWorld serverWorld) {
-            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
-            if (tardisHolder.isPresent()) return tardisHolder.get().writeNbt(new NbtCompound(), serverWorld.getRegistryManager());
-        }
-
         return this.tardisStateManager.writeNbt(new NbtCompound(), player.getRegistryManager());
     }
 
@@ -334,10 +329,15 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
 
         TardisStateManager tardis = tardisHolder.get();
         tardis.addConsoleTile(this);
-        tardis.markConsoleTilesUpdated();
 
+        NbtCompound tag = new NbtCompound();
         this.controlsStorage.applyDataFromTardis(tardis);
-        this.tardisStateManager.readNbt(tardis.writeNbt(new NbtCompound(), serverWorld.getRegistryManager()), serverWorld.getRegistryManager());
+        tag.put("controlsState", this.controlsStorage.writeNbt(new NbtCompound()));
+        tag.put("tardisState", tardis.writeNbt(new NbtCompound(), serverWorld.getRegistryManager()));
+        this.tardisStateManager.readNbt(tag.getCompound("tardisState"), serverWorld.getRegistryManager());
+
+        new TardisConsoleUnitUpdatePacket(this.getPos(), tag)
+            .sendToAll(serverWorld.getServer());
     }
 
     private void createControls() {
@@ -407,7 +407,7 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     private void sendMonitorOpenPacket(ServerPlayerEntity player, TardisStateManager tardis) {
-        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), this.getSavedTardisTag(player))
+        new TardisConsoleUnitMonitorOpenPacket(player, this.getPos(), tardis.getId(), tardis.writeNbt(new NbtCompound(), tardis.getWorld().getRegistryManager()))
             .sendTo(player);
     }
 

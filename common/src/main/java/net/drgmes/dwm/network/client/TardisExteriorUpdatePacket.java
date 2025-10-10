@@ -7,7 +7,7 @@ import net.drgmes.dwm.enums.TardisExteriorAction;
 import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -45,9 +45,9 @@ public record TardisExteriorUpdatePacket(
     @Environment(EnvType.CLIENT)
     public static void handle(TardisExteriorUpdatePacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
                 switch (payload.exteriorAction) {
                     case NORMALIZE -> tardisExteriorBlockEntity.normalize();
                     case DEMAT -> tardisExteriorBlockEntity.demat();

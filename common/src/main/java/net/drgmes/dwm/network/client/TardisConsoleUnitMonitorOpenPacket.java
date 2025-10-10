@@ -11,6 +11,7 @@ import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -20,6 +21,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -59,13 +62,25 @@ public record TardisConsoleUnitMonitorOpenPacket(
     @Environment(EnvType.CLIENT)
     public static void handle(TardisConsoleUnitMonitorOpenPacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
                 NbtCompound tag = new NbtCompound();
                 tag.put("tardisTag", payload.tardisTag);
                 tag.put("roomsTag", payload.roomsTag);
-                mc.setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
+
+                TardisConsoleRooms.CONSOLE_ROOMS.clear();
+
+                List<String> keys = new ArrayList<>(payload.roomsTag.getKeys());
+                keys.sort(Comparator.comparing((key) -> key));
+
+                keys.forEach((key) -> {
+                    TardisConsoleRoomEntry entry = TardisConsoleRoomEntry.fromNbt(payload.roomsTag.getCompound(key));
+                    TardisConsoleRooms.CONSOLE_ROOMS.put(entry.name, entry);
+                });
+
+                tardisConsoleUnitBlockEntity.tardisStateManager.readNbt(payload.tardisTag, player.getRegistryManager());
+                MinecraftClient.getInstance().setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
             }
         });
     }
@@ -83,13 +98,13 @@ public record TardisConsoleUnitMonitorOpenPacket(
     }
 
     private static NbtCompound createRoomsTag(String currentConsoleRoomId) {
-        List<TardisConsoleRoomEntry> list = TardisConsoleRooms.CONSOLE_ROOMS.values().stream().filter((consoleRoom) -> !consoleRoom.isHidden).toList();
+        List<TardisConsoleRoomEntry> consoleRooms = TardisConsoleRooms.CONSOLE_ROOMS.values().stream().toList();
         AtomicInteger i = new AtomicInteger();
         NbtCompound tag = new NbtCompound();
 
-        list.forEach((entry) -> {
-            int index = entry.name.equals(currentConsoleRoomId) ? 0 : i.incrementAndGet();
-            tag.put(CommonHelper.formatIndexString(index), entry.toNbt());
+        consoleRooms.forEach((consoleRoom) -> {
+            int index = consoleRoom.name.equals(currentConsoleRoomId) ? 0 : i.incrementAndGet();
+            tag.put(CommonHelper.formatIndexString(index), consoleRoom.toNbt());
         });
 
         return tag;

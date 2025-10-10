@@ -79,6 +79,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
     private final Map<EActions, ButtonWidget> buttons = new LinkedHashMap<>();
 
     private NbtCompound tag;
+    private boolean isInitial;
 
     public TardisConsoleUnitMonitorConsoleMainScreen(BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity, String tardisId, String owner, NbtCompound tag) {
         super(DWM.TEXTS.MONITOR_TITLE, tardisConsoleUnitBlockEntity);
@@ -86,6 +87,7 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
         this.tardisId = tardisId;
         this.owner = owner;
         this.tag = tag;
+        this.isInitial = true;
 
         NbtCompound tardisTag = this.tag.getCompound("tardisTag");
         this.exteriorType = TardisExteriors.getExteriorType(tardisTag.getString("exteriorType"));
@@ -122,7 +124,11 @@ public class TardisConsoleUnitMonitorConsoleMainScreen extends BaseTardisConsole
                 buttonSize,
                 Text.empty(),
                 (b) -> {
-                    if (this.client != null && this.client.player != null) this.tag.put("tardisTag", this.tardisConsoleUnitBlockEntity.getSavedTardisTag(this.client.player));
+                    if (!this.isInitial && this.client != null && this.client.player != null) {
+                        this.tag.put("tardisTag", this.tardisConsoleUnitBlockEntity.getSavedTardisTag(this.client.player));
+                    }
+
+                    if (this.isInitial) this.isInitial = false;
                     action.onPress.accept(this);
                 }
             );

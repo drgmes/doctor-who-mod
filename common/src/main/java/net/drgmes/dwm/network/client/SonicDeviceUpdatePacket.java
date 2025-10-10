@@ -6,7 +6,7 @@ import net.drgmes.dwm.common.sonicdevice.SonicDevice;
 import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
@@ -36,14 +36,13 @@ public record SonicDeviceUpdatePacket(
     @Environment(EnvType.CLIENT)
     public static void handle(SonicDeviceUpdatePacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
-            if (mc.player == null) return;
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
             EquipmentSlot slot = EquipmentSlot.byName(payload.slotName);
-            ItemStack equippedStack = mc.player.getEquippedStack(slot);
+            ItemStack equippedStack = player.getEquippedStack(slot);
 
             if (SonicDevice.checkItemStackIsSonicDevice(equippedStack) || equippedStack.isEmpty()) {
-                mc.player.equipStack(slot, payload.itemStack);
+                context.getPlayer().equipStack(slot, payload.itemStack);
             }
         });
     }

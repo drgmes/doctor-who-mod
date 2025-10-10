@@ -50,9 +50,12 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
         NbtCompound roomsTag = tag.getCompound("roomsTag");
         List<String> keys = new ArrayList<>(roomsTag.getKeys());
-
         keys.sort(Comparator.comparing((key) -> key));
-        keys.forEach((key) -> this.consoleRooms.add(TardisConsoleRoomEntry.fromNbt(roomsTag.getCompound(key))));
+
+        keys.forEach((key) -> {
+            TardisConsoleRoomEntry entry = TardisConsoleRoomEntry.fromNbt(roomsTag.getCompound(key));
+            if (!entry.isHidden) this.consoleRooms.add(entry);
+        });
     }
 
     @Override
@@ -134,7 +137,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
     @Override
     public void apply() {
-        if (this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId)) {
+        if (this.selected != null) {
             this.client.setScreen(new TardisConsoleUnitMonitorConsoleRoomConfirmationScreen(this.tardisConsoleUnitBlockEntity, this.tardisId, this.selected.consoleRoom.name, this));
         }
     }
@@ -155,7 +158,7 @@ public class TardisConsoleUnitMonitorConsoleRoomsScreen extends BaseTardisConsol
 
     private void update() {
         if (!this.isInited) return;
-        this.acceptButton.active = this.selected != null && !this.selected.consoleRoom.name.equals(this.currentConsoleRoomId);
+        this.acceptButton.active = this.selected != null;
     }
 
     private void setSelected(ConsoleRoomsListWidget.ConsoleRoomEntry entry) {

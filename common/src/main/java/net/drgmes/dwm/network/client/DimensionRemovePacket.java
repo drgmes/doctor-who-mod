@@ -5,7 +5,7 @@ import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -35,10 +35,9 @@ public record DimensionRemovePacket(
     @Environment(EnvType.CLIENT)
     public static void handle(DimensionRemovePacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
-            if (mc.player == null || mc.getNetworkHandler() == null) return;
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            Set<RegistryKey<World>> worlds = mc.getNetworkHandler().getWorldKeys();
+            Set<RegistryKey<World>> worlds = player.networkHandler.getWorldKeys();
             if (worlds == null || !worlds.contains(payload.worldKey)) return;
 
             worlds.remove(payload.worldKey);

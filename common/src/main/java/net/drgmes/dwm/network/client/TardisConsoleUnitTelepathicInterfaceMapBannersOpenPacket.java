@@ -8,6 +8,7 @@ import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -38,10 +39,10 @@ public record TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket(
     @Environment(EnvType.CLIENT)
     public static void handle(TardisConsoleUnitTelepathicInterfaceMapBannersOpenPacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-                mc.setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(payload.tag, mc.world.getRegistryManager())));
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+                MinecraftClient.getInstance().setScreen(new TardisConsoleUnitTelepathicInterfaceMapBannersScreen(tardisConsoleUnitBlockEntity, MapState.fromNbt(payload.tag, player.getRegistryManager())));
             }
         });
     }

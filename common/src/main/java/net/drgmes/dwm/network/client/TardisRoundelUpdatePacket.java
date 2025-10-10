@@ -6,7 +6,7 @@ import net.drgmes.dwm.blocks.tardis.misc.tardisroundel.TardisRoundelBlockEntity;
 import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -37,9 +37,9 @@ public record TardisRoundelUpdatePacket(
     @Environment(EnvType.CLIENT)
     public static void handle(TardisRoundelUpdatePacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof TardisRoundelBlockEntity tardisRoundelBlockEntity) {
                 tardisRoundelBlockEntity.uncovered = payload.uncovered;
                 tardisRoundelBlockEntity.lightMode = payload.lightMode;
             }

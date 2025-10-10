@@ -10,6 +10,7 @@ import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -52,10 +53,10 @@ public record ArsCreatorOpenPacket(
     @Environment(EnvType.CLIENT)
     public static void handle(ArsCreatorOpenPacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisArsCreatorBlockEntity) {
-                mc.setScreen(new TardisArsCreatorScreen(payload.blockPos, payload.arsCategories, payload.arsStructures));
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof TardisArsCreatorBlockEntity) {
+                MinecraftClient.getInstance().setScreen(new TardisArsCreatorScreen(payload.blockPos, payload.arsCategories, payload.arsStructures));
             }
         });
     }

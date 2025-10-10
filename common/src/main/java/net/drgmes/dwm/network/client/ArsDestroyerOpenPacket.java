@@ -9,6 +9,7 @@ import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -36,10 +37,10 @@ public record ArsDestroyerOpenPacket(
     @Environment(EnvType.CLIENT)
     public static void handle(ArsDestroyerOpenPacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof TardisArsDestroyerBlockEntity) {
-                mc.setScreen(new TardisArsDestroyerScreen(payload.blockPos, payload.arsStructure));
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof TardisArsDestroyerBlockEntity) {
+                MinecraftClient.getInstance().setScreen(new TardisArsDestroyerScreen(payload.blockPos, payload.arsStructure));
             }
         });
     }

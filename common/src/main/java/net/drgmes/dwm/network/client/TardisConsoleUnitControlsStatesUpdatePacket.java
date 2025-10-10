@@ -6,7 +6,7 @@ import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntit
 import net.drgmes.dwm.network.IPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -36,9 +36,9 @@ public record TardisConsoleUnitControlsStatesUpdatePacket(
     @Environment(EnvType.CLIENT)
     public static void handle(TardisConsoleUnitControlsStatesUpdatePacket payload, NetworkManager.PacketContext context) {
         context.queue(() -> {
-            final MinecraftClient mc = MinecraftClient.getInstance();
+            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
 
-            if (mc.world.getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
+            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
                 tardisConsoleUnitBlockEntity.controlsStorage.readNbt(payload.tag);
             }
         });
