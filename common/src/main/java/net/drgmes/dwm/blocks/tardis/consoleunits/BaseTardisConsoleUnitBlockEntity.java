@@ -106,6 +106,11 @@ public abstract class BaseTardisConsoleUnitBlockEntity extends BlockEntity {
     }
 
     public NbtCompound getSavedTardisTag(PlayerEntity player) {
+        if (this.getWorld() instanceof ServerWorld serverWorld) {
+            Optional<TardisStateManager> tardisHolder = TardisStateManager.get(serverWorld);
+            if (tardisHolder.isPresent()) return tardisHolder.get().writeNbt(new NbtCompound(), serverWorld.getRegistryManager());
+        }
+
         return this.tardisStateManager.writeNbt(new NbtCompound(), player.getRegistryManager());
     }
 
