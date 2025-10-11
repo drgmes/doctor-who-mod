@@ -7,5 +7,5 @@
   "doors_block": "dwm:tardis_doors_capsule",
   "decorator_block": "minecraft:chiseled_quartz_block",
   "teleporter_room": "dwm:tardis/teleporter_rooms/imperial_classic",
-  "image": "https://i.imgur.com/nhFyIZn.png"
+  "image": "https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/console_rooms/imperial_classic.png?raw=true"
 }

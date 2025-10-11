@@ -1,4 +1,4 @@
-<img alt="dwm-logo" height="auto" src="https://i.imgur.com/e0tBJqh.png" title="DWM Logo" width="100%"/>
+<img alt="dwm-logo" height="auto" src="https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/logo.png?raw=true" title="DWM Logo" width="100%"/>
 
 <div align="center" style="text-align: center;">
 
@@ -55,21 +55,21 @@ It is planned to add:
 
 Engineer Table
 
-![engineer-table](https://i.imgur.com/Qc1WesX.png "Engineer Table")
+![engineer-table](https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/recipes/engineer_table.png?raw=true "Engineer Table")
 
 Dematerialization Circuit
 
-![dematerialization-circuit](https://i.imgur.com/1OH0BRU.png "Dematerialization Circuit")
+![dematerialization-circuit](https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/recipes/dematerialization_circuit.png?raw=true "Dematerialization Circuit")
 
 Directional Unit
 
-![directional-unit](https://i.imgur.com/6TLiMWK.png "Directional Unit")
+![directional-unit](https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/recipes/directional_unit.png?raw=true "Directional Unit")
 
 Shield Generator
 
-![shield-generator](https://i.imgur.com/AUHbn53.png "Shield Generator")
+![shield-generator](https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/recipes/shield_generator.png?raw=true "Shield Generator")
 </div>
 
 ***
-![tardis-interior](https://i.imgur.com/hZ6cm3L.png "TARDIS Exterior")
+![tardis-interior](https://github.com/drgmes/doctor-who-mod/blob/1.21.1/public/images/screenshots/exterior.png?raw=true "TARDIS Exterior")
 ***
