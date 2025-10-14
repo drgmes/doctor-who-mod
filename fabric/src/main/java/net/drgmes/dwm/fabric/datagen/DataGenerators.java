@@ -26,6 +26,7 @@ public class DataGenerators implements DataGeneratorEntrypoint {
         pack.addProvider(ModPoiTypesTagsProvider::new);
         pack.addProvider(ModRecipeProvider::new);
         pack.addProvider(ModWorldgenProvider::new);
+        pack.addProvider(ModArsProvider::new);
     }
 
     @Override

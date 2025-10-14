@@ -53,13 +53,13 @@ public class ModDimensions {
         JsonArray json = new JsonArray();
         for (RegistryKey<World> world : WORLDS) {
             json.add(world.getValue().getPath());
-            DWM.LOGGER.info("Saved " + world.getValue().getPath());
+            DWM.LOGGER.info("Saved {}", world.getValue().getPath());
         }
 
         try (PrintWriter printWriter = new PrintWriter(new FileWriter(getWorldsRegistryFile(server)))) {
             printWriter.write(json.toString());
         } catch (Exception e) {
-            DWM.LOGGER.error("Error in saving worlds registry (" + e.getMessage() + ")");
+            DWM.LOGGER.error("Error in saving worlds registry ({})", e.getMessage());
         }
     }
 
@@ -71,12 +71,12 @@ public class ModDimensions {
             JsonArray json = JsonParser.parseString(content).getAsJsonArray();
 
             for (JsonElement worldId : json) {
-                DWM.LOGGER.info("Loaded " + worldId);
+                DWM.LOGGER.info("Loaded {}", worldId);
                 WORLDS.add(RegistryKey.of(RegistryKeys.WORLD, DWM.getIdentifier(worldId.getAsString())));
                 DimensionHelper.getOrCreateWorld(worldId.getAsString(), server, TardisHelper::tardisDimensionBuilder);
             }
         } catch (Exception e) {
-            DWM.LOGGER.error("Error in loading worlds registry (" + e.getMessage() + ")");
+            DWM.LOGGER.error("Error in loading worlds registry ({})", e.getMessage());
         }
     }
 

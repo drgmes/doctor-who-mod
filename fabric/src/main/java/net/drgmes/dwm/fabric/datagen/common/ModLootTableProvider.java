@@ -26,9 +26,9 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
             }
 
             switch (blockLootDataBuilder.lootType) {
-                default -> this.addDrop(blockBuilder.getBlock());
                 case ORE -> this.addDrop(blockBuilder.getBlock(), this.oreDrops(blockBuilder.getBlock(), blockLootDataBuilder.lootItem));
                 case DOOR -> this.addDrop(blockBuilder.getBlock(), this.doorDrops(blockBuilder.getBlock()));
+                default -> this.addDrop(blockBuilder.getBlock());
             }
         }
     }

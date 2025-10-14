@@ -114,6 +114,7 @@ public class DWM {
         public static final Function<String, Text> TELEPATHIC_INTERFACE_MAP_BANNER_LOADED = (color) -> Text.translatable("message.dwm.tardis.telepathic_interface.map.loaded.banner", Text.literal(color).formatted(Formatting.GOLD));
 
         public static final Text ARS_DESTROYER_MUST_BE_SNEAKING = Text.translatable("message.dwm.ars_destroyer.must_be_sneaking");
+        public static final Text ARS_DESTROYER_INVALID_ROOM = Text.translatable("message.dwm.ars_destroyer.invalid_room");
 
         public static final Text TARDIS_TELEPORTER_MUST_BE_SNEAKING = Text.translatable("message.dwm.tardis_teleporter.must_be_sneaking");
 

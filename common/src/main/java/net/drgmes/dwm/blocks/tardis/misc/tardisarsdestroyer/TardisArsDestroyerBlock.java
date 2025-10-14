@@ -2,6 +2,7 @@ package net.drgmes.dwm.blocks.tardis.misc.tardisarsdestroyer;
 
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
+import net.drgmes.dwm.common.tardis.ars.ArsStructure;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.network.client.ArsDestroyerOpenPacket;
 import net.drgmes.dwm.setup.ModBlockEntities;
@@ -55,7 +56,10 @@ public class TardisArsDestroyerBlock extends BaseRotatableWaterloggedBlockWithEn
         }
 
         if (world.getBlockEntity(blockPos) instanceof TardisArsDestroyerBlockEntity tardisArsDestroyerBlockEntity) {
-            new ArsDestroyerOpenPacket(blockPos, ArsStructures.STRUCTURES.get(tardisArsDestroyerBlockEntity.arsStructureName)).sendTo(serverPlayer);
+            ArsStructure consoleRoom = ArsStructures.STRUCTURES.get(tardisArsDestroyerBlockEntity.arsStructureName);
+
+            if (consoleRoom != null) new ArsDestroyerOpenPacket(blockPos, consoleRoom).sendTo(serverPlayer);
+            else player.sendMessage(DWM.TEXTS.ARS_DESTROYER_INVALID_ROOM, true);
         }
 
         return ActionResult.SUCCESS;

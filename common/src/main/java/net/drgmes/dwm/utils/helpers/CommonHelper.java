@@ -1,13 +1,17 @@
 package net.drgmes.dwm.utils.helpers;
 
 import net.drgmes.dwm.DWM;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 
@@ -15,10 +19,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class CommonHelper {
+    public static final List<String> COLORS = Stream.of(
+        Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE,
+        Items.LIGHT_BLUE_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE,
+        Items.RED_DYE, Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE
+    ).map((dyeItem) -> ((DyeItem) dyeItem).getColor().getName()).toList();
+
+    public static final List<String> WOODS = Stream.of(
+        Blocks.ACACIA_PLANKS, Blocks.BAMBOO_PLANKS, Blocks.BIRCH_PLANKS, Blocks.CHERRY_PLANKS,
+        Blocks.CRIMSON_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.MANGROVE_PLANKS,
+        Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.WARPED_PLANKS
+    ).map((logBlock) -> Registries.BLOCK.getId(logBlock).getPath().replace("_planks", "")).toList();
+
     private static final Map<String, Thread> threads = new HashMap<>();
 
     public static Thread runInThread(String name, Runnable consumer) {

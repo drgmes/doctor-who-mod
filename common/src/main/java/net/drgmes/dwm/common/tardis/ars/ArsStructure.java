@@ -43,11 +43,12 @@ public class ArsStructure {
             buf.writeString(payload.path);
             buf.writeString(payload.title);
             buf.writeString(payload.category);
+            buf.writeInt(payload.order);
         }
 
         @Override
         public ArsStructure decode(PacketByteBuf buf) {
-            return new ArsStructure(buf.readString(), buf.readString(), buf.readString(), buf.readString());
+            return new ArsStructure(buf.readString(), buf.readString(), buf.readString(), buf.readString(), buf.readInt());
         }
     };
 
@@ -55,14 +56,16 @@ public class ArsStructure {
     public final String path;
     public final String title;
     public final String category;
+    public final int order;
 
-    private Map<String, JsonElement> replaceables;
+    private Map<String, JsonElement> substitutes;
 
-    public ArsStructure(String name, String path, String title, String category) {
+    public ArsStructure(String name, String path, String title, String category, int order) {
         this.name = name;
         this.path = path;
         this.title = title;
         this.category = category;
+        this.order = order;
     }
 
     public Text getTitle() {
@@ -73,8 +76,8 @@ public class ArsStructure {
         return world.getStructureTemplateManager().getTemplateOrBlank(Identifier.of(this.path));
     }
 
-    public ArsStructure setReplaceables(Map<String, JsonElement> replaceables) {
-        this.replaceables = replaceables;
+    public ArsStructure setSubstitutes(Map<String, JsonElement> substitutes) {
+        this.substitutes = substitutes;
         return this;
     }
 
@@ -110,15 +113,15 @@ public class ArsStructure {
                 });
 
                 if (isAreaEmpty && template.place(world, blockPos, BlockPos.ORIGIN, placeSettings, world.random, Block.NOTIFY_ALL)) {
-                    // Replace blocks in newly generated structure
-                    if (this.replaceables != null) {
+                    // Replace blocks in a newly generated structure
+                    if (this.substitutes != null) {
                         WorldHelper.foreachArea(aabb, (bp) -> {
                             try {
                                 BlockState bs = world.getBlockState(bp);
                                 String blockId = Registries.BLOCK.getId(bs.getBlock()).toString();
 
-                                if (this.replaceables.containsKey(blockId)) {
-                                    Block replacingBlock = Registries.BLOCK.get(Identifier.of(this.replaceables.get(blockId).getAsString()));
+                                if (this.substitutes.containsKey(blockId)) {
+                                    Block replacingBlock = Registries.BLOCK.get(Identifier.of(this.substitutes.get(blockId).getAsString()));
 
                                     BlockState replacingBlockState = replacingBlock.getDefaultState();
                                     replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.OPEN);

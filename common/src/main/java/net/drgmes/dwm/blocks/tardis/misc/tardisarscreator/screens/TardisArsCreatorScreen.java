@@ -50,7 +50,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.arsCategories = arsCategories;
         this.arsStructures = arsStructures;
 
-        this.reloadCategoriesList();
+        this.reloadArsCategoriesList();
         this.reloadArsStructuresList();
     }
 
@@ -112,7 +112,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.selectedArsStructureEntry = selectedArsStructureEntry;
 
         if (!this.searchField.getText().isEmpty()) {
-            this.reloadCategoriesList();
+            this.reloadArsCategoriesList();
             this.reloadArsStructuresList();
         }
     }
@@ -123,7 +123,7 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
         if (!this.searchField.getText().equals(lastSearch)) {
             this.selectedArsStructureEntry = null;
-            this.reloadCategoriesList();
+            this.reloadArsCategoriesList();
             this.reloadArsStructuresList();
             this.listWidget.refreshList();
             this.update();
@@ -138,24 +138,26 @@ public class TardisArsCreatorScreen extends BaseScreen {
         this.close();
     }
 
-    protected void setSelectedArsCategory(ListWidget.ListEntry entry) {
-        this.selectedArsCategory = entry.arsCategory != null ? entry.arsCategory : this.arsCategories.getOrDefault(this.selectedArsCategory.parent, null);
-        this.selectedArsStructureEntry = null;
-        this.searchField.setText("");
-
-        this.reloadCategoriesList();
-        this.reloadArsStructuresList();
-        this.update();
-
-        this.listWidget.refreshList();
+    private Vector2i getListPos() {
+        return this.getLeftTopRenderPos(0, INPUT_HEIGHT + 4);
     }
 
-    protected void setSelectedArsStructure(ListWidget.ListEntry entry) {
-        this.selectedArsStructureEntry = entry == this.selectedArsStructureEntry ? null : entry;
-        this.update();
+    private Vector2i getListSize() {
+        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - INPUT_HEIGHT - BUTTON_SIZE - 6);
     }
 
-    protected void reloadCategoriesList() {
+    private boolean hasSearch() {
+        return this.searchField != null && !Objects.equals(this.searchField.getText(), "");
+    }
+
+    private void update() {
+        if (!this.isInited) return;
+
+        this.lastSearch = this.searchField.getText();
+        this.acceptButton.active = this.selectedArsStructureEntry != null;
+    }
+
+    private void reloadArsCategoriesList() {
         List<ArsCategory> list;
 
         if (this.hasSearch()) {
@@ -169,13 +171,13 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
         if (!list.isEmpty()) {
             list = new ArrayList<>(list);
-            list.sort(Comparator.comparing((arsCategory) -> arsCategory.name));
+            list.sort(Comparator.comparing((arsCategory) -> arsCategory.order));
         }
 
         this.filteredArsCategories = list;
     }
 
-    protected void reloadArsStructuresList() {
+    private void reloadArsStructuresList() {
         List<ArsStructure> list;
 
         if (this.hasSearch()) {
@@ -189,29 +191,27 @@ public class TardisArsCreatorScreen extends BaseScreen {
 
         if (!list.isEmpty()) {
             list = new ArrayList<>(list);
-            list.sort(Comparator.comparing((arsStructure) -> arsStructure.name));
+            list.sort(Comparator.comparing((arsStructure) -> arsStructure.order));
         }
 
         this.filteredArsStructures = list;
     }
 
-    protected boolean hasSearch() {
-        return this.searchField != null && !Objects.equals(this.searchField.getText(), "");
+    private void setSelectedArsCategory(ListWidget.ListEntry entry) {
+        this.selectedArsCategory = entry.arsCategory != null ? entry.arsCategory : this.arsCategories.getOrDefault(this.selectedArsCategory.parent, null);
+        this.selectedArsStructureEntry = null;
+        this.searchField.setText("");
+
+        this.reloadArsCategoriesList();
+        this.reloadArsStructuresList();
+        this.update();
+
+        this.listWidget.refreshList();
     }
 
-    private Vector2i getListPos() {
-        return this.getLeftTopRenderPos(0, INPUT_HEIGHT + 4);
-    }
-
-    private Vector2i getListSize() {
-        return new Vector2i(this.getBackgroundSize().x - this.getBackgroundBorderSize().x * 2, this.getBackgroundSize().y - this.getBackgroundBorderSize().y * 2 - SCREEN_MARGIN * 2 - INPUT_HEIGHT - BUTTON_SIZE - 6);
-    }
-
-    private void update() {
-        if (!this.isInited) return;
-
-        this.lastSearch = this.searchField.getText();
-        this.acceptButton.active = this.selectedArsStructureEntry != null;
+    private void setSelectedArsStructure(ListWidget.ListEntry entry) {
+        this.selectedArsStructureEntry = entry == this.selectedArsStructureEntry ? null : entry;
+        this.update();
     }
 
     private static class ListWidget extends BaseListWidget {

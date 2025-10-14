@@ -8,21 +8,20 @@ import net.minecraft.item.Items;
 import java.util.HashMap;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.stream.Stream;
 
 public class ColoredBlockBuilders {
-    public final HashMap<Item, BlockBuilder> blockBuilders = new HashMap<>();
-
-    private static final List<Item> dyes = Stream.of(
+    private static final List<Item> DYE_ITEMS = List.of(
         Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE,
         Items.LIGHT_BLUE_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE,
         Items.RED_DYE, Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE
-    ).toList();
+    );
+
+    public final HashMap<Item, BlockBuilder> blockBuilders = new HashMap<>();
 
     public <T extends BlockBuilder> ColoredBlockBuilders(String baseName, BiFunction<String, Item, BlockBuilder> blockBuilderSupplier) {
-        for (Item dye : dyes) {
-            String color = ((DyeItem) dye).getColor().getName();
-            blockBuilders.put(dye, blockBuilderSupplier.apply(baseName + "_" + color, dye));
+        for (Item dyeItem : DYE_ITEMS) {
+            String color = ((DyeItem) dyeItem).getColor().getName();
+            blockBuilders.put(dyeItem, blockBuilderSupplier.apply(baseName + "_" + color, dyeItem));
         }
     }
 

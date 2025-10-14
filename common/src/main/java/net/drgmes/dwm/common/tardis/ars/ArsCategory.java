@@ -12,11 +12,12 @@ public class ArsCategory {
             buf.writeString(payload.title);
             buf.writeString(payload.tag);
             buf.writeString(payload.parent);
+            buf.writeInt(payload.order);
         }
 
         @Override
         public ArsCategory decode(PacketByteBuf buf) {
-            return new ArsCategory(buf.readString(), buf.readString(), buf.readString(), buf.readString());
+            return new ArsCategory(buf.readString(), buf.readString(), buf.readString(), buf.readString(), buf.readInt());
         }
     };
 
@@ -24,12 +25,14 @@ public class ArsCategory {
     public final String title;
     public final String tag;
     public final String parent;
+    public final int order;
 
-    public ArsCategory(String name, String title, String tag, String parent) {
+    public ArsCategory(String name, String title, String tag, String parent, int order) {
         this.name = name;
         this.title = title;
         this.tag = tag;
         this.parent = parent;
+        this.order = order;
     }
 
     public Text getTag() {

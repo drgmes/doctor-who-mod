@@ -80,7 +80,7 @@ public abstract class BaseTardisConsoleUnitBlockRenderer<C extends BaseTardisCon
                 else if (controlEntry.type == TardisConsoleUnitControlType.ROTATOR) this.activateRotator(model, (int) value, controlRole, delta);
             }
         } catch (Exception e) {
-            DWM.LOGGER.error("Error in animating ModelPart (" + e.getMessage() + ")");
+            DWM.LOGGER.error("Error in animating ModelPart ({})", e.getMessage());
         }
     }
 

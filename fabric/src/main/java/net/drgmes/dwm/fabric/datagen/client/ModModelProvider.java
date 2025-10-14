@@ -31,7 +31,6 @@ public class ModModelProvider extends FabricModelProvider {
             Map<TextureKey, Identifier> itemTextures = blockModelDataBuilder.itemTextures;
 
             switch (blockModelDataBuilder.blockType) {
-                default -> BlockStateHelper.createSimpleBlockStateAndModel(blockStateModelGenerator, blockBuilder);
                 case SIMPLE -> BlockStateHelper.createSimpleBlockState(blockStateModelGenerator, blockBuilder, blockTextures.get(TextureKey.ALL));
                 case VARIED_SLAB -> BlockStateHelper.createVariedSlabBlockStateAndModel(blockStateModelGenerator, blockBuilder, blockTextures.get(TextureKey.ALL));
                 case SOLID_SLAB -> BlockStateHelper.createSolidSlabBlockStateAndModel(blockStateModelGenerator, blockBuilder, blockTextures.get(TextureKey.ALL), blockTextures.get(TextureKey.CONTENT));
@@ -45,6 +44,8 @@ public class ModModelProvider extends FabricModelProvider {
                     Map.Entry<TextureKey, Identifier> sideTexture = blockTextures.entrySet().stream().findAny().get();
                     BlockStateHelper.createSimpleBlockStateAndModelWithUniqueSide(blockStateModelGenerator, blockBuilder, sideTexture.getValue(), sideTexture.getKey());
                 }
+
+                default -> BlockStateHelper.createSimpleBlockStateAndModel(blockStateModelGenerator, blockBuilder);
             }
 
             switch (blockModelDataBuilder.itemType) {

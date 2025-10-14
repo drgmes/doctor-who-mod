@@ -66,6 +66,7 @@ public class TardisRoundelBlock extends BaseRotatableWaterloggedBlockWithEntity 
                 case Z -> state.with(AXIS, Direction.Axis.X);
                 default -> state;
             };
+
             default -> state;
         };
     }
