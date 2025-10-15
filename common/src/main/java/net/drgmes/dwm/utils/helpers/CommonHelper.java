@@ -26,16 +26,20 @@ import java.util.stream.Stream;
 
 public class CommonHelper {
     public static final List<String> COLORS = Stream.of(
-        Items.BLACK_DYE, Items.BLUE_DYE, Items.BROWN_DYE, Items.CYAN_DYE, Items.GRAY_DYE, Items.GREEN_DYE,
-        Items.LIGHT_BLUE_DYE, Items.LIME_DYE, Items.MAGENTA_DYE, Items.ORANGE_DYE, Items.PINK_DYE, Items.PURPLE_DYE,
-        Items.RED_DYE, Items.LIGHT_GRAY_DYE, Items.WHITE_DYE, Items.YELLOW_DYE
-    ).map((dyeItem) -> ((DyeItem) dyeItem).getColor().getName()).toList();
+        Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE, Items.BLACK_DYE, Items.BROWN_DYE, Items.RED_DYE,
+        Items.ORANGE_DYE, Items.YELLOW_DYE, Items.LIME_DYE, Items.GREEN_DYE, Items.CYAN_DYE, Items.LIGHT_BLUE_DYE,
+        Items.BLUE_DYE, Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.PINK_DYE
+    ).map((item) -> ((DyeItem) item).getColor().getName()).toList();
 
     public static final List<String> WOODS = Stream.of(
-        Blocks.ACACIA_PLANKS, Blocks.BAMBOO_PLANKS, Blocks.BIRCH_PLANKS, Blocks.CHERRY_PLANKS,
-        Blocks.CRIMSON_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.JUNGLE_PLANKS, Blocks.MANGROVE_PLANKS,
-        Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.WARPED_PLANKS
-    ).map((logBlock) -> Registries.BLOCK.getId(logBlock).getPath().replace("_planks", "")).toList();
+        Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS,
+        Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS,
+        Blocks.BAMBOO_PLANKS, Blocks.CRIMSON_PLANKS, Blocks.WARPED_PLANKS
+    ).map((block) -> Registries.BLOCK.getId(block).getPath().replace("_planks", "")).toList();
+
+    public static final List<String> COPPERS = Stream.of(
+        Blocks.COPPER_BLOCK, Blocks.EXPOSED_COPPER, Blocks.WEATHERED_COPPER, Blocks.OXIDIZED_COPPER
+    ).map((block) -> Registries.BLOCK.getId(block).getPath().replace("_copper", "").replace("copper_block", "unoxidized")).toList();
 
     private static final Map<String, Thread> threads = new HashMap<>();
 

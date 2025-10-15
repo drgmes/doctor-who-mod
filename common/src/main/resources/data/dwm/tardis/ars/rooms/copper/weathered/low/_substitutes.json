@@ -1,0 +1,16 @@
+{
+  "minecraft:blue_concrete": "minecraft:waxed_weathered_chiseled_copper",
+  "minecraft:white_concrete": "minecraft:waxed_weathered_copper",
+  "minecraft:black_concrete": "minecraft:tuff_bricks",
+  "minecraft:gray_concrete": "minecraft:polished_tuff",
+  "minecraft:brown_concrete": "minecraft:chiseled_tuff_bricks",
+  "minecraft:light_gray_concrete": "minecraft:tuff_bricks",
+  "minecraft:andesite_stairs": "minecraft:tuff_brick_stairs",
+  "minecraft:diorite_stairs": "minecraft:polished_tuff_stairs",
+  "minecraft:stone_stairs": "minecraft:polished_tuff_stairs",
+  "minecraft:stone_slab": "minecraft:polished_tuff_slab",
+  "minecraft:glass_pane": "minecraft:air",
+  "minecraft:andesite_wall": "minecraft:air",
+  "minecraft:diorite_wall": "minecraft:air",
+  "minecraft:redstone_lamp": "minecraft:waxed_weathered_copper_bulb"
+}

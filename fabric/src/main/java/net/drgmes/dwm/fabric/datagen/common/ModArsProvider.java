@@ -29,23 +29,28 @@ public class ModArsProvider implements DataProvider {
         this.output = output;
         this.registryLookupFuture = registriesFuture;
 
-        this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.HALLWAYS));
-        this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.ROOMS));
-
         this.entries.add(new ArsEntry("imperial", ArsEntry.ETypes.HALLWAYS));
         this.entries.add(new ArsEntry("imperial", ArsEntry.ETypes.ROOMS));
+
+        this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.HALLWAYS));
+        this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.ROOMS));
 
         this.entries.add(new ArsEntry("tech", ArsEntry.ETypes.HALLWAYS));
         this.entries.add(new ArsEntry("tech", ArsEntry.ETypes.ROOMS));
 
-        CommonHelper.COLORS.forEach((color) -> {
-            this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.HALLWAYS));
-            this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.ROOMS));
-        });
-
         CommonHelper.WOODS.forEach((wood) -> {
             this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.HALLWAYS));
             this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.ROOMS));
+        });
+
+        CommonHelper.COPPERS.forEach((copper) -> {
+            this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.ROOMS));
+        });
+
+        CommonHelper.COLORS.forEach((color) -> {
+            this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.ROOMS));
         });
     }
 

@@ -8,20 +8,45 @@ import net.drgmes.dwm.common.tardis.ars.ArsCategories;
 import net.drgmes.dwm.common.tardis.ars.ArsStructures;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
+import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ModResourcePacks {
+    private enum EArsType {
+        NONE(null, null),
+        IMPERIAL("/imperial/_category.json", null),
+        AQUATIC("/aquatic/_category.json", null),
+        TECH("/tech/_category.json", null),
+        WOODEN("/wooden/([^/]+)(/|.json)", CommonHelper.WOODS),
+        COPPER("/copper/([^/]+)(/|.json)", CommonHelper.COPPERS),
+        TITANIUM("/titanium/([^/]+)(/|.json)", CommonHelper.COLORS);
+
+        private final Pattern pattern;
+        private final Map<String, Integer> priorityMap = new HashMap<>();
+
+        EArsType(@Nullable String pattern, @Nullable List<String> priorityMap) {
+            this.pattern = pattern == null ? null : Pattern.compile(pattern);
+
+            if (priorityMap != null) {
+                AtomicInteger index = new AtomicInteger(0);
+                priorityMap.forEach((key) -> this.priorityMap.put(key, index.getAndIncrement()));
+            }
+        }
+    }
+
     public static void setup(ResourceManager manager) {
         Predicate<Identifier> jsonPredicate = (path) -> path.getPath().endsWith(".json");
 
@@ -87,7 +112,19 @@ public class ModResourcePacks {
         AtomicInteger categoriesCount = new AtomicInteger(0);
         AtomicInteger roomsCount = new AtomicInteger(0);
 
-        arsEntryResources.forEach((id, resource) -> {
+        List<Identifier> keys = new ArrayList<>(arsEntryResources.keySet());
+        keys.sort((a, b) -> {
+            ArsType aType = ArsType.classify(a.getPath());
+            ArsType bType = ArsType.classify(b.getPath());
+
+            if (aType.type != bType.type) return Integer.compare(aType.type.ordinal(), bType.type.ordinal());
+            return Integer.compare(aType.index, bType.index);
+        });
+
+        keys.forEach((id) -> {
+            if (!arsEntryResources.containsKey(id)) return;
+            Resource resource = arsEntryResources.get(id);
+
             try {
                 InputStream stream = resource.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(stream);
@@ -128,5 +165,33 @@ public class ModResourcePacks {
 
         DWM.LOGGER.info("Loaded {} ars categories.", categoriesCount.get());
         DWM.LOGGER.info("Loaded {} ars rooms.", roomsCount.get());
+    }
+
+    private static class ArsType {
+        protected EArsType type;
+        protected int index;
+
+        public ArsType(EArsType type, int index) {
+            this.type = type;
+            this.index = index;
+        }
+
+        public static ArsType classify(String path) {
+            for (EArsType type : EArsType.values()) {
+                if (type.pattern == null) continue;
+
+                Matcher matcher = type.pattern.matcher(path);
+                if (matcher.find()) {
+                    if (matcher.groupCount() == 0) {
+                        return new ArsType(type, 0);
+                    }
+
+                    String variant = matcher.group(1);
+                    return new ArsType(type, type.priorityMap.getOrDefault(variant, Integer.MAX_VALUE));
+                }
+            }
+
+            return new ArsType(EArsType.NONE, -1);
+        }
     }
 }
