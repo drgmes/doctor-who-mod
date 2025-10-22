@@ -31,6 +31,7 @@ public class ModResourcePacks {
         AQUATIC("/aquatic/_category.json", null),
         TECH("/tech/_category.json", null),
         WOODEN("/wooden/([^/]+)(/|.json)", CommonHelper.WOODS),
+        ROCKS("/rock/([^/]+)(/|.json)", CommonHelper.ROCKS),
         COPPER("/copper/([^/]+)(/|.json)", CommonHelper.COPPERS),
         TITANIUM("/titanium/([^/]+)(/|.json)", CommonHelper.COLORS);
 

@@ -1,0 +1,18 @@
+{
+  "title": "title.dwm.ars.structure.room_rock_andesite_storage",
+  "structure": "dwm:tardis/ars/rooms/_/storage",
+  "substitutes": {
+    "minecraft:blue_concrete": "minecraft:andesite",
+    "minecraft:white_concrete": "minecraft:spruce_planks",
+    "minecraft:black_concrete": "minecraft:andesite",
+    "minecraft:gray_concrete": "minecraft:polished_andesite",
+    "minecraft:brown_concrete": "minecraft:polished_andesite",
+    "minecraft:light_gray_concrete": "minecraft:polished_andesite",
+    "minecraft:andesite_stairs": "minecraft:polished_andesite_stairs",
+    "minecraft:diorite_stairs": "minecraft:andesite_stairs",
+    "minecraft:stone_stairs": "minecraft:polished_andesite_stairs",
+    "minecraft:stone_slab": "minecraft:polished_andesite_slab",
+    "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane",
+    "minecraft:diorite_wall": "minecraft:andesite_wall"
+  }
+}

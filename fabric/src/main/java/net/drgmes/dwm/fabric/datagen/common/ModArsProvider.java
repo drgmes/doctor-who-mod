@@ -43,6 +43,11 @@ public class ModArsProvider implements DataProvider {
             this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.ROOMS));
         });
 
+        CommonHelper.ROCKS.forEach((rock) -> {
+            this.entries.add(new ArsEntry("rock/" + rock, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("rock/" + rock, ArsEntry.ETypes.ROOMS));
+        });
+
         CommonHelper.COPPERS.forEach((copper) -> {
             this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.HALLWAYS));
             this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.ROOMS));

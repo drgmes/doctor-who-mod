@@ -13,7 +13,7 @@ public class TardisArsDestroyerBlockBuilder extends BlockBuilder {
     }
 
     public static AbstractBlock.Settings getBlockSettings() {
-        return AbstractBlock.Settings.copy(Blocks.BEDROCK);
+        return AbstractBlock.Settings.copy(Blocks.DEEPSLATE);
     }
 
     @Override

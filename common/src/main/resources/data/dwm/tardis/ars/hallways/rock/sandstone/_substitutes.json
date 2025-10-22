@@ -1,0 +1,13 @@
+{
+  "minecraft:blue_concrete": "minecraft:chiseled_sandstone",
+  "minecraft:white_concrete": "minecraft:jungle_planks",
+  "minecraft:black_concrete": "minecraft:sandstone",
+  "minecraft:gray_concrete": "minecraft:cut_sandstone",
+  "minecraft:brown_concrete": "minecraft:sandstone",
+  "minecraft:light_gray_concrete": "minecraft:cut_sandstone",
+  "minecraft:andesite_stairs": "minecraft:smooth_sandstone_stairs",
+  "minecraft:diorite_stairs": "minecraft:smooth_sandstone_stairs",
+  "minecraft:stone_stairs": "minecraft:smooth_sandstone_stairs",
+  "minecraft:stone_slab": "minecraft:smooth_sandstone_slab",
+  "minecraft:glass_pane": "minecraft:yellow_stained_glass_pane"
+}

@@ -1,0 +1,17 @@
+{
+  "minecraft:blue_concrete": "minecraft:end_stone",
+  "minecraft:white_concrete": "minecraft:acacia_planks",
+  "minecraft:black_concrete": "minecraft:end_stone",
+  "minecraft:gray_concrete": "minecraft:end_stone_bricks",
+  "minecraft:brown_concrete": "minecraft:end_stone_bricks",
+  "minecraft:light_gray_concrete": "minecraft:end_stone_bricks",
+  "minecraft:andesite_stairs": "minecraft:end_stone_brick_stairs",
+  "minecraft:diorite_stairs": "minecraft:end_stone_brick_stairs",
+  "minecraft:granite_stairs": "minecraft:end_stone_brick_stairs",
+  "minecraft:tuff_stairs": "minecraft:end_stone_brick_stairs",
+  "minecraft:stone_stairs": "minecraft:end_stone_brick_stairs",
+  "minecraft:stone_slab": "minecraft:end_stone_brick_slab",
+  "minecraft:glass_pane": "minecraft:cyan_stained_glass_pane",
+  "minecraft:andesite_wall": "minecraft:end_stone_brick_wall",
+  "minecraft:diorite_wall": "minecraft:end_stone_brick_wall"
+}

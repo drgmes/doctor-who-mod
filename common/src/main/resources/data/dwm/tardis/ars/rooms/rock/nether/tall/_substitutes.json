@@ -1,0 +1,17 @@
+{
+  "minecraft:blue_concrete": "minecraft:chiseled_nether_bricks",
+  "minecraft:white_concrete": "minecraft:warped_planks",
+  "minecraft:black_concrete": "minecraft:red_nether_bricks",
+  "minecraft:gray_concrete": "minecraft:nether_bricks",
+  "minecraft:brown_concrete": "minecraft:nether_bricks",
+  "minecraft:light_gray_concrete": "minecraft:nether_bricks",
+  "minecraft:andesite_stairs": "minecraft:nether_brick_stairs",
+  "minecraft:diorite_stairs": "minecraft:nether_brick_stairs",
+  "minecraft:granite_stairs": "minecraft:red_nether_brick_stairs",
+  "minecraft:tuff_stairs": "minecraft:red_nether_brick_stairs",
+  "minecraft:stone_stairs": "minecraft:nether_brick_stairs",
+  "minecraft:stone_slab": "minecraft:nether_brick_slab",
+  "minecraft:glass_pane": "minecraft:red_stained_glass_pane",
+  "minecraft:andesite_wall": "minecraft:nether_brick_wall",
+  "minecraft:diorite_wall": "minecraft:nether_brick_wall"
+}

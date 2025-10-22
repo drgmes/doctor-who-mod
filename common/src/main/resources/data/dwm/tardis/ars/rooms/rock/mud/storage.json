@@ -1,0 +1,19 @@
+{
+  "title": "title.dwm.ars.structure.room_rock_mud_storage",
+  "structure": "dwm:tardis/ars/rooms/_/storage",
+  "substitutes": {
+    "minecraft:blue_concrete": "minecraft:packed_mud",
+    "minecraft:white_concrete": "minecraft:spruce_planks",
+    "minecraft:black_concrete": "minecraft:mud_bricks",
+    "minecraft:gray_concrete": "minecraft:mud_bricks",
+    "minecraft:brown_concrete": "minecraft:mud_bricks",
+    "minecraft:light_gray_concrete": "minecraft:mud_bricks",
+    "minecraft:andesite_stairs": "minecraft:mud_brick_stairs",
+    "minecraft:diorite_stairs": "minecraft:mud_brick_stairs",
+    "minecraft:stone_stairs": "minecraft:mud_brick_stairs",
+    "minecraft:stone_slab": "minecraft:mud_brick_slab",
+    "minecraft:glass_pane": "minecraft:pink_stained_glass_pane",
+    "minecraft:andesite_wall": "minecraft:mud_brick_wall",
+    "minecraft:diorite_wall": "minecraft:mud_brick_wall"
+  }
+}

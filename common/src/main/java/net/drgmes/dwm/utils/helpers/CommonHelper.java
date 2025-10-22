@@ -1,6 +1,7 @@
 package net.drgmes.dwm.utils.helpers;
 
 import net.drgmes.dwm.DWM;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
@@ -8,6 +9,7 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.DyeItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -25,21 +27,29 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class CommonHelper {
-    public static final List<String> COLORS = Stream.of(
-        Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE, Items.BLACK_DYE, Items.BROWN_DYE, Items.RED_DYE,
-        Items.ORANGE_DYE, Items.YELLOW_DYE, Items.LIME_DYE, Items.GREEN_DYE, Items.CYAN_DYE, Items.LIGHT_BLUE_DYE,
-        Items.BLUE_DYE, Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.PINK_DYE
-    ).map((item) -> ((DyeItem) item).getColor().getName()).toList();
-
     public static final List<String> WOODS = Stream.of(
         Blocks.OAK_PLANKS, Blocks.SPRUCE_PLANKS, Blocks.BIRCH_PLANKS, Blocks.JUNGLE_PLANKS,
         Blocks.ACACIA_PLANKS, Blocks.DARK_OAK_PLANKS, Blocks.MANGROVE_PLANKS, Blocks.CHERRY_PLANKS,
         Blocks.BAMBOO_PLANKS, Blocks.CRIMSON_PLANKS, Blocks.WARPED_PLANKS
-    ).map((block) -> Registries.BLOCK.getId(block).getPath().replace("_planks", "")).toList();
+    ).map(CommonHelper::getWoodBlockName).toList();
+
+    public static final List<String> ROCKS = Stream.of(
+        Blocks.STONE, Blocks.MOSSY_STONE_BRICKS, Blocks.GRANITE, Blocks.DIORITE,
+        Blocks.ANDESITE, Blocks.DEEPSLATE, Blocks.TUFF, Blocks.MUD,
+        Blocks.SANDSTONE, Blocks.RED_SANDSTONE, Blocks.NETHER_BRICKS, Blocks.BLACKSTONE,
+        Blocks.END_STONE
+    ).map(CommonHelper::getRockBlockName).toList();
 
     public static final List<String> COPPERS = Stream.of(
         Blocks.COPPER_BLOCK, Blocks.EXPOSED_COPPER, Blocks.WEATHERED_COPPER, Blocks.OXIDIZED_COPPER
-    ).map((block) -> Registries.BLOCK.getId(block).getPath().replace("_copper", "").replace("copper_block", "unoxidized")).toList();
+    ).map(CommonHelper::getCopperBlockName).toList();
+
+    public static final List<String> COLORS = Stream.of(
+        Items.WHITE_DYE, Items.LIGHT_GRAY_DYE, Items.GRAY_DYE, Items.BLACK_DYE,
+        Items.BROWN_DYE, Items.RED_DYE, Items.ORANGE_DYE, Items.YELLOW_DYE,
+        Items.LIME_DYE, Items.GREEN_DYE, Items.CYAN_DYE, Items.LIGHT_BLUE_DYE,
+        Items.BLUE_DYE, Items.PURPLE_DYE, Items.MAGENTA_DYE, Items.PINK_DYE
+    ).map(CommonHelper::getDyeItemName).toList();
 
     private static final Map<String, Thread> threads = new HashMap<>();
 
@@ -117,6 +127,30 @@ public class CommonHelper {
         }
 
         return null;
+    }
+
+    public static Identifier getBlockId(Block block) {
+        return Registries.BLOCK.getId(block);
+    }
+
+    public static String getBlockName(Block block) {
+        return getBlockId(block).getPath();
+    }
+
+    public static String getWoodBlockName(Block block) {
+        return getBlockName(block).replace("_planks", "");
+    }
+
+    public static String getRockBlockName(Block block) {
+        return getBlockName(block).replace("_bricks", "");
+    }
+
+    public static String getCopperBlockName(Block block) {
+        return getBlockName(block).replace("_copper", "").replace("copper_block", "unoxidized");
+    }
+
+    public static String getDyeItemName(Item item) {
+        return ((DyeItem) item).getColor().getName();
     }
 
     public static NbtComponent getItemStackData(ItemStack itemStack) {
