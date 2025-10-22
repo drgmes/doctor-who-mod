@@ -1139,7 +1139,7 @@
   "title.dwm.ars.structure.room_wooden_acacia_tall_large": "Acacia Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_acacia_tall_x_large": "Acacia Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_acacia_tall_huge": "Acacia Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_acacia": "Acacia Storage",
+  "title.dwm.ars.structure.room_wooden_acacia_storage": "Acacia Storage",
 
   "title.dwm.ars.structure.room_wooden_bamboo_low_narrow": "Bamboo Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_bamboo_low_small": "Bamboo Room Small (Low)",
@@ -1153,7 +1153,7 @@
   "title.dwm.ars.structure.room_wooden_bamboo_tall_large": "Bamboo Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_bamboo_tall_x_large": "Bamboo Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_bamboo_tall_huge": "Bamboo Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_bamboo": "Bamboo Storage",
+  "title.dwm.ars.structure.room_wooden_bamboo_storage": "Bamboo Storage",
 
   "title.dwm.ars.structure.room_wooden_birch_low_narrow": "Birch Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_birch_low_small": "Birch Room Small (Low)",
@@ -1167,7 +1167,7 @@
   "title.dwm.ars.structure.room_wooden_birch_tall_large": "Birch Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_birch_tall_x_large": "Birch Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_birch_tall_huge": "Birch Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_birch": "Birch Storage",
+  "title.dwm.ars.structure.room_wooden_birch_storage": "Birch Storage",
 
   "title.dwm.ars.structure.room_wooden_cherry_low_narrow": "Cherry Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_cherry_low_small": "Cherry Room Small (Low)",
@@ -1181,7 +1181,7 @@
   "title.dwm.ars.structure.room_wooden_cherry_tall_large": "Cherry Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_cherry_tall_x_large": "Cherry Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_cherry_tall_huge": "Cherry Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_cherry": "Cherry Storage",
+  "title.dwm.ars.structure.room_wooden_cherry_storage": "Cherry Storage",
 
   "title.dwm.ars.structure.room_wooden_crimson_low_narrow": "Crimson Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_crimson_low_small": "Crimson Room Small (Low)",
@@ -1195,7 +1195,7 @@
   "title.dwm.ars.structure.room_wooden_crimson_tall_large": "Crimson Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_crimson_tall_x_large": "Crimson Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_crimson_tall_huge": "Crimson Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_crimson": "Crimson Storage",
+  "title.dwm.ars.structure.room_wooden_crimson_storage": "Crimson Storage",
 
   "title.dwm.ars.structure.room_wooden_dark_oak_low_narrow": "Dark Oak Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_dark_oak_low_small": "Dark Oak Room Small (Low)",
@@ -1209,7 +1209,7 @@
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_large": "Dark Oak Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_x_large": "Dark Oak Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_huge": "Dark Oak Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_dark_oak": "Dark Oak Storage",
+  "title.dwm.ars.structure.room_wooden_dark_oak_storage": "Dark Oak Storage",
 
   "title.dwm.ars.structure.room_wooden_jungle_low_narrow": "Jungle Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_jungle_low_small": "Jungle Room Small (Low)",
@@ -1223,7 +1223,7 @@
   "title.dwm.ars.structure.room_wooden_jungle_tall_large": "Jungle Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_jungle_tall_x_large": "Jungle Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_jungle_tall_huge": "Jungle Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_jungle": "Jungle Storage",
+  "title.dwm.ars.structure.room_wooden_jungle_storage": "Jungle Storage",
 
   "title.dwm.ars.structure.room_wooden_mangrove_low_narrow": "Mangrove Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_mangrove_low_small": "Mangrove Room Small (Low)",
@@ -1237,7 +1237,7 @@
   "title.dwm.ars.structure.room_wooden_mangrove_tall_large": "Mangrove Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_mangrove_tall_x_large": "Mangrove Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_mangrove_tall_huge": "Mangrove Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_mangrove": "Mangrove Storage",
+  "title.dwm.ars.structure.room_wooden_mangrove_storage": "Mangrove Storage",
 
   "title.dwm.ars.structure.room_wooden_oak_low_narrow": "Oak Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_oak_low_small": "Oak Room Small (Low)",
@@ -1251,7 +1251,7 @@
   "title.dwm.ars.structure.room_wooden_oak_tall_large": "Oak Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_oak_tall_x_large": "Oak Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_oak_tall_huge": "Oak Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_oak": "Oak Storage",
+  "title.dwm.ars.structure.room_wooden_oak_storage": "Oak Storage",
 
   "title.dwm.ars.structure.room_wooden_spruce_low_narrow": "Spruce Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_spruce_low_small": "Spruce Room Small (Low)",
@@ -1265,7 +1265,7 @@
   "title.dwm.ars.structure.room_wooden_spruce_tall_large": "Spruce Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_spruce_tall_x_large": "Spruce Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_spruce_tall_huge": "Spruce Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_spruce": "Spruce Storage",
+  "title.dwm.ars.structure.room_wooden_spruce_storage": "Spruce Storage",
 
   "title.dwm.ars.structure.room_wooden_warped_low_narrow": "Warped Room Narrow (Low)",
   "title.dwm.ars.structure.room_wooden_warped_low_small": "Warped Room Small (Low)",
@@ -1279,7 +1279,7 @@
   "title.dwm.ars.structure.room_wooden_warped_tall_large": "Warped Room Large (Tall)",
   "title.dwm.ars.structure.room_wooden_warped_tall_x_large": "Warped Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_wooden_warped_tall_huge": "Warped Room Huge (Tall)",
-  "title.dwm.ars.structure.room_wooden_storage_warped": "Warped Storage",
+  "title.dwm.ars.structure.room_wooden_warped_storage": "Warped Storage",
 
   "title.dwm.ars.structure.room_copper_unoxidized_low_narrow": "Unoxidized Copper Room Narrow (Low)",
   "title.dwm.ars.structure.room_copper_unoxidized_low_small": "Unoxidized Copper Room Small (Low)",
@@ -1349,7 +1349,7 @@
   "title.dwm.ars.structure.room_titanium_black_tall_large": "Black Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_black_tall_x_large": "Black Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_black_tall_huge": "Black Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_black": "Black Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_black_storage": "Black Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_blue_low_narrow": "Blue Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_blue_low_small": "Blue Titanium Room Small (Low)",
@@ -1363,7 +1363,7 @@
   "title.dwm.ars.structure.room_titanium_blue_tall_large": "Blue Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_blue_tall_x_large": "Blue Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_blue_tall_huge": "Blue Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_blue": "Blue Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_blue_storage": "Blue Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_brown_low_narrow": "Brown Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_brown_low_small": "Brown Titanium Room Small (Low)",
@@ -1377,7 +1377,7 @@
   "title.dwm.ars.structure.room_titanium_brown_tall_large": "Brown Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_brown_tall_x_large": "Brown Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_brown_tall_huge": "Brown Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_brown": "Brown Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_brown_storage": "Brown Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_cyan_low_narrow": "Cyan Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_cyan_low_small": "Cyan Titanium Room Small (Low)",
@@ -1391,7 +1391,7 @@
   "title.dwm.ars.structure.room_titanium_cyan_tall_large": "Cyan Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_cyan_tall_x_large": "Cyan Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_cyan_tall_huge": "Cyan Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_cyan": "Cyan Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_cyan_storage": "Cyan Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_gray_low_narrow": "Gray Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_gray_low_small": "Gray Titanium Room Small (Low)",
@@ -1405,7 +1405,7 @@
   "title.dwm.ars.structure.room_titanium_gray_tall_large": "Gray Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_gray_tall_x_large": "Gray Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_gray_tall_huge": "Gray Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_gray": "Gray Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_gray_storage": "Gray Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_green_low_narrow": "Green Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_green_low_small": "Green Titanium Room Small (Low)",
@@ -1419,7 +1419,7 @@
   "title.dwm.ars.structure.room_titanium_green_tall_large": "Green Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_green_tall_x_large": "Green Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_green_tall_huge": "Green Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_green": "Green Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_green_storage": "Green Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_light_blue_low_narrow": "Light-blue Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_light_blue_low_small": "Light-blue Titanium Room Small (Low)",
@@ -1433,7 +1433,7 @@
   "title.dwm.ars.structure.room_titanium_light_blue_tall_large": "Light-blue Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_light_blue_tall_x_large": "Light-blue Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_light_blue_tall_huge": "Light-blue Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_light_blue": "Light-blue Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_light_blue_storage": "Light-blue Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_light_gray_low_narrow": "Light-gray Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_light_gray_low_small": "Light-gray Titanium Room Small (Low)",
@@ -1447,7 +1447,7 @@
   "title.dwm.ars.structure.room_titanium_light_gray_tall_large": "Light-gray Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_light_gray_tall_x_large": "Light-gray Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_light_gray_tall_huge": "Light-gray Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_light_gray": "Light-gray Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_light_gray_storage": "Light-gray Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_lime_low_narrow": "Lime Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_lime_low_small": "Lime Titanium Room Small (Low)",
@@ -1461,7 +1461,7 @@
   "title.dwm.ars.structure.room_titanium_lime_tall_large": "Lime Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_lime_tall_x_large": "Lime Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_lime_tall_huge": "Lime Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_lime": "Lime Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_lime_storage": "Lime Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_magenta_low_narrow": "Magenta Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_magenta_low_small": "Magenta Titanium Room Small (Low)",
@@ -1475,7 +1475,7 @@
   "title.dwm.ars.structure.room_titanium_magenta_tall_large": "Magenta Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_magenta_tall_x_large": "Magenta Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_magenta_tall_huge": "Magenta Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_magenta": "Magenta Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_magenta_storage": "Magenta Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_orange_low_narrow": "Orange Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_orange_low_small": "Orange Titanium Room Small (Low)",
@@ -1489,7 +1489,7 @@
   "title.dwm.ars.structure.room_titanium_orange_tall_large": "Orange Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_orange_tall_x_large": "Orange Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_orange_tall_huge": "Orange Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_orange": "Orange Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_orange_storage": "Orange Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_pink_low_narrow": "Pink Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_pink_low_small": "Pink Titanium Room Small (Low)",
@@ -1503,7 +1503,7 @@
   "title.dwm.ars.structure.room_titanium_pink_tall_large": "Pink Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_pink_tall_x_large": "Pink Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_pink_tall_huge": "Pink Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_pink": "Pink Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_pink_storage": "Pink Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_purple_low_narrow": "Purple Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_purple_low_small": "Purple Titanium Room Small (Low)",
@@ -1517,7 +1517,7 @@
   "title.dwm.ars.structure.room_titanium_purple_tall_large": "Purple Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_purple_tall_x_large": "Purple Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_purple_tall_huge": "Purple Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_purple": "Purple Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_purple_storage": "Purple Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_red_low_narrow": "Red Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_red_low_small": "Red Titanium Room Small (Low)",
@@ -1531,7 +1531,7 @@
   "title.dwm.ars.structure.room_titanium_red_tall_large": "Red Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_red_tall_x_large": "Red Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_red_tall_huge": "Red Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_red": "Red Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_red_storage": "Red Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_white_low_narrow": "White Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_white_low_small": "White Titanium Room Small (Low)",
@@ -1545,7 +1545,7 @@
   "title.dwm.ars.structure.room_titanium_white_tall_large": "White Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_white_tall_x_large": "White Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_white_tall_huge": "White Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_white": "White Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_white_storage": "White Titanium Storage",
 
   "title.dwm.ars.structure.room_titanium_yellow_low_narrow": "Yellow Titanium Room Narrow (Low)",
   "title.dwm.ars.structure.room_titanium_yellow_low_small": "Yellow Titanium Room Small (Low)",
@@ -1559,7 +1559,7 @@
   "title.dwm.ars.structure.room_titanium_yellow_tall_large": "Yellow Titanium Room Large (Tall)",
   "title.dwm.ars.structure.room_titanium_yellow_tall_x_large": "Yellow Titanium Room Extra-Large (Tall)",
   "title.dwm.ars.structure.room_titanium_yellow_tall_huge": "Yellow Titanium Room Huge (Tall)",
-  "title.dwm.ars.structure.room_titanium_storage_yellow": "Yellow Titanium Storage",
+  "title.dwm.ars.structure.room_titanium_yellow_storage": "Yellow Titanium Storage",
 
   "message.dwm.tardis.arrive.timer": "TARDIS will arrive in %s seconds",
   "message.dwm.tardis.arrive.failed": "§cTARDIS not arrived and landed at %s",

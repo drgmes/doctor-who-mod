@@ -1,5 +1,5 @@
 {
-  "title": "title.dwm.ars.structure.room_wooden_storage_warped",
+  "title": "title.dwm.ars.structure.room_wooden_warped_storage",
   "structure": "dwm:tardis/ars/rooms/_/storage",
   "substitutes": {
     "minecraft:blue_concrete": "minecraft:warped_wart_block",

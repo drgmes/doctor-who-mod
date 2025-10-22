@@ -1,5 +1,5 @@
 {
-  "title": "title.dwm.ars.structure.room_titanium_storage_light_blue",
+  "title": "title.dwm.ars.structure.room_titanium_light_blue_storage",
   "structure": "dwm:tardis/ars/rooms/_/storage",
   "substitutes": {
     "minecraft:blue_concrete": "dwm:titanium_skin",

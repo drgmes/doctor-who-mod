@@ -1139,7 +1139,7 @@
   "title.dwm.ars.structure.room_wooden_acacia_tall_large": "Кімната з акації (велика, висока)",
   "title.dwm.ars.structure.room_wooden_acacia_tall_x_large": "Кімната з акації (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_acacia_tall_huge": "Кімната з акації (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_acacia": "Сховище з акації",
+  "title.dwm.ars.structure.room_wooden_acacia_storage": "Сховище з акації",
 
   "title.dwm.ars.structure.room_wooden_bamboo_low_narrow": "Кімната з бамбука (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_bamboo_low_small": "Кімната з бамбука (маленька, низька)",
@@ -1153,7 +1153,7 @@
   "title.dwm.ars.structure.room_wooden_bamboo_tall_large": "Кімната з бамбука (велика, висока)",
   "title.dwm.ars.structure.room_wooden_bamboo_tall_x_large": "Кімната з бамбука (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_bamboo_tall_huge": "Кімната з бамбука (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_bamboo": "Сховище з бамбука",
+  "title.dwm.ars.structure.room_wooden_bamboo_storage": "Сховище з бамбука",
 
   "title.dwm.ars.structure.room_wooden_birch_low_narrow": "Кімната з берези (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_birch_low_small": "Кімната з берези (маленька, низька)",
@@ -1167,7 +1167,7 @@
   "title.dwm.ars.structure.room_wooden_birch_tall_large": "Кімната з берези (велика, висока)",
   "title.dwm.ars.structure.room_wooden_birch_tall_x_large": "Кімната з берези (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_birch_tall_huge": "Кімната з берези (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_birch": "Сховище з берези",
+  "title.dwm.ars.structure.room_wooden_birch_storage": "Сховище з берези",
 
   "title.dwm.ars.structure.room_wooden_cherry_low_narrow": "Кімната з вишневого дерева (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_cherry_low_small": "Кімната з вишневого дерева (маленька, низька)",
@@ -1181,7 +1181,7 @@
   "title.dwm.ars.structure.room_wooden_cherry_tall_large": "Кімната з вишневого дерева (велика, висока)",
   "title.dwm.ars.structure.room_wooden_cherry_tall_x_large": "Кімната з вишневого дерева (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_cherry_tall_huge": "Кімната з вишневого дерева (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_cherry": "Сховище з вишневого дерева",
+  "title.dwm.ars.structure.room_wooden_cherry_storage": "Сховище з вишневого дерева",
 
   "title.dwm.ars.structure.room_wooden_crimson_low_narrow": "Кімната з багряного дерева (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_crimson_low_small": "Кімната з багряного дерева (маленька, низька)",
@@ -1195,7 +1195,7 @@
   "title.dwm.ars.structure.room_wooden_crimson_tall_large": "Кімната з багряного дерева (велика, висока)",
   "title.dwm.ars.structure.room_wooden_crimson_tall_x_large": "Кімната з багряного дерева (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_crimson_tall_huge": "Кімната з багряного дерева (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_crimson": "Сховище з багряного дерева",
+  "title.dwm.ars.structure.room_wooden_crimson_storage": "Сховище з багряного дерева",
 
   "title.dwm.ars.structure.room_wooden_dark_oak_low_narrow": "Кімната з темного дуба (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_dark_oak_low_small": "Кімната з темного дуба (маленька, низька)",
@@ -1209,7 +1209,7 @@
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_large": "Кімната з темного дуба (велика, висока)",
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_x_large": "Кімната з темного дуба (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_dark_oak_tall_huge": "Кімната з темного дуба (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_dark_oak": "Сховище з темного дуба",
+  "title.dwm.ars.structure.room_wooden_dark_oak_storage": "Сховище з темного дуба",
 
   "title.dwm.ars.structure.room_wooden_jungle_low_narrow": "Кімната з тропічного дерева (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_jungle_low_small": "Кімната з тропічного дерева (маленька, низька)",
@@ -1223,7 +1223,7 @@
   "title.dwm.ars.structure.room_wooden_jungle_tall_large": "Кімната з тропічного дерева (велика, висока)",
   "title.dwm.ars.structure.room_wooden_jungle_tall_x_large": "Кімната з тропічного дерева (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_jungle_tall_huge": "Кімната з тропічного дерева (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_jungle": "Сховище з тропічного дерева",
+  "title.dwm.ars.structure.room_wooden_jungle_storage": "Сховище з тропічного дерева",
 
   "title.dwm.ars.structure.room_wooden_mangrove_low_narrow": "Кімната з мангрового дерева (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_mangrove_low_small": "Кімната з мангрового дерева (маленька, низька)",
@@ -1237,7 +1237,7 @@
   "title.dwm.ars.structure.room_wooden_mangrove_tall_large": "Кімната з мангрового дерева (велика, висока)",
   "title.dwm.ars.structure.room_wooden_mangrove_tall_x_large": "Кімната з мангрового дерева (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_mangrove_tall_huge": "Кімната з мангрового дерева (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_mangrove": "Сховище з мангрового дерева",
+  "title.dwm.ars.structure.room_wooden_mangrove_storage": "Сховище з мангрового дерева",
 
   "title.dwm.ars.structure.room_wooden_oak_low_narrow": "Кімната з дуба (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_oak_low_small": "Кімната з дуба (маленька, низька)",
@@ -1251,7 +1251,7 @@
   "title.dwm.ars.structure.room_wooden_oak_tall_large": "Кімната з дуба (велика, висока)",
   "title.dwm.ars.structure.room_wooden_oak_tall_x_large": "Кімната з дуба (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_oak_tall_huge": "Кімната з дуба (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_oak": "Сховище з дуба",
+  "title.dwm.ars.structure.room_wooden_oak_storage": "Сховище з дуба",
 
   "title.dwm.ars.structure.room_wooden_spruce_low_narrow": "Кімната зі смереки (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_spruce_low_small": "Кімната зі смереки (маленька, низька)",
@@ -1265,7 +1265,7 @@
   "title.dwm.ars.structure.room_wooden_spruce_tall_large": "Кімната зі смереки (велика, висока)",
   "title.dwm.ars.structure.room_wooden_spruce_tall_x_large": "Кімната зі смереки (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_spruce_tall_huge": "Кімната зі смереки (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_spruce": "Сховище зі смереки",
+  "title.dwm.ars.structure.room_wooden_spruce_storage": "Сховище зі смереки",
 
   "title.dwm.ars.structure.room_wooden_warped_low_narrow": "Кімната з химерного дерева (вузька, низька)",
   "title.dwm.ars.structure.room_wooden_warped_low_small": "Кімната з химерного дерева (маленька, низька)",
@@ -1279,7 +1279,7 @@
   "title.dwm.ars.structure.room_wooden_warped_tall_large": "Кімната з химерного дерева (велика, висока)",
   "title.dwm.ars.structure.room_wooden_warped_tall_x_large": "Кімната з химерного дерева (дуже велика, висока)",
   "title.dwm.ars.structure.room_wooden_warped_tall_huge": "Кімната з химерного дерева (величезна, висока)",
-  "title.dwm.ars.structure.room_wooden_storage_warped": "Сховище з химерного дерева",
+  "title.dwm.ars.structure.room_wooden_warped_storage": "Сховище з химерного дерева",
 
   "title.dwm.ars.structure.room_copper_unoxidized_low_narrow": "Неокиснена мідна кімната (вузька, низька)",
   "title.dwm.ars.structure.room_copper_unoxidized_low_small": "Неокиснена мідна кімната (маленька, низька)",
@@ -1349,7 +1349,7 @@
   "title.dwm.ars.structure.room_titanium_black_tall_large": "Титанова кімната (велика, висока, чорна)",
   "title.dwm.ars.structure.room_titanium_black_tall_x_large": "Титанова кімната (дуже велика, висока, чорна)",
   "title.dwm.ars.structure.room_titanium_black_tall_huge": "Титанова кімната (величезна, висока, чорна)",
-  "title.dwm.ars.structure.room_titanium_storage_black": "Титанове сховище (чорне)",
+  "title.dwm.ars.structure.room_titanium_black_storage": "Титанове сховище (чорне)",
 
   "title.dwm.ars.structure.room_titanium_blue_low_narrow": "Титанова кімната (вузька, низька, синя)",
   "title.dwm.ars.structure.room_titanium_blue_low_small": "Титанова кімната (маленька, низька, синя)",
@@ -1363,7 +1363,7 @@
   "title.dwm.ars.structure.room_titanium_blue_tall_large": "Титанова кімната (велика, висока, синя)",
   "title.dwm.ars.structure.room_titanium_blue_tall_x_large": "Титанова кімната (дуже велика, висока, синя)",
   "title.dwm.ars.structure.room_titanium_blue_tall_huge": "Титанова кімната (величезна, висока, синя)",
-  "title.dwm.ars.structure.room_titanium_storage_blue": "Титанове сховище (синє)",
+  "title.dwm.ars.structure.room_titanium_blue_storage": "Титанове сховище (синє)",
 
   "title.dwm.ars.structure.room_titanium_brown_low_narrow": "Титанова кімната (вузька, низька, коричнева)",
   "title.dwm.ars.structure.room_titanium_brown_low_small": "Титанова кімната (маленька, низька, коричнева)",
@@ -1377,7 +1377,7 @@
   "title.dwm.ars.structure.room_titanium_brown_tall_large": "Титанова кімната (велика, висока, коричнева)",
   "title.dwm.ars.structure.room_titanium_brown_tall_x_large": "Титанова кімната (дуже велика, висока, коричнева)",
   "title.dwm.ars.structure.room_titanium_brown_tall_huge": "Титанова кімната (величезна, висока, коричнева)",
-  "title.dwm.ars.structure.room_titanium_storage_brown": "Титанове сховище (коричневе)",
+  "title.dwm.ars.structure.room_titanium_brown_storage": "Титанове сховище (коричневе)",
 
   "title.dwm.ars.structure.room_titanium_cyan_low_narrow": "Титанова кімната (вузька, низька, бірюзова)",
   "title.dwm.ars.structure.room_titanium_cyan_low_small": "Титанова кімната (маленька, низька, бірюзова)",
@@ -1391,7 +1391,7 @@
   "title.dwm.ars.structure.room_titanium_cyan_tall_large": "Титанова кімната (велика, висока, бірюзова)",
   "title.dwm.ars.structure.room_titanium_cyan_tall_x_large": "Титанова кімната (дуже велика, висока, бірюзова)",
   "title.dwm.ars.structure.room_titanium_cyan_tall_huge": "Титанова кімната (величезна, висока, бірюзова)",
-  "title.dwm.ars.structure.room_titanium_storage_cyan": "Титанове сховище (бірюзове)",
+  "title.dwm.ars.structure.room_titanium_cyan_storage": "Титанове сховище (бірюзове)",
 
   "title.dwm.ars.structure.room_titanium_gray_low_narrow": "Титанова кімната (вузька, низька, сіра)",
   "title.dwm.ars.structure.room_titanium_gray_low_small": "Титанова кімната (маленька, низька, сіра)",
@@ -1405,7 +1405,7 @@
   "title.dwm.ars.structure.room_titanium_gray_tall_large": "Титанова кімната (велика, висока, сіра)",
   "title.dwm.ars.structure.room_titanium_gray_tall_x_large": "Титанова кімната (дуже велика, висока, сіра)",
   "title.dwm.ars.structure.room_titanium_gray_tall_huge": "Титанова кімната (величезна, висока, сіра)",
-  "title.dwm.ars.structure.room_titanium_storage_gray": "Титанове сховище (сіре)",
+  "title.dwm.ars.structure.room_titanium_gray_storage": "Титанове сховище (сіре)",
 
   "title.dwm.ars.structure.room_titanium_green_low_narrow": "Титанова кімната (вузька, низька, зелена)",
   "title.dwm.ars.structure.room_titanium_green_low_small": "Титанова кімната (маленька, низька, зелена)",
@@ -1419,7 +1419,7 @@
   "title.dwm.ars.structure.room_titanium_green_tall_large": "Титанова кімната (велика, висока, зелена)",
   "title.dwm.ars.structure.room_titanium_green_tall_x_large": "Титанова кімната (дуже велика, висока, зелена)",
   "title.dwm.ars.structure.room_titanium_green_tall_huge": "Титанова кімната (величезна, висока, зелена)",
-  "title.dwm.ars.structure.room_titanium_storage_green": "Титанове сховище (зелене)",
+  "title.dwm.ars.structure.room_titanium_green_storage": "Титанове сховище (зелене)",
 
   "title.dwm.ars.structure.room_titanium_light_blue_low_narrow": "Титанова кімната (вузька, низька, блакитна)",
   "title.dwm.ars.structure.room_titanium_light_blue_low_small": "Титанова кімната (маленька, низька, блакитна)",
@@ -1433,7 +1433,7 @@
   "title.dwm.ars.structure.room_titanium_light_blue_tall_large": "Титанова кімната (велика, висока, блакитна)",
   "title.dwm.ars.structure.room_titanium_light_blue_tall_x_large": "Титанова кімната (дуже велика, висока, блакитна)",
   "title.dwm.ars.structure.room_titanium_light_blue_tall_huge": "Титанова кімната (величезна, висока, блакитна)",
-  "title.dwm.ars.structure.room_titanium_storage_light_blue": "Титанове сховище (синє)",
+  "title.dwm.ars.structure.room_titanium_light_blue_storage": "Титанове сховище (синє)",
 
   "title.dwm.ars.structure.room_titanium_light_gray_low_narrow": "Титанова кімната (вузька, низька, світло-сіра)",
   "title.dwm.ars.structure.room_titanium_light_gray_low_small": "Титанова кімната (маленька, низька, світло-сіра)",
@@ -1447,7 +1447,7 @@
   "title.dwm.ars.structure.room_titanium_light_gray_tall_large": "Титанова кімната (велика, висока, світло-сіра)",
   "title.dwm.ars.structure.room_titanium_light_gray_tall_x_large": "Титанова кімната (дуже велика, висока, світло-сіра)",
   "title.dwm.ars.structure.room_titanium_light_gray_tall_huge": "Титанова кімната (величезна, висока, світло-сіра)",
-  "title.dwm.ars.structure.room_titanium_storage_light_gray": "Титанове сховище (світло-сіре)",
+  "title.dwm.ars.structure.room_titanium_light_gray_storage": "Титанове сховище (світло-сіре)",
 
   "title.dwm.ars.structure.room_titanium_lime_low_narrow": "Титанова кімната (вузька, низька, салатова)",
   "title.dwm.ars.structure.room_titanium_lime_low_small": "Титанова кімната (маленька, низька, салатова)",
@@ -1461,7 +1461,7 @@
   "title.dwm.ars.structure.room_titanium_lime_tall_large": "Титанова кімната (велика, висока, салатова)",
   "title.dwm.ars.structure.room_titanium_lime_tall_x_large": "Титанова кімната (дуже велика, висока, салатова)",
   "title.dwm.ars.structure.room_titanium_lime_tall_huge": "Титанова кімната (величезна, висока, салатова)",
-  "title.dwm.ars.structure.room_titanium_storage_lime": "Титанове сховище (салатове)",
+  "title.dwm.ars.structure.room_titanium_lime_storage": "Титанове сховище (салатове)",
 
   "title.dwm.ars.structure.room_titanium_magenta_low_narrow": "Титанова кімната (вузька, низька, пурпурна)",
   "title.dwm.ars.structure.room_titanium_magenta_low_small": "Титанова кімната (маленька, низька, пурпурна)",
@@ -1475,7 +1475,7 @@
   "title.dwm.ars.structure.room_titanium_magenta_tall_large": "Титанова кімната (велика, висока, пурпурна)",
   "title.dwm.ars.structure.room_titanium_magenta_tall_x_large": "Титанова кімната (дуже велика, висока, пурпурна)",
   "title.dwm.ars.structure.room_titanium_magenta_tall_huge": "Титанова кімната (величезна, висока, пурпурна)",
-  "title.dwm.ars.structure.room_titanium_storage_magenta": "Титанове сховище (пурпурне)",
+  "title.dwm.ars.structure.room_titanium_magenta_storage": "Титанове сховище (пурпурне)",
 
   "title.dwm.ars.structure.room_titanium_orange_low_narrow": "Титанова кімната (вузька, низька, помаранчева)",
   "title.dwm.ars.structure.room_titanium_orange_low_small": "Титанова кімната (маленька, низька, помаранчева)",
@@ -1489,7 +1489,7 @@
   "title.dwm.ars.structure.room_titanium_orange_tall_large": "Титанова кімната (велика, висока, помаранчева)",
   "title.dwm.ars.structure.room_titanium_orange_tall_x_large": "Титанова кімната (дуже велика, висока, помаранчева)",
   "title.dwm.ars.structure.room_titanium_orange_tall_huge": "Титанова кімната (величезна, висока, помаранчева)",
-  "title.dwm.ars.structure.room_titanium_storage_orange": "Титанове сховище (помаранчеве)",
+  "title.dwm.ars.structure.room_titanium_orange_storage": "Титанове сховище (помаранчеве)",
 
   "title.dwm.ars.structure.room_titanium_pink_low_narrow": "Титанова кімната (вузька, низька, рожева)",
   "title.dwm.ars.structure.room_titanium_pink_low_small": "Титанова кімната (маленька, низька, рожева)",
@@ -1503,7 +1503,7 @@
   "title.dwm.ars.structure.room_titanium_pink_tall_large": "Титанова кімната (велика, висока, рожева)",
   "title.dwm.ars.structure.room_titanium_pink_tall_x_large": "Титанова кімната (дуже велика, висока, рожева)",
   "title.dwm.ars.structure.room_titanium_pink_tall_huge": "Титанова кімната (величезна, висока, рожева)",
-  "title.dwm.ars.structure.room_titanium_storage_pink": "Титанове сховище (рожеве)",
+  "title.dwm.ars.structure.room_titanium_pink_storage": "Титанове сховище (рожеве)",
 
   "title.dwm.ars.structure.room_titanium_purple_low_narrow": "Титанова кімната (вузька, низька, фіолетова)",
   "title.dwm.ars.structure.room_titanium_purple_low_small": "Титанова кімната (маленька, низька, фіолетова)",
@@ -1517,7 +1517,7 @@
   "title.dwm.ars.structure.room_titanium_purple_tall_large": "Титанова кімната (велика, висока, фіолетова)",
   "title.dwm.ars.structure.room_titanium_purple_tall_x_large": "Титанова кімната (дуже велика, висока, фіолетова)",
   "title.dwm.ars.structure.room_titanium_purple_tall_huge": "Титанова кімната (величезна, висока, фіолетова)",
-  "title.dwm.ars.structure.room_titanium_storage_purple": "Титанове сховище (фіолетове)",
+  "title.dwm.ars.structure.room_titanium_purple_storage": "Титанове сховище (фіолетове)",
 
   "title.dwm.ars.structure.room_titanium_red_low_narrow": "Титанова кімната (вузька, низька, червона)",
   "title.dwm.ars.structure.room_titanium_red_low_small": "Титанова кімната (маленька, низька, червона)",
@@ -1531,7 +1531,7 @@
   "title.dwm.ars.structure.room_titanium_red_tall_large": "Титанова кімната (велика, висока, червона)",
   "title.dwm.ars.structure.room_titanium_red_tall_x_large": "Титанова кімната (дуже велика, висока, червона)",
   "title.dwm.ars.structure.room_titanium_red_tall_huge": "Титанова кімната (величезна, висока, червона)",
-  "title.dwm.ars.structure.room_titanium_storage_red": "Титанове сховище (червоне)",
+  "title.dwm.ars.structure.room_titanium_red_storage": "Титанове сховище (червоне)",
 
   "title.dwm.ars.structure.room_titanium_white_low_narrow": "Титанова кімната (вузька, низька, біла)",
   "title.dwm.ars.structure.room_titanium_white_low_small": "Титанова кімната (маленька, низька, біла)",
@@ -1545,7 +1545,7 @@
   "title.dwm.ars.structure.room_titanium_white_tall_large": "Титанова кімната (велика, висока, біла)",
   "title.dwm.ars.structure.room_titanium_white_tall_x_large": "Титанова кімната (дуже велика, висока, біла)",
   "title.dwm.ars.structure.room_titanium_white_tall_huge": "Титанова кімната (величезна, висока, біла)",
-  "title.dwm.ars.structure.room_titanium_storage_white": "Титанове сховище (біле)",
+  "title.dwm.ars.structure.room_titanium_white_storage": "Титанове сховище (біле)",
 
   "title.dwm.ars.structure.room_titanium_yellow_low_narrow": "Титанова кімната (вузька, низька, жовта)",
   "title.dwm.ars.structure.room_titanium_yellow_low_small": "Титанова кімната (маленька, низька, жовта)",
@@ -1559,7 +1559,7 @@
   "title.dwm.ars.structure.room_titanium_yellow_tall_large": "Титанова кімната (велика, висока, жовта)",
   "title.dwm.ars.structure.room_titanium_yellow_tall_x_large": "Титанова кімната (дуже велика, висока, жовта)",
   "title.dwm.ars.structure.room_titanium_yellow_tall_huge": "Титанова кімната (величезна, висока, жовта)",
-  "title.dwm.ars.structure.room_titanium_storage_yellow": "Титанове сховище (жовте)",
+  "title.dwm.ars.structure.room_titanium_yellow_storage": "Титанове сховище (жовте)",
 
   "message.dwm.tardis.arrive.timer": "ТАРДІС прибуде через %s секунд(и)",
   "message.dwm.tardis.arrive.failed": "§cТАРДІС не прибула та приземлилася на %s",
