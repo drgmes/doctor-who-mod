@@ -3,7 +3,7 @@
   "structure": "dwm:tardis/ars/rooms/_/storage",
   "substitutes": {
     "minecraft:blue_concrete": "minecraft:chiseled_nether_bricks",
-    "minecraft:white_concrete": "minecraft:warped_planks",
+    "minecraft:white_concrete": "minecraft:crimson_planks",
     "minecraft:black_concrete": "minecraft:red_nether_bricks",
     "minecraft:gray_concrete": "minecraft:nether_bricks",
     "minecraft:brown_concrete": "minecraft:nether_bricks",
