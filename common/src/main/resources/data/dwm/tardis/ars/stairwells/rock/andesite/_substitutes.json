@@ -1,0 +1,12 @@
+{
+  "minecraft:blue_concrete": "minecraft:andesite",
+  "minecraft:white_concrete": "minecraft:spruce_planks",
+  "minecraft:black_concrete": "minecraft:andesite",
+  "minecraft:gray_concrete": "minecraft:polished_andesite",
+  "minecraft:brown_concrete": "minecraft:polished_andesite",
+  "minecraft:light_gray_concrete": "minecraft:polished_andesite",
+  "minecraft:andesite_stairs": "minecraft:spruce_stairs",
+  "minecraft:stone_stairs": "minecraft:polished_andesite_stairs",
+  "minecraft:stone_slab": "minecraft:polished_andesite_slab",
+  "minecraft:glass_pane": "minecraft:light_blue_stained_glass_pane"
+}

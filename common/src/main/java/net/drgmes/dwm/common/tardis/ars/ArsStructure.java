@@ -122,26 +122,18 @@ public class ArsStructure {
 
                                 if (this.substitutes.containsKey(blockId)) {
                                     Block replacingBlock = Registries.BLOCK.get(Identifier.of(this.substitutes.get(blockId).getAsString()));
-
                                     BlockState replacingBlockState = replacingBlock.getDefaultState();
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.OPEN);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.AXIS);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.FACING);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ORIENTATION);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.HORIZONTAL_AXIS);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.HORIZONTAL_FACING);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.DOUBLE_BLOCK_HALF);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.BLOCK_HALF);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WATERLOGGED);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.STAIR_SHAPE);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.SLAB_TYPE);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.NORTH);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.SOUTH);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WEST);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.WEST);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.EAST);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ATTACHED);
-                                    replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, Properties.ATTACHMENT);
+
+                                    List<Property<?>> propertiesToCopy = List.of(
+                                        Properties.AXIS, Properties.HORIZONTAL_AXIS, Properties.FACING, Properties.HORIZONTAL_FACING,
+                                        Properties.ORIENTATION, Properties.NORTH, Properties.SOUTH, Properties.WEST, Properties.EAST,
+                                        Properties.BLOCK_HALF, Properties.DOUBLE_BLOCK_HALF, Properties.STAIR_SHAPE, Properties.SLAB_TYPE,
+                                        Properties.WATERLOGGED, Properties.OPEN, Properties.ATTACHED, Properties.ATTACHMENT
+                                    );
+
+                                    for (Property<?> property : propertiesToCopy) {
+                                        replacingBlockState = copyBlockStateProperty(bs, replacingBlockState, property);
+                                    }
 
                                     world.setBlockState(bp, replacingBlockState, Block.NOTIFY_ALL);
                                 }
@@ -239,7 +231,7 @@ public class ArsStructure {
         placeSettings = placeSettings.setRotation(rotation);
 
         List<StructureTemplate.StructureBlockInfo> tadBlocksInfo = template.getInfosForBlock(BlockPos.ORIGIN, placeSettings, ModBlocks.TARDIS_ARS_DESTROYER.getBlock());
-        BlockPos tadOffset = tadBlocksInfo.size() > 0 ? tadBlocksInfo.get(0).pos().withY(0) : BlockPos.ORIGIN;
+        BlockPos tadOffset = !tadBlocksInfo.isEmpty() ? tadBlocksInfo.getFirst().pos() : BlockPos.ORIGIN;
         BlockPos blockPos;
 
         if (isInitial) {

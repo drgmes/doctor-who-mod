@@ -1,0 +1,12 @@
+{
+  "minecraft:blue_concrete": "minecraft:cobbled_deepslate",
+  "minecraft:white_concrete": "minecraft:dark_oak_planks",
+  "minecraft:black_concrete": "minecraft:polished_deepslate",
+  "minecraft:gray_concrete": "minecraft:deepslate_bricks",
+  "minecraft:brown_concrete": "minecraft:deepslate_tiles",
+  "minecraft:light_gray_concrete": "minecraft:deepslate_bricks",
+  "minecraft:andesite_stairs": "minecraft:dark_oak_stairs",
+  "minecraft:stone_stairs": "minecraft:deepslate_brick_stairs",
+  "minecraft:stone_slab": "minecraft:deepslate_brick_slab",
+  "minecraft:glass_pane": "minecraft:orange_stained_glass_pane"
+}

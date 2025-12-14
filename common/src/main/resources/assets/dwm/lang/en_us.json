@@ -487,6 +487,118 @@
   "title.dwm.ars.category.hallways.titanium_yellow": "Yellow Titanium Hallways",
   "title.dwm.ars.category.hallways.titanium_yellow.tag": "Yellow",
 
+  "title.dwm.ars.category.stairwells": "Stairwells",
+  "title.dwm.ars.category.stairwells.tag": "Stairwells",
+
+  "title.dwm.ars.category.stairwells.imperial": "Imperial Stairwells",
+  "title.dwm.ars.category.stairwells.imperial.tag": "Imperial",
+
+  "title.dwm.ars.category.stairwells.aquatic": "Aquatic Stairwells",
+  "title.dwm.ars.category.stairwells.aquatic.tag": "Aquatic",
+
+  "title.dwm.ars.category.stairwells.tech": "Tech Stairwells",
+  "title.dwm.ars.category.stairwells.tech.tag": "Tech",
+
+  "title.dwm.ars.category.stairwells.wooden": "Wooden Stairwells",
+  "title.dwm.ars.category.stairwells.wooden.tag": "Wooden",
+  "title.dwm.ars.category.stairwells.wooden_acacia": "Acacia Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_acacia.tag": "Acacia",
+  "title.dwm.ars.category.stairwells.wooden_bamboo": "Bamboo Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_bamboo.tag": "Bamboo",
+  "title.dwm.ars.category.stairwells.wooden_birch": "Birch Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_birch.tag": "Birch",
+  "title.dwm.ars.category.stairwells.wooden_cherry": "Cherry Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_cherry.tag": "Cherry",
+  "title.dwm.ars.category.stairwells.wooden_crimson": "Crimson Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_crimson.tag": "Crimson",
+  "title.dwm.ars.category.stairwells.wooden_dark_oak": "Dark Oak Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_dark_oak.tag": "Dark Oak",
+  "title.dwm.ars.category.stairwells.wooden_jungle": "Jungle Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_jungle.tag": "Jungle",
+  "title.dwm.ars.category.stairwells.wooden_mangrove": "Mangrove Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_mangrove.tag": "Mangrove",
+  "title.dwm.ars.category.stairwells.wooden_oak": "Oak Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_oak.tag": "Oak",
+  "title.dwm.ars.category.stairwells.wooden_spruce": "Spruce Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_spruce.tag": "Spruce",
+  "title.dwm.ars.category.stairwells.wooden_warped": "Warped Stairwells",
+  "title.dwm.ars.category.stairwells.wooden_warped.tag": "Warped",
+
+  "title.dwm.ars.category.stairwells.rock": "Rock Stairwells",
+  "title.dwm.ars.category.stairwells.rock.tag": "Rock",
+  "title.dwm.ars.category.stairwells.rock_stone": "Stone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_stone.tag": "Stone Bricks",
+  "title.dwm.ars.category.stairwells.rock_mossy_stone": "Mossy Stone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_mossy_stone.tag": "Mossy Stone Bricks",
+  "title.dwm.ars.category.stairwells.rock_granite": "Granite Stairwells",
+  "title.dwm.ars.category.stairwells.rock_granite.tag": "Granite",
+  "title.dwm.ars.category.stairwells.rock_diorite": "Diorite Stairwells",
+  "title.dwm.ars.category.stairwells.rock_diorite.tag": "Diorite",
+  "title.dwm.ars.category.stairwells.rock_andesite": "Andesite Stairwells",
+  "title.dwm.ars.category.stairwells.rock_andesite.tag": "Andesite",
+  "title.dwm.ars.category.stairwells.rock_deepslate": "Deepslate Stairwells",
+  "title.dwm.ars.category.stairwells.rock_deepslate.tag": "Deepslate",
+  "title.dwm.ars.category.stairwells.rock_tuff": "Tuff Stairwells",
+  "title.dwm.ars.category.stairwells.rock_tuff.tag": "Tuff",
+  "title.dwm.ars.category.stairwells.rock_mud": "Mud Stairwells",
+  "title.dwm.ars.category.stairwells.rock_mud.tag": "Mud",
+  "title.dwm.ars.category.stairwells.rock_sandstone": "Sandstone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_sandstone.tag": "Sandstone",
+  "title.dwm.ars.category.stairwells.rock_red_sandstone": "Red Sandstone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_red_sandstone.tag": "Red Sandstone",
+  "title.dwm.ars.category.stairwells.rock_nether": "Nether Stairwells",
+  "title.dwm.ars.category.stairwells.rock_nether.tag": "Nether Sandstone",
+  "title.dwm.ars.category.stairwells.rock_blackstone": "Blackstone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_blackstone.tag": "Blackstone",
+  "title.dwm.ars.category.stairwells.rock_end_stone": "End Stone Stairwells",
+  "title.dwm.ars.category.stairwells.rock_end_stone.tag": "End Stone Bricks",
+
+  "title.dwm.ars.category.stairwells.copper": "Copper Stairwells",
+  "title.dwm.ars.category.stairwells.copper.tag": "Copper",
+  "title.dwm.ars.category.stairwells.copper_unoxidized": "Unoxidized Copper Stairwells",
+  "title.dwm.ars.category.stairwells.copper_unoxidized.tag": "Unoxidized",
+  "title.dwm.ars.category.stairwells.copper_exposed": "Exposed Copper Stairwells",
+  "title.dwm.ars.category.stairwells.copper_exposed.tag": "Exposed",
+  "title.dwm.ars.category.stairwells.copper_weathered": "Weathered Copper Stairwells",
+  "title.dwm.ars.category.stairwells.copper_weathered.tag": "Weathered",
+  "title.dwm.ars.category.stairwells.copper_oxidized": "Oxidized Copper Stairwells",
+  "title.dwm.ars.category.stairwells.copper_oxidized.tag": "Oxidized",
+
+  "title.dwm.ars.category.stairwells.titanium": "Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium.tag": "Titanium",
+  "title.dwm.ars.category.stairwells.titanium_black": "Black Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_black.tag": "Black",
+  "title.dwm.ars.category.stairwells.titanium_blue": "Blue Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_blue.tag": "Blue",
+  "title.dwm.ars.category.stairwells.titanium_brown": "Brown Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_brown.tag": "Brown",
+  "title.dwm.ars.category.stairwells.titanium_cyan": "Cyan Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_cyan.tag": "Cyan",
+  "title.dwm.ars.category.stairwells.titanium_gray": "Gray Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_gray.tag": "Gray",
+  "title.dwm.ars.category.stairwells.titanium_green": "Green Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_green.tag": "Green",
+  "title.dwm.ars.category.stairwells.titanium_light_blue": "Light-blue Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_light_blue.tag": "Light-blue",
+  "title.dwm.ars.category.stairwells.titanium_light_gray": "Light-gray Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_light_gray.tag": "Light-gray",
+  "title.dwm.ars.category.stairwells.titanium_lime": "Lime Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_lime.tag": "Lime",
+  "title.dwm.ars.category.stairwells.titanium_magenta": "Magenta Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_magenta.tag": "Magenta",
+  "title.dwm.ars.category.stairwells.titanium_orange": "Orange Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_orange.tag": "Orange",
+  "title.dwm.ars.category.stairwells.titanium_pink": "Pink Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_pink.tag": "Pink",
+  "title.dwm.ars.category.stairwells.titanium_purple": "Purple Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_purple.tag": "Purple",
+  "title.dwm.ars.category.stairwells.titanium_red": "Red Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_red.tag": "Red",
+  "title.dwm.ars.category.stairwells.titanium_white": "White Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_white.tag": "White",
+  "title.dwm.ars.category.stairwells.titanium_yellow": "Yellow Titanium Stairwells",
+  "title.dwm.ars.category.stairwells.titanium_yellow.tag": "Yellow",
+
   "title.dwm.ars.category.rooms": "Rooms",
   "title.dwm.ars.category.rooms.tag": "Rooms",
 
@@ -1350,6 +1462,147 @@
   "title.dwm.ars.structure.hallway_titanium_yellow_turn_right_short": "Yellow Titanium Hallway Turn Right Short",
   "title.dwm.ars.structure.hallway_titanium_yellow_turn_left_long": "Yellow Titanium Hallway Turn Left Long",
   "title.dwm.ars.structure.hallway_titanium_yellow_turn_right_long": "Yellow Titanium Hallway Turn Right Long",
+
+  "title.dwm.ars.structure.stairwell_imperial_down": "Imperial Stairwell Down",
+  "title.dwm.ars.structure.stairwell_imperial_up": "Imperial Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_aquatic_down": "Aquatic Stairwell Down",
+  "title.dwm.ars.structure.stairwell_aquatic_up": "Aquatic Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_tech_down": "Tech Stairwell Down",
+  "title.dwm.ars.structure.stairwell_tech_up": "Tech Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_acacia_down": "Acacia Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_acacia_up": "Acacia Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_bamboo_down": "Bamboo Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_bamboo_up": "Bamboo Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_birch_down": "Birch Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_birch_up": "Birch Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_cherry_down": "Cherry Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_cherry_up": "Cherry Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_crimson_down": "Crimson Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_crimson_up": "Crimson Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_dark_oak_down": "Dark Oak Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_dark_oak_up": "Dark Oak Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_jungle_down": "Jungle Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_jungle_up": "Jungle Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_mangrove_down": "Mangrove Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_mangrove_up": "Mangrove Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_oak_down": "Oak Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_oak_up": "Oak Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_spruce_down": "Spruce Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_spruce_up": "Spruce Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_wooden_warped_down": "Warped Stairwell Down",
+  "title.dwm.ars.structure.stairwell_wooden_warped_up": "Warped Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_stone_down": "Stone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_stone_up": "Stone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_mossy_stone_down": "Mossy Stone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_mossy_stone_up": "Mossy Stone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_granite_down": "Granite Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_granite_up": "Granite Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_diorite_down": "Diorite Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_diorite_up": "Diorite Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_andesite_down": "Andesite Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_andesite_up": "Andesite Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_deepslate_down": "Deepslate Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_deepslate_up": "Deepslate Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_tuff_down": "Tuff Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_tuff_up": "Tuff Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_mud_down": "Mud Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_mud_up": "Mud Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_sandstone_down": "Sandstone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_sandstone_up": "Sandstone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_red_sandstone_down": "Red Sandstone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_red_sandstone_up": "Red Sandstone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_nether_down": "Nether Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_nether_up": "Nether Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_blackstone_down": "Blackstone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_blackstone_up": "Blackstone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_rock_end_stone_down": "End Stone Stairwell Down",
+  "title.dwm.ars.structure.stairwell_rock_end_stone_up": "End Stone Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_copper_unoxidized_down": "Unoxidized Copper Stairwell Down",
+  "title.dwm.ars.structure.stairwell_copper_unoxidized_up": "Unoxidized Copper Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_copper_exposed_down": "Exposed Copper Stairwell Down",
+  "title.dwm.ars.structure.stairwell_copper_exposed_up": "Exposed Copper Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_copper_weathered_down": "Weathered Copper Stairwell Down",
+  "title.dwm.ars.structure.stairwell_copper_weathered_up": "Weathered Copper Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_copper_oxidized_down": "Oxidized Copper Stairwell Down",
+  "title.dwm.ars.structure.stairwell_copper_oxidized_up": "Oxidized Copper Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_black_down": "Black Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_black_up": "Black Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_blue_down": "Blue Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_blue_up": "Blue Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_brown_down": "Brown Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_brown_up": "Brown Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_cyan_down": "Cyan Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_cyan_up": "Cyan Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_gray_down": "Gray Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_gray_up": "Gray Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_green_down": "Green Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_green_up": "Green Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_light_blue_down": "Light-blue Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_light_blue_up": "Light-blue Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_light_gray_down": "Light-gray Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_light_gray_up": "Light-gray Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_lime_down": "Lime Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_lime_up": "Lime Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_magenta_down": "Magenta Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_magenta_up": "Magenta Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_orange_down": "Orange Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_orange_up": "Orange Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_pink_down": "Pink Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_pink_up": "Pink Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_purple_down": "Purple Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_purple_up": "Purple Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_red_down": "Red Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_red_up": "Red Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_white_down": "White Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_white_up": "White Titanium Stairwell Up",
+
+  "title.dwm.ars.structure.stairwell_titanium_yellow_down": "Yellow Titanium Stairwell Down",
+  "title.dwm.ars.structure.stairwell_titanium_yellow_up": "Yellow Titanium Stairwell Up",
 
   "title.dwm.ars.structure.room_imperial_low_narrow": "Imperial Room Narrow (Low)",
   "title.dwm.ars.structure.room_imperial_low_small": "Imperial Room Small (Low)",

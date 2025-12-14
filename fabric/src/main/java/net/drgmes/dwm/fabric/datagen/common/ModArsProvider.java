@@ -15,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -30,31 +31,38 @@ public class ModArsProvider implements DataProvider {
         this.registryLookupFuture = registriesFuture;
 
         this.entries.add(new ArsEntry("imperial", ArsEntry.ETypes.HALLWAYS));
+        this.entries.add(new ArsEntry("imperial", ArsEntry.ETypes.STAIRWELLS));
         this.entries.add(new ArsEntry("imperial", ArsEntry.ETypes.ROOMS));
 
         this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.HALLWAYS));
+        this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.STAIRWELLS));
         this.entries.add(new ArsEntry("aquatic", ArsEntry.ETypes.ROOMS));
 
         this.entries.add(new ArsEntry("tech", ArsEntry.ETypes.HALLWAYS));
+        this.entries.add(new ArsEntry("tech", ArsEntry.ETypes.STAIRWELLS));
         this.entries.add(new ArsEntry("tech", ArsEntry.ETypes.ROOMS));
 
         CommonHelper.WOODS.forEach((wood) -> {
             this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.STAIRWELLS));
             this.entries.add(new ArsEntry("wooden/" + wood, ArsEntry.ETypes.ROOMS));
         });
 
         CommonHelper.ROCKS.forEach((rock) -> {
             this.entries.add(new ArsEntry("rock/" + rock, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("rock/" + rock, ArsEntry.ETypes.STAIRWELLS));
             this.entries.add(new ArsEntry("rock/" + rock, ArsEntry.ETypes.ROOMS));
         });
 
         CommonHelper.COPPERS.forEach((copper) -> {
             this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.STAIRWELLS));
             this.entries.add(new ArsEntry("copper/" + copper, ArsEntry.ETypes.ROOMS));
         });
 
         CommonHelper.COLORS.forEach((color) -> {
             this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.HALLWAYS));
+            this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.STAIRWELLS));
             this.entries.add(new ArsEntry("titanium/" + color, ArsEntry.ETypes.ROOMS));
         });
     }
@@ -85,8 +93,8 @@ public class ModArsProvider implements DataProvider {
                     if (!Objects.equals(prevSubstitutesFolder, substitutesFolder)) i.set(0);
                     prevSubstitutesFolder = substitutesFolder;
 
-                    try (FileInputStream fileInputStream = new FileInputStream(new File(substitutesPath))) {
-                        String content = IOUtils.toString(fileInputStream);
+                    try (FileInputStream fileInputStream = new FileInputStream(substitutesPath)) {
+                        String content = IOUtils.toString(fileInputStream, Charset.defaultCharset());
                         substitutes = JsonParser.parseString(content).getAsJsonObject();
                     } catch (Exception e) {
                         DWM.LOGGER.warn("Error in loading substitutes ({})", substitutesPath);
