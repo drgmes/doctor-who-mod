@@ -1,13 +1,9 @@
 package net.drgmes.dwm.network.client;
 
-import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlockEntity;
 import net.drgmes.dwm.enums.TardisExteriorAction;
 import net.drgmes.dwm.network.IPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
@@ -42,19 +38,4 @@ public record TardisExteriorUpdatePacket(
         return PACKET_ID;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisExteriorUpdatePacket payload, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
-
-            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisExteriorBlockEntity tardisExteriorBlockEntity) {
-                switch (payload.exteriorAction) {
-                    case NORMALIZE -> tardisExteriorBlockEntity.normalize();
-                    case DEMAT -> tardisExteriorBlockEntity.demat();
-                    case REMAT -> tardisExteriorBlockEntity.remat();
-                    case PULSE -> tardisExteriorBlockEntity.pulse();
-                }
-            }
-        });
-    }
 }

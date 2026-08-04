@@ -1,15 +1,9 @@
 package net.drgmes.dwm.network.client;
 
-import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.TardisTeleporterBlockEntity;
-import net.drgmes.dwm.blocks.tardis.misc.tardisteleporter.screens.TardisTeleporterScreen;
 import net.drgmes.dwm.enums.TardisTeleporterEntityTypes;
 import net.drgmes.dwm.network.IPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.codec.PacketCodecs;
@@ -41,14 +35,4 @@ public record TardisTeleporterOpenPacket(
         return PACKET_ID;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisTeleporterOpenPacket payload, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
-
-            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof TardisTeleporterBlockEntity) {
-                MinecraftClient.getInstance().setScreen(new TardisTeleporterScreen(payload.blockPos, payload.destinationBlockPos, payload.isLocked, payload.allowedEntityTypes));
-            }
-        });
-    }
 }

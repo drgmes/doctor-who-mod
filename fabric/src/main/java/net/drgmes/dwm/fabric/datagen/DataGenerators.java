@@ -6,13 +6,8 @@ import net.drgmes.dwm.setup.ModWorldGen;
 import net.drgmes.dwm.utils.builders.FeatureBuilder;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryBuilder;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.PlacedFeature;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 public class DataGenerators implements DataGeneratorEntrypoint {
     @Override
@@ -31,25 +26,16 @@ public class DataGenerators implements DataGeneratorEntrypoint {
 
     @Override
     public void buildRegistry(RegistryBuilder registryBuilder) {
-        AtomicReference<Registerable<ConfiguredFeature<?, ?>>> configuredFeatureRegistry = new AtomicReference<>();
-        AtomicReference<Registerable<PlacedFeature>> placedFeatureRegistry = new AtomicReference<>();
-
         registryBuilder.addRegistry(RegistryKeys.CONFIGURED_FEATURE, (registry) -> {
-            configuredFeatureRegistry.set(registry);
-            buildWorldGenData(configuredFeatureRegistry.get(), placedFeatureRegistry.get());
+            for (FeatureBuilder featureBuilder : ModWorldGen.FEATURE_BUILDERS) {
+                featureBuilder.buildConfigured(registry);
+            }
         });
 
         registryBuilder.addRegistry(RegistryKeys.PLACED_FEATURE, (registry) -> {
-            placedFeatureRegistry.set(registry);
-            buildWorldGenData(configuredFeatureRegistry.get(), placedFeatureRegistry.get());
+            for (FeatureBuilder featureBuilder : ModWorldGen.FEATURE_BUILDERS) {
+                featureBuilder.buildPlaced(registry);
+            }
         });
-    }
-
-    private void buildWorldGenData(Registerable<ConfiguredFeature<?, ?>> configuredFeatureRegistry, Registerable<PlacedFeature> placedFeatureRegistry) {
-        if (configuredFeatureRegistry == null || placedFeatureRegistry == null) return;
-
-        for (FeatureBuilder featureBuilder : ModWorldGen.FEATURE_BUILDERS) {
-            featureBuilder.build(configuredFeatureRegistry, placedFeatureRegistry);
-        }
     }
 }

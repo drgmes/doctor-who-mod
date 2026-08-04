@@ -1,12 +1,8 @@
 package net.drgmes.dwm.network.client;
 
-import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
 import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
 import net.drgmes.dwm.network.IPacket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -33,14 +29,4 @@ public record TardisConsoleUnitUpdatePacket(
         return PACKET_ID;
     }
 
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitUpdatePacket payload, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
-
-            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-                tardisConsoleUnitBlockEntity.readNbt(payload.tag, player.getRegistryManager());
-            }
-        });
-    }
 }
