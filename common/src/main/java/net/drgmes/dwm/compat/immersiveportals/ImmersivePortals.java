@@ -45,22 +45,22 @@ public class ImmersivePortals {
     public static Map.Entry<Portal, Portal> createPortals(ServerWorld world, Direction originFacing, Direction destinationFacing, BlockPos originBlockPos, BlockPos destinationBlockPos, RegistryKey<World> destinationWorldKey, double originFacingOffset, double destinationFacingOffset, double blockOffset, double innerWidth, double innerHeight, double outerWidth, double outerHeight) {
         Vec3d originPos = Vec3d.ofCenter(originBlockPos, blockOffset).offset(originFacing, originFacingOffset);
         Vec3d destinationPos = Vec3d.ofCenter(destinationBlockPos, blockOffset).offset(destinationFacing, destinationFacingOffset);
-
-        DQuaternion dQuaternion = DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), destinationFacing == Direction.NORTH || destinationFacing == Direction.SOUTH ? 180 : 0);
-        dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), originFacing.asRotation()));
-        dQuaternion = dQuaternion.combine(DQuaternion.rotationByDegrees(new Vec3d(0, 1, 0), destinationFacing.asRotation()));
+        Vec3d up = new Vec3d(0, 1, 0);
 
         Portal portal = Portal.ENTITY_TYPE.create(world);
         portal.setOriginPos(originPos);
-        portal.setRotation(dQuaternion);
         portal.setDestination(destinationPos);
         portal.setDestinationDimension(destinationWorldKey);
-        portal.setOrientationAndSize(new Vec3d(1, 0, 0), new Vec3d(0, 1, 0), innerWidth, innerHeight);
-        PortalManipulation.rotatePortalBody(portal, DQuaternion.fromMcQuaternion(DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), originFacing.asRotation()).toMcQuaternion()));
+        portal.setOrientationAndSize(new Vec3d(1, 0, 0), up, innerWidth, innerHeight);
+        PortalManipulation.rotatePortalBody(portal, DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), originFacing.asRotation()));
 
         Portal portalReversed = PortalAPI.createReversePortal(portal);
-        portalReversed.setWidth(outerWidth);
-        portalReversed.setHeight(outerHeight);
+        portalReversed.setOrientationAndSize(new Vec3d(1, 0, 0), up, outerWidth, outerHeight);
+        PortalManipulation.rotatePortalBody(portalReversed, DQuaternion.rotationByDegrees(new Vec3d(0, -1, 0), destinationFacing.asRotation()));
+        PortalManipulation.adjustRotationToConnect(portal, portalReversed);
+
+        portal.reloadAndSyncToClientNextTick();
+        portalReversed.reloadAndSyncToClientNextTick();
         return Map.entry(portal, portalReversed);
     }
 

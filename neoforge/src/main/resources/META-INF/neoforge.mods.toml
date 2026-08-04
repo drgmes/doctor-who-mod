@@ -7,6 +7,7 @@ modId = "${modId}"
 version = "${modVersion}"
 displayName = "${modName}"
 authors = "${modAuthors}"
+credits = "${modContributors}"
 description = "${modDescription}"
 logoFile = "assets/${modId}/icon.png"
 

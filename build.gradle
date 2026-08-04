@@ -23,6 +23,7 @@ allprojects {
         modVersion               : rootProject.mod_version,
         modLicense               : rootProject.mod_license,
         modAuthors               : rootProject.mod_authors,
+        modContributors          : rootProject.mod_contributors,
         modName                  : rootProject.mod_name,
         modDescription           : rootProject.mod_description,
         modHomepage              : rootProject.mod_homepage,

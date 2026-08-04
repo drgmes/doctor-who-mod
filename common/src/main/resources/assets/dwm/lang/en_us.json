@@ -2492,5 +2492,22 @@
   "config.dwm.option.structuresAlwaysAvailable": "All Structures always available",
   "config.dwm.option.structuresAlwaysAvailable.@Tooltip": "Allows you to visit any structure without having to visit them first.",
   "config.dwm.option.filterStructuresByVisitedBiomes": "Show structures only for biomes that have already been visited",
-  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Shows only structures of already visited biomes (if structuresAlwaysAvailable = false, the structure still needs to be visited separately. If structuresAlwaysAvailable = true, all structures related to visited biomes are immediately shown)."
+  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Shows only structures of already visited biomes (if structuresAlwaysAvailable = false, the structure still needs to be visited separately. If structuresAlwaysAvailable = true, all structures related to visited biomes are immediately shown).",
+
+  "text.autoconfig.dwm.title": "Doctor Who Mod - Config",
+  "text.autoconfig.dwm.category.default": "General",
+  "text.autoconfig.dwm.option.dimensionsBlacklist": "Dimensions Blacklist",
+  "text.autoconfig.dwm.option.dimensionsBlacklist.@Tooltip": "List of Dimensions that will not be displayed in the TARDIS Dimensions List.",
+  "text.autoconfig.dwm.option.hideTheEndConditionally": "Hide the End conditionally",
+  "text.autoconfig.dwm.option.hideTheEndConditionally.@Tooltip": "Hide The End from the TARDIS Dimensions List until the Dragon is defeated.",
+  "text.autoconfig.dwm.option.tardisRecallOperatorOnly": "Only operator can recall TARDIS",
+  "text.autoconfig.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Allow only operators to recall the TARDIS by key.",
+  "text.autoconfig.dwm.option.dimensionsAlwaysAvailable": "All Dimensions always available",
+  "text.autoconfig.dwm.option.dimensionsAlwaysAvailable.@Tooltip": "Allows you to visit any dimension without having to visit them first.",
+  "text.autoconfig.dwm.option.biomesAlwaysAvailable": "All Biomes always available",
+  "text.autoconfig.dwm.option.biomesAlwaysAvailable.@Tooltip": "Allows you to visit any biome without having to visit them first.",
+  "text.autoconfig.dwm.option.structuresAlwaysAvailable": "All Structures always available",
+  "text.autoconfig.dwm.option.structuresAlwaysAvailable.@Tooltip": "Allows you to visit any structure without having to visit them first.",
+  "text.autoconfig.dwm.option.filterStructuresByVisitedBiomes": "Show structures only for biomes that have already been visited",
+  "text.autoconfig.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Shows only structures of already visited biomes (if structuresAlwaysAvailable = false, the structure still needs to be visited separately. If structuresAlwaysAvailable = true, all structures related to visited biomes are immediately shown)."
 }

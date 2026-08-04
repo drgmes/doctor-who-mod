@@ -1,6 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
-import net.drgmes.dwm.blocks.tardis.exteriors.BaseTardisExteriorBlock;
 import net.drgmes.dwm.compat.iris.Iris;
 import net.drgmes.dwm.setup.ModCompats;
 import net.drgmes.dwm.utils.helpers.RenderHelper;
@@ -64,7 +63,7 @@ public abstract class BaseTardisDoorsBlockRenderer<C extends BaseTardisDoorsBloc
         if (half != DoubleBlockHalf.LOWER) return;
 
         boolean hasImmersivePortals = ModCompats.immersivePortals();
-        boolean isOpen = tile.getCachedState().get(BaseTardisExteriorBlock.OPEN);
+        boolean isOpen = tile.getCachedState().get(BaseTardisDoorsBlock.OPEN);
         float rotateDegrees = tile.getCachedState().get(BaseTardisDoorsBlock.FACING).asRotation();
 
         BaseTardisDoorsModel model = this.modelFactory.apply(this.ctx.getLayerModelPart(this.modelLayer));

@@ -2492,5 +2492,22 @@
   "config.dwm.option.structuresAlwaysAvailable": "Всі структури завжди в наявності",
   "config.dwm.option.structuresAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-яку структуру без необхідності їхнього попереднього відвідування.",
   "config.dwm.option.filterStructuresByVisitedBiomes": "Показувати структури лише вже відвіданих біомів",
-  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Показує структури лише вже відвіданих біомів (якщо structuresAlwaysAvailable = false, то структуру все ще необхідно відвідати окремо. Якщо structuresAlwaysAvailable = true, то відразу показує всі структури, які відносяться до відвіданих біомів)."
+  "config.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Показує структури лише вже відвіданих біомів (якщо structuresAlwaysAvailable = false, то структуру все ще необхідно відвідати окремо. Якщо structuresAlwaysAvailable = true, то відразу показує всі структури, які відносяться до відвіданих біомів).",
+
+  "text.autoconfig.dwm.title": "Doctor Who Mod - Конфігурація",
+  "text.autoconfig.dwm.category.default": "Загальні",
+  "text.autoconfig.dwm.option.dimensionsBlacklist": "Чорний список вимірів",
+  "text.autoconfig.dwm.option.dimensionsBlacklist.@Tooltip": "Список вимірів, які не будуть доступні у списку вибору вимірів ТАРДІС.",
+  "text.autoconfig.dwm.option.hideTheEndConditionally": "Приховувати Край за замовчуванням",
+  "text.autoconfig.dwm.option.hideTheEndConditionally.@Tooltip": "Приховувати вимір Краю зі списку вибору вимірів ТАРДІС, доки Дракон не переможений.",
+  "text.autoconfig.dwm.option.tardisRecallOperatorOnly": "Операторський виклик ТАРДІС",
+  "text.autoconfig.dwm.option.tardisRecallOperatorOnly.@Tooltip": "Дозволити лише операторам викликати ТАРДІС за допомогою ключа.",
+  "text.autoconfig.dwm.option.dimensionsAlwaysAvailable": "Всі виміри завжди в наявності",
+  "text.autoconfig.dwm.option.dimensionsAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-який вимір без необхідності їхнього попереднього відвідування.",
+  "text.autoconfig.dwm.option.biomesAlwaysAvailable": "Всі біоми завжди в наявності",
+  "text.autoconfig.dwm.option.biomesAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-який біом без необхідності їхнього попереднього відвідування.",
+  "text.autoconfig.dwm.option.structuresAlwaysAvailable": "Всі структури завжди в наявності",
+  "text.autoconfig.dwm.option.structuresAlwaysAvailable.@Tooltip": "Дозволяє відвідати будь-яку структуру без необхідності їхнього попереднього відвідування.",
+  "text.autoconfig.dwm.option.filterStructuresByVisitedBiomes": "Показувати структури лише вже відвіданих біомів",
+  "text.autoconfig.dwm.option.filterStructuresByVisitedBiomes.@Tooltip": "Показує структури лише вже відвіданих біомів (якщо structuresAlwaysAvailable = false, то структуру все ще необхідно відвідати окремо. Якщо structuresAlwaysAvailable = true, то відразу показує всі структури, які відносяться до відвіданих біомів)."
 }

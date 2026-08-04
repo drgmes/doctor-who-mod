@@ -4,7 +4,12 @@
   "version": "${modVersion}",
   "name": "${modName}",
   "description": "${modDescription}",
-  "authors": ["${modAuthors}"],
+  "authors": [
+    "DrGmes"
+  ],
+  "contributors": [
+    "Kojimo"
+  ],
   "license": "${modLicense}",
   "contact": {
     "homepage": "${modHomepage}",
