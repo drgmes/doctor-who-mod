@@ -1,17 +1,10 @@
 package net.drgmes.dwm.network.client;
 
-import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitMonitorConsoleMainScreen;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRoomEntry;
 import net.drgmes.dwm.common.tardis.consolerooms.TardisConsoleRooms;
 import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -21,8 +14,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,32 +48,6 @@ public record TardisConsoleUnitMonitorOpenPacket(
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitMonitorOpenPacket payload, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
-
-            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-                NbtCompound tag = new NbtCompound();
-                tag.put("tardisTag", payload.tardisTag);
-                tag.put("roomsTag", payload.roomsTag);
-
-                TardisConsoleRooms.CONSOLE_ROOMS.clear();
-
-                List<String> keys = new ArrayList<>(payload.roomsTag.getKeys());
-                keys.sort(Comparator.comparing((key) -> key));
-
-                keys.forEach((key) -> {
-                    TardisConsoleRoomEntry entry = TardisConsoleRoomEntry.fromNbt(payload.roomsTag.getCompound(key));
-                    TardisConsoleRooms.CONSOLE_ROOMS.put(entry.name, entry);
-                });
-
-                tardisConsoleUnitBlockEntity.tardisStateManager.readNbt(payload.tardisTag, player.getRegistryManager());
-                MinecraftClient.getInstance().setScreen(new TardisConsoleUnitMonitorConsoleMainScreen(tardisConsoleUnitBlockEntity, payload.tardisId, payload.owner, tag));
-            }
-        });
     }
 
     private static String getOwnerName(ServerPlayerEntity player, NbtCompound tardisTag) {

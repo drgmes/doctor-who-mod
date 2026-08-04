@@ -1,6 +1,5 @@
 package net.drgmes.dwm.blocks.tardis.doors;
 
-import net.drgmes.dwm.blocks.tardis.doors.tardisdoorspolicebox.TardisDoorsPoliceBoxBlock;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -39,7 +38,7 @@ public abstract class BaseTardisDoorsModel extends Model {
     }
 
     public void setupAnim(BaseTardisDoorsBlockEntity tile) {
-        if (tile.getCachedState().get(TardisDoorsPoliceBoxBlock.OPEN)) {
+        if (tile.getCachedState().get(BaseTardisDoorsBlock.OPEN)) {
             this.door_left.yaw = -this.doorAngle;
             this.door_right.yaw = this.doorAngle;
         }

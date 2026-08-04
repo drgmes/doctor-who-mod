@@ -829,8 +829,9 @@ public class TardisStateManager extends PersistentState {
         this.updatedDoorsTiles = false;
 
         this.doorsTiles.forEach((blockPos, tile) -> {
-            if (tile == null) return;
-            this.world.setBlockState(blockPos, tile.getCachedState().with(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), Block.NOTIFY_ALL);
+            BlockState blockState = tile != null ? tile.getCachedState() : this.world.getBlockState(blockPos);
+            if (!(blockState.getBlock() instanceof BaseTardisDoorsBlock)) return;
+            this.world.setBlockState(blockPos, blockState.with(BaseTardisDoorsBlock.OPEN, this.isDoorsOpened()), Block.NOTIFY_ALL);
         });
     }
 

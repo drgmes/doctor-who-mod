@@ -1,9 +1,6 @@
 package net.drgmes.dwm.network.client;
 
-import dev.architectury.networking.NetworkManager;
 import net.drgmes.dwm.DWM;
-import net.drgmes.dwm.blocks.tardis.consoleunits.BaseTardisConsoleUnitBlockEntity;
-import net.drgmes.dwm.blocks.tardis.consoleunits.screens.TardisConsoleUnitTelepathicInterfaceLocationsScreen;
 import net.drgmes.dwm.common.tardis.TardisStateManager;
 import net.drgmes.dwm.common.tardis.systems.TardisSystemResearch;
 import net.drgmes.dwm.enums.TardisTelepathicInterfaceDataType;
@@ -11,10 +8,6 @@ import net.drgmes.dwm.network.IPacket;
 import net.drgmes.dwm.setup.ModConfig;
 import net.drgmes.dwm.utils.helpers.CommonHelper;
 import net.drgmes.dwm.utils.helpers.TardisHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -54,28 +47,6 @@ public record TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket(
     @Override
     public Id<? extends CustomPayload> getId() {
         return PACKET_ID;
-    }
-
-    @Environment(EnvType.CLIENT)
-    public static void handle(TardisConsoleUnitTelepathicInterfaceLocationsOpenPacket payload, NetworkManager.PacketContext context) {
-        context.queue(() -> {
-            ClientPlayerEntity player = (ClientPlayerEntity) context.getPlayer();
-
-            if (player.getWorld().getBlockEntity(payload.blockPos) instanceof BaseTardisConsoleUnitBlockEntity tardisConsoleUnitBlockEntity) {
-                List<Map.Entry<Identifier, TardisTelepathicInterfaceDataType>> locations = new ArrayList<>();
-                List<String> keys = new ArrayList<>(payload.tag.getKeys());
-
-                keys.sort(Comparator.comparing((key) -> key));
-                keys.forEach((key) -> {
-                    locations.add(Map.entry(
-                        Identifier.of(payload.tag.getCompound(key).getString("id")),
-                        TardisTelepathicInterfaceDataType.valueOf(payload.tag.getCompound(key).getString("type"))
-                    ));
-                });
-
-                MinecraftClient.getInstance().setScreen(new TardisConsoleUnitTelepathicInterfaceLocationsScreen(tardisConsoleUnitBlockEntity, locations));
-            }
-        });
     }
 
     private static NbtCompound createLocationsListTag(ServerWorld world, @Nullable ServerWorld destinationWorld) {

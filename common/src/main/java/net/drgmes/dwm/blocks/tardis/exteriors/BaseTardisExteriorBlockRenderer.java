@@ -1,5 +1,6 @@
 package net.drgmes.dwm.blocks.tardis.exteriors;
 
+import net.drgmes.dwm.compat.immersiveportals.ImmersivePortalsIrisCompat;
 import net.drgmes.dwm.compat.iris.Iris;
 import net.drgmes.dwm.enums.TardisExteriorState;
 import net.drgmes.dwm.setup.ModCompats;
@@ -51,6 +52,7 @@ public abstract class BaseTardisExteriorBlockRenderer<C extends BaseTardisExteri
     public void render(C tile, float delta, MatrixStack matrixStack, VertexConsumerProvider buffer, int light, int overlay) {
         DoubleBlockHalf half = tile.getCachedState().get(BaseTardisExteriorBlock.HALF);
         if (half != DoubleBlockHalf.LOWER) return;
+        if (ImmersivePortalsIrisCompat.shouldHideExteriorShellForPortalView()) return;
 
         boolean hasImmersivePortals = ModCompats.immersivePortals();
         boolean hasEnabledIrisShaders = ModCompats.iris() && Iris.isShaderPackInUse();

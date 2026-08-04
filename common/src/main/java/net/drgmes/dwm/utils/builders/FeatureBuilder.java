@@ -58,8 +58,12 @@ public class FeatureBuilder {
         return this.name;
     }
 
-    public void build(Registerable<ConfiguredFeature<?, ?>> configuredFeatureRegistry, Registerable<PlacedFeature> placedFeatureRegistry) {
-        RegistryEntry.Reference<ConfiguredFeature<?, ?>> configuredFeature = configuredFeatureRegistry.register(this.configuredFeatureKey, this.configuredFeatureSupplier.get());
+    public void buildConfigured(Registerable<ConfiguredFeature<?, ?>> configuredFeatureRegistry) {
+        configuredFeatureRegistry.register(this.configuredFeatureKey, this.configuredFeatureSupplier.get());
+    }
+
+    public void buildPlaced(Registerable<PlacedFeature> placedFeatureRegistry) {
+        RegistryEntry<ConfiguredFeature<?, ?>> configuredFeature = placedFeatureRegistry.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE).getOrThrow(this.configuredFeatureKey);
         placedFeatureRegistry.register(this.placedFeatureKey, this.placedFeatureBuilder.apply(configuredFeature));
     }
 }
