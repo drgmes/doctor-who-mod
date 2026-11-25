@@ -4,10 +4,6 @@ architectury {
 
 loom {
     accessWidenerPath = file('src/main/resources/dwm.accesswidener')
-
-    mixin {
-        defaultRefmapName = "dwm.refmap.json"
-    }
 }
 
 dependencies {

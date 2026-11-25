@@ -58,6 +58,10 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
+
+        mixin {
+            useLegacyMixinAp = false
+        }
     }
 
     dependencies {

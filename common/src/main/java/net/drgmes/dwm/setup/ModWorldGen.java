@@ -1,51 +1,21 @@
 package net.drgmes.dwm.setup;
 
 import net.drgmes.dwm.utils.builders.FeatureBuilder;
-import net.drgmes.dwm.world.features.AbandonedTardisFeature;
 import net.minecraft.block.Block;
 import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.structure.rule.TagMatchRuleTest;
-import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.YOffset;
-import net.minecraft.world.gen.feature.DefaultFeatureConfig;
-import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OreFeatureConfig;
-import net.minecraft.world.gen.feature.PlacedFeatures;
 import net.minecraft.world.gen.placementmodifier.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
 
 public class ModWorldGen {
     public static final ArrayList<FeatureBuilder> FEATURE_BUILDERS = new ArrayList<>();
-
-    // //////// //
-    // FEATURES //
-    // //////// //
-
-    public static final Supplier<Feature<DefaultFeatureConfig>> ABANDONED_TARDIS = Registration.registerFeature("abandoned_tardis", AbandonedTardisFeature::new);
-
-    // ////// //
-    // COMMON //
-    // ////// //
-
-    public static final FeatureBuilder ABANDONED_TARDIS_SURFACE = new FeatureBuilder(
-        "abandoned_tardis_surface",
-        GenerationStep.Feature.SURFACE_STRUCTURES,
-        ABANDONED_TARDIS,
-        () -> DefaultFeatureConfig.INSTANCE,
-        (ctx) -> ctx.hasTag(BiomeTags.IS_OVERWORLD),
-        () -> getPlacementModifiers(
-            CountPlacementModifier.of(1),
-            RarityFilterPlacementModifier.of(75),
-            PlacedFeatures.WORLD_SURFACE_WG_HEIGHTMAP,
-            PlacedFeatures.OCEAN_FLOOR_WG_HEIGHTMAP
-        )
-    );
 
     // //// //
     // ORES //
